@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,6 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        Admin::create([
+            'uid'      => uid(),
+            'email'    => 'logic@surehustle.com',
+            'username' => 'logic',
+            'password' => Hash::make('12345678'),
+        ]);
+
+
         $this->call(CountriesTableSeeder::class);
         $this->call(AdvertisementsTableSeeder::class);
         $this->call(LanguagesTableSeeder::class);
