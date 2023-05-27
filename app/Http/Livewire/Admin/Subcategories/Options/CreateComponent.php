@@ -32,8 +32,8 @@ class CreateComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_create_subcategory'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_create_subcategory'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.subcategories.options.create', [
             'categories' => $this->categories
@@ -98,7 +98,6 @@ class CreateComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon'        => 'success'
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -109,7 +108,6 @@ class CreateComponent extends Component
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
@@ -120,8 +118,6 @@ class CreateComponent extends Component
             ]);
 
             throw $th;
-
         }
     }
-    
 }

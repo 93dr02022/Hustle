@@ -225,6 +225,8 @@
   'main.seller.projects.bids.options.edit-component' => 'App\\Http\\Livewire\\Main\\Seller\\Projects\\Bids\\Options\\EditComponent',
   'main.seller.projects.milestones.milestones-component' => 'App\\Http\\Livewire\\Main\\Seller\\Projects\\Milestones\\MilestonesComponent',
   'main.seller.projects.projects-component' => 'App\\Http\\Livewire\\Main\\Seller\\Projects\\ProjectsComponent',
+  'main.seller.quotes.create-quote-component' => 'App\\Http\\Livewire\\Main\\Seller\\Quotes\\CreateQuoteComponent',
+  'main.seller.quotes.quotes-component' => 'App\\Http\\Livewire\\Main\\Seller\\Quotes\\QuotesComponent',
   'main.seller.refunds.options.details-component' => 'App\\Http\\Livewire\\Main\\Seller\\Refunds\\Options\\DetailsComponent',
   'main.seller.refunds.refunds-component' => 'App\\Http\\Livewire\\Main\\Seller\\Refunds\\RefundsComponent',
   'main.seller.reviews.options.details-component' => 'App\\Http\\Livewire\\Main\\Seller\\Reviews\\Options\\DetailsComponent',

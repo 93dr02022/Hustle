@@ -1273,7 +1273,7 @@ function _price($amount)
  */
 function countryFlag($code)
 {
-    return url('public/vendor/blade-flags/country-' . strtolower($code) . '.svg');
+    return url('vendor/blade-flags/country-' . strtolower($code) . '.svg');
 }
 
 /**
@@ -1512,7 +1512,7 @@ function livewire_asset_path()
 
         $manifest          = json_decode(file_get_contents(base_path('vendor/livewire/livewire/dist/manifest.json')), true);
         $versionedFileName = $manifest['/livewire.js'];
-        return url("public/vendor/livewire{$versionedFileName}");
+        return url("vendor/livewire{$versionedFileName}");
     } catch (\Throwable $th) {
         return null;
     }

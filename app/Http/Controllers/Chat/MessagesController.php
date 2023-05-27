@@ -26,7 +26,8 @@ class MessagesController extends Controller
     /**
      * Set chat api
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->chat = new ChatApi();
     }
 
@@ -47,45 +48,45 @@ class MessagesController extends Controller
         );
     }
 
-    
+
     /**
      * eturning the view of the app with the required data
      *
      * @param string $id
      * @return \Illuminate\Contracts\View\View
      */
-    public function index( $id = null)
+    public function index($id = null)
     {
         // Get user
-        $user        = User::where('id', '!=', auth()->id())
-                            ->where('uid', $id)
-                            ->whereIn('status', ['active', 'verified'])
-                            ->first();
+        $user = User::where('id', '!=', auth()->id())
+            ->where('uid', $id)
+            ->whereIn('status', ['active', 'verified'])
+            ->first();
 
         // SEO
         $separator   = settings('general')->separator;
         $title       = __('messages.t_messages') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage     = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         // Return view
@@ -115,20 +116,18 @@ class MessagesController extends Controller
 
             // Get user
             $fetch = User::where('id', $request->get('id'))
-                            ->select('id', 'uid', 'username', 'fullname', 'avatar_id', 'active_status')
-                            ->with('avatar', function($query) {
-                                return $query->select('id', 'file_extension', 'file_folder', 'uid');
-                            })
-                            ->first();
+                ->select('id', 'uid', 'username', 'fullname', 'avatar_id', 'active_status')
+                ->with('avatar', function ($query) {
+                    return $query->select('id', 'file_extension', 'file_folder', 'uid');
+                })
+                ->first();
 
             // Check if user exists
-            if($fetch){
+            if ($fetch) {
 
                 // Set avatar
                 $userAvatar = $this->chat->getUserWithAvatar($fetch)->avatar;
-
             }
-
         }
 
         // send the response
@@ -190,7 +189,7 @@ class MessagesController extends Controller
 
             // Get file
             $file           = $request->file('file');
-            
+
             // Check file size
             if ($file->getSize() < $this->chat->getMaxUploadSize()) {
 
@@ -205,23 +204,18 @@ class MessagesController extends Controller
 
                     // Upload attachment and store the new name
                     $file->storeAs(config('chatify.attachments.folder'), $attachment, config('chatify.storage_disk_name'));
-
                 } else {
 
                     // Error
                     $error->status  = 1;
                     $error->message = __('messages.t_selected_file_extension_is_not_allowed');
-
                 }
-
             } else {
 
                 // Error
                 $error->status  = 1;
                 $error->message = __('messages.t_selected_file_size_big');
-
             }
-
         } else {
 
             // Get message
@@ -233,14 +227,12 @@ class MessagesController extends Controller
                 // Error
                 $error->status  = true;
                 $error->message = __('messages.t_enter_your_message');
-
             }
-
         }
 
         // Check if there is no error
         if (!$error->status) {
-            
+
             // Generate message id
             $message_id = mt_rand(9, 999999999) + time();
 
@@ -263,12 +255,11 @@ class MessagesController extends Controller
             $messageData = $this->chat->fetchMessage($message_id);
 
             // send to user using pusher
-            $this->chat->push("private-chat.".$request->get('id'), 'messaging', [
+            $this->chat->push("private-chat." . $request->get('id'), 'messaging', [
                 'from_id' => auth()->id(),
                 'to_id'   => $request->get('id'),
                 'message' => $this->chat->messageCard($messageData, 'default')
             ]);
-
         }
 
         // Send the response
@@ -301,7 +292,7 @@ class MessagesController extends Controller
 
         // If there is no messages yet
         if ($totalMessages < 1) {
-            $response['messages'] ='<p class="message-hint center-el"><span>' . __('messages.t_type_something_to_start_messaging') . '</span></p>';
+            $response['messages'] = '<p class="message-hint center-el"><span>' . __('messages.t_type_something_to_start_messaging') . '</span></p>';
             return Response::json($response);
         }
 
@@ -356,23 +347,23 @@ class MessagesController extends Controller
     {
         // Get users
         $users = Message::join('users',  function ($join) {
-                            $join->on('ch_messages.from_id', '=', 'users.id')
-                                ->orOn('ch_messages.to_id', '=', 'users.id');
-                        })
-                        ->where(function ($q) {
-                            $q->where('ch_messages.from_id', auth()->id())
-                            ->orWhere('ch_messages.to_id', auth()->id());
-                        })
-                        ->with('avatar')
-                        ->where('users.id','!=',auth()->id())
-                        ->select('users.*',DB::raw('MAX(ch_messages.created_at) max_created_at'))
-                        ->orderBy('max_created_at', 'desc')
-                        ->groupBy('users.id')
-                        ->paginate($request->per_page ?? $this->perPage);
+            $join->on('ch_messages.from_id', '=', 'users.id')
+                ->orOn('ch_messages.to_id', '=', 'users.id');
+        })
+            ->where(function ($q) {
+                $q->where('ch_messages.from_id', auth()->id())
+                    ->orWhere('ch_messages.to_id', auth()->id());
+            })
+            ->with('avatar')
+            ->where('users.id', '!=', auth()->id())
+            ->select('users.*', DB::raw('MAX(ch_messages.created_at) max_created_at'))
+            ->orderBy('max_created_at', 'desc')
+            ->groupBy('users.id')
+            ->paginate($request->per_page ?? $this->perPage);
 
         // Get all users
         $usersList = $users->items();
-        
+
         // Check if list not empty
         if (count($usersList) > 0) {
 
@@ -380,15 +371,13 @@ class MessagesController extends Controller
 
             // Loop through contacts
             foreach ($usersList as $user) {
-                
+
                 $contacts .= $this->chat->getContactItem($user);
             }
-
         } else {
 
             // Contacts list empty
             $contacts = '<p class="message-hint center-el w-full"><span>' . __('messages.t_ur_contact_list_is_empty') . '</span></p>';
-
         }
 
         // Send response
@@ -412,13 +401,12 @@ class MessagesController extends Controller
         $user = User::where('id', $request->get('user_id'))->first();
 
         // Check if user does not exist
-        if(!$user){
+        if (!$user) {
 
             // Send response
             return Response::json([
                 'message' => __('messages.t_user_not_found'),
             ], 401);
-
         }
 
         // Set contact
@@ -479,7 +467,6 @@ class MessagesController extends Controller
             $favoritesList .= view('Chatify::layouts.favorite', [
                 'user' => $user,
             ]);
-
         }
 
         // Send the response
@@ -506,22 +493,22 @@ class MessagesController extends Controller
 
         // Search contacts
         $records    = Message::join('users',  function ($join) {
-                                $join->on('ch_messages.from_id', '=', 'users.id')
-                                    ->orOn('ch_messages.to_id', '=', 'users.id');
-                            })
-                            ->where(function ($q) {
-                                $q->where('ch_messages.from_id', auth()->id())
-                                ->orWhere('ch_messages.to_id', auth()->id());
-                            })
-                            ->where(function($query) use($input) {
-                                $query->where('username', 'LIKE', "%{$input}%")
-                                        ->orWhere('fullname', 'LIKE', "%{$input}%");
-                            })
-                            ->with('avatar')
-                            ->where('users.id','!=',auth()->id())
-                            ->groupBy('users.id')
-                            ->paginate($request->per_page ?? $this->perPage);
-        
+            $join->on('ch_messages.from_id', '=', 'users.id')
+                ->orOn('ch_messages.to_id', '=', 'users.id');
+        })
+            ->where(function ($q) {
+                $q->where('ch_messages.from_id', auth()->id())
+                    ->orWhere('ch_messages.to_id', auth()->id());
+            })
+            ->where(function ($query) use ($input) {
+                $query->where('username', 'LIKE', "%{$input}%")
+                    ->orWhere('fullname', 'LIKE', "%{$input}%");
+            })
+            ->with('avatar')
+            ->where('users.id', '!=', auth()->id())
+            ->groupBy('users.id')
+            ->paginate($request->per_page ?? $this->perPage);
+
         // Loop through records
         foreach ($records->items() as $record) {
 
@@ -534,7 +521,7 @@ class MessagesController extends Controller
         }
 
         // Check if no results found
-        if($records->total() < 1){
+        if ($records->total() < 1) {
             $getRecords = '<p class="message-hint center-el"><span>' . __('messages.t_no_results_found') . '</span></p>';
         }
 
@@ -544,7 +531,6 @@ class MessagesController extends Controller
             'total'     => $records->total(),
             'last_page' => $records->lastPage()
         ], 200);
-        
     }
 
 
@@ -570,7 +556,6 @@ class MessagesController extends Controller
                 'get'   => 'sharedPhoto',
                 'image' => $this->chat->getAttachmentUrl($shared[$i]),
             ])->render();
-
         }
 
         // Send the response

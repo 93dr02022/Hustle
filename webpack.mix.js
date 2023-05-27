@@ -1,5 +1,6 @@
 const mix = require("laravel-mix");
 require("laravel-mix-compress");
+require("laravel-mix-blade-reload");
 
 /*
  |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ require("laravel-mix-compress");
 mix.js("resources/js/app.js", "public/js")
     .vue()
     .js("node_modules/select2/dist/js/select2.min.js", "public/js/select2.js")
+    .bladeReload()
     .postCss("resources/css/mdi.css", "public/css")
     .postCss(
         "node_modules/select2/dist/css/select2.min.css",

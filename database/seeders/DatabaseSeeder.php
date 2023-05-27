@@ -65,5 +65,9 @@ class DatabaseSeeder extends Seeder
         $this->call(YoucanpaySettingsTableSeeder::class);
         $this->call(EpointSettingsTableSeeder::class);
         $this->call(LiveChatSettingsTableSeeder::class);
+
+        $this->call([
+            CategorySeeder::class,
+        ]);
     }
 }

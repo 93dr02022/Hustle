@@ -28,6 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('settings_appearance', function (Blueprint $table) {
+            $table->dropForeign('settings_appearance_placeholder_img_id_foreign');
             $table->dropColumn('placeholder_img_id');
         });
     }
