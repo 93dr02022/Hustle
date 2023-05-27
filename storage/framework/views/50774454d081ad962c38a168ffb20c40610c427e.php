@@ -16,22 +16,27 @@
 
     <?php
         $link_active_class = 'bg-primary-100/25 border-primary-600 text-primary-700 dark:text-white hover:bg-primary-100/25 hover:text-primary-700';
-        $link_basic_class  = 'border-transparent text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-600 hover:text-gray-900';
+        $link_basic_class = 'border-transparent text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-600 hover:text-gray-900';
         $icon_active_class = 'text-primary-600 dark:text-gray-50 group-hover:text-primary-600 dark:group-hover:text-white';
-        $icon_basic_class  = 'text-gray-400 dark:text-gray-300 dark:group-hover:text-white group-hover:text-gray-500';
-        $id                = uid();
+        $icon_basic_class = 'text-gray-400 dark:text-gray-300 dark:group-hover:text-white group-hover:text-gray-500';
+        $id = uid();
     ?>
 
     <div class="w-full border-b border-gray-100 dark:border-zinc-600">
         <div class="flex flex-col text-center divide-y divide-gray-200 dark:divide-zinc-600">
             <div class="flex-1 flex flex-col p-8">
                 <a href="<?php echo e(url('profile', auth()->user()->username)); ?>">
-                    <img class="w-20 h-20 flex-shrink-0 mx-auto rounded-full object-cover lazy" src="<?php echo e(placeholder_img()); ?>" data-src="<?php echo e(src(auth()->user()->avatar)); ?>" alt="<?php echo e(auth()->user()->username); ?>">
+                    <img class="w-20 h-20 flex-shrink-0 mx-auto rounded-full object-cover lazy"
+                        src="<?php echo e(placeholder_img()); ?>" data-src="<?php echo e(src(auth()->user()->avatar)); ?>"
+                        alt="<?php echo e(auth()->user()->username); ?>">
                 </a>
                 <h3 class="mt-6 text-gray-700 dark:text-white text-sm font-medium flex items-center justify-center">
-                    <span class="text-sm font-bold tracking-wider text-gray-700 dark:text-gray-100"><?php echo e(auth()->user()->username); ?></span>
+                    <span
+                        class="text-sm font-bold tracking-wider text-gray-700 dark:text-gray-100"><?php echo e(auth()->user()->username); ?></span>
                     <?php if(auth()->user()->status === 'verified'): ?>
-                        <img data-tooltip-target="tooltip-account-verified-<?php echo e($id); ?>" class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5" src="<?php echo e(url('img/auth/verified-badge.svg')); ?>" alt="<?php echo e(__('messages.t_account_verified')); ?>">
+                        <img data-tooltip-target="tooltip-account-verified-<?php echo e($id); ?>"
+                            class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5" src="<?php echo e(url('img/auth/verified-badge.svg')); ?>"
+                            alt="<?php echo e(__('messages.t_account_verified')); ?>">
                         <div id="tooltip-account-verified-<?php echo e($id); ?>" role="tooltip"
                             class="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-sm shadow-sm opacity-0 tooltip dark:bg-gray-700">
                             <?php echo e(__('messages.t_account_verified')); ?>
@@ -43,7 +48,8 @@
                     <dd class="text-gray-900 text-sm font-black dark:text-white"><?php echo money(auth()->user()->balance_available, settings('currency')->code, true); ?></dd>
                     <dd class="mt-3">
                         <?php if(auth()->user()->account_type === 'seller'): ?>
-                            <a href="<?php echo e(url('seller/home')); ?>" class="px-4 py-1 text-green-800 text-xs font-semibold bg-green-100 rounded-full">
+                            <a href="<?php echo e(url('seller/home')); ?>"
+                                class="px-4 py-1 text-green-800 text-xs font-semibold bg-green-100 rounded-full">
                                 <?php echo e(__('messages.t_seller_dashboard')); ?>
 
                             </a>
@@ -119,10 +125,16 @@
 
         
         <?php if(settings('projects')->is_enabled): ?>
-            <a href="<?php echo e(url('account/projects')); ?>" class="<?php echo e(Request::is('account/projects') ? $link_active_class : $link_basic_class); ?> group ltr:border-l-4 rtl:border-r-4 px-5 py-3 flex items-center text-sm font-medium">
+            <a href="<?php echo e(url('account/projects')); ?>"
+                class="<?php echo e(Request::is('account/projects') ? $link_active_class : $link_basic_class); ?> group ltr:border-l-4 rtl:border-r-4 px-5 py-3 flex items-center text-sm font-medium">
 
                 
-                <svg class="<?php echo e(Request::is('account/projects') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <svg class="<?php echo e(Request::is('account/projects') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
 
                 
                 <span class="truncate text-sm font-semibold"> <?php echo e(__('messages.t_my_projects')); ?> </span>
@@ -131,10 +143,16 @@
         <?php endif; ?>
 
         
-        <a href="<?php echo e(url('account/deposit')); ?>" class="<?php echo e(Request::is('account/deposit') ? $link_active_class : $link_basic_class); ?> group ltr:border-l-4 rtl:border-r-4 px-5 py-3 flex items-center text-sm font-medium">
+        <a href="<?php echo e(url('account/deposit')); ?>"
+            class="<?php echo e(Request::is('account/deposit') ? $link_active_class : $link_basic_class); ?> group ltr:border-l-4 rtl:border-r-4 px-5 py-3 flex items-center text-sm font-medium">
 
             
-            <svg class="<?php echo e(Request::is('account/deposit') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <svg class="<?php echo e(Request::is('account/deposit') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
 
             
             <span class="truncate text-sm font-semibold"> <?php echo e(__('messages.t_deposit')); ?> </span>
@@ -197,7 +215,12 @@
             class="<?php echo e(Request::is('account/refunds') ? $link_active_class : $link_basic_class); ?> group ltr:border-l-4 rtl:border-r-4 px-5 py-3 flex items-center text-sm font-medium">
 
             
-            <svg xmlns="http://www.w3.org/2000/svg" class="<?php echo e(Request::is('account/refunds') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="<?php echo e(Request::is('account/refunds') ? $icon_active_class : $icon_basic_class); ?> flex-shrink-0 ltr:-ml-1 rtl:-mr-1 ltr:mr-3 rtl:ml-3 h-5 w-5"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
+            </svg>
 
             
             <span class="truncate text-sm font-semibold"> <?php echo e(__('messages.t_my_refunds')); ?> </span>

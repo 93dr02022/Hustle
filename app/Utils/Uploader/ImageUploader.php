@@ -29,7 +29,7 @@ class ImageUploader
 
         // Set selected image
         self::$image     = $img;
-        
+
         // Return this
         return new self;
     }
@@ -45,9 +45,9 @@ class ImageUploader
     {
         // Check if class exists
         $path = public_path("storage/$folder");
-   
+
         // Create this folder if not exists
-        if(!File::isDirectory($path)){
+        if (!File::isDirectory($path)) {
             File::makeDirectory($path, 0755, true, true);
         }
 
@@ -103,7 +103,7 @@ class ImageUploader
     public function deleteById($id)
     {
         try {
-            
+
             Schema::disableForeignKeyConstraints();
             DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
@@ -112,7 +112,7 @@ class ImageUploader
 
             // Check if file exists
             if ($file) {
-                
+
                 // Get file local path
                 $path = public_path("storage/$file->file_folder/$file->uid.$file->file_extension");
 
@@ -123,18 +123,15 @@ class ImageUploader
 
                 // Now delete from database
                 $file->delete();
-
             }
 
             Schema::enableForeignKeyConstraints();
             DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
             return $this;
-
         } catch (\Throwable $th) {
             return $this;
         }
-        
     }
 
 
@@ -187,9 +184,9 @@ class ImageUploader
      */
     public static function fromUrl($url, $folder)
     {
-        
+
         try {
-            
+
             // Get image contents
             $contents             = file_get_contents($url);
 
@@ -222,11 +219,8 @@ class ImageUploader
 
             // Return file id
             return $file->id;
-
         } catch (\Throwable $th) {
             return null;
         }
-        
     }
-
 }

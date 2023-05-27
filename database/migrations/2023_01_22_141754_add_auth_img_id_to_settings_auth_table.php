@@ -27,7 +27,11 @@ return new class extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         Schema::table('settings_auth', function (Blueprint $table) {
+            $table->dropIndex('settings_auth_auth_img_id_index');
+            $table->dropForeign('settings_auth_auth_img_id_foreign');
             $table->dropColumn('auth_img_id');
         });
     }

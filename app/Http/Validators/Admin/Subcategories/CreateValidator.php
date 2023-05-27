@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -46,7 +46,7 @@ class CreateValidator
             ];
 
             // Set data to validate
-            $data     = [
+            $data = [
                 'name'        => $request->name,
                 'slug'        => $request->slug,
                 'description' => $request->description,
@@ -60,10 +60,8 @@ class CreateValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }

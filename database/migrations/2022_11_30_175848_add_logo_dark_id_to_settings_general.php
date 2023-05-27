@@ -27,6 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('settings_general', function (Blueprint $table) {
+            $table->dropForeign('settings_general_logo_dark_id_foreign');
             $table->dropColumn('logo_dark_id');
         });
     }

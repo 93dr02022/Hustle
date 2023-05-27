@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Livewire\Main\Become\SellerComponent;
 use Illuminate\Support\Facades\Route;
 
 // Tasks
@@ -430,6 +429,12 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
                 // Requirements
                 Route::get('requirements/{id}', RequirementsComponent::class);
             });
+        });
+
+        // Quotes
+        Route::namespace('Quotes')->prefix('quotes')->group(function () {
+            Route::get('/', QuotesComponent::class);
+            Route::get('create', CreateQuoteComponent::class);
         });
 
         // Portfolio

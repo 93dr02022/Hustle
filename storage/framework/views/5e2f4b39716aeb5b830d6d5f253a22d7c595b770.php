@@ -269,6 +269,15 @@
 								<span><?php echo app('translator')->get('messages.t_orders'); ?></span>
 							</a>
 
+                            
+							
+							<a href="<?php echo e(url('seller/quotes')); ?>" class="group flex items-center ltr:pl-3 ltr:pr-2 rtl:pr-3 rtl:pl-2 py-2 text-sm font-semibold tracking-wide ltr:rounded-l-full rtl:rounded-r-full <?php echo e(\Illuminate\Support\Str::of(request()->path())->startsWith('seller/orders') ? 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100'); ?>">
+
+								<svg class="text-slate-500 dark:text-zinc-300 flex-shrink-0 h-6 w-6 ltr:mr-3.5 rtl:ml-3.5 -mt-[3px] group-hover:text-slate-700 dark:group-hover:text-zinc-200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1"> <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <rect x="0" y="0" width="24" height="24"/> <path d="M5.94290508,4 L18.0570949,4 C18.5865712,4 19.0242774,4.41271535 19.0553693,4.94127798 L19.8754445,18.882556 C19.940307,19.9852194 19.0990032,20.9316862 17.9963398,20.9965487 C17.957234,20.9988491 17.9180691,21 17.8788957,21 L6.12110428,21 C5.01653478,21 4.12110428,20.1045695 4.12110428,19 C4.12110428,18.9608266 4.12225519,18.9216617 4.12455553,18.882556 L4.94463071,4.94127798 C4.97572263,4.41271535 5.41342877,4 5.94290508,4 Z" fill="currentColor" opacity="0.3"/> <path d="M7,7 L9,7 C9,8.65685425 10.3431458,10 12,10 C13.6568542,10 15,8.65685425 15,7 L17,7 C17,9.76142375 14.7614237,12 12,12 C9.23857625,12 7,9.76142375 7,7 Z" fill="currentColor"/> </g></svg>
+								
+								<span><?php echo app('translator')->get('messages.t_quotes'); ?></span>
+							</a>
+
 							
 							<a href="<?php echo e(url('seller/gigs')); ?>" class="group flex items-center ltr:pl-3 ltr:pr-2 rtl:pr-3 rtl:pl-2 py-2 text-sm font-semibold tracking-wide ltr:rounded-l-full rtl:rounded-r-full <?php echo e(\Illuminate\Support\Str::of(request()->path())->startsWith('seller/gigs') ? 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100'); ?>">
 
@@ -561,15 +570,15 @@
 						<?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('main.partials.notifications')->html();
-} elseif ($_instance->childHasBeenRendered('cJ9jc9H')) {
-    $componentId = $_instance->getRenderedChildComponentId('cJ9jc9H');
-    $componentTag = $_instance->getRenderedChildComponentTagName('cJ9jc9H');
+} elseif ($_instance->childHasBeenRendered('qaqSVjP')) {
+    $componentId = $_instance->getRenderedChildComponentId('qaqSVjP');
+    $componentTag = $_instance->getRenderedChildComponentTagName('qaqSVjP');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('cJ9jc9H');
+    $_instance->preserveRenderedChild('qaqSVjP');
 } else {
     $response = \Livewire\Livewire::mount('main.partials.notifications');
     $html = $response->html();
-    $_instance->logRenderedChild('cJ9jc9H', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('qaqSVjP', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -587,7 +596,7 @@ echo $html;
 
 		
 		<script >window.Wireui = {hook(hook, callback) {window.addEventListener(`wireui:${hook}`, () => callback())},dispatchHook(hook) {window.dispatchEvent(new Event(`wireui:${hook}`))}}</script>
-<script src="https://aa9d-102-89-22-172.ngrok-free.app/wireui/assets/scripts?id=3c15fb3b36f54e2baae1e97b6eb0015e" defer ></script>
+<script src="http://localhost:3030/wireui/assets/scripts?id=3c15fb3b36f54e2baae1e97b6eb0015e" defer ></script>
 
 		
 		<script defer src="<?php echo e(mix('js/app.js')); ?>"></script>

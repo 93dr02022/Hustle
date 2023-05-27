@@ -35,23 +35,22 @@ class Header extends Component
      * Init component
      *
      * @return void
-     */     
+     */
     public function mount()
     {
         // Check if user online
         if (auth()->check()) {
-            
+
             // Count unread messages
             $unread_message      = Message::where('to_id', auth()->id())
-                                            ->where('seen', false)
-                                            ->count();
+                ->where('seen', false)
+                ->count();
 
             // Set unread messages
             $this->new_messages  = $unread_message;
 
             // Get notifications
             $this->notifications = Notification::where('user_id', auth()->id())->where('is_seen', false)->latest()->get();
-
         }
 
         // Get language from session
@@ -62,21 +61,18 @@ class Header extends Component
 
         // Check if language exists
         if ($language) {
-            
+
             // Set default language
             $this->default_language_name = $language->name;
             $this->default_language_code = $language->language_code;
             $this->default_country_code  = $language->country_code;
-
         } else {
 
             // Not found, set default
             $this->default_language_name = "English";
             $this->default_language_code = "en";
             $this->default_country_code  = "us";
-
         }
-
     }
 
     /**
@@ -112,63 +108,60 @@ class Header extends Component
      */
     public function search()
     {
-        
+
         // Check if has a searching keyword
         if ($this->q) {
-            
+
             // Set keyword
             $keyword       = $this->q;
 
             // Get gigs same as this keyword
             $gigs          = Gig::query()
-                                        ->active()
-                                        ->where(function($query) use($keyword) {
-                                            return $query->where('title', 'LIKE', "%{$keyword}%") 
-                                                        ->orWhere('slug', 'LIKE', "%{$keyword}%") 
-                                                        ->orWhere('description', 'LIKE', "%{$keyword}%");
-                                        })  
-                                        ->select('id', 'title', 'slug')
-                                        ->limit(10)
-                                        ->get();
+                ->active()
+                ->where(function ($query) use ($keyword) {
+                    return $query->where('title', 'LIKE', "%{$keyword}%")
+                        ->orWhere('slug', 'LIKE', "%{$keyword}%")
+                        ->orWhere('description', 'LIKE', "%{$keyword}%");
+                })
+                ->select('id', 'title', 'slug')
+                ->limit(10)
+                ->get();
 
             // Set gigs
             $this->gigs    = $gigs;
 
             // Get sellers
             $sellers       = User::query()
-                                        ->whereIn('status', ['verified', 'active'])
-                                        ->where('account_type', 'seller')
-                                        ->where(function($query) use($keyword) {
-                                            return $query->where('username', 'LIKE', "%{$keyword}%")
-                                                        ->orWhere('fullname', 'LIKE', "%{$keyword}%")
-                                                        ->orWhere('headline', 'LIKE', "%{$keyword}%")
-                                                        ->orWhere('description', 'LIKE', "%{$keyword}%");
-                                        })
-                                        ->select('id', 'username', 'avatar_id', 'status', 'headline', 'fullname', 'description', 'account_type')
-                                        ->with('avatar')
-                                        ->limit(10)
-                                        ->get();
+                ->whereIn('status', ['verified', 'active'])
+                ->where('account_type', 'seller')
+                ->where(function ($query) use ($keyword) {
+                    return $query->where('username', 'LIKE', "%{$keyword}%")
+                        ->orWhere('fullname', 'LIKE', "%{$keyword}%")
+                        ->orWhere('headline', 'LIKE', "%{$keyword}%")
+                        ->orWhere('description', 'LIKE', "%{$keyword}%");
+                })
+                ->select('id', 'username', 'avatar_id', 'status', 'headline', 'fullname', 'description', 'account_type')
+                ->with('avatar')
+                ->limit(10)
+                ->get();
 
             // Set sellers
             $this->sellers = $sellers;
 
             // Get tags
             $tags          = Tag::query()
-                                        ->where('name', 'LIKE', "%{$keyword}%")
-                                        ->select('slug', 'name')
-                                        ->limit(10)
-                                        ->get();
-            
+                ->where('name', 'LIKE', "%{$keyword}%")
+                ->select('slug', 'name')
+                ->limit(10)
+                ->get();
+
             // Set tags
             $this->tags    = $tags;
-
         } else {
-            
+
             // Reset data
             $this->reset(['q', 'gigs', 'sellers', 'tags']);
-
         }
-
     }
 
 
@@ -181,7 +174,7 @@ class Header extends Component
     {
         // Check if has a search term
         if (!$this->q) {
-            
+
             // Error
             $this->notification([
                 'title'       => __('messages.t_info'),
@@ -190,7 +183,6 @@ class Header extends Component
             ]);
 
             return;
-
         }
 
         // Redirect to search page
@@ -263,7 +255,7 @@ class Header extends Component
 
         // Check if language exists
         if (!$language) {
-            
+
             // Not found
             $this->notification([
                 'title'       => __('messages.t_error'),
@@ -272,7 +264,6 @@ class Header extends Component
             ]);
 
             return;
-
         }
 
         // Set default language
@@ -281,5 +272,4 @@ class Header extends Component
         // Refresh the page
         $this->dispatchBrowserEvent('refresh');
     }
-    
 }
