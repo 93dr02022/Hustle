@@ -102,20 +102,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="intro-x tbody-tr">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="5"
-                                class="py-3 font-light text-sm text-gray-400 dark:text-zinc-200 text-center tracking-wide shadow-sm bg-white dark:bg-zinc-800 rounded-md">
-                                @lang('messages.no_results_found')
-                            </td>
-                        </tr>
+                        @forelse ($quotations as $quotations)
+                            <tr class="intro-x tbody-tr">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5"
+                                    class="py-3 font-light text-sm text-gray-400 dark:text-zinc-200 text-center tracking-wide shadow-sm bg-white dark:bg-zinc-800 rounded-md">
+                                    @lang('messages.no_results_found')
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

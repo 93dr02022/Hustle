@@ -15,6 +15,5 @@ class CreateQuoteComponent extends Component
 
     public function create($form)
     {
-        dd($form);
     }
 }
