@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -43,10 +43,8 @@ class LoginValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }

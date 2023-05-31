@@ -20,6 +20,7 @@
         "guzzlehttp/guzzle": "^7.4",
         "htmlmin/htmlmin": "^9.0",
         "intervention/image": "^2.7",
+        "itsgoingd/clockwork": "*",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/socialite": "^5.5",
@@ -60,7 +61,6 @@
         "youcanpay/payment-sdk": "^0.1.22"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
         "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.22",
