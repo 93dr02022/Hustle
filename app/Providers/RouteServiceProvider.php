@@ -40,15 +40,6 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix(config('global.dashboard_prefix'))
                 ->namespace('App\Http\Livewire\Admin')
                 ->group(base_path('routes/admin.php'));
-
-            if (!isInstalled()) {
-                
-                Route::prefix('install')
-                    ->middleware('web')
-                    ->namespace('App\Http\Livewire\Installation')
-                    ->group(base_path('routes/install.php'));
-
-            }
         });
     }
 

@@ -14,18 +14,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if($this->app->environment('production')) {
-
-            // Force https, but not in localhost
-            try {
-                if (!is_localhost()) {
-                    \URL::forceScheme('https');
-                }
-            } catch (\Throwable $th) {
-            }
-            
-        }
-
         if ($this->app->isLocal()) {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }

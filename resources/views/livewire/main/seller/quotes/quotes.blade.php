@@ -1,10 +1,10 @@
-<div class="w-full">
+<div class="w-full" x-data="window.SellerDashboardQuotesPage">
 
     {{-- Loading --}}
     <x-forms.loading />
 
     {{-- Heading --}}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-10">
         <div class="mx-auto max-w-7xl">
             <div class="lg:flex lg:items-center lg:justify-between">
 
@@ -81,34 +81,47 @@
             </div>
         </div>
     </div>
+    
 
-    {{-- Content --}}
+    {{-- quotations list table --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 space-y-2">
-        <div x-data="window.SellerDashboardQuotesPage">
+        <div>
             <div
                 class="mt-8 overflow-x-auto overflow-y-hidden sm:mt-0 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-zinc-800 dark:scrollbar-track-zinc-600">
                 <table class="w-full text-left border-spacing-y-[10px] border-separate sm:mt-2">
                     <thead class="">
                         <tr class="thead-tr">
-                            <th>@lang('messages.t_quotation')</th>
-
-                            <th>@lang('messages.t_relation')</th>
-
-                            <th>@lang('messages.t_data')</th>
-
-                            <th>@lang('messages.t_status')</th>
-
-                            <th>@lang('messages.t_options')</th>
+                            <th>Name</th>
+                            <th>Reference</th>
+                            <th>Total dis.</th>
+                            <th>Total</th>
+                            <th>Expires At</th>
+                            <th>Paid</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($quotations as $quotations)
-                            <tr class="intro-x tbody-tr">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                        @forelse ($quotations as $quote)
+                            <tr class="tbody-tr">
+                                <td>{{ $quote->first_name }} {{ $quote->last_name }}</td>
+                                <td>{{ $quote->reference }}</td>
+                                <td>{{ $quote->total_discount}}</td>
+                                <td>{{ $quote->total }}</td>
+                                <td>{{ now()->parse($quote->expires_at)->format('m/d/Y') }}</td>
+                                <td>
+                                    @if (!$quote->paid)
+                                        <span class="px-2.5 py-1 rounded bg-red-200 text-red-600">Unpaid</span>
+                                    @endif
+
+                                    @if ($quote->paid)
+                                        <span class="px-2.5 py-1 rounded bg-green-200 text-green-600">Paid</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <x-dropdown>                                     
+                                        <x-dropdown.item @click="viewQuote({{ $quote->toJson() }})" class="mx-2 my-2" label="View Quotation" />
+                                    </x-dropdown>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -121,8 +134,67 @@
                     </tbody>
                 </table>
             </div>
+
+            {{-- Pagination --}}
+            @if ($quotations->hasPages())
+                <div class="bg-gray-100 px-4 py-5 sm:px-6 rounded-bl-lg rounded-br-lg flex justify-center border-t-0 border-r border-l border-b">
+                    {!! $quotations->links('pagination::tailwind') !!}
+                </div>
+            @endif
         </div>
     </div>
+
+    {{-- seleted modal quoations items --}}
+    <x-forms.right-modal>
+        <x-slot name="title">
+            <div class="">Quotation information</div>
+        </x-slot>
+
+        <div class="">
+            <div class="border rounded mt-2 mb-5">
+                <div class="flex items-center px-4 py-3.5">
+                   <div class="flex items-center flex-shrink-0 justify-center h-8 w-8 rounded-full bg-black mr-3">
+                      <i class="icon-park w-4 h-4 text-white"></i>
+                   </div>
+                   <div class="text-sm font-medium" x-text="`${selectedQuote.quote.first_name} ${selectedQuote.quote.last_name}`"></div>
+                </div>
+                <div class="grid grid-cols-3 items-center text-sm font-normal text-white bg-black py-3 px-3">
+                   <h6>Total Disc.</h6>
+                   <h6>Total</h6>
+                   <h6>Paid</h6>
+                </div>
+                <div class="grid grid-cols-3 items-center text-sm font-normal py-4 px-3">
+                   <h6 x-text="selectedQuote.quote.total_discount"></h6>
+                   <h6 x-text="selectedQuote.quote.total"></h6>
+                   <h6 x-text="selectedQuote.quote.paid ? 'Paid' : 'Unpaid'"></h6>
+                </div>
+            </div>
+
+            <div class="text-sm font-semibold mb-3">Quote Items</div>
+            <template x-for="item in selectedQuote.items" :key="item.id">
+                <div class="border rounded py-4 px-3 grid grid-cols-3 gap-y-2 gap-x-3 sm:gap-x-5">
+                    <div class="col-span-2 md:col-span-3">
+                        <div class="text-sm text-gray-500">Description</div>
+                        <div class="text-sm" x-text="item.description"></div>
+                    </div>
+                    <div class="">
+                        <div class="text-sm text-gray-500">Quantity</div>
+                        <div class="text-sm" x-text="`${item.quantity} qty`"></div>
+                    </div>
+                    <div class="">
+                        <div class="text-sm text-gray-500">Price</div>
+                        <div class="text-sm" x-text="item.price"></div>
+                    </div>
+                    <div class="">
+                        <div class="text-sm text-gray-500">Discount</div>
+                        <div class="text-sm" x-text="item.discount"></div>
+                    </div>
+                </div>
+            </template>
+            
+        </div>
+    </x-forms.right-modal>
+    
 </div>
 
 @push('scripts')
@@ -131,6 +203,31 @@
             return {
                 form: {
                     demo: "this is a demo content"
+                },
+
+                hidden: false,
+                titleStyle: "",
+                selectedQuote: {
+                    quote: {},
+                    items: []
+                },
+
+                viewQuote(quote) {
+                    this.selectedQuote.quote = quote
+                    this.selectedQuote.items = []
+                    this.hidden = true
+                    this.wireQuoteItems(quote.id)
+                },
+
+                async wireQuoteItems(quoteId) {
+                    let res = await @this.getQuotationItems(quoteId)
+                    this.selectedQuote.items = res
+                },
+
+                closeRightModal(event) {
+                    if (event.target.classList.contains('modal-backdrop')) {
+                        this.hidden = false
+                    }
                 }
             }
         }

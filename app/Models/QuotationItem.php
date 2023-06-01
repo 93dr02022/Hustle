@@ -15,6 +15,7 @@ class QuotationItem extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'user_id',
         'quotation_id',
         'description',
         'quantity',

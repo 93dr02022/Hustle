@@ -1137,42 +1137,6 @@ function advertisements($name = null, $updateCache = false)
 }
 
 /**
- * Check if application installed
- *
- * @return boolean
- */
-function isInstalled()
-{
-    try {
-
-        // Get installation route file path
-        $path = base_path('routes/install.php');
-
-        // Check if file exists
-        if (File::exists($path)) {
-
-            // Installation not finished yet
-            return false;
-        }
-
-        // Connect db
-        // DB::connection()->getPDO();
-
-        // // Check if there is a connection
-        // if (!DB::connection()->getDatabaseName()) {
-        //     return false;
-        // }
-
-        // Application is live
-        return true;
-    } catch (\Exception $e) {
-
-        // Not connected
-        return false;
-    }
-}
-
-/**
  * Convert HEX to HSL
  *
  * @param string $RGB

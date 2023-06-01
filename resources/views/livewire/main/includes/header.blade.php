@@ -199,9 +199,9 @@
                 </div>
 
                 {{-- Change langauge --}}
-                @if (settings('general')->is_language_switcher)
+                {{-- @if (settings('general')->is_language_switcher)
                     @livewire('main.partials.languages')
-                @endif
+                @endif --}}
 
                 {{-- Become a seller --}}
                 @guest
