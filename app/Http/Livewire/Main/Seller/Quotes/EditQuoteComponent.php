@@ -2,31 +2,48 @@
 
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
-use App\Http\Validators\Main\Seller\Quote\CreateQuoteValidator;
+use App\Http\Validators\Main\Seller\Quote\EditQuoteValidator;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use DB;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
-class CreateQuoteComponent extends Component
+class EditQuoteComponent extends Component
 {
     use Actions;
 
+    public $quotation;
+    public $canUpdate = true;
+
+    public function mount($quoteId)
+    {
+        $this->quotation = Quotation::where('id', $quoteId)
+            ->with('items')
+            ->withCasts(['expires_at' => 'date:Y-m-d'])
+            ->firstOrFail();
+
+        if ($this->quotation->paid) {
+            $this->canUpdate = false;
+        }
+    }
+
     public function render()
     {
-        return view('livewire.main.seller.quotes.create', [
-            'commission' => settings('commission')
+        return view('livewire.main.seller.quotes.edit', [
+            'commission' => settings('commission'),
         ])
             ->extends('livewire.main.seller.layout.app')
             ->section('content');
     }
 
-    public function create($form)
+    /**
+     * Update the Quotation and it items
+     */
+    public function update($form)
     {
-        $validator = CreateQuoteValidator::validate($form);
+        $validator = EditQuoteValidator::validate($form);
 
         if ($validator->fails()) {
             return ['success' => false, 'errors' => $validator->errors()->messages()];
@@ -38,21 +55,17 @@ class CreateQuoteComponent extends Component
             $quoteItems = collect($validator->safe()->only('items')['items']);
             $totals = $this->calculateTotals($quoteItems);
 
-            $quotation = Quotation::create([
-                'user_id' => auth()->id(),
-                'quote_date' => now(),
-                'reference' => uid(15),
-                'sharing_uid' => strtolower(uid(25)),
-                'is_draft' => true,
-                'paid' => false,
+            Quotation::where('id', $this->quotation->id)->update([
                 ...$totals,
                 ...$quoteAttr
             ]);
 
+            QuotationItem::where('quotation_id', $this->quotation->id)->delete();
+
             QuotationItem::query()
-                ->insert($quoteItems->map(function ($item) use ($quotation) {
+                ->insert($quoteItems->map(function ($item) {
                     $item['user_id'] = auth()->id();
-                    $item['quotation_id'] = $quotation->id;
+                    $item['quotation_id'] = $this->quotation->id;
                     $item['created_at'] = now();
                     $item['updated_at'] = now();
 
@@ -62,12 +75,12 @@ class CreateQuoteComponent extends Component
             DB::commit();
 
             $this->notification([
-                'title' => 'Quotation Created',
-                'description' => 'Quotation created successfully. you can now share quotation to customers to pay',
+                'title' => 'Quotation Updated',
+                'description' => 'Quotation updated successfully. you can now share quotation to customers to pay',
                 'icon' => 'success'
             ]);
 
-            return $quotation->toArray();
+            return redirect()->to('/seller/quotes');
         } catch (\Throwable $th) {
             $this->notification([
                 'title'       => __('messages.t_error'),
