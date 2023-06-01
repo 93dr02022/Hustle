@@ -30,17 +30,17 @@ class CreateQuoteComponent extends Component
         $validator = CreateQuoteValidator::validate($form);
 
         if ($validator->fails()) {
-            return ['errors' => $validator->errors()->messages()];
+            return ['success' => false, 'errors' => $validator->errors()->messages()];
         }
 
         DB::beginTransaction();
         try {
             $quoteAttr = $validator->safe()->except('items');
-            $quoteItems = $validator->safe()->collect('items');
+            $quoteItems = collect($validator->safe()->only('items')['items']);
             $totals = $this->calculateTotals($quoteItems);
 
             $quotation = Quotation::create([
-                'user_id' => auth()->id,
+                'user_id' => auth()->id(),
                 'quote_date' => now(),
                 'reference' => uid(15),
                 'sharing_uid' => strtolower(uid(25)),
@@ -60,7 +60,16 @@ class CreateQuoteComponent extends Component
                 })->toArray());
 
             DB::commit();
+
+            $this->notification([
+                'title' => 'Quotation Created',
+                'description' => 'Quotation created successfully. you can now share quotation to customers to pay',
+                'icon' => 'success'
+            ]);
+
+            return $quotation->toArray();
         } catch (\Throwable $th) {
+            dd($th);
             $this->notification([
                 'title'       => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),

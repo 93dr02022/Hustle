@@ -19,7 +19,7 @@ class Quotation extends Model
         'user_id',
         'payment_method',
         'phone_number',
-        'firt_name',
+        'first_name',
         'last_name',
         'email',
         'quote_date',

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->index();
             $table->string('payment_method')->index();
             $table->string('phone_number')->index();
-            $table->string('firt_name')->index();
+            $table->string('first_name')->index();
             $table->string('last_name')->index();
             $table->string('email')->index();
             $table->dateTime('quote_date')->index();

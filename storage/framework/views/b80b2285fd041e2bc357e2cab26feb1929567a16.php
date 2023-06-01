@@ -62,7 +62,7 @@
     
     <div class="px-4 mx-auto space-y-2 max-w-7xl sm:px-6 md:px-12">
         <div x-data="window.SellerDashboardCreateQuote">
-            <div class="max-w-3xl pt-5 mx-auto bg-white rounded shadow-md">
+            <div x-show="!successful" class="max-w-3xl pt-5 mx-auto bg-white rounded shadow-md">
                 <form x-on:submit.prevent="createQuotation">
                     <div class="grid grid-cols-1 px-3 mt-5 sm:grid-cols-2 sm:px-5 gap-x-3 sm:gap-x-5 gap-y-4 sm:gap-y-8">
                         <div class="">
@@ -168,9 +168,38 @@
                     </div>
 
                     <div class="flex items-center justify-end px-4 py-3 text-right shadow bg-gray-50 dark:bg-black/50 sm:px-5 sm:rounded-bl-md sm:rounded-br-md">
-                        <button type="submit" wire:loading.attr="disabled" wire:target="create" class="px-6 py-3 text-sm font-semibold tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500">Proceed</button>
+                        <button type="submit" wire:loading.attr="disabled" wire:target="create" class="btn-purple">Proceed</button>
                     </div>
                 </form>
+            </div>
+
+            
+            <div x-show="successful" class="max-w-md py-5 mx-auto bg-white rounded shadow-md">
+                <div class="flex-shrink-0 flex justify-center">
+                    <div class="inline-flex h-32 w-32 rounded-full bg-green-100 p-6 items-center justify-center">
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icons.card-icon','data' => ['width' => '50','height' => '50']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('icons.card-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['width' => '50','height' => '50']); ?> <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="relative mt-7 mx-5">
+                    <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100" :value="`https://correcthustle.com/payments/${quote.sharing_uid}/pay`" readonly />
+                    <div class="flex absolute inset-y-0 right-0 items-center pl-4 pr-2 py-3 pointer-events-auto">
+                        <button @click="copy(`https://correcthustle.com/payments/${quote.sharing_uid}/pay`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -200,8 +229,8 @@
                 },
 
                 quote: {},
-
                 total: 0,
+                copying: false,
                 tax: <?php echo json_encode($commission, 15, 512) ?>,
 
                 sumTotal(index) {
@@ -247,7 +276,11 @@
                     if (res?.errors) {
                         this.errors = res.errors
                     }
-                    console.log(res);
+
+                    if(res) {
+                        this.quote = res;
+                        this.successful = true;
+                    }
                 },
 
                 toastError(message, type="error") {
@@ -255,6 +288,17 @@
                         title: type == 'success' ? 'Success' : 'Error occured',
                         description: message,
                         icon: type == 'success' ? 'success' : 'error'
+                    });
+                },
+
+                copy (text) {
+                    navigator.clipboard.writeText(text)
+                    .then(() => {
+                        this.copying = true;
+                        setTimeout(() => this.copying = false, 2000);
+                    })
+                    .catch((err) => {
+                        this.copying = false;
                     });
                 }
             }
