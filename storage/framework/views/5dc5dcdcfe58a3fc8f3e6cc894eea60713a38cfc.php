@@ -44,6 +44,9 @@
                     <tr class="focus:outline-none text-sm leading-none text-gray-800 bg-white dark:bg-zinc-600 hover:bg-gray-100 dark:hover:bg-zinc-700 border-b border-t border-gray-100 dark:border-zinc-700/40" wire:key="users-<?php echo e($user->id); ?>">
 
                         
+                        <?php
+                            dd($user);
+                        ?>
                         <td class="ltr:pl-4 rtl:pr-4">
                             <a href="<?php echo e(url('profile', $user->username)); ?>" target="_blank" class="flex items-center">
                                 <div class="w-8 h-8">

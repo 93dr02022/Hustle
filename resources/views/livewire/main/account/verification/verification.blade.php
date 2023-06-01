@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="px-4 sm:px-6 lg:px-8">
+    <div class="sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-zinc-800 rounded-lg shadow overflow-hidden">
             <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x rtl:divide-x-reverse">
 
@@ -187,7 +187,7 @@
 
                                 {{-- Upload ID files --}}
                                 @if ($document_type === 'id')
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                                         {{-- Front side --}}
                                         <div>

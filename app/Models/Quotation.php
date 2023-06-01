@@ -17,15 +17,22 @@ class Quotation extends Model
      */
     protected $fillable = [
         'user_id',
+        'payment_method',
         'phone_number',
-        'firt_name',
+        'first_name',
         'last_name',
         'email',
         'quote_date',
         'reference',
+        'sharing_uid',
         'is_draft',
+        'paid',
         'total',
+        'expires_at',
         'total_discount',
+        'total_tax',
+        'total_quantity',
+        'note',
     ];
 
     /**

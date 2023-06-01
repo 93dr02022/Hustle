@@ -38,8 +38,8 @@ class CreateComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_create_user'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_create_user'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.users.options.create', [
             'countries' => $this->countries,
@@ -87,7 +87,7 @@ class CreateComponent extends Component
 
             // This level must be same as account type
             if ($level->account_type !== $this->account_type) {
-                
+
                 // Error
                 $this->notification([
                     'title'       => __('messages.t_error'),
@@ -96,15 +96,14 @@ class CreateComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Check if request has avatar image
             if ($this->avatar) {
                 $avatar_id = ImageUploader::make($this->avatar)
-                                            ->resize(100)
-                                            ->folder('avatars')
-                                            ->handle();
+                    ->resize(100)
+                    ->folder('avatars')
+                    ->handle();
             } else {
                 $avatar_id = null;
             }
@@ -135,7 +134,6 @@ class CreateComponent extends Component
                 'description' => __('messages.t_account_has_been_created'),
                 'icon'        => 'success'
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -146,7 +144,6 @@ class CreateComponent extends Component
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
@@ -157,8 +154,6 @@ class CreateComponent extends Component
             ]);
 
             throw $th;
-
         }
     }
-    
 }
