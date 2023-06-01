@@ -200,23 +200,7 @@
                 </div>
 
                 
-                <?php if(settings('general')->is_language_switcher): ?>
-                    <?php
-if (! isset($_instance)) {
-    $html = \Livewire\Livewire::mount('main.partials.languages')->html();
-} elseif ($_instance->childHasBeenRendered('l3175861827-0')) {
-    $componentId = $_instance->getRenderedChildComponentId('l3175861827-0');
-    $componentTag = $_instance->getRenderedChildComponentTagName('l3175861827-0');
-    $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('l3175861827-0');
-} else {
-    $response = \Livewire\Livewire::mount('main.partials.languages');
-    $html = $response->html();
-    $_instance->logRenderedChild('l3175861827-0', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
-}
-echo $html;
-?>
-                <?php endif; ?>
+                
 
                 
                 <?php if(auth()->guard()->guest()): ?>
@@ -265,15 +249,15 @@ echo $html;
                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('main.partials.search')->html();
-} elseif ($_instance->childHasBeenRendered('l3175861827-1')) {
-    $componentId = $_instance->getRenderedChildComponentId('l3175861827-1');
-    $componentTag = $_instance->getRenderedChildComponentTagName('l3175861827-1');
+} elseif ($_instance->childHasBeenRendered('l3175861827-0')) {
+    $componentId = $_instance->getRenderedChildComponentId('l3175861827-0');
+    $componentTag = $_instance->getRenderedChildComponentTagName('l3175861827-0');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('l3175861827-1');
+    $_instance->preserveRenderedChild('l3175861827-0');
 } else {
     $response = \Livewire\Livewire::mount('main.partials.search');
     $html = $response->html();
-    $_instance->logRenderedChild('l3175861827-1', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('l3175861827-0', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -282,15 +266,15 @@ echo $html;
                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('main.partials.cart')->html();
-} elseif ($_instance->childHasBeenRendered('l3175861827-2')) {
-    $componentId = $_instance->getRenderedChildComponentId('l3175861827-2');
-    $componentTag = $_instance->getRenderedChildComponentTagName('l3175861827-2');
+} elseif ($_instance->childHasBeenRendered('l3175861827-1')) {
+    $componentId = $_instance->getRenderedChildComponentId('l3175861827-1');
+    $componentTag = $_instance->getRenderedChildComponentTagName('l3175861827-1');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('l3175861827-2');
+    $_instance->preserveRenderedChild('l3175861827-1');
 } else {
     $response = \Livewire\Livewire::mount('main.partials.cart');
     $html = $response->html();
-    $_instance->logRenderedChild('l3175861827-2', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('l3175861827-1', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

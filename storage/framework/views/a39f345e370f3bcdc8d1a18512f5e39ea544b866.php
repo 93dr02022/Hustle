@@ -104,25 +104,23 @@
                 <table class="w-full text-left border-spacing-y-[10px] border-separate sm:mt-2">
                     <thead class="">
                         <tr class="thead-tr">
-                            <th><?php echo app('translator')->get('messages.t_quotation'); ?></th>
-
-                            <th><?php echo app('translator')->get('messages.t_relation'); ?></th>
-
-                            <th><?php echo app('translator')->get('messages.t_data'); ?></th>
-
-                            <th><?php echo app('translator')->get('messages.t_status'); ?></th>
-
-                            <th><?php echo app('translator')->get('messages.t_options'); ?></th>
+                            <th>Name</th>
+                            <th>Reference</th>
+                            <th>Total discount</th>
+                            <th>Total</th>
+                            <th>Expires At</th>
+                            <th>Paid</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $__empty_1 = true; $__currentLoopData = $quotations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quotations): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <?php $__empty_1 = true; $__currentLoopData = $quotations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quote): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="intro-x tbody-tr">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><?php echo e($quote->first_name); ?> <?php echo e($quote->last_name); ?></td>
+                                <td><?php echo e($quote->reference); ?></td>
+                                <td><?php echo e($quote->total_discount); ?></td>
+                                <td><?php echo e($quote->total); ?></td>
+                                <td><?php echo e(now()->parse($quote->expires_at)->format('m/d/Y')); ?></td>
+                                <td><?php echo e($quote->paid ? 'paid' : 'unpaid'); ?></td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>

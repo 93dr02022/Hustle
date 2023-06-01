@@ -17,32 +17,17 @@ class isIpBanned
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if application installed
-        if (isInstalled()) {
-            
-            // Get ip address
-            $ip     = $request->ip();
+        $ip = $request->ip();
 
-            // Get banned ip
-            $banned = BannedIp::where('ip_address', $ip)->where('attempts', '>=', 3)->first();
+        $banned = BannedIp::where('ip_address', $ip)
+            ->where('attempts', '>=', 3)
+            ->first();
 
-            // Check if ip banned
-            if ($banned) {
-                
-                // This ip banned
-                return redirect('/');
-
-            }
-
-            // Continue request
-            return $next($request);
-
-        } else {
-
-            // Not installed yet
-            return $next($request);
-
+        // Check if ip banned
+        if ($banned) {
+            return redirect('/');
         }
-        
+
+        return $next($request);
     }
 }

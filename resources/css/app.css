@@ -29,7 +29,7 @@
    }
 
    .thead-tr th {
-      @apply font-bold tracking-wider text-gray-600 px-5 py-4.5 border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md rtl:text-right
+      @apply font-bold tracking-wider text-gray-600 px-4 py-4.5 border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md rtl:text-right
    } 
 
    .tbody-tr {
@@ -37,7 +37,7 @@
    }
 
    .tbody-tr td {
-      @apply px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md text-center
+      @apply text-sm px-4 py-3 first:rounded-l-md last:rounded-r-md text-left
    }
 
    .form-ctr {

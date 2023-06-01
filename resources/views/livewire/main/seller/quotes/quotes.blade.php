@@ -90,25 +90,23 @@
                 <table class="w-full text-left border-spacing-y-[10px] border-separate sm:mt-2">
                     <thead class="">
                         <tr class="thead-tr">
-                            <th>@lang('messages.t_quotation')</th>
-
-                            <th>@lang('messages.t_relation')</th>
-
-                            <th>@lang('messages.t_data')</th>
-
-                            <th>@lang('messages.t_status')</th>
-
-                            <th>@lang('messages.t_options')</th>
+                            <th>Name</th>
+                            <th>Reference</th>
+                            <th>Total discount</th>
+                            <th>Total</th>
+                            <th>Expires At</th>
+                            <th>Paid</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($quotations as $quotations)
+                        @forelse ($quotations as $quote)
                             <tr class="intro-x tbody-tr">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $quote->first_name }} {{ $quote->last_name }}</td>
+                                <td>{{ $quote->reference }}</td>
+                                <td>{{ $quote->total_discount}}</td>
+                                <td>{{ $quote->total }}</td>
+                                <td>{{ now()->parse($quote->expires_at)->format('m/d/Y') }}</td>
+                                <td>{{ $quote->paid ? 'paid' : 'unpaid' }}</td>
                             </tr>
                         @empty
                             <tr>
