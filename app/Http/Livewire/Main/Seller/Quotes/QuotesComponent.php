@@ -3,10 +3,14 @@
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
 use App\Models\Quotation;
+use App\Models\QuotationItem;
 use Livewire\Component;
 
 class QuotesComponent extends Component
 {
+    public $quoteItems = [];
+    public $simpleModal;
+
     public function render()
     {
         return view('livewire.main.seller.quotes.quotes', [
@@ -23,6 +27,16 @@ class QuotesComponent extends Component
      */
     public function getQuotationsProperty()
     {
-        return Quotation::query()->authUser()->paginate(20);
+        return Quotation::query()->authUser()->paginate(10);
+    }
+
+    /**
+     * Get quotation items
+     */
+    public function getQuotationItems($quotationId)
+    {
+        return QuotationItem::where('quotation_id', $quotationId)
+            ->get()
+            ->toArray();
     }
 }

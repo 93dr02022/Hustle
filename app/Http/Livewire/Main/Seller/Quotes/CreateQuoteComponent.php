@@ -52,6 +52,7 @@ class CreateQuoteComponent extends Component
 
             QuotationItem::query()
                 ->insert($quoteItems->map(function ($item) use ($quotation) {
+                    $item['user_id'] = auth()->id();
                     $item['quotation_id'] = $quotation->id;
                     $item['created_at'] = now();
                     $item['updated_at'] = now();
@@ -69,7 +70,6 @@ class CreateQuoteComponent extends Component
 
             return $quotation->toArray();
         } catch (\Throwable $th) {
-            dd($th);
             $this->notification([
                 'title'       => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),

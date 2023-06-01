@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('quotation_items', function (Blueprint $table) {
             $table->id();
-            $table->string('description', 1000)->index();
+            $table->foreignId('user_id')->index();
             $table->foreignId('quotation_id')->constrained()->cascadeOnDelete();
+            $table->string('description', 1000)->index();
             $table->integer('quantity')->index();
             $table->decimal('price')->index();
             $table->decimal('tax_rates')->index();

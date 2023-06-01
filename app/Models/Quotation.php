@@ -36,6 +36,15 @@ class Quotation extends Model
     ];
 
     /**
+     * The attributes that should be casts.
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'paid' => 'boolean'
+    ];
+
+    /**
      * The quotation items for this quotation
      */
     public function quotationItems()
