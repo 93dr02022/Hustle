@@ -9,7 +9,7 @@ use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 class EditComponent extends Component
 {
     use SEOToolsTrait;
-    
+
     public $gig;
     public $step;
 
@@ -24,7 +24,7 @@ class EditComponent extends Component
     public function mount($id)
     {
         // Get gig
-        $gig       = Gig::where('uid', $id)->firstOrFail();
+        $gig = Gig::where('uid', $id)->firstOrFail();
 
         // Set gig
         $this->gig = $gig;
@@ -39,5 +39,4 @@ class EditComponent extends Component
     {
         return view('livewire.admin.gigs.options.edit')->extends('livewire.admin.layout.app')->section('content');
     }
-    
 }

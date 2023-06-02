@@ -120,6 +120,7 @@
                                 <td>
                                     <x-dropdown>                                     
                                         <x-dropdown.item @click="viewQuote({{ $quote->toJson() }})" class="mx-2 my-2" label="View Quotation" />
+                                        <x-dropdown.item href="/seller/quotes/{{$quote->id}}/edit" class="mx-2 my-2" label="Edit Quotation" />
                                     </x-dropdown>
                                 </td>
                             </tr>

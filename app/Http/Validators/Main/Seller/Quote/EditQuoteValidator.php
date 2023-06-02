@@ -5,7 +5,7 @@ namespace App\Http\Validators\Main\Seller\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CreateQuoteValidator
+class EditQuoteValidator
 {
 
     /**

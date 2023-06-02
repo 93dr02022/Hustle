@@ -47,7 +47,7 @@ class Quotation extends Model
     /**
      * The quotation items for this quotation
      */
-    public function quotationItems()
+    public function items()
     {
         return $this->hasMany(QuotationItem::class);
     }
