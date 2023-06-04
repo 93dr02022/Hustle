@@ -51,8 +51,12 @@ class CreateQuoteComponent extends Component
 
             QuotationItem::query()
                 ->insert($quoteItems->map(function ($item) use ($quotation) {
+                    $taxedPrice = $this->calcTaxedPrice($item['price']);
                     $item['user_id'] = auth()->id();
                     $item['quotation_id'] = $quotation->id;
+                    $item['tax_rates'] = settings('commission')->tax_value;
+                    $item['taxed_price'] = $taxedPrice;
+                    $item['total_price'] = $taxedPrice - $item['discount'];
                     $item['created_at'] = now();
                     $item['updated_at'] = now();
 
@@ -75,6 +79,16 @@ class CreateQuoteComponent extends Component
                 'icon'        => 'error'
             ]);
         }
+    }
+
+    /**
+     * Calculate quotation item taxed and discounted price
+     */
+    public function calcTaxedPrice($price)
+    {
+        $taxRate = floatval(settings('commission')->tax_value) / 100;
+        $priceAfterTax = $price - ($price * $taxRate);
+        return $priceAfterTax;
     }
 
     /**

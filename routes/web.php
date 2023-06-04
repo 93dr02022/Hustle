@@ -521,6 +521,11 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
         });
     });
 
+    // Main quotes payment
+    Route::namespace('Quotes')->prefix('quotations')->group(function () {
+        Route::get('/{uid}/payment', PaymentComponent::class);
+    });
+
     // Help
     Route::namespace('Help')->prefix('help')->group(function () {
 

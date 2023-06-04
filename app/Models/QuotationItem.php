@@ -21,6 +21,8 @@ class QuotationItem extends Model
         'quantity',
         'price',
         'tax_rates',
+        'taxed_price',
+        'total_price',
         'discount',
     ];
 }

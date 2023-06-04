@@ -64,8 +64,12 @@ class EditQuoteComponent extends Component
 
             QuotationItem::query()
                 ->insert($quoteItems->map(function ($item) {
+                    $taxedPrice = $this->calcTaxedPrice($item['price']);
                     $item['user_id'] = auth()->id();
                     $item['quotation_id'] = $this->quotation->id;
+                    $item['tax_rates'] = settings('commission')->tax_value;
+                    $item['taxed_price'] = $taxedPrice;
+                    $item['total_price'] = $taxedPrice - $item['discount'];
                     $item['created_at'] = now();
                     $item['updated_at'] = now();
 
@@ -82,12 +86,23 @@ class EditQuoteComponent extends Component
 
             return redirect()->to('/seller/quotes');
         } catch (\Throwable $th) {
+            dd($th);
             $this->notification([
                 'title'       => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon'        => 'error'
             ]);
         }
+    }
+
+    /**
+     * Calculate quotation item taxed and discounted price
+     */
+    public function calcTaxedPrice($price)
+    {
+        $taxRate = floatval(settings('commission')->tax_value) / 100;
+        $priceAfterTax = $price - ($price * $taxRate);
+        return $priceAfterTax;
     }
 
     /**

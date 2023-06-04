@@ -201,6 +201,7 @@
   'main.profile.profile-component' => 'App\\Http\\Livewire\\Main\\Profile\\ProfileComponent',
   'main.profile.project-component' => 'App\\Http\\Livewire\\Main\\Profile\\ProjectComponent',
   'main.project.project-component' => 'App\\Http\\Livewire\\Main\\Project\\ProjectComponent',
+  'main.quotes.payment-component' => 'App\\Http\\Livewire\\Main\\Quotes\\PaymentComponent',
   'main.redirect.redirect-component' => 'App\\Http\\Livewire\\Main\\Redirect\\RedirectComponent',
   'main.reviews.reviews-component' => 'App\\Http\\Livewire\\Main\\Reviews\\ReviewsComponent',
   'main.search.search-component' => 'App\\Http\\Livewire\\Main\\Search\\SearchComponent',
