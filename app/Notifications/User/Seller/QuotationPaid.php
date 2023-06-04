@@ -7,20 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PendingOrder extends Notification implements ShouldQueue
+class QuotationPaid extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    public $item;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($item)
+    public function __construct(public $quotation)
     {
-        $this->item = $item;
+        //
     }
 
     /**
@@ -42,14 +40,10 @@ class PendingOrder extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_pending_order');
-
         return (new MailMessage)
-            ->subject($subject)
-            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-            ->line(__('messages.t_notification_seller_line_1_pending_order'))
-            ->action(__('messages.t_order_details'), url('seller/orders/details', $this->item->uid));
+            ->line('The introduction to the notification.')
+            ->action('Quotation Paid', url("/seller/quotations"))
+            ->line('Thank you for using our application!');
     }
 
     /**

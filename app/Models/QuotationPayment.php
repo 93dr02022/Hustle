@@ -14,5 +14,11 @@ class QuotationPayment extends Model
      * 
      * @var array<string, string>
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'quotation_id',
+        'payment_method',
+        'payment_id',
+        'paid_amount',
+        'status'
+    ];
 }

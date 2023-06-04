@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quotation_id')->constrained();
             $table->string('payment_method')->index();
-            $table->string('payment_ref')->unique();
+            $table->string('payment_id')->index();
             $table->decimal('paid_amount', 16)->index();
-            $table->string('gateway_status')->nullable()->index();
+            $table->string('status')->index(); // paid | pending | failed
             $table->timestamps();
         });
     }

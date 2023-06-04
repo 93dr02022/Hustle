@@ -1,10 +1,23 @@
 <div class="relative w-full mx-auto" x-data="window.MainquotesPaymentPage" x-init="initialize()">
+    {{-- Loading --}}
+    <div class="fixed top-0 left-0 z-50 bg-black w-full h-full opacity-80" wire:loading>
+        <div class="w-full h-full flex items-center justify-center">
+            <div role="status">
+                <svg aria-hidden="true" class="mx-auto w-12 h-12 text-gray-500 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg>
+                <span class="text-xs font-medium tracking-wider text-white mt-4 block">{{ __('messages.t_please_wait_dots') }}</span>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-4xl mx-auto">
         {{-- Quotation items --}}
         @if ($quotation)
 
             {{-- quotation items table list --}}
-            @if (!$goToPay)
+            @if (!$goToPay && !$payCompleted && !$payHasError)
                 <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border dark:border-zinc-700">
                     {{-- Section title --}}
                     <div class="bg-gray-50 dark:bg-zinc-700 px-7 py-4 rounded-t-md">
@@ -74,30 +87,10 @@
             @endif
 
             {{-- checkout payment selection --}}
-            @if ($goToPay)
+            @if ($goToPay && !$payHasError)
                 <div class="max-w-2xl py-12 mx-auto bg-white dark:bg-zinc-800 shadow-sm rounded-md border dark:border-zinc-700 text-center mb-12">
-                    {{-- Icon --}}
-                    <div class="h-28 w-28 border-2 border-gray-100 dark:border-zinc-600 bg-gray-50 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto">
-                        <svg class="mx-auto h-9 w-9 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <g>
-                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                <path d="M6.5 2h11a1 1 0 0 1 .8.4L21 6v15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6l2.7-3.6a1 1 0 0 1 .8-.4zm12 4L17 4H7L5.5 6h13zM9 10H7v2a5 5 0 0 0 10 0v-2h-2v2a3 3 0 0 1-6 0v-2z">
-                                </path>
-                            </g>
-                        </svg>
-                    </div>
-
-                    {{-- Texts --}}
-                    <h2 class="mt-4 text-base font-bold text-gray-700 dark:text-gray-100">{{ __('messages.t_checkout') }}</h2>
-                    <div class="flex items-center justify-center text-green-400 hover:text-green-500 mt-1">
-                        <svg class="h-5 w-5 ltr:mr-1 rtl:ml-1" stroke="currentColor" fill="currentColor" stroke-width="0" version="1.2" baseProfile="tiny" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M17 10h-1v-2c0-2.205-1.794-4-4-4s-4 1.795-4 4v2h-1c-1.103 0-2 .896-2 2v7c0 1.104.897 2 2 2h10c1.103 0 2-.896 2-2v-7c0-1.104-.897-2-2-2zm-5 8.299c-.719 0-1.3-.58-1.3-1.299s.581-1.301 1.3-1.301 1.3.582 1.3 1.301-.581 1.299-1.3 1.299zm2-7.299h-4v-3c0-1.104.897-2 2-2s2 .896 2 2v3z">
-                            </path>
-                        </svg>
-                        <p class="text-sm">{{ __('messages.t_ur_transaction_is_secure') }}</p>
-                    </div>
+                    {{-- payment secure icon logo --}}
+                    @include('livewire.main.quotes.partials.successLogo')
 
                     @if ($inSelection)
                         <div class="max-w-sm mx-auto mt-7 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4 px-4">
@@ -153,12 +146,21 @@
                                     @click="window.makePaystackPayment"
                                     id="paystack-payment-button"
                                     class="w-full text-sm font-medium flex justify-center py-5 px-8 rounded tracking-wide focus:outline-none focus:shadow-outline bg-primary-600 hover:bg-primary-700 text-white cursor-pointer disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed"
+                                    wire:loading.attr="disabled"
+                                    wire:target="checkout"
                                     >
                                         {{ __('messages.t_pay')    }}
                                 </button>
                             </div>
                         @endif
                     @endif
+                </div>
+            @endif
+
+            @if ($goToPay && $payHasError)
+                <div class="max-w-2xl py-12 mx-auto bg-white dark:bg-zinc-800 shadow-sm rounded-md border dark:border-zinc-700 text-center mb-12">
+                    {{-- payment secure icon logo --}}
+                    @include('livewire.main.quotes.partials.errorLogo')
                 </div>
             @endif
 
@@ -175,10 +177,13 @@
                 </div>
                 <div class="py-12">
                     <div class="text-center">
-                        <h1 class="mt-2 text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">{{ __('messages.t_ur_cart_is_empty') }}</h1>
-                        <p class="mt-2 text-base text-gray-500">{{ __('messages.t_ur_cart_is_empty_subtitle') }}</p>
+                        <h1 class="mt-2 text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
+                            Quotation not Found
+                        </h1>
+                        <p class="mt-2 text-base text-gray-500">Sorry we couldnt find quotation or it has expired</p>
                         <div class="mt-6">
-                            <a href="{{ url('/') }}" class="text-base font-medium text-primary-600 hover:text-primary-600">{{ __('messages.t_continue_shopping') }}<span aria-hidden="true"> →</span></a>
+                            <a href="{{ url('/') }}" class="text-base font-medium text-primary-600 hover:text-primary-600">
+                                Check more Services<span aria-hidden="true"> →</span></a>
                         </div>
                     </div>
                 </div>
@@ -192,8 +197,8 @@
                 window.makePaystackPayment = function(){
                     let handler = PaystackPop.setup({
                         key     : "{{ config('paystack.publicKey') }}",
-                        email   : "{{ $quotation->email }}",
-                        amount  : Number({{ $quotation->total }}) * 100,
+                        email   : "{{ $quotation?->email }}",
+                        amount  : Number({{ $quotation?->total ?? 0 }}) * 100,
                         currency: "{{ settings('paystack')->currency }}",
                         ref     : '{{ uid(32) }}',
                         onClose : function(){
