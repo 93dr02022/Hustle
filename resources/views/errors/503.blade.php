@@ -24,7 +24,7 @@
     {{-- Styles --}}
     <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/style.css') }}" rel="stylesheet">
 
 </head>
 <body class="h-full">

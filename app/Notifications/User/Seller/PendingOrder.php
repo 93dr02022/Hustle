@@ -46,10 +46,10 @@ class PendingOrder extends Notification implements ShouldQueue
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_pending_order');
 
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_seller_line_1_pending_order'))
-                    ->action(__('messages.t_order_details'), url('seller/orders/details', $this->item->uid));
+            ->subject($subject)
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->line(__('messages.t_notification_seller_line_1_pending_order'))
+            ->action(__('messages.t_order_details'), url('seller/orders/details', $this->item->uid));
     }
 
     /**

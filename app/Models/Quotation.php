@@ -41,8 +41,17 @@ class Quotation extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'paid' => 'boolean'
+        'paid' => 'boolean',
+        'expires_at' => 'date'
     ];
+
+    /**
+     * Get quotation owner
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * The quotation items for this quotation
