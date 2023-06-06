@@ -178,6 +178,16 @@
                                                 </span>
                                             </div>
                                         </label>
+
+                                        {{-- BVN Verification --}}
+                                        <label class="rounded-bl-md rounded-br-md relative border-2 dark:border-zinc-600 border-t-0 p-4 flex cursor-pointer focus:outline-none ">
+                                            <input type="radio" name="document_type" value="bvn" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_bvn">
+                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
+                                                <span id="document_type_passport" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
+                                                    {{ __('BVN Verification') }}
+                                                </span>
+                                            </div>
+                                        </label>
                                         
                                     </div>
                                 </fieldset>
@@ -258,8 +268,8 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
+
                                 @elseif ($document_type === 'driver_license')
                                     <div class="grid grid-cols-2 gap-4">
 
@@ -332,8 +342,8 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
+
                                 @elseif ($document_type === 'passport')
                                     <div class="grid grid-cols-1 gap-4">
 
@@ -371,8 +381,8 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
+                                @elseif ($document_type == 'bvn')
                                 @endif
 
                             {{-- Selfie --}}
