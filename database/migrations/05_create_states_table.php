@@ -13,15 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
-            $table->string('code')->index();
-            $table->boolean('is_active')->default(true);
-            $table->string('phonecode')->index();
-            $table->string('emoji')->index();
-            $table->string('currency_code')->index();
-            $table->string('currency_name')->index();
+            $table->foreignId('country_id')->constrained()->index();
+            $table->timestamps();
         });
     }
 
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('states');
     }
 };
