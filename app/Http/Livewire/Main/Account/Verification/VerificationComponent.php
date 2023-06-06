@@ -86,7 +86,7 @@ class VerificationComponent extends Component
     public function setDocumentType()
     {
         // Document type must be id, driver license or passport
-        if (!in_array($this->document_type, ['id', 'driver_license', 'passport'])) {
+        if (!in_array($this->document_type, ['id', 'driver_license', 'passport', 'bvn'])) {
 
             // Error
             $this->notification([
