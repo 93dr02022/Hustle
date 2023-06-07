@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('uid', 20)->unique();
             $table->unsignedBigInteger('user_id');
-            $table->enum('document_type', ['id', 'driver_license', 'passport']);
-            $table->unsignedBigInteger('file_front_side');
+            $table->enum('document_type', ['id', 'driver_license', 'passport', 'bvn']);
+            $table->unsignedBigInteger('file_front_side')->nullable();
             $table->unsignedBigInteger('file_back_side')->nullable();
             $table->unsignedBigInteger('file_selfie');
             $table->enum('status', ['pending', 'verified', 'declined'])->default('pending');

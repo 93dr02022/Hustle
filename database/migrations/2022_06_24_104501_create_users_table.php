@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('provider_id', 60)->nullable();
 
             $table->string('fullname', 60)->nullable();
+            $table->string('first_name', 60)->nullable();
+            $table->string('last_name', 60)->nullable();
+            $table->string('other_name', 60)->nullable();
             $table->string('headline', 100)->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'pending', 'verified', 'banned'])->default('pending');

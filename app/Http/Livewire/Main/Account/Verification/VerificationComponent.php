@@ -12,6 +12,7 @@ use App\Http\Validators\Main\Account\Verification\DocIDValidator;
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
 use App\Http\Validators\Main\Account\Verification\DocDriverValidator;
 use App\Http\Validators\Main\Account\Verification\DocPassportValidator;
+use Illuminate\Support\Facades\Http;
 
 class VerificationComponent extends Component
 {
@@ -21,10 +22,16 @@ class VerificationComponent extends Component
     public $verification;
     public $document_type;
     public $selfie;
-    public $currentStep        = 1;
-    public $doc_id             = [];
+    public $currentStep = 1;
+    public $doc_id = [];
     public $doc_driver_license = [];
-    public $doc_passport       = [];
+    public $doc_passport = [];
+
+    public $first_name;
+    public $last_name;
+    public $bank;
+    public $bvn;
+    public $accountNumber;
 
     /**
      * Init component
@@ -38,6 +45,9 @@ class VerificationComponent extends Component
 
         // Set verification
         $this->verification = $verification ? $verification : false;
+
+        $this->first_name = auth()->user()->first_name;
+        $this->last_name = auth()->user()->last_name;
     }
 
 
@@ -74,7 +84,24 @@ class VerificationComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.account.verification.verification')->extends('livewire.main.layout.app')->section('content');
+        return view('livewire.main.account.verification.verification', [
+            'banks' => $this->banks
+        ])
+            ->extends('livewire.main.layout.app')
+            ->section('content');
+    }
+
+    /**
+     * Get the list of verification banks
+     */
+    public function getBanksProperty()
+    {
+        $banks = Http::withToken(config('paystack.secretKey'))
+            ->get("https://api.paystack.co/bank?per_page=100")
+            ->collect()
+            ->toArray();
+
+        return $banks['data'];
     }
 
 
@@ -100,6 +127,41 @@ class VerificationComponent extends Component
 
         // Go to next step
         $this->currentStep = 2;
+
+        if ($this->document_type == 'bvn') {
+            $this->dispatchBrowserEvent('pharaonic.select2.load', [
+                'component' => $this->id,
+                'target'    => '#select2-id-bank'
+            ]);
+        }
+    }
+
+    /**
+     * Run paystack api to validate the bvn
+     */
+    public function bvnMatch()
+    {
+        $response = Http::withToken(config('paystack.secretKey'))
+            ->post("https://api.paystack.co/bvn/match", [
+                "bvn" => $this->bvn,
+                "bank_code" => $this->bank,
+                "account_number" => $this->accountNumber,
+                "first_name" => $this->first_name,
+                "last_name" => $this->last_name
+            ])
+            ->object();
+
+        if (!$response->status) {
+            $this->toastError("Sorry error occured unable to validate your information.");
+            return false;
+        }
+
+        if (!$response->data->first_name || !$response->data->last_name) {
+            $this->toastError("Sorry we are unable to validate your first name and last name");
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -193,7 +255,7 @@ class VerificationComponent extends Component
             }
 
             // Save selfie
-            $selfie                        = ImageUploader::make($this->selfie)
+            $selfie = ImageUploader::make($this->selfie)
                 ->folder('verifications')
                 ->handle();
 
@@ -236,6 +298,13 @@ class VerificationComponent extends Component
         if ($this->currentStep !== 1) {
             $this->currentStep -= 1;
         }
+
+        if ($this->currentStep == 2 && $this->document_type == 'bvn') {
+            $this->dispatchBrowserEvent('pharaonic.select2.load', [
+                'component' => $this->id,
+                'target'    => '#select2-id-bank'
+            ]);
+        }
     }
 
 
@@ -255,5 +324,17 @@ class VerificationComponent extends Component
             // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
         }
+    }
+
+    /**
+     * Error toast notification
+     */
+    public function toastError($message)
+    {
+        $this->notification([
+            'title'       => __('messages.t_error'),
+            'description' => $message,
+            'icon'        => 'error'
+        ]);
     }
 }
