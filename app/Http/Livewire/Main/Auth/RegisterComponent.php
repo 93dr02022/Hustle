@@ -17,11 +17,13 @@ use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 class RegisterComponent extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $email;
     public $username;
     public $password;
     public $fullname;
+    public $firstname;
+    public $lastname;
     public $recaptcha_token;
 
     public $social_grid;
@@ -66,7 +68,6 @@ class RegisterComponent extends Component
 
         // Set grid
         $this->social_grid = $social_grid_counter;
-
     }
 
 
@@ -81,26 +82,26 @@ class RegisterComponent extends Component
         $separator   = settings('general')->separator;
         $title       = __('messages.t_signup') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage     = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.auth.register')->extends('livewire.main.auth.layout.auth')->section('content');
@@ -116,60 +117,58 @@ class RegisterComponent extends Component
     public function register($form)
     {
         try {
-            
+
             // Verify form first
-            if (!is_array($form) || !isset($form['email']) || !isset($form['password']) || !isset($form['fullname']) || !isset($form['username'])) {
-                return;
+            if (!is_array($form) || !isset($form['email']) || !isset($form['password']) || !isset($form['firstname']) || !isset($form['lastname']) || !isset($form['username'])) {
+                return 'stopped here';
             }
 
             // Set data
-            $this->email           = $form['email'];
-            $this->password        = $form['password'];
-            $this->fullname        = $form['fullname'];
-            $this->username        = $form['username'];
+            $this->email = $form['email'];
+            $this->password = $form['password'];
+            $this->firstname = $form['firstname'];
+            $this->lastname = $form['lastname'];
+            $this->username  = $form['username'];
             $this->recaptcha_token = $form['recaptcha_token'];
 
             // Verify recapctah first
             if (settings('security')->is_recaptcha) {
                 try {
-                    
+
                     // Get recaptcha secret key
                     $recaptcha_secret           = config('recaptcha.secret_key');
-    
+
                     // post request to server
                     $verify_recaptcha_url       = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) .  '&response=' . urlencode($this->recaptcha_token);
-    
+
                     // Get recaptcha response
                     $recaptcha_response         = file_get_contents($verify_recaptcha_url);
-    
+
                     // Convert response to json
                     $recaptcha_decoded_response = json_decode($recaptcha_response, true);
-    
+
                     // should return JSON with success as true
-                    if(!isset($recaptcha_decoded_response["success"])) {
-                        
+                    if (!isset($recaptcha_decoded_response["success"])) {
+
                         // Spam detected
                         $this->notification([
                             'title'       => __('messages.t_error'),
                             'description' => __('messages.t_recaptcha_error_message'),
                             'icon'        => 'error'
                         ]);
-    
+
                         return;
-    
                     }
-    
                 } catch (\Throwable $th) {
-    
+
                     // Spam detected
                     $this->notification([
                         'title'       => __('messages.t_error'),
                         'description' => __('messages.t_recaptcha_error_message'),
                         'icon'        => 'error'
                     ]);
-    
+
                     return;
-                    
                 }
             }
 
@@ -177,12 +176,13 @@ class RegisterComponent extends Component
             RegisterValidator::validate($this);
 
             // Get auth settings
-            $settings       = settings('auth');
+            $settings = settings('auth');
 
             // Create new user
-            $user           = new User();
-            $user->uid      = uid();
-            $user->fullname = clean($this->fullname);
+            $user = new User();
+            $user->uid = uid();
+            $user->first_name = clean($this->firstname);
+            $user->last_name = clean($this->lastname);
             $user->email    = clean($this->email);
             $user->username = clean($this->username);
             $user->password = Hash::make($this->password);
@@ -192,36 +192,33 @@ class RegisterComponent extends Component
 
             // Check if user requires verification
             if ($settings->verification_required) {
-                
+
                 // Check if verification using email
                 if ($settings->verification_type === 'email') {
-                    
+
                     // Generate token
-                    $token                    = uid(64);
+                    $token = uid(64);
 
                     // Generate verification
-                    $verification             = new EmailVerification();
-                    $verification->token      = $token;
-                    $verification->email      = $this->email;
-                    $verification->expires_at = now()->addMinutes( $settings->verification_expiry_period );
+                    $verification = new EmailVerification();
+                    $verification->token = $token;
+                    $verification->email = $this->email;
+                    $verification->expires_at = now()->addMinutes($settings->verification_expiry_period);
                     $verification->save();
 
                     // Send notification to user
-                    $user->notify( (new VerifyEmail($verification))->locale(config('app.locale')) );
+                    $user->notify((new VerifyEmail($verification))->locale(config('app.locale')));
 
                     // Redirect to same page with success message
                     return redirect('auth/register')->with('success', __('messages.t_register_verification_email_sent', ['email' => $this->email, 'minutes' => $settings->verification_expiry_period]));
-
                 } else if ($settings->verification_type === 'admin') {
 
                     // Send notification to admin
-                    Admin::first()->notify( (new PendingUser($user))->locale(config('app.locale')) );
+                    Admin::first()->notify((new PendingUser($user))->locale(config('app.locale')));
 
                     // Redirect to same page with success
                     return redirect('auth/register')->with('success', __('messages.t_register_verification_admin_pending'));
-
                 }
-
             }
 
             // Send welcome message
@@ -232,7 +229,6 @@ class RegisterComponent extends Component
 
             // Redirect to home
             return redirect('/');
-
         } catch (\Throwable $th) {
             throw $th;
         }
