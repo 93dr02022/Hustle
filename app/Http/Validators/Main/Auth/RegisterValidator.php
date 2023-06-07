@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -19,11 +19,12 @@ class RegisterValidator
         try {
 
             // Set rules
-            $rules    = [
+            $rules = [
                 'username' => ['required', 'max:60', 'min:3', 'unique:users', new UsernameRule()],
                 'email'    => 'required|max:60|email|unique:users',
                 'password' => 'required|max:60',
-                'fullname' => 'required|max:60|min:3'
+                'firstname' => 'required|max:60|min:3',
+                'lastname' => 'required|max:60|min:3'
             ];
 
             // Set errors messages
@@ -38,18 +39,23 @@ class RegisterValidator
                 'email.unique'      => __('messages.t_validator_unique'),
                 'password.required' => __('messages.t_validator_required'),
                 'password.max'      => __('messages.t_validator_max', ['max' => 60]),
-                'fullname.required' => __('messages.t_validator_required'),
-                'fullname.max'      => __('messages.t_validator_max', ['max' => 60]),
-                'fullname.min'      => __('messages.t_validator_min', ['min' => 3]),
-                'fullname.regex'    => __('messages.t_validator_regex'),
+                'firstname.required' => __('messages.t_validator_required'),
+                'firstname.max'      => __('messages.t_validator_max', ['max' => 60]),
+                'firstname.min'      => __('messages.t_validator_min', ['min' => 3]),
+                'firstname.regex'    => __('messages.t_validator_regex'),
+                'lastname.required' => __('messages.t_validator_required'),
+                'lastname.max'      => __('messages.t_validator_max', ['max' => 60]),
+                'lastname.min'      => __('messages.t_validator_min', ['min' => 3]),
+                'lastname.regex'    => __('messages.t_validator_regex'),
             ];
 
             // Set data to validate
-            $data     = [
-                'email'    => $request->email,
+            $data = [
+                'email' => $request->email,
                 'username' => $request->username,
                 'password' => $request->password,
-                'fullname' => $request->fullname,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
             ];
 
             // Validate data
@@ -57,10 +63,8 @@ class RegisterValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }
