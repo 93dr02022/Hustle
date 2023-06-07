@@ -82,7 +82,7 @@ class PaymentComponent extends Component
 
                 $this->toastSuccess('Payment Completed successfully.');
 
-                return redirect()->to('/account/orders');
+                return redirect()->to('/');
             } catch (\Throwable $th) {
                 DB::rollBack();
 

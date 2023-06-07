@@ -69,11 +69,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CategorySeeder::class,
+            StatesTableSeeder::class
         ]);
 
         if (App::environment('local')) {
             $this->call([
                 UserSeeder::class,
+                StatesTableSeeder::class
             ]);
         }
     }

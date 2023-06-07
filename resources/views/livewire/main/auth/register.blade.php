@@ -40,24 +40,45 @@
 			<div class="mt-6">
 				<form x-data="window.UcZWcDFfVKBjfgP" x-on:submit.prevent="register" class="grid grid-cols-12 md:gap-x-6 gap-y-6">
 
-					{{-- Fullname --}}
+					{{-- First name --}}
 					<div class="col-span-12">
 						<div class="relative w-full shadow-sm rounded-md">
 
 							{{-- Input --}}
-							<input type="text" x-model="form.fullname" class="{{ $errors->first('fullname') ? 'focus:ring-red-600 focus:border-red-600 border-red-500' : 'focus:ring-primary-600 focus:border-primary-600 border-gray-300' }} border text-gray-900 text-sm rounded-md font-medium block w-full ltr:pr-12 rtl:pl-12 p-4 placeholder:font-normal dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="{{ __('messages.t_enter_your_fullname') }}">
+							<input type="text" x-model="form.firstname" class="{{ $errors->first('firstname') ? 'focus:ring-red-600 focus:border-red-600 border-red-500' : 'focus:ring-primary-600 focus:border-primary-600 border-gray-300' }} border text-gray-900 text-sm rounded-md font-medium block w-full ltr:pr-12 rtl:pl-12 p-4 placeholder:font-normal dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="{{ __('Enter your first name') }}">
 
 							{{-- Icon --}}
 							<div class="absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center ltr:pr-3 rtl:pl-3">
                                 <svg class="w-5 h-5 text-gray-400" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
 							</div>
-
 						</div>
 
 						{{-- Error --}}
-						@error('fullname')
+						@error('firstname')
 							<p class="mt-1.5 text-[13px] tracking-wide text-red-600 font-medium ltr:pl-1 rtl:pr-1">
-								{{ $errors->first('fullname') }}
+								{{ $errors->first('firstname') }}
+							</p>
+						@enderror
+
+					</div>
+
+                    {{-- Last name --}}
+					<div class="col-span-12">
+                        <div class="relative w-full shadow-sm rounded-md">
+
+                            {{-- Input --}}
+							<input type="text" x-model="form.lastname" class="{{ $errors->first('lastname') ? 'focus:ring-red-600 focus:border-red-600 border-red-500' : 'focus:ring-primary-600 focus:border-primary-600 border-gray-300' }} border text-gray-900 text-sm rounded-md font-medium block w-full ltr:pr-12 rtl:pl-12 p-4 placeholder:font-normal dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="{{ __('Enter your last name') }}">
+
+							{{-- Icon --}}
+							<div class="absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center ltr:pr-3 rtl:pl-3">
+                                <svg class="w-5 h-5 text-gray-400" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+							</div>
+						</div>
+
+						{{-- Error --}}
+						@error('lastname')
+							<p class="mt-1.5 text-[13px] tracking-wide text-red-600 font-medium ltr:pl-1 rtl:pr-1">
+								{{ $errors->first('lastname') }}
 							</p>
 						@enderror
 
@@ -149,7 +170,7 @@
 
 					{{-- Register --}}
 					<div class="col-span-12">
-						<button type="submit" wire:loading.attr="disabled" wire:target="register" :disabled="!form.email || !form.password || !form.fullname || !form.username" class="w-full bg-primary-600 enabled:hover:bg-primary-700 text-white py-4.5 px-4 rounded-md text-[13px] font-semibold tracking-wide disabled:bg-zinc-200 disabled:text-zinc-500">
+						<button type="submit" wire:loading.attr="disabled" wire:target="register" :disabled="!form.email || !form.password || !form.firstname || !form.lastname || !form.username" class="w-full bg-primary-600 enabled:hover:bg-primary-700 text-white py-4.5 px-4 rounded-md text-[13px] font-semibold tracking-wide disabled:bg-zinc-200 disabled:text-zinc-500">
 							
 							{{-- Loading indicator --}}
 							<div wire:loading wire:target="register">
@@ -296,8 +317,10 @@
 				form: {
 					email   : null,
 					password: null,
-					fullname: null,
-					username: null
+					// fullname: null,
+					username: null,
+                    firstname: null,
+                    lastname: null,
 				},
 
 				// Register
@@ -332,7 +355,7 @@
 					}
 
 					// Validate form
-					if (!_this.form.email || !_this.form.password || !_this.form.fullname || !_this.form.username) {
+					if (!_this.form.email || !_this.form.password || !_this.form.firstname || !_this.form.lastname || !_this.form.username) {
                         
 						// Error
 						window.$wireui.notify({
@@ -347,10 +370,11 @@
 
 					// Register
 					@this.register({
-						'email'          : _this.form.email,
-						'password'       : _this.form.password,
-						'username'       : _this.form.username,
-						'fullname'       : _this.form.fullname,
+						'email': _this.form.email,
+						'password': _this.form.password,
+						'username': _this.form.username,
+						'firstname': _this.form.firstname,
+                        'lastname': _this.form.lastname,
 						'recaptcha_token': recaptcha_token
 					});
 

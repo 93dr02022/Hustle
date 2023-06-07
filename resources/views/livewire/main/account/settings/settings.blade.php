@@ -59,7 +59,7 @@
                                         :placeholder="__('messages.t_choose_country')"
                                         model="country"
                                         :options="$countries"
-                                        :isDefer="true"
+                                        :isDefer="false"
                                         :isAssociative="false"
                                         :componentId="$this->id"
                                         value="id"
@@ -67,9 +67,57 @@
                                 </div>
                             </div>
 
+                            {{-- States --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <div class="w-full">
+                                    <label class="text-[0.8125rem] font-medium block mb-2 {{ $errors->first('state') ? 'text-red-600 dark:text-red-500' : 'text-gray-700 dark:text-white' }}">States</label>
+                                    <select wire:model="state" class="form-ctr py-3.5">
+                                        @foreach ($states as $state)
+                                            <option value="{{ $state['id'] }}">{{ $state['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- City --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input 
+                                    label="{{ __('City') }}" 
+                                    placeholder="{{ __('city') }}" 
+                                    model="city"
+                                    icon="account" />
+                            </div>
+
+                            {{-- Post code --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input 
+                                    label="{{ __('Postcode') }}" 
+                                    placeholder="{{ __('postcode') }}" 
+                                    model="postcode"
+                                    icon="account" />
+                            </div>
+
+                            {{-- Address --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input 
+                                    label="{{ __('Address') }}" 
+                                    placeholder="{{ __('Address') }}" 
+                                    model="address"
+                                    icon="account" />
+                            </div>
+
+                            {{-- Local Governemt --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input 
+                                    label="{{ __('local Government zone') }}" 
+                                    placeholder="{{ __('local Government zone') }}" 
+                                    model="localGovernmentZone"
+                                    icon="account" />
+                            </div>
+
                             {{-- Current password --}}
                             @if (auth()->user()->password)
-                                <div class="col-span-12">
+                                <div class="col-span-12 md:col-span-6">
                                     <x-forms.text-input 
                                         label="{{ __('messages.t_password') }}" 
                                         placeholder="{{ __('messages.t_enter_your_current_password') }}" 

@@ -178,6 +178,16 @@
                                                 </span>
                                             </div>
                                         </label>
+
+                                        {{-- BVN Verification --}}
+                                        <label class="rounded-bl-md rounded-br-md relative border-2 dark:border-zinc-600 border-t-0 p-4 flex cursor-pointer focus:outline-none ">
+                                            <input type="radio" name="document_type" value="bvn" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_bvn">
+                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
+                                                <span id="document_type_passport" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
+                                                    {{ __('BVN Verification') }}
+                                                </span>
+                                            </div>
+                                        </label>
                                         
                                     </div>
                                 </fieldset>
@@ -258,8 +268,8 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
+
                                 @elseif ($document_type === 'driver_license')
                                     <div class="grid grid-cols-2 gap-4">
 
@@ -332,8 +342,8 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
+
                                 @elseif ($document_type === 'passport')
                                     <div class="grid grid-cols-1 gap-4">
 
@@ -371,7 +381,70 @@
                                                 </div>
                                             @enderror
                                         </div>
+                                    </div>
+                                @elseif ($document_type == 'bvn')
+                                    {{-- Message --}}
+                                    <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 py-7 px-4 mb-5">
+                                        <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ltr:ml-3 rtl:mr-3">
+                                            <p class="text-sm text-yellow-700">
+                                                In Compliance with our regulator we do not store your BVN information we are only using it to verify your information.
+                                            </p>
+                                        </div>
+                                        </div>
+                                    </div>
 
+                                    {{-- bnv verification and account details --}}
+                                    <div class="grid md:grid-cols-2 md:gap-x-8 gap-y-8 mb-6">
+                                        <x-forms.text-input 
+                                        label="{{ __('BVN Number') }}" 
+                                        placeholder="{{ __('12345678910') }}" 
+                                        model="bvn"
+                                        type="tel"
+                                        icon="at" />
+
+                                        <x-forms.text-input 
+                                        label="{{ __('Account Number') }}" 
+                                        placeholder="{{ __('1234567890') }}" 
+                                        model="accountNumber"
+                                        type="tel"
+                                        icon="at" />
+
+
+                                        <div class="w-full" wire:ignore>
+                                            <x-forms.select2
+                                                :label="__('Select Your bank')"
+                                                :placeholder="__('Select Bank')"
+                                                model="bank"
+                                                :options="$banks"
+                                                :isDefer="true"
+                                                :isAssociative="false"
+                                                :componentId="$this->id"
+                                                value="code"
+                                                text="name" />
+                                        </div>
+
+                                        <x-forms.text-input 
+                                        label="{{ __('First name') }}" 
+                                        placeholder="{{ __('first name') }}" 
+                                        model="first_name"
+                                        type="tel"
+                                        icon="at"
+                                        readonly />
+
+                                        <x-forms.text-input 
+                                        label="{{ __('Last name') }}" 
+                                        placeholder="{{ __('Last name') }}" 
+                                        model="last_name"
+                                        type="tel"
+                                        icon="at"
+                                        class="disabled:bg-slate-300"
+                                        readonly />
                                     </div>
                                 @endif
 
@@ -498,6 +571,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 
 @endpush
+
+@pushOnce('styles')
+    <link href="{{ mix('css/select2.css') }}" rel="stylesheet" />
+@endPushOnce
+
+@pushOnce('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ mix('js/select2.js') }}"></script>
+    <script src="{{ url('vendor/pharaonic/pharaonic.select2.min.js') }}"></script>
+@endPushOnce
 
 {{-- Include in Footer --}}
 @push('scripts')
