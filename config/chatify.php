@@ -23,7 +23,7 @@ return [
     */
     'routes'     => [
         'prefix'     => "inbox",
-        'middleware' => ['web','auth'],
+        'middleware' => ['web', 'auth'],
         'namespace'  => "App\Http\Controllers\Chat",
     ],
     'api_routes' => [
@@ -38,11 +38,11 @@ return [
     |-------------------------------------
     */
     'pusher' => [
-        'key'     => '',
-        'secret'  => '',
-        'app_id'  => '',
+        'key'     => env('PUSHER_APP_KEY', ''),
+        'secret'  => env('PUSHER_APP_SECRET', ''),
+        'app_id'  => env('PUSHER_APP_ID', ''),
         'options' => [
-            'cluster'   => '',
+            'cluster'   => env('PUSHER_APP_CLUSTER', ''),
             'encrypted' => 1,
         ],
     ],
@@ -79,8 +79,8 @@ return [
     'attachments' => [
         'folder'              => 'attachments',
         'download_route_name' => 'attachments.download',
-        'allowed_images'      => (array) ['png','jpg','jpeg','gif'],
-        'allowed_files'       => (array) ['zip','rar','txt', 'pdf'],
+        'allowed_images'      => (array) ['png', 'jpg', 'jpeg', 'gif'],
+        'allowed_files'       => (array) ['zip', 'rar', 'txt', 'pdf'],
         'max_upload_size'     => 10, // MB
     ],
 
