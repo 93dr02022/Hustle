@@ -108,7 +108,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 COPY composer.json .
 RUN composer install --no-scripts
 RUN php artisan migrate:status
-RUN php artisan migrate --seed --force 
+#RUN php artisan migrate --seed --force 
 RUN php artisan optimize
 
 CMD php artisan serve --host=0.0.0.0 --port 80
