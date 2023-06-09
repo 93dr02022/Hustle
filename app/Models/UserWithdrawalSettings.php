@@ -17,13 +17,6 @@ class UserWithdrawalSettings extends Model
     protected $table = 'user_withdrawal_settings';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -31,6 +24,9 @@ class UserWithdrawalSettings extends Model
     protected $fillable = [
         'user_id',
         'gateway_provider_name',
-        'gateway_provider_id'
+        'gateway_provider_id',
+        'bank_name',
+        'bank_code',
+        'account_name',
     ];
 }

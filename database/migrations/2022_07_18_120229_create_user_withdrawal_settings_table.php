@@ -15,11 +15,14 @@ return new class extends Migration
     {
         Schema::create('user_withdrawal_settings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('gateway_provider_name', 20)->default('paypal');
-            $table->string('gateway_provider_id', 60)->nullable();
-            
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->unique()->constrained();
+            $table->string('gateway_provider_name', 20)->default('offline');
+            $table->string('gateway_provider_id', 60)->nullable(); // account number
+            $table->string('bank_name')->nullable()->index();
+            $table->string('bank_code')->nullable()->index();
+            $table->string('account_name')->nullable()->index();
+
+            $table->timestamps();
         });
     }
 

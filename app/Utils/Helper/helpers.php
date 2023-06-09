@@ -144,6 +144,17 @@ function src($file)
 
 
 /**
+ * Make file name from an extension
+ * 
+ * @param string    $extension
+ */
+function makeFileName($extension)
+{
+    return uid(25) . '.' . $extension;
+}
+
+
+/**
  * Get admin url
  *
  * @param string $to
@@ -1452,16 +1463,16 @@ function placeholder_img()
             }
 
             // If does not exists return default image
-            return url('storage/default/default-placeholder.jpg');
+            return url('img/default/default-placeholder.jpg');
         } else {
 
             // Not found
-            return url('storage/default/default-placeholder.jpg');
+            return url('img/default/default-placeholder.jpg');
         }
     } catch (\Throwable $th) {
 
         // Something went wrong, return default image
-        return url('storage/default/default-placeholder.jpg');
+        return url('img/default/default-placeholder.jpg');
     }
 }
 

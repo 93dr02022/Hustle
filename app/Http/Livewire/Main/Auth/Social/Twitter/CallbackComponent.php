@@ -13,7 +13,7 @@ use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 class CallbackComponent extends Component
 {
     use SEOToolsTrait;
-    
+
     /**
      * Init component
      *
@@ -25,26 +25,26 @@ class CallbackComponent extends Component
         $separator   = settings('general')->separator;
         $title       = __('messages.t_twitter_login') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage     = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         // Get tokens
@@ -77,28 +77,26 @@ class CallbackComponent extends Component
             } else if ($is_email_exists->provider_id !== $user->getId()) {
                 return redirect('auth/login')->with('error', __('messages.t_socialite_error_email_exists'));
             }
-
         }
 
         // Get user with same username
         $is_username_exists = User::withTrashed()->where('username', $nickname)
-                                    ->whereNull('provider_name')
-                                    ->whereNull('provider_id')
-                                    ->first();
+            ->whereNull('provider_name')
+            ->whereNull('provider_id')
+            ->first();
 
         // Check if username exists
         if ($is_username_exists) {
-            $username = $nickname . "_" . substr(md5(microtime()),rand(0,26),4);
+            $username = $nickname . "_" . substr(md5(microtime()), rand(0, 26), 4);
         } else {
             $username = $nickname;
         }
 
         // Check if user has avatar
         if ($avatar) {
-            
+
             // Save user avatar
             $avatar_id = ImageUploader::fromUrl($avatar, 'avatars');
-
         } else {
             $avatar_id = null;
         }
@@ -140,15 +138,13 @@ class CallbackComponent extends Component
     {
         // Check if there is a nickname
         if ($nickname) {
-            
+
             // Generate username
             $username = strtolower(Str::slug($nickname, '_'));
-
         } else if ($name) {
-            
+
             // Generate username
             $username = strtolower(Str::slug($name, '_'));
-
         } else {
 
             // Generate username
@@ -172,7 +168,7 @@ class CallbackComponent extends Component
 
         $config     = config('services')['twitter'];
 
-        $connection = new TwitterOAuth($config['client_id'], $config['client_secret']); 
+        $connection = new TwitterOAuth($config['client_id'], $config['client_secret']);
 
         $tokens     = $connection->oauth("oauth/access_token", ["oauth_verifier" => $oauth_verifier, "oauth_token" => $oauth_token]);
 

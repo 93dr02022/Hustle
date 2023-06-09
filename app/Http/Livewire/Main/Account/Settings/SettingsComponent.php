@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use App\Http\Validators\Main\Account\Settings\EditValidator;
 use App\Models\State;
+use Illuminate\Validation\ValidationException;
 
 class SettingsComponent extends Component
 {
@@ -17,7 +18,8 @@ class SettingsComponent extends Component
 
     public $username;
     public $email;
-    public $fullname;
+    public $firstname;
+    public $lastname;
     public $country;
     public $state;
     public $city;
@@ -35,17 +37,17 @@ class SettingsComponent extends Component
      */
     public function mount()
     {
-        // Get user
         $user = auth()->user();
 
         // Fill form
         $this->fill([
             'username' => $user->username,
             'email' => $user->email,
-            'fullname' => $user->fullname,
+            'firstname' => $user->first_name,
+            'lastname' => $user->last_name,
             'country' => $user->country_id,
             'postcode' => $user->post_code,
-            'localGovernemntZone' => $user->local_government_zone,
+            'localGovernmentZone' => $user->local_government_zone,
             'address' => $user->address,
             'city' => $user->city,
             'state' => $user->state_id,
@@ -132,8 +134,6 @@ class SettingsComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             EditValidator::validate($this);
 
             // Set current user
@@ -141,13 +141,7 @@ class SettingsComponent extends Component
 
             // Validate current password
             if ($user->password && !Hash::check($this->password, $user->password)) {
-
-                // Password does not match
-                $this->notification([
-                    'title'       => __('messages.t_error'),
-                    'description' => __('messages.t_ur_current_pass_does_not_match'),
-                    'icon'        => 'error'
-                ]);
+                $this->toastError(__('messages.t_ur_current_pass_does_not_match'));
 
                 return;
             }
@@ -156,7 +150,8 @@ class SettingsComponent extends Component
             User::where('id', auth()->id())->update([
                 'username' => clean($this->username),
                 'email' => clean($this->email),
-                'fullname' => $this->fullname ? clean($this->fullname) : null,
+                'first_name' => $this->firstname ? clean($this->firstname) : null,
+                'last_name' => $this->lastname ? clean($this->lastname) : null,
                 'country_id' => $this->country ? $this->country : null,
                 'state_id' => $this->state ? $this->state : null,
                 'address' => $this->address ? $this->address : null,
@@ -177,26 +172,28 @@ class SettingsComponent extends Component
                 'description' => __('messages.t_ur_account_settings_updated'),
                 'icon'        => 'success'
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
 
-            // Validation error
-            $this->notification([
-                'title'       => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
-            ]);
+            $this->toastError(__('messages.t_toast_form_validation_error'));
 
             throw $e;
         } catch (\Throwable $th) {
 
-            // Error
-            $this->notification([
-                'title'       => __('messages.t_error'),
-                'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
-            ]);
+            $this->toastError(__('messages.t_toast_something_went_wrong'));
 
             throw $th;
         }
+    }
+
+    /**
+     * Wire UI Error toast notification
+     */
+    public function toastError($message)
+    {
+        $this->notification([
+            'title'       => __('messages.t_error'),
+            'description' => $message,
+            'icon'        => 'error'
+        ]);
     }
 }

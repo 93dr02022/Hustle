@@ -16,20 +16,16 @@ return new class extends Migration
         Schema::create('verification_center', function (Blueprint $table) {
             $table->id();
             $table->string('uid', 20)->unique();
-            $table->unsignedBigInteger('user_id');
-            $table->enum('document_type', ['id', 'driver_license', 'passport', 'bvn']);
-            $table->unsignedBigInteger('file_front_side')->nullable();
-            $table->unsignedBigInteger('file_back_side')->nullable();
-            $table->unsignedBigInteger('file_selfie');
+            $table->foreignId('user_id')->unique()->constrained();
+            $table->enum('document_type', ['bvn', 'id', 'driver_license', 'passport']);
+            $table->mediumText('file_front_side')->nullable();
+            $table->mediumText('file_back_side')->nullable();
+            $table->mediumText('file_selfie');
             $table->enum('status', ['pending', 'verified', 'declined'])->default('pending');
             $table->timestamp('verified_at')->nullable();
             $table->timestamp('declined_at')->nullable();
-            $table->timestamp('created_at');
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('file_front_side')->references('id')->on('file_manager');
-            $table->foreign('file_back_side')->references('id')->on('file_manager');
-            $table->foreign('file_selfie')->references('id')->on('file_manager');
+            $table->timestamps();
         });
     }
 

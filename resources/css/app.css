@@ -56,3 +56,7 @@
       @apply px-6 py-3 text-sm font-semibold tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500
    }
 }
+
+[x-cloak] { 
+   display: none !important; 
+}

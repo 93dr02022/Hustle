@@ -12,7 +12,9 @@ use App\Notifications\Admin\PendingUser;
 use App\Notifications\User\Everyone\Welcome;
 use App\Notifications\User\Everyone\VerifyEmail;
 use App\Http\Validators\Main\Auth\RegisterValidator;
+use App\Models\UserWithdrawalSettings;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use DB;
 
 class RegisterComponent extends Component
 {
@@ -117,10 +119,8 @@ class RegisterComponent extends Component
     public function register($form)
     {
         try {
-
-            // Verify form first
             if (!is_array($form) || !isset($form['email']) || !isset($form['password']) || !isset($form['firstname']) || !isset($form['lastname']) || !isset($form['username'])) {
-                return 'stopped here';
+                return;
             }
 
             // Set data
@@ -131,106 +131,99 @@ class RegisterComponent extends Component
             $this->username  = $form['username'];
             $this->recaptcha_token = $form['recaptcha_token'];
 
-            // Verify recapctah first
-            if (settings('security')->is_recaptcha) {
-                try {
+            $this->verifyRecaptcha();
 
-                    // Get recaptcha secret key
-                    $recaptcha_secret           = config('recaptcha.secret_key');
-
-                    // post request to server
-                    $verify_recaptcha_url       = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) .  '&response=' . urlencode($this->recaptcha_token);
-
-                    // Get recaptcha response
-                    $recaptcha_response         = file_get_contents($verify_recaptcha_url);
-
-                    // Convert response to json
-                    $recaptcha_decoded_response = json_decode($recaptcha_response, true);
-
-                    // should return JSON with success as true
-                    if (!isset($recaptcha_decoded_response["success"])) {
-
-                        // Spam detected
-                        $this->notification([
-                            'title'       => __('messages.t_error'),
-                            'description' => __('messages.t_recaptcha_error_message'),
-                            'icon'        => 'error'
-                        ]);
-
-                        return;
-                    }
-                } catch (\Throwable $th) {
-
-                    // Spam detected
-                    $this->notification([
-                        'title'       => __('messages.t_error'),
-                        'description' => __('messages.t_recaptcha_error_message'),
-                        'icon'        => 'error'
-                    ]);
-
-                    return;
-                }
-            }
-
-            // Validate form
             RegisterValidator::validate($this);
-
-            // Get auth settings
             $settings = settings('auth');
 
-            // Create new user
-            $user = new User();
-            $user->uid = uid();
-            $user->first_name = clean($this->firstname);
-            $user->last_name = clean($this->lastname);
-            $user->email    = clean($this->email);
-            $user->username = clean($this->username);
-            $user->password = Hash::make($this->password);
-            $user->status   = $settings->verification_required ? 'pending' : 'active';
-            $user->level_id = 1;
-            $user->save();
+            $user = User::create([
+                'uid' => uid(),
+                'first_name' => clean($this->firstname),
+                'last_name' => clean($this->lastname),
+                'email' => clean($this->email),
+                'username' => clean($this->username),
+                'password' => Hash::make($this->password),
+                'status' => $settings->verification_required ? 'pending' : 'active',
+                'level_id' => 1,
+            ]);
 
             // Check if user requires verification
             if ($settings->verification_required) {
-
-                // Check if verification using email
                 if ($settings->verification_type === 'email') {
-
-                    // Generate token
+                    // Generate verification token and save it
                     $token = uid(64);
-
-                    // Generate verification
-                    $verification = new EmailVerification();
-                    $verification->token = $token;
-                    $verification->email = $this->email;
-                    $verification->expires_at = now()->addMinutes($settings->verification_expiry_period);
-                    $verification->save();
+                    $verification = EmailVerification::create([
+                        'token' => $token,
+                        'email' => $this->email,
+                        'expires_at' => now()->addMinutes($settings->verification_expiry_period)
+                    ]);
 
                     // Send notification to user
                     $user->notify((new VerifyEmail($verification))->locale(config('app.locale')));
 
                     // Redirect to same page with success message
-                    return redirect('auth/register')->with('success', __('messages.t_register_verification_email_sent', ['email' => $this->email, 'minutes' => $settings->verification_expiry_period]));
+                    return redirect('auth/register')
+                        ->with('success', __('messages.t_register_verification_email_sent', [
+                            'email' => $this->email,
+                            'minutes' => $settings->verification_expiry_period
+                        ]));
                 } else if ($settings->verification_type === 'admin') {
 
                     // Send notification to admin
-                    Admin::first()->notify((new PendingUser($user))->locale(config('app.locale')));
+                    Admin::first()
+                        ->notify((new PendingUser($user))
+                            ->locale(config('app.locale')));
 
                     // Redirect to same page with success
-                    return redirect('auth/register')->with('success', __('messages.t_register_verification_admin_pending'));
+                    return redirect('auth/register')
+                        ->with('success', __('messages.t_register_verification_admin_pending'));
                 }
             }
 
-            // Send welcome message
             $user->notify(new Welcome);
 
-            // Now login
             auth()->login($user, true);
 
-            // Redirect to home
             return redirect('/');
         } catch (\Throwable $th) {
-            throw $th;
+            $this->toastError($th->getMessage());
+            return;
         }
+    }
+
+    /**
+     * Verify recaptcha token
+     */
+    public function verifyRecaptcha()
+    {
+        if (settings('security')->is_recaptcha) {
+            try {
+                $recaptcha_secret = config('recaptcha.secret_key');
+
+                // post request to server
+                $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) .  '&response=' . urlencode($this->recaptcha_token);
+
+                $recaptcha_response = file_get_contents($verify_recaptcha_url);
+                $recaptcha_decoded_response = json_decode($recaptcha_response, true);
+
+                if (!isset($recaptcha_decoded_response["success"])) {
+                    throw new \Exception(__('messages.t_recaptcha_error_message'));
+                }
+            } catch (\Throwable $th) {
+                throw new \Exception(__('messages.t_recaptcha_error_message'));
+            }
+        }
+    }
+
+    /**
+     * Wire UI Error toast notification
+     */
+    public function toastError($message)
+    {
+        $this->notification([
+            'title'       => __('messages.t_error'),
+            'description' => $message,
+            'icon'        => 'error'
+        ]);
     }
 }
