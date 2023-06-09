@@ -116,7 +116,7 @@ class MessagesController extends Controller
 
             // Get user
             $fetch = User::where('id', $request->get('id'))
-                ->select('id', 'uid', 'username', 'fullname', 'avatar_id', 'active_status')
+                ->select('id', 'uid', 'username', 'first_name', 'last_name', 'avatar_id', 'active_status')
                 ->with('avatar', function ($query) {
                     return $query->select('id', 'file_extension', 'file_folder', 'uid');
                 })
@@ -502,7 +502,8 @@ class MessagesController extends Controller
             })
             ->where(function ($query) use ($input) {
                 $query->where('username', 'LIKE', "%{$input}%")
-                    ->orWhere('fullname', 'LIKE', "%{$input}%");
+                    ->orWhere('first_name', 'LIKE', "%{$input}%")
+                    ->orWhere('last_name', 'LIKE', "%{$input}%");
             })
             ->with('avatar')
             ->where('users.id', '!=', auth()->id())

@@ -12,7 +12,11 @@ use App\Http\Validators\Main\Account\Verification\DocIDValidator;
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
 use App\Http\Validators\Main\Account\Verification\DocDriverValidator;
 use App\Http\Validators\Main\Account\Verification\DocPassportValidator;
+use App\Models\UserWithdrawalSettings;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class VerificationComponent extends Component
 {
@@ -20,7 +24,7 @@ class VerificationComponent extends Component
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $verification;
-    public $document_type;
+    public $document_type = 'bvn';
     public $selfie;
     public $currentStep = 1;
     public $doc_id = [];
@@ -30,8 +34,9 @@ class VerificationComponent extends Component
     public $first_name;
     public $last_name;
     public $bank;
-    public $bvn;
+    public $bvn = null;
     public $accountNumber;
+    public $accountName;
 
     /**
      * Init component
@@ -104,40 +109,21 @@ class VerificationComponent extends Component
         return $banks['data'];
     }
 
-
     /**
-     * Set document type
-     *
-     * @return void
+     * Get bank name to save
      */
-    public function setDocumentType()
+    public function getBankName()
     {
-        // Document type must be id, driver license or passport
-        if (!in_array($this->document_type, ['id', 'driver_license', 'passport', 'bvn'])) {
+        $bank = collect($this->banks)->first(function ($bank) {
+            return $bank['code'] === $this->bank;
+        });
 
-            // Error
-            $this->notification([
-                'title'       => __('messages.t_error'),
-                'description' => __('messages.t_please_select_a_valid_document_type'),
-                'icon'        => 'error'
-            ]);
-
-            return;
-        }
-
-        // Go to next step
-        $this->currentStep = 2;
-
-        if ($this->document_type == 'bvn') {
-            $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'component' => $this->id,
-                'target'    => '#select2-id-bank'
-            ]);
-        }
+        return $bank['name'];
     }
 
     /**
-     * Run paystack api to validate the bvn
+     * Run paystack api to validate the names via BVN
+     * if BVN is provided
      */
     public function bvnMatch()
     {
@@ -157,129 +143,102 @@ class VerificationComponent extends Component
         }
 
         if (!$response->data->first_name || !$response->data->last_name) {
-            $this->toastError("Sorry we are unable to validate your first name and last name");
+            $this->toastError("Sorry we are unable to validate your names");
             return false;
         }
 
         return true;
     }
 
-
     /**
-     * Set document files
-     *
-     * @return void
+     * Run paystack api to validate name via account number 
+     * if BVN is not provided.
      */
-    public function setDocumentFiles()
+    public function accountMatch()
     {
-        try {
+        $response = Http::withToken(config('paystack.secretKey'))
+            ->get("https://api.paystack.co/bank/resolve?account_number={$this->accountNumber}&bank_code={$this->bank}")
+            ->object();
 
-            // Validate files
-            switch ($this->document_type) {
-                case 'id':
-                    DocIDValidator::validate($this);
-                    break;
-                case 'driver_license':
-                    DocDriverValidator::validate($this);
-                    break;
-                case 'passport':
-                    DocPassportValidator::validate($this);
-                    break;
-            }
-
-            // Go to next step
-            $this->currentStep = 3;
-        } catch (\Illuminate\Validation\ValidationException $e) {
-
-            // Validation error
-            $this->notification([
-                'title'       => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
-            ]);
-
-            throw $e;
-        } catch (\Throwable $th) {
-            throw $th;
+        if (!$response->status) {
+            $this->toastError("Sorry error occured unable to validate your information.");
+            return false;
         }
+
+        $containsAll = Str::containsAll($response->data->account_name, [
+            $this->first_name,
+            $this->last_name
+        ], true);
+
+        if (!$containsAll) {
+            $this->toastError("Sorry we are unable to validate your names");
+            return false;
+        }
+
+        return $response->data->account_name;
     }
 
 
     /**
-     * Finish verification
-     *
-     * @return void
+     * Very the seller supplied account information 
+     */
+    public function verify()
+    {
+        if ($this->bvn && !$this->bvnMatch()) {
+            return;
+        }
+
+        $accountName = $this->accountMatch();
+
+        if (!$accountName) {
+            return;
+        }
+
+        $this->accountName = $accountName;
+
+        $this->currentStep = 2;
+    }
+
+
+    /**
+     * Complete Verification forma and submits the form
      */
     public function finish()
     {
         try {
-
-            // Validate selfie photo
             SelfieValidator::validate($this);
 
-            // Get user id
-            $user_id = auth()->id();
+            $extension  = $this->selfie->getClientOriginalExtension();
+            $fileName = makeFileName($extension);
 
-            // Check if document (id)
-            if ($this->document_type === 'id') {
+            $path = $this->selfie->storeAs('verifications', $fileName, 'public');
 
-                // Upload front side
-                $front_side_id = ImageUploader::make($this->doc_id['front'])
-                    ->folder('verifications')
-                    ->handle();
+            VerificationCenter::upsert([
+                [
+                    'uid' => uid(),
+                    'user_id' => auth()->id(),
+                    'document_type' => $this->document_type,
+                    'status' => $this->bvn ? 'verified' : 'pending',
+                    'file_selfie' => $path
+                ]
+            ], ['user_id'], ['document_type', 'file_selfie']);
 
-                // Upload back side
-                $back_side_id  = ImageUploader::make($this->doc_id['back'])
-                    ->folder('verifications')
-                    ->handle();
-            } elseif ($this->document_type === 'driver_license') {
-
-                // Upload front side
-                $front_side_id = ImageUploader::make($this->doc_driver_license['front'])
-                    ->folder('verifications')
-                    ->handle();
-
-                // Upload back side
-                $back_side_id  = ImageUploader::make($this->doc_driver_license['back'])
-                    ->folder('verifications')
-                    ->handle();
-            } elseif ($this->document_type === 'passport') {
-
-                // Upload front side
-                $front_side_id = ImageUploader::make($this->doc_passport['front'])
-                    ->folder('verifications')
-                    ->handle();
-
-                // No back side for passport
-                $back_side_id  = null;
-            }
-
-            // Save selfie
-            $selfie = ImageUploader::make($this->selfie)
-                ->folder('verifications')
-                ->handle();
-
-            // Save verification
-            $verification                  = new VerificationCenter();
-            $verification->uid             = uid();
-            $verification->user_id         = $user_id;
-            $verification->document_type   = $this->document_type;
-            $verification->file_front_side = $front_side_id;
-            $verification->file_back_side  = $back_side_id;
-            $verification->file_selfie     = $selfie;
-            $verification->save();
+            UserWithdrawalSettings::upsert([
+                [
+                    'user_id' => auth()->id(),
+                    'gateway_provider_name' => 'offline',
+                    'gateway_provider_id' => $this->accountNumber,
+                    'bank_name' => $this->getBankName(),
+                    'bank_code' => $this->bank,
+                    'account_name' => $this->accountName,
+                ]
+            ], ['user_id'], ['gateway_provider_id', 'bank_name', 'bank_code', 'account_name']);
 
             // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
 
-            // Validation error
-            $this->notification([
-                'title'       => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
-            ]);
-
+            $this->toastError(__('messages.t_toast_form_validation_error'));
             throw $e;
         } catch (\Throwable $th) {
             throw $th;
@@ -309,25 +268,19 @@ class VerificationComponent extends Component
 
 
     /**
-     * Start again and send files
-     *
-     * @return void
+     * Start verification again and resend files
      */
     public function sendFilesAgain()
     {
-        // Check if verification already declined
         if ($this->verification && $this->verification->status === 'declined') {
 
-            // Delete verification
             $this->verification->delete();
-
-            // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
         }
     }
 
     /**
-     * Error toast notification
+     * Wire UI Error toast notification
      */
     public function toastError($message)
     {

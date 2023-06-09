@@ -36,9 +36,12 @@
                         
                         {{-- Check if user has a verification before or not --}}
                         @if ($verification)
-                            
                             {{-- Verification status --}} 
-                            <div class="py-5">
+                            <div class="flex items-center justify-between py-2">
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Verification info') }}</dt>
+                                <button class="btn-purple text-[13px] font-normal px-3">Update banking</button>
+                            </div>
+                            <div class="bg-gray-100 border border-gray-200 rounded-md py-5 px-3">
                                 <dl class="grid grid-cols-1 gap-y-8 sm:grid-cols-2">
                                     <div class="sm:col-span-1">
                                         <dt class="text-sm font-medium text-gray-500">{{ __('messages.t_verification_status') }}</dt>
@@ -81,375 +84,90 @@
                                     <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">
 
                                         {{-- Selfie photo --}}
-                                        <li class="ltr:pl-3 rtl:pr-3 ltr:pr-4 rtl:pl-4 py-3 flex items-center justify-between text-sm">
+                                        <li class="ltr:pl-3 rtl:pr-3 ltr:pr-4 rtl:pl-4 py-4 flex items-center justify-between text-sm">
                                             <div class="w-0 flex-1 flex items-center">
                                                 <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
                                                 </svg>
-                                                <span class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate text-xs"> <span class="font-semibold">{{ __('messages.t_selfie_photo') }}</span> - {{ format_bytes($verification->selfie->file_size) }} </span>
+                                                <span class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate text-xs"> <span class="font-semibold">{{ __('Selfie Photo Verification') }}</span> </span>
                                             </div>
                                             <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0">
-                                                <a href="{{ url( 'uploads/verifications/' . $verification->uid . '/selfie/' . $verification->file_selfie ) }}" target="_blank" class="font-medium text-primary-600 hover:text-primary-600 text-xs"> {{ __('messages.t_download') }} </a>
+                                                <a href="{{ url('storage/' . $verification->file_selfie ) }}" target="_blank" class="font-medium text-primary-600 hover:text-primary-600 text-xs"> {{ __('messages.t_download') }} </a>
                                             </div>
                                         </li>
-
-                                        {{-- Frontside --}}
-                                        <li class="ltr:pl-3 rtl:pr-3 ltr:pr-4 rtl:pl-4 py-3 flex items-center justify-between text-sm">
-                                            <div class="w-0 flex-1 flex items-center">
-                                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
-                                                </svg>
-                                                <span class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate text-xs"> 
-                                                    @if ($verification->document_type === 'id')
-                                                        <span class="font-semibold">{{ __('messages.t_government_issued_id_frontside') }}</span>
-                                                    @elseif ($verification->document_type === 'driver_license')
-                                                        <span class="font-semibold">{{ __('messages.t_driver_license_frontside') }}</span>
-                                                    @elseif ($verification->document_type === 'passport')
-                                                        <span class="font-semibold">{{ __('messages.t_passport') }}</span>
-                                                    @endif
-                                                    - {{ format_bytes($verification->frontside->file_size) }} </span>
-                                            </div>
-                                            <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0">
-                                                <a href="{{ url( 'uploads/verifications/' . $verification->uid . '/front/' . $verification->file_front_side ) }}" target="_blank" class="font-medium text-primary-600 hover:text-primary-600 text-xs"> {{ __('messages.t_download') }} </a>
-                                            </div>
-                                        </li>
-
-                                        {{-- Backside --}}
-                                        @if ($verification->document_type !== 'passport')
-                                            <li class="ltr:pl-3 rtl:pr-3 ltr:pr-4 rtl:pl-4 py-3 flex items-center justify-between text-sm">
-                                                <div class="w-0 flex-1 flex items-center">
-                                                    <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
-                                                    </svg>
-                                                    <span class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate text-xs"> 
-                                                        @if ($verification->document_type === 'id')
-                                                            <span class="font-semibold">{{ __('messages.t_government_issued_id_backside') }}</span>
-                                                        @elseif ($verification->document_type === 'driver_license')
-                                                            <span class="font-semibold">{{ __('messages.t_driver_license_backside') }}</span>
-                                                        @endif
-                                                        - {{ format_bytes($verification->backside->file_size) }} </span>
-                                                </div>
-                                                <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0">
-                                                    <a href="{{ url( 'uploads/verifications/' . $verification->uid . '/back/' . $verification->file_back_side ) }}" target="_blank" class="font-medium text-primary-600 hover:text-primary-600 text-xs"> {{ __('messages.t_download') }} </a>
-                                                </div>
-                                            </li>
-                                        @endif
-                                        
                                     </ul>
                                 </dd>
                             </div>
-
                         @else
-
                             {{-- Choose verification document type --}}
                             @if ($currentStep === 1)
-                                
-                                <fieldset>
-                                    <legend class="text-xs font-medium text-gray-900 dark:text-gray-100 mb-2">{{ __('messages.t_choose_document_type') }}</legend>
-                            
-                                    <div class="mt-1 bg-white dark:bg-zinc-700 rounded-md shadow-sm -space-y-px">
 
-                                        {{-- Identify card --}}
-                                        <label class="rounded-tl-md rounded-tr-md relative border-2 dark:border-zinc-600 p-4 flex cursor-pointer focus:outline-none ">
-                                            <input type="radio" name="document_type" value="id" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_id">
-                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
-                                                <span id="document_type_id" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
-                                                    {{ __('messages.t_government_issued_id') }}
-                                                </span>
-                                            </div>
-                                        </label>
-
-                                        {{-- Driver license --}}
-                                        <label class="relative border-2 dark:border-zinc-600 border-t-0 p-4 flex cursor-pointer focus:outline-none ">
-                                            <input type="radio" name="document_type" value="driver_license" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_driver_license">
-                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
-                                                <span id="document_type_driver_license" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
-                                                    {{ __('messages.t_driver_license') }}
-                                                </span>
-                                            </div>
-                                        </label>
-
-                                        {{-- Passport --}}
-                                        <label class="rounded-bl-md rounded-br-md relative border-2 dark:border-zinc-600 border-t-0 p-4 flex cursor-pointer focus:outline-none ">
-                                            <input type="radio" name="document_type" value="passport" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_passport">
-                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
-                                                <span id="document_type_passport" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
-                                                    {{ __('messages.t_passport') }}
-                                                </span>
-                                            </div>
-                                        </label>
-
-                                        {{-- BVN Verification --}}
-                                        <label class="rounded-bl-md rounded-br-md relative border-2 dark:border-zinc-600 border-t-0 p-4 flex cursor-pointer focus:outline-none ">
-                                            <input type="radio" name="document_type" value="bvn" wire:model.defer="document_type" class="h-4 w-4 cursor-pointer text-primary-600 border-gray-300 dark:border-zinc-600 focus:ring-primary-600" aria-labelledby="document_type_bvn">
-                                            <div class="ltr:ml-3 rtl:mr-3 flex flex-col">
-                                                <span id="document_type_passport" class="block text-xs font-medium text-gray-900 dark:text-gray-300">
-                                                    {{ __('BVN Verification') }}
-                                                </span>
-                                            </div>
-                                        </label>
-                                        
+                                {{-- Message --}}
+                                <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 py-7 px-4 mb-7">
+                                    <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
                                     </div>
-                                </fieldset>
+                                    <div class="ltr:ml-3 rtl:mr-3">
+                                        <p class="text-sm text-yellow-700">
+                                            In Compliance with our regulator we do not store your BVN information we are only using it to verify your information.
+                                        </p>
+                                    </div>
+                                    </div>
+                                </div>
 
-                            {{-- Upload files --}}
-                            @elseif ($currentStep === 2)
+                                {{-- bnv verification and account details --}}
+                                <div class="grid md:grid-cols-2 md:gap-x-8 gap-y-8 mb-6">
+                                    <x-forms.text-input 
+                                    label="{{ __('BVN Number') }}" 
+                                    placeholder="{{ __('12345678910') }}" 
+                                    model="bvn"
+                                    type="tel"
+                                    icon="at" />
 
-                                {{-- Upload ID files --}}
-                                @if ($document_type === 'id')
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <x-forms.text-input 
+                                    label="{{ __('Account Number') }}" 
+                                    placeholder="{{ __('1234567890') }}" 
+                                    model="accountNumber"
+                                    type="tel"
+                                    icon="at" />
 
-                                        {{-- Front side --}}
-                                        <div>
-                                            <div class="flex justify-center items-center w-full">
-                                                <label for="doc_id_frontside" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-zinc-600 dark:hover:border-zinc-500 dark:hover:bg-zinc-600">
-                                                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                                                            </svg>
-    
-                                                            {{-- Choose file text --}}
-                                                            <template x-if="!preview.front">
-                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('messages.t_upload_doc_front_side') }}</span></p>
-                                                            </template>
-    
-                                                            {{-- Choosen file name --}}
-                                                            <template x-if="preview.front">
-                                                                <p class="mb-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                                    <span class="font-semibold" x-text="preview.front"></span></p>
-                                                            </template>
-    
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                                {{ __('messages.t_verification_allowed_mimes_size') }}
-                                                            </p>
-                                                        </div>
-    
-                                                    <input id="doc_id_frontside" type="file" accept="image/jpg,image/jpeg,image/png"  class="hidden" @change="setFrontSide" wire:model="doc_id.front">
-                                                </label>
-                                            </div> 
-                                            @error('front')
-                                                <div class="text-xs font-medium text-red-500 pt-1">
-                                                    {{ $errors->first('front') }}
-                                                </div>
-                                            @enderror
-                                        </div>
 
-                                        {{-- Back side --}}
-                                        <div>
-                                            <div class="flex justify-center items-center w-full">
-                                                <label for="doc_id_backside" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-zinc-600 dark:hover:border-zinc-500 dark:hover:bg-zinc-600">
-                                                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                                            </svg>
-    
-                                                            {{-- Choose file text --}}
-                                                            <template x-if="!preview.back">
-                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('messages.t_upload_doc_back_side') }}</span></p>
-                                                            </template>
-    
-                                                            {{-- Choosen file name --}}
-                                                            <template x-if="preview.back">
-                                                                <p class="mb-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                                    <span class="font-semibold" x-text="preview.back"></span></p>
-                                                            </template>
-    
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                                {{ __('messages.t_verification_allowed_mimes_size') }}
-                                                            </p>
-                                                        </div>
-    
-                                                    <input id="doc_id_backside" type="file" accept="image/jpg,image/jpeg,image/png" class="hidden" @change="setBackSide" wire:model="doc_id.back">
-                                                </label>
-                                            </div>  
-                                            @error('back')
-                                                <div class="text-xs font-medium text-red-500 pt-1">
-                                                    {{ $errors->first('back') }}
-                                                </div>
-                                            @enderror
-                                        </div>
+                                    <div class="w-full" wire:ignore>
+                                        <x-forms.select2
+                                            :label="__('Select Your bank')"
+                                            :placeholder="__('Select Bank')"
+                                            model="bank"
+                                            :options="$banks"
+                                            :isDefer="true"
+                                            :isAssociative="false"
+                                            :componentId="$this->id"
+                                            value="code"
+                                            text="name" />
                                     </div>
 
-                                @elseif ($document_type === 'driver_license')
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <x-forms.text-input 
+                                    label="{{ __('First name') }}" 
+                                    placeholder="{{ __('first name') }}" 
+                                    model="first_name"
+                                    type="tel"
+                                    icon="at"
+                                    readonly />
 
-                                        {{-- Front side --}}
-                                        <div>
-                                            <div class="flex justify-center items-center w-full">
-                                                <label for="doc_driver_license_frontside" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-zinc-600 dark:hover:border-zinc-500 dark:hover:bg-zinc-600">
-                                                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                                                            </svg>
-
-                                                            {{-- Choose file text --}}
-                                                            <template x-if="!preview.front">
-                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('messages.t_upload_doc_front_side') }}</span></p>
-                                                            </template>
-
-                                                            {{-- Choosen file name --}}
-                                                            <template x-if="preview.front">
-                                                                <p class="mb-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                                    <span class="font-semibold" x-text="preview.front"></span></p>
-                                                            </template>
-
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                                {{ __('messages.t_verification_allowed_mimes_size') }}
-                                                            </p>
-                                                        </div>
-
-                                                    <input id="doc_driver_license_frontside" type="file" accept="image/jpg,image/jpeg,image/png"  class="hidden" @change="setFrontSide" wire:model="doc_driver_license.front">
-                                                </label>
-                                            </div> 
-                                            @error('front')
-                                                <div class="text-xs font-medium text-red-500 pt-1">
-                                                    {{ $errors->first('front') }}
-                                                </div>
-                                            @enderror
-                                        </div>
-
-                                        {{-- Back side --}}
-                                        <div>
-                                            <div class="flex justify-center items-center w-full">
-                                                <label for="doc_driver_license_backside" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-zinc-600 dark:hover:border-zinc-500 dark:hover:bg-zinc-600">
-                                                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                                            </svg>
-
-                                                            {{-- Choose file text --}}
-                                                            <template x-if="!preview.back">
-                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('messages.t_upload_doc_back_side') }}</span></p>
-                                                            </template>
-
-                                                            {{-- Choosen file name --}}
-                                                            <template x-if="preview.back">
-                                                                <p class="mb-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                                    <span class="font-semibold" x-text="preview.back"></span></p>
-                                                            </template>
-
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                                {{ __('messages.t_verification_allowed_mimes_size') }}
-                                                            </p>
-                                                        </div>
-
-                                                    <input id="doc_driver_license_backside" type="file" accept="image/jpg,image/jpeg,image/png" class="hidden" @change="setBackSide" wire:model="doc_driver_license.back">
-                                                </label>
-                                            </div>  
-                                            @error('back')
-                                                <div class="text-xs font-medium text-red-500 pt-1">
-                                                    {{ $errors->first('back') }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                @elseif ($document_type === 'passport')
-                                    <div class="grid grid-cols-1 gap-4">
-
-                                        {{-- Front side --}}
-                                        <div>
-                                            <div class="flex justify-center items-center w-full">
-                                                <label for="doc_passport_frontside" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-zinc-600 dark:hover:border-zinc-500 dark:hover:bg-zinc-600">
-                                                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                                                            </svg>
-
-                                                            {{-- Choose file text --}}
-                                                            <template x-if="!preview.front">
-                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('messages.t_upload_doc_front_side') }}</span></p>
-                                                            </template>
-
-                                                            {{-- Choosen file name --}}
-                                                            <template x-if="preview.front">
-                                                                <p class="mb-2 text-sm text-gray-900 dark:text-gray-400 truncate">
-                                                                    <span class="font-semibold" x-text="preview.front"></span></p>
-                                                            </template>
-
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                                {{ __('messages.t_verification_allowed_mimes_size') }}
-                                                            </p>
-                                                        </div>
-
-                                                    <input id="doc_passport_frontside" type="file" accept="image/jpg,image/jpeg,image/png" class="hidden" @change="setFrontSide" wire:model="doc_passport.front">
-                                                </label>
-                                            </div> 
-                                            @error('front')
-                                                <div class="text-xs font-medium text-red-500 pt-1">
-                                                    {{ $errors->first('front') }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @elseif ($document_type == 'bvn')
-                                    {{-- Message --}}
-                                    <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 py-7 px-4 mb-5">
-                                        <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div class="ltr:ml-3 rtl:mr-3">
-                                            <p class="text-sm text-yellow-700">
-                                                In Compliance with our regulator we do not store your BVN information we are only using it to verify your information.
-                                            </p>
-                                        </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- bnv verification and account details --}}
-                                    <div class="grid md:grid-cols-2 md:gap-x-8 gap-y-8 mb-6">
-                                        <x-forms.text-input 
-                                        label="{{ __('BVN Number') }}" 
-                                        placeholder="{{ __('12345678910') }}" 
-                                        model="bvn"
-                                        type="tel"
-                                        icon="at" />
-
-                                        <x-forms.text-input 
-                                        label="{{ __('Account Number') }}" 
-                                        placeholder="{{ __('1234567890') }}" 
-                                        model="accountNumber"
-                                        type="tel"
-                                        icon="at" />
-
-
-                                        <div class="w-full" wire:ignore>
-                                            <x-forms.select2
-                                                :label="__('Select Your bank')"
-                                                :placeholder="__('Select Bank')"
-                                                model="bank"
-                                                :options="$banks"
-                                                :isDefer="true"
-                                                :isAssociative="false"
-                                                :componentId="$this->id"
-                                                value="code"
-                                                text="name" />
-                                        </div>
-
-                                        <x-forms.text-input 
-                                        label="{{ __('First name') }}" 
-                                        placeholder="{{ __('first name') }}" 
-                                        model="first_name"
-                                        type="tel"
-                                        icon="at"
-                                        readonly />
-
-                                        <x-forms.text-input 
-                                        label="{{ __('Last name') }}" 
-                                        placeholder="{{ __('Last name') }}" 
-                                        model="last_name"
-                                        type="tel"
-                                        icon="at"
-                                        class="disabled:bg-slate-300"
-                                        readonly />
-                                    </div>
-                                @endif
+                                    <x-forms.text-input 
+                                    label="{{ __('Last name') }}" 
+                                    placeholder="{{ __('Last name') }}" 
+                                    model="last_name"
+                                    type="tel"
+                                    icon="at"
+                                    class="disabled:bg-slate-300"
+                                    readonly />
+                                </div>
 
                             {{-- Selfie --}}
-                            @elseif ($currentStep === 3)
+                            @elseif ($currentStep === 2)
 
                                 {{-- Message --}}
                                 <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 p-4">
@@ -531,19 +249,12 @@
                                 {{-- Set document type --}}
                                 @if ($currentStep === 1)
                                     <div class="py-4 px-4 flex justify-end sm:px-6">
-                                        <x-forms.button action="setDocumentType" text="{{ __('messages.t_next_step') }}" block="0" />
-                                    </div>
-                                @endif
-
-                                {{-- Set document files --}}
-                                @if ($currentStep === 2)
-                                    <div class="py-4 px-4 flex justify-end sm:px-6">
-                                        <x-forms.button action="setDocumentFiles" text="{{ __('messages.t_next_step') }}" block="0" />
+                                        <x-forms.button action="verify" text="{{ __('messages.t_next_step') }}" block="0" />
                                     </div>
                                 @endif
 
                                 {{-- Finish --}}
-                                @if ($currentStep === 3)
+                                @if ($currentStep === 2)
                                     <div class="py-4 px-4 flex justify-end sm:px-6">
                                         <x-forms.button action="finish" text="{{ __('messages.t_finish') }}" block="0" />
                                     </div>
@@ -572,7 +283,7 @@
 
 @endpush
 
-@pushOnce('styles')
+{{-- @pushOnce('styles')
     <link href="{{ mix('css/select2.css') }}" rel="stylesheet" />
 @endPushOnce
 
@@ -580,7 +291,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ mix('js/select2.js') }}"></script>
     <script src="{{ url('vendor/pharaonic/pharaonic.select2.min.js') }}"></script>
-@endPushOnce
+@endPushOnce --}}
 
 {{-- Include in Footer --}}
 @push('scripts')

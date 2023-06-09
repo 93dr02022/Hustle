@@ -13,8 +13,10 @@ class SettingsComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
-    public $selected = 'offline';
     public $offline_info;
+    public $bank;
+    public $accountName;
+    public $accountNumber;
 
     /**
      * Init component
@@ -23,11 +25,13 @@ class SettingsComponent extends Component
      */
     public function mount()
     {
-        $payout_account = UserWithdrawalSettings::firstOrCreate(['user_id' => auth()->id()]);
+        $withdrawInfo = UserWithdrawalSettings::where('user_id', auth()->id())->first();
 
-        // Set offline info
-        $this->offline_info = $payout_account->gateway_provider_id;
-        $this->selected     = 'offline';
+        if ($withdrawInfo) {
+            $this->bank = $withdrawInfo->bank_name;
+            $this->accountName = $withdrawInfo->account_name;
+            $this->accountNumber = $withdrawInfo->gateway_provider_id;
+        }
     }
 
 
@@ -73,7 +77,7 @@ class SettingsComponent extends Component
      *
      * @return void
      */
-    public function update($selected)
+    public function update()
     {
         try {
             SettingsValidator::validate($this);

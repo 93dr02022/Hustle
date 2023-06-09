@@ -16,7 +16,7 @@
             id="text-input-component-id-{{ $model }}" 
             {{ $type === 'password' ? 'readonly' : '' }} 
             onfocus="{{ $type === 'password' ? "this.removeAttribute('readonly');" : "" }}" 
-            class="disabled:cursor-not-allowed focus:!ring-0 focus:outline-none block w-full ltr:pr-10 ltr:pl-4 rtl:pl-10 rtl:!pr-4 py-3.5 placeholder:font-normal placeholder:text-[13px] dark:placeholder-zinc-300 text-sm font-medium text-zinc-800 dark:text-white rounded-md dark:bg-transparent {{ $errors->first($model) ? 'focus:!ring-red-600 focus:!border-red-600 border-red-500' : 'focus:!ring-primary-600 focus:!border-primary-600 border-gray-300 dark:border-zinc-500' }}" 
+            class="read-only:bg-gray-100 disabled:cursor-not-allowed focus:!ring-0 focus:outline-none block w-full ltr:pr-10 ltr:pl-4 rtl:pl-10 rtl:!pr-4 py-3.5 placeholder:font-normal placeholder:text-[13px] dark:placeholder-zinc-300 text-sm font-medium text-zinc-800 dark:text-white rounded-md dark:bg-transparent {{ $errors->first($model) ? 'focus:!ring-red-600 focus:!border-red-600 border-red-500' : 'focus:!ring-primary-600 focus:!border-primary-600 border-gray-300 dark:border-zinc-500' }}" 
             {{ $attributes }} />
 
         @if ($suffix)

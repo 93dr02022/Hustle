@@ -174,7 +174,7 @@
             </div>
 
             {{-- successfull notification view to copy link --}}
-            <div x-show="successful" class="max-w-md py-5 mx-auto bg-white rounded shadow-md">
+            <div x-show="successful" class="max-w-md py-5 mx-auto bg-white rounded shadow-md" x-cloak>
                 <div class="flex-shrink-0 flex justify-center">
                     <div class="inline-flex h-32 w-32 rounded-full bg-green-100 p-6 items-center justify-center">
                         <x-icons.card-icon width="50" height="50"></x-icons.card-icon>
