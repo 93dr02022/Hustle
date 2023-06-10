@@ -160,6 +160,7 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -185,6 +186,7 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -208,6 +210,7 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -246,6 +249,7 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -351,7 +355,9 @@ class CreateComponent extends Component
                         'price' => $upgrade['price'],
                         'extra_days' => isset($upgrade['extra_days']) ? $upgrade['extra_days'] : 0,
                     ]);
+
                 }
+
             }
 
             // Check if gig has faqs
@@ -366,7 +372,9 @@ class CreateComponent extends Component
                         'question' => clean($faq['question']),
                         'answer' => clean($faq['answer']),
                     ]);
+
                 }
+
             }
 
             // Check if gig has requirements
@@ -395,9 +403,13 @@ class CreateComponent extends Component
                                 'requirement_id' => $requirement->id,
                                 'option' => $option,
                             ]);
+
                         }
+
                     }
+
                 }
+
             }
 
             // Check if gig has custom seo
@@ -409,6 +421,7 @@ class CreateComponent extends Component
                     'title' => clean($this->seo_title),
                     'description' => clean($this->seo_description),
                 ]);
+
             }
 
             // Save gig images
@@ -430,6 +443,7 @@ class CreateComponent extends Component
                     'img_medium_id' => $img_medium_id,
                     'img_large_id' => $img_large_id,
                 ]);
+
             }
 
             // Check if documents exists in request
@@ -457,7 +471,9 @@ class CreateComponent extends Component
                         'name' => $name,
                         'size' => $size,
                     ]);
+
                 }
+
             }
 
             // Gig has been posted successfully
@@ -469,9 +485,11 @@ class CreateComponent extends Component
                 $this->is_approved = false;
 
                 Admin::first()->notify((new PendingGig($gig))->locale(config('app.locale')));
+
             } else {
 
                 $this->is_approved = true;
+
             }
 
             // Success message
@@ -480,6 +498,7 @@ class CreateComponent extends Component
                 'description' => __('messages.t_gig_created_successfully'),
                 'icon' => 'success',
             ]);
+
         } catch (\Throwable $th) {
             throw $th;
         }
