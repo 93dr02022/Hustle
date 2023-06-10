@@ -2,18 +2,20 @@
 
 namespace App\Http\Livewire\Main\Includes;
 
-use Cookie;
-use App\Models\Page;
-use Livewire\Component;
 use App\Models\Language;
+use App\Models\Page;
+use Cookie;
+use Livewire\Component;
 use WireUi\Traits\Actions;
 
 class Footer extends Component
 {
     use Actions;
-    
+
     public $default_language_name;
+
     public $default_language_code;
+
     public $default_country_code;
 
     /**
@@ -24,29 +26,29 @@ class Footer extends Component
     public function mount()
     {
         // Get language from session
-        $locale   = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
+        $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
 
         // Get default language
         $language = Language::where('language_code', $locale)->first();
 
         // Check if language exists
         if ($language) {
-            
+
             // Set default language
             $this->default_language_name = $language->name;
             $this->default_language_code = $language->language_code;
-            $this->default_country_code  = $language->country_code;
+            $this->default_country_code = $language->country_code;
 
         } else {
 
             // Not found, set default
-            $this->default_language_name = "English";
-            $this->default_language_code = "en";
-            $this->default_country_code  = "us";
+            $this->default_language_name = 'English';
+            $this->default_language_code = 'en';
+            $this->default_country_code = 'us';
 
         }
     }
-    
+
     /**
      * Render component
      *
@@ -55,10 +57,9 @@ class Footer extends Component
     public function render()
     {
         return view('livewire.main.includes.footer', [
-            'pages' => $this->pages
+            'pages' => $this->pages,
         ]);
     }
-
 
     /**
      * Get pages
@@ -70,11 +71,10 @@ class Footer extends Component
         return Page::orderBy('title', 'asc')->get();
     }
 
-
     /**
      * Change locale
      *
-     * @param string $locale
+     * @param  string  $locale
      * @return void
      */
     public function setLocale($locale)
@@ -83,13 +83,13 @@ class Footer extends Component
         $language = Language::where('language_code', $locale)->where('is_active', true)->first();
 
         // Check if language exists
-        if (!$language) {
-            
+        if (! $language) {
+
             // Not found
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_selected_lang_does_not_found'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
@@ -103,7 +103,6 @@ class Footer extends Component
         $this->dispatchBrowserEvent('refresh');
     }
 
-
     /**
      * Switch theme
      *
@@ -112,19 +111,19 @@ class Footer extends Component
     public function switchTheme()
     {
         try {
-            
+
             // Get appearance settings
             $settings = settings('appearance');
 
             // Check if theme switcher enabled
             if ($settings->is_theme_switcher) {
-                
+
                 // Get current theme
                 $current = current_theme();
 
                 // Check current theme
                 if ($current === 'light') {
-                   
+
                     // Switch to dark mode
                     Cookie::queue('default_theme', 'dark', 10080); // 7 days = 10080 min
 
@@ -141,11 +140,10 @@ class Footer extends Component
             }
 
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             return;
 
         }
     }
-    
 }

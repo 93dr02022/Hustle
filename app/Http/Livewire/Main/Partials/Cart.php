@@ -8,10 +8,10 @@ use WireUi\Traits\Actions;
 class Cart extends Component
 {
     use Actions;
-    
-    public $cart    = [];
+
+    public $cart = [];
+
     protected $listeners = ['cart-updated' => 'cartUpdated'];
-    
 
     /**
      * Init component
@@ -34,12 +34,11 @@ class Cart extends Component
         return view('livewire.main.partials.cart');
     }
 
-
     /**
      * Count total price of an item in cart
      *
-     * @param string $id
-     * @return integer
+     * @param  string  $id
+     * @return int
      */
     public function itemTotalPrice($id)
     {
@@ -48,18 +47,17 @@ class Cart extends Component
 
         // Loop throug items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Check if item exists
             if ($item['id'] === $id) {
-                
+
                 // Get quantity
                 $quantity = (int) $item['quantity'];
 
                 // Sum upgrades total price
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
-                    $total_upgrades_price = array_reduce($item['upgrades'], function($i, $obj)
-                    {
+
+                    $total_upgrades_price = array_reduce($item['upgrades'], function ($i, $obj) {
                         // Calculate only selected upgrades
                         if ($obj['checked'] == true) {
                             return $i += $obj['price'];
@@ -88,11 +86,10 @@ class Cart extends Component
 
     }
 
-
     /**
      * Remove item from cart
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function remove($id)
@@ -102,13 +99,13 @@ class Cart extends Component
 
         // Loop through cart
         foreach ($cart as $key => $item) {
-            
+
             // Check if item exists in cart
             if ($item['id'] === $id) {
-                
+
                 // Delete item from cart
                 unset($cart[$key]);
-                
+
                 // Break
                 break;
 
@@ -130,20 +127,19 @@ class Cart extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_item_removed_from_cart_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
 
         // Update cart
         $this->dispatchBrowserEvent('cart-updated');
     }
 
-
     /**
      * Calculate total price
      *
-     * @return integer
+     * @return int
      */
     public function total()
     {
@@ -152,7 +148,7 @@ class Cart extends Component
 
         // Loop through items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
 
@@ -161,7 +157,6 @@ class Cart extends Component
         // Return total price
         return $total;
     }
-
 
     /**
      * Check if cart updated
@@ -172,5 +167,4 @@ class Cart extends Component
     {
         $this->cart = session('cart', []);
     }
-    
 }

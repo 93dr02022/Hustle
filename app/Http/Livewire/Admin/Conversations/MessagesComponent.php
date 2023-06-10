@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Admin\Conversations;
 
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
-use Livewire\WithPagination;
-use Livewire\Component;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class MessagesComponent extends Component
 {
@@ -17,13 +17,13 @@ class MessagesComponent extends Component
     /**
      * Inti component
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function mount($id)
     {
         // Get conversation
-        $conversation       = Conversation::where('uid', $id)->firstOrFail();
+        $conversation = Conversation::where('uid', $id)->firstOrFail();
 
         // Set conversation
         $this->conversation = $conversation;
@@ -37,14 +37,13 @@ class MessagesComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_conversation_messages'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_conversation_messages'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.conversations.messages', [
-            'messages' => $this->messages
+            'messages' => $this->messages,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of messages
@@ -56,11 +55,10 @@ class MessagesComponent extends Component
         return ConversationMessage::where('conversation_id', $this->conversation->id)->latest()->paginate(42);
     }
 
-
     /**
      * Delete selected message
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -68,5 +66,4 @@ class MessagesComponent extends Component
         // Delete message
         ConversationMessage::where('id', $id)->where('conversation_id', $this->conversation->id)->delete();
     }
-    
 }

@@ -2,25 +2,29 @@
 
 namespace App\Http\Livewire\Admin\Categories\Options;
 
-use Livewire\Component;
+use App\Http\Validators\Admin\Categories\CreateValidator;
 use App\Models\Category;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Categories\CreateValidator;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class CreateComponent extends Component
 {
-
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $name;
+
     public $slug;
+
     public $description;
+
     public $icon;
+
     public $image;
+
     public $is_visible;
 
     /**
@@ -31,12 +35,11 @@ class CreateComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_create_category'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_create_category'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.categories.options.create')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Create new category
@@ -65,14 +68,14 @@ class CreateComponent extends Component
             }
 
             // Save category
-            $category              = new Category();
-            $category->uid         = uid();
-            $category->name        = $this->name;
-            $category->slug        = Str::slug($this->slug);
+            $category = new Category();
+            $category->uid = uid();
+            $category->name = $this->name;
+            $category->slug = Str::slug($this->slug);
             $category->description = $this->description ? $this->description : null;
-            $category->icon_id     = $icon_id;
-            $category->image_id    = $image_id;
-            $category->is_visible  = $this->is_visible ? true : false;
+            $category->icon_id = $icon_id;
+            $category->image_id = $image_id;
+            $category->is_visible = $this->is_visible ? true : false;
             $category->save();
 
             // Reset form
@@ -80,34 +83,31 @@ class CreateComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

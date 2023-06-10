@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Admin\Gigs;
 
 use App\Models\Gig;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Notifications\User\Everyone\GigPublished;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class GigsComponent extends Component
 {
@@ -21,14 +21,13 @@ class GigsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_gigs'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_gigs'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.gigs.gigs', [
-            'gigs' => $this->gigs
+            'gigs' => $this->gigs,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of gigs
@@ -40,11 +39,10 @@ class GigsComponent extends Component
         return Gig::latest()->paginate(42);
     }
 
-
     /**
      * Delete gig
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -54,12 +52,12 @@ class GigsComponent extends Component
 
         // Check of gig has pending orders
         if ($gig->orders_in_queue) {
-            
+
             // You can't delete this
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_u_cant_delete_this_gig_pending_orders'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
@@ -71,17 +69,16 @@ class GigsComponent extends Component
 
         // success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_gig_deleted_successfull'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Publish gig
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function publish($id)
@@ -94,22 +91,21 @@ class GigsComponent extends Component
         $gig->save();
 
         // Send notification to owner
-        $gig->owner->notify( (new GigPublished($gig))->locale(config('app.locale')) );
+        $gig->owner->notify((new GigPublished($gig))->locale(config('app.locale')));
 
         // Send notification
         notification([
-            'text'    => 't_ur_gig_title_has_been_published',
-            'action'  => url('service', $gig->slug),
+            'text' => 't_ur_gig_title_has_been_published',
+            'action' => url('service', $gig->slug),
             'user_id' => $gig->user_id,
-            'params'  => ['title' => $gig->title]
+            'params' => ['title' => $gig->title],
         ]);
 
         // success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_gig_published_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 }

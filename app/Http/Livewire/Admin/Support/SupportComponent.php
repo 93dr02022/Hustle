@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\Admin\Support;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
-use App\Models\SupportMessage;
-use App\Mail\Admin\Support\Reply;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Validators\Admin\Support\ReplyValidator;
+use App\Mail\Admin\Support\Reply;
+use App\Models\SupportMessage;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Mail;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class SupportComponent extends Component
 {
@@ -25,14 +25,13 @@ class SupportComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_support'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_support'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.support.support', [
-            'messages' => $this->messages
+            'messages' => $this->messages,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of messages
@@ -44,11 +43,10 @@ class SupportComponent extends Component
         return SupportMessage::latest()->paginate(42);
     }
 
-
     /**
      * Read message
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function read($id)
@@ -67,11 +65,10 @@ class SupportComponent extends Component
         $this->dispatchBrowserEvent('open-modal', 'read-message');
     }
 
-
     /**
      * Reply message
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function reply($id)
@@ -88,7 +85,7 @@ class SupportComponent extends Component
             Mail::to($message->email)->send(new Reply($this->message, $message));
 
             // Mark message as replied
-            $message->is_seen    = true;
+            $message->is_seen = true;
             $message->is_replied = true;
             $message->save();
 
@@ -97,41 +94,38 @@ class SupportComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_message_reply_sent_successfully'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Delete message
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -141,10 +135,9 @@ class SupportComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_message_has_been_deleted'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

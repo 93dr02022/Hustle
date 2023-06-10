@@ -2,28 +2,36 @@
 
 namespace App\Http\Livewire\Admin\Services;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
+use App\Http\Validators\Admin\Services\PaypalValidator;
 use App\Models\PayPalSettings;
 use App\Utils\Uploader\ImageUploader;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Validators\Admin\Services\PaypalValidator;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class PaypalComponent extends Component
 {
     use SEOToolsTrait, WithFileUploads, Actions;
-    
+
     public $is_enabled;
+
     public $name;
+
     public $logo;
+
     public $currency;
+
     public $exchange_rate;
+
     public $deposit_fee;
+
     public $client_id;
+
     public $client_secret;
+
     public $environment;
 
     /**
@@ -38,17 +46,16 @@ class PaypalComponent extends Component
 
         // Fill default settings
         $this->fill([
-            'is_enabled'    => $settings->is_enabled ? 1 : 0,
-            'name'          => $settings->name,
-            'currency'      => config('paypal.currency'),
+            'is_enabled' => $settings->is_enabled ? 1 : 0,
+            'name' => $settings->name,
+            'currency' => config('paypal.currency'),
             'exchange_rate' => $settings->exchange_rate,
-            'deposit_fee'   => $settings->deposit_fee,
-            'client_id'     => config('paypal.mode') == 'sandbox' ? config('paypal.sandbox.client_id') : config('paypal.live.client_id'),
+            'deposit_fee' => $settings->deposit_fee,
+            'client_id' => config('paypal.mode') == 'sandbox' ? config('paypal.sandbox.client_id') : config('paypal.live.client_id'),
             'client_secret' => config('paypal.mode') == 'sandbox' ? config('paypal.sandbox.client_secret') : config('paypal.live.client_secret'),
-            'environment'   => config('paypal.mode')
+            'environment' => config('paypal.mode'),
         ]);
     }
-
 
     /**
      * Render component
@@ -58,14 +65,13 @@ class PaypalComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_paypal'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_paypal'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.services.paypal', [
-            'currencies' => config('money')
+            'currencies' => config('money'),
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update settings
@@ -84,12 +90,12 @@ class PaypalComponent extends Component
 
             // Check if request has a logo file
             if ($this->logo) {
-                
+
                 // Upload new logo
                 $logo_id = ImageUploader::make($this->logo)
-                                        ->folder('services')
-                                        ->deleteById($settings->logo_id)
-                                        ->handle();
+                    ->folder('services')
+                    ->deleteById($settings->logo_id)
+                    ->handle();
 
             } else {
 
@@ -100,16 +106,16 @@ class PaypalComponent extends Component
 
             // Save settings
             PayPalSettings::first()->update([
-                'is_enabled'    => $this->is_enabled ? 1 : 0,
-                'name'          => $this->name,
-                'logo_id'       => $logo_id,
+                'is_enabled' => $this->is_enabled ? 1 : 0,
+                'name' => $this->name,
+                'logo_id' => $logo_id,
                 'exchange_rate' => $this->exchange_rate,
-                'deposit_fee'   => $this->deposit_fee
+                'deposit_fee' => $this->deposit_fee,
             ]);
 
             // Check mode
-            if ($this->environment === "sandbox") {
-                
+            if ($this->environment === 'sandbox') {
+
                 // Write sandbox config
                 Config::write('paypal.mode', 'sandbox');
                 Config::write('paypal.sandbox.client_id', $this->client_id);
@@ -135,34 +141,31 @@ class PaypalComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

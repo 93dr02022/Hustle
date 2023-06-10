@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Admin\Projects\Plans;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use App\Models\ProjectPlan;
 use App\Models\ProjectBiddingPlan;
+use App\Models\ProjectPlan;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use File;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class PlansComponent extends Component
 {
@@ -23,11 +23,10 @@ class PlansComponent extends Component
     public function mount()
     {
         // Check if alert must be hidden
-        if (File::exists( base_path('regular') )) {
+        if (File::exists(base_path('regular'))) {
             $this->alert = true;
         }
     }
-
 
     /**
      * Render component
@@ -37,15 +36,14 @@ class PlansComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_projects_plans'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_projects_plans'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.projects.plans.plans', [
-            'plans'         => $this->plans,
-            'bidding_plans' => $this->bidding_plans
+            'plans' => $this->plans,
+            'bidding_plans' => $this->bidding_plans,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get projects plans plans
@@ -57,7 +55,6 @@ class PlansComponent extends Component
         return ProjectPlan::all();
     }
 
-
     /**
      * Get bidding pormotion plans
      *
@@ -68,50 +65,47 @@ class PlansComponent extends Component
         return ProjectBiddingPlan::all();
     }
 
-
     /**
      * Activate plan plan
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function activate($id)
     {
         // Disable plan
         ProjectPlan::where('id', $id)->update([
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Disable selected plan
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function disable($id)
     {
         // Disable plan
         ProjectPlan::where('id', $id)->update([
-            'is_active' => false
+            'is_active' => false,
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Hide alert message
@@ -121,10 +115,9 @@ class PlansComponent extends Component
     public function hideAlert()
     {
         // Delete file
-        File::delete( base_path('regular') );
+        File::delete(base_path('regular'));
 
         // Hide alert
         $this->alert = false;
     }
-    
 }

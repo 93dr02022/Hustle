@@ -2,28 +2,32 @@
 
 namespace App\Http\Livewire\Admin\Categories\Options;
 
-use Livewire\Component;
-use App\Models\Category;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
-use App\Utils\Uploader\ImageUploader;
 use App\Http\Validators\Admin\Categories\EditValidator;
+use App\Models\Category;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class EditComponent extends Component
 {
-
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $name;
-    public $slug;
-    public $description;
-    public $icon;
-    public $image;
-    public $is_visible;
-    public $category;
 
+    public $slug;
+
+    public $description;
+
+    public $icon;
+
+    public $image;
+
+    public $is_visible;
+
+    public $category;
 
     public function mount($id)
     {
@@ -32,16 +36,15 @@ class EditComponent extends Component
 
         // Fill form
         $this->fill([
-            'name'        => $category->name,
-            'slug'        => $category->slug,
+            'name' => $category->name,
+            'slug' => $category->slug,
             'description' => $category->description,
-            'is_visible'  => $category->is_visible ? 1 : 0,
+            'is_visible' => $category->is_visible ? 1 : 0,
         ]);
 
         // Set category
         $this->category = $category;
     }
-
 
     /**
      * Render component
@@ -56,7 +59,6 @@ class EditComponent extends Component
 
         return view('livewire.admin.categories.options.edit')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update category
@@ -93,27 +95,27 @@ class EditComponent extends Component
             }
 
             // Update category
-            $this->category->name        = $this->name;
-            $this->category->slug        = Str::slug($this->slug);
+            $this->category->name = $this->name;
+            $this->category->slug = Str::slug($this->slug);
             $this->category->description = $this->description ? $this->description : null;
-            $this->category->icon_id     = $icon_id;
-            $this->category->image_id    = $image_id;
-            $this->category->is_visible  = $this->is_visible ? true : false;
+            $this->category->icon_id = $icon_id;
+            $this->category->image_id = $image_id;
+            $this->category->is_visible = $this->is_visible ? true : false;
             $this->category->save();
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
@@ -121,9 +123,9 @@ class EditComponent extends Component
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;

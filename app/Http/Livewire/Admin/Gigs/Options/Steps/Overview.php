@@ -2,38 +2,47 @@
 
 namespace App\Http\Livewire\Admin\Gigs\Options\Steps;
 
+use App\Http\Validators\Admin\Gigs\Edit\OverviewValidator;
+use App\Models\Category;
 use App\Models\Gig;
 use App\Models\GigFaq;
 use App\Models\GigSeo;
-use Livewire\Component;
-use App\Models\Category;
-use WireUi\Traits\Actions;
 use App\Models\Subcategory;
-use Illuminate\Support\Str;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Gigs\Edit\OverviewValidator;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class Overview extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $title;
+
     public $category;
+
     public $subcategory;
+
     public $description;
+
     public $seo_title;
+
     public $seo_description;
+
     public $question;
+
     public $answer;
-    public $tags          = [];
-    public $faqs          = [];
+
+    public $tags = [];
+
+    public $faqs = [];
 
     public $gig;
 
     /**
      * Init component
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function mount(Gig $gig)
@@ -54,7 +63,7 @@ class Overview extends Component
                 // Set faq
                 $faq = [
                     'question' => $faq->question,
-                    'answer'   => $faq->answer
+                    'answer' => $faq->answer,
                 ];
 
                 // Add this faq to list
@@ -64,11 +73,11 @@ class Overview extends Component
 
         // Fill form
         $this->fill([
-            'title'           => $gig->title,
-            'category'        => $gig->category_id,
-            'subcategory'     => $gig->subcategory_id,
-            'description'     => $gig->description,
-            'seo_title'       => $gig->seo ? $gig->seo->title : null,
+            'title' => $gig->title,
+            'category' => $gig->category_id,
+            'subcategory' => $gig->subcategory_id,
+            'description' => $gig->description,
+            'seo_title' => $gig->seo ? $gig->seo->title : null,
             'seo_description' => $gig->seo ? $gig->seo->description : null,
         ]);
     }
@@ -81,15 +90,14 @@ class Overview extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_edit_overview'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_edit_overview'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.gigs.options.steps.overview', [
-            'categories'    => $this->categories,
+            'categories' => $this->categories,
             'subcategories' => $this->subcategories,
         ]);
     }
-
 
     /**
      * Get all parent categories
@@ -101,7 +109,6 @@ class Overview extends Component
         return Category::orderBy('name')->get();
     }
 
-
     /**
      * Get subcategories
      *
@@ -112,11 +119,10 @@ class Overview extends Component
         return Subcategory::where('parent_id', $this->gig->category_id)->orderBy('name')->get();
     }
 
-
     /**
      * Get subcategories
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function updatedCategory($id)
@@ -124,7 +130,6 @@ class Overview extends Component
         // Get all subcategories in this parent category
         $this->subcategories = Subcategory::where('parent_id', $id)->orderBy('name')->get();
     }
-
 
     /**
      * Add a FAQ to list
@@ -142,7 +147,7 @@ class Overview extends Component
             // Set faq
             $faq = [
                 'question' => $this->question,
-                'answer'   => $this->answer
+                'answer' => $this->answer,
             ];
 
             // Add this faq to list
@@ -153,58 +158,54 @@ class Overview extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_faq_added_successfully'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
 
     /**
      * Remove item from list
      *
-     * @param integer $key
+     * @param  int  $key
      * @return void
      */
     public function removeFaq($key)
     {
         // Check if item set in array
         if (isset($this->faqs[$key])) {
-            
+
             // Remove it
             unset($this->faqs[$key]);
 
         }
     }
 
-
     /**
      * Add tag to list
      *
-     * @param string $tag
      * @return void
      */
     public function addTag(string $tag)
@@ -216,7 +217,7 @@ class Overview extends Component
             OverviewValidator::tag($tag);
 
             // Clear tag
-            $clean = str_replace(['"', "'", ";", ":", "/", ",", ".", "-", "_", "&", "!"], "", $tag);
+            $clean = str_replace(['"', "'", ';', ':', '/', ',', '.', '-', '_', '&', '!'], '', $tag);
 
             // Add add tag to list
             array_push($this->tags, $clean);
@@ -228,32 +229,29 @@ class Overview extends Component
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Remove tag from list
      *
-     * @param string $tag
+     * @param  string  $tag
      * @return void
      */
     public function removeTag($tag)
@@ -263,7 +261,7 @@ class Overview extends Component
 
         // Check if tag exists
         if (isset($this->tags[$key])) {
-            
+
             // Delete this tag
             unset($this->tags[$key]);
 
@@ -273,7 +271,6 @@ class Overview extends Component
         }
     }
 
-
     /**
      * Save overview data section
      *
@@ -282,13 +279,13 @@ class Overview extends Component
     public function save()
     {
         try {
-            
+
             // Validate form
             OverviewValidator::all($this);
 
             // Check if request has tags
             if (count($this->tags)) {
-                
+
                 // Delete old tags
                 $this->gig->untag();
 
@@ -301,18 +298,18 @@ class Overview extends Component
 
             // Check if request has new faqs
             if (count($this->faqs)) {
-                
+
                 // Delete old faqs
                 GigFaq::where('gig_id', $this->gig->id)->delete();
 
                 // Add new faqs
                 foreach ($this->faqs as $faq) {
-                    
+
                     // Save faq
                     GigFaq::create([
-                        'gig_id'   => $this->gig->id,
+                        'gig_id' => $this->gig->id,
                         'question' => clean($faq['question']),
-                        'answer'   => clean($faq['answer'])
+                        'answer' => clean($faq['answer']),
                     ]);
 
                 }
@@ -321,62 +318,59 @@ class Overview extends Component
 
             // Check if request has seo details
             if ($this->seo_title && $this->seo_description) {
-                
+
                 // Delete old seo
                 GigSeo::where('gig_id', $this->gig->id)->delete();
 
                 // Add new seo
                 GigSeo::create([
-                    'gig_id'      => $this->gig->id,
-                    'title'       => clean($this->seo_title),
+                    'gig_id' => $this->gig->id,
+                    'title' => clean($this->seo_title),
                     'description' => clean($this->seo_description),
                 ]);
 
             }
 
             // Get title
-            $title                     = htmlspecialchars_decode(clean($this->title));
+            $title = htmlspecialchars_decode(clean($this->title));
 
             // Generate unique slug for this gig
-            $slug                      = substr( Str::slug($title), 0, 138 ) . '-' . $this->gig->uid;
+            $slug = substr(Str::slug($title), 0, 138).'-'.$this->gig->uid;
 
             // Get description
-            $description               = clean($this->description);
+            $description = clean($this->description);
 
             // Update gig data
-            $this->gig->title          = $title;
-            $this->gig->slug           = $slug;
-            $this->gig->description    = $description;
-            $this->gig->category_id    = $this->category;
+            $this->gig->title = $title;
+            $this->gig->slug = $slug;
+            $this->gig->description = $description;
+            $this->gig->category_id = $this->category;
             $this->gig->subcategory_id = $this->subcategory;
             $this->gig->save();
 
             // Success
-            return redirect( config('global.dashboard_prefix') . "/gigs/edit/" . $this->gig->uid . "?step=pricing" )->with('success', __('messages.t_overview_section_has_been_saved'));
+            return redirect(config('global.dashboard_prefix').'/gigs/edit/'.$this->gig->uid.'?step=pricing')->with('success', __('messages.t_overview_section_has_been_saved'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

@@ -2,28 +2,32 @@
 
 namespace App\Http\Livewire\Admin\Auth;
 
-use Livewire\Component;
+use App\Http\Validators\Admin\Auth\LoginValidator;
 use App\Models\BannedIp;
-use WireUi\Traits\Actions;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use App\Http\Validators\Admin\Auth\LoginValidator;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class LoginComponent extends Component
 {
-
     use SEOToolsTrait, Actions;
- 
+
     protected $attempts = 2;
-    protected $retry    = 20;
+
+    protected $retry = 20;
 
     public $email;
+
     public $password;
+
     public $message;
+
     public $recaptcha_token;
 
     public $attemptsLeft;
+
     public $retryAfter;
 
     /**
@@ -42,9 +46,8 @@ class LoginComponent extends Component
         $this->attemptsLeft = RateLimiter::retriesLeft($this->throttleKey(), $this->attempts);
 
         // Set time left
-        $this->retryAfter   = RateLimiter::availableIn($this->throttleKey(), $this->attempts);
+        $this->retryAfter = RateLimiter::availableIn($this->throttleKey(), $this->attempts);
     }
-
 
     /**
      * Render component
@@ -54,12 +57,11 @@ class LoginComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_login'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_login'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.auth.login')->extends('livewire.admin.auth.layout')->section('content');
     }
-
 
     /**
      * Login
@@ -71,57 +73,57 @@ class LoginComponent extends Component
         try {
 
             // Verify form first
-            if (!is_array($form) || !isset($form['email']) || !isset($form['password'])) {
+            if (! is_array($form) || ! isset($form['email']) || ! isset($form['password'])) {
                 return;
             }
 
             // Set data
-            $this->email           = $form['email'];
-            $this->password        = $form['password'];
+            $this->email = $form['email'];
+            $this->password = $form['password'];
             $this->recaptcha_token = $form['recaptcha_token'];
 
             // Verify recapctah first (If enabled)
             if (settings('security')->is_recaptcha) {
-                
+
                 try {
-                    
+
                     // Get recaptcha secret key
-                    $recaptcha_secret           = config('recaptcha.secret_key');
-    
+                    $recaptcha_secret = config('recaptcha.secret_key');
+
                     // post request to server
-                    $verify_recaptcha_url       = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) .  '&response=' . urlencode($this->recaptcha_token);
-    
+                    $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($recaptcha_secret).'&response='.urlencode($this->recaptcha_token);
+
                     // Get recaptcha response
-                    $recaptcha_response         = file_get_contents($verify_recaptcha_url);
-    
+                    $recaptcha_response = file_get_contents($verify_recaptcha_url);
+
                     // Convert response to json
                     $recaptcha_decoded_response = json_decode($recaptcha_response, true);
-    
+
                     // should return JSON with success as true
-                    if(!isset($recaptcha_decoded_response["success"])) {
-                        
+                    if (! isset($recaptcha_decoded_response['success'])) {
+
                         // Spam detected
                         $this->notification([
-                            'title'       => __('messages.t_error'),
+                            'title' => __('messages.t_error'),
                             'description' => __('messages.t_recaptcha_error_message'),
-                            'icon'        => 'error'
+                            'icon' => 'error',
                         ]);
-    
+
                         return;
-    
+
                     }
-    
+
                 } catch (\Throwable $th) {
-    
+
                     // Spam detected
                     $this->notification([
-                        'title'       => __('messages.t_error'),
+                        'title' => __('messages.t_error'),
                         'description' => __('messages.t_recaptcha_error_message'),
-                        'icon'        => 'error'
+                        'icon' => 'error',
                     ]);
-    
+
                     return;
-                    
+
                 }
 
             }
@@ -134,10 +136,10 @@ class LoginComponent extends Component
 
             // Get credentials
             $credentials = [
-                'email'    => $this->email,
-                'password' => $this->password
+                'email' => $this->email,
+                'password' => $this->password,
             ];
-     
+
             if (Auth::guard('admin')->attempt($credentials, true)) {
 
                 // Successfull login
@@ -145,7 +147,7 @@ class LoginComponent extends Component
 
                 // Clear failed attempts
                 RateLimiter::clear($this->throttleKey());
-     
+
                 // Redirect to dashboard
                 return redirect()->intended(config('global.dashboard_prefix'));
 
@@ -153,36 +155,34 @@ class LoginComponent extends Component
 
             // Failed login, set failed attempt
             RateLimiter::hit($this->throttleKey(), $this->retry);
-     
+
             // Invalid login data
             $this->message = __('messages.t_invalid_login_credentials_pls_try_again');
 
-            // Return 
+            // Return
             return;
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
-            
+
         }
     }
-
 
     /**
      * Get the rate limiting throttle key for the request.
@@ -197,11 +197,11 @@ class LoginComponent extends Component
         // Return key
         return "login_ip_address_banned_$ip";
     }
-    
 
     /**
      * Ensure the login request is not rate limited.
      * 5 failed attempt
+     *
      * @return void
      */
     public function checkTooManyFailedAttempts()
@@ -212,9 +212,8 @@ class LoginComponent extends Component
 
         // User reach limit attempts, ban his ip address
         BannedIp::updateOrCreate(['ip_address' => request()->ip()])->increment('attempts');
-        
+
         // Redirect to home page
         return redirect('/');
     }
-
 }

@@ -2,19 +2,23 @@
 
 namespace App\Http\Livewire\Main\Create\Steps;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
 use App\Http\Validators\Main\Create\GalleryValidator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class Gallery extends Component
 {
     use WithFileUploads, Actions;
 
-    public $images    = [];
+    public $images = [];
+
     public $documents = [];
+
     public $video_link;
+
     public $video_id;
+
     public $thumbnail;
 
     /**
@@ -36,7 +40,6 @@ class Gallery extends Component
         return view('livewire.main.create.steps.gallery');
     }
 
-
     /**
      * Add a youtube video
      *
@@ -54,40 +57,40 @@ class Gallery extends Component
 
         // Validate url
         $has_match = preg_match($rx, $this->video_link, $matches);
-        
+
         // Check if video is valid
         if (isset($matches[1])) {
-            
+
             // Now we have to check if video really exists or not
-            $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $matches[1]);
+            $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v='.$matches[1]);
 
-                if(is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/',$headers[0]) : false){
-                    
-                    // Video exists
-                    $this->notification([
-                        'title'       => __('messages.t_success'),
-                        'description' => __('messages.t_youtube_video_has_been_successfully_added'),
-                        'icon'        => 'success'
-                    ]);
+            if (is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/', $headers[0]) : false) {
 
-                    // Close modal
-                    $this->dispatchBrowserEvent('close-modal', 'modal-add-youtube-video-container');
+                // Video exists
+                $this->notification([
+                    'title' => __('messages.t_success'),
+                    'description' => __('messages.t_youtube_video_has_been_successfully_added'),
+                    'icon' => 'success',
+                ]);
 
-                } else {
-                    
-                    // Video not exists, reset form
-                    $this->reset('video_link');
+                // Close modal
+                $this->dispatchBrowserEvent('close-modal', 'modal-add-youtube-video-container');
 
-                    // Error
-                    $this->notification([
-                        'title'       => __('messages.t_error'),
-                        'description' => __('messages.t_youtube_video_not_exists'),
-                        'icon'        => 'error'
-                    ]);
+            } else {
 
-                    return;
+                // Video not exists, reset form
+                $this->reset('video_link');
 
-                }
+                // Error
+                $this->notification([
+                    'title' => __('messages.t_error'),
+                    'description' => __('messages.t_youtube_video_not_exists'),
+                    'icon' => 'error',
+                ]);
+
+                return;
+
+            }
 
         } else {
 
@@ -96,16 +99,15 @@ class Gallery extends Component
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_youtube_video_invalid'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
 
         }
     }
-
 
     /**
      * Remove video
@@ -118,7 +120,6 @@ class Gallery extends Component
         $this->reset('video_link');
     }
 
-
     /**
      * Go back to preview step
      *
@@ -129,7 +130,6 @@ class Gallery extends Component
         // Go back to preview step
         $this->emit('back');
     }
-
 
     /**
      * Save gallery data section
@@ -143,12 +143,12 @@ class Gallery extends Component
             // Validate form
             GalleryValidator::all($this);
 
-            // Set images 
+            // Set images
             foreach ($this->images as $key => $image) {
                 $data['images'][$key] = $image->getFilename();
             }
 
-            // Set documents 
+            // Set documents
             if (settings('publish')->is_documents_enabled && count($this->documents)) {
                 foreach ($this->documents as $key => $document) {
                     $data['documents'][$key] = $document->getFilename();
@@ -156,9 +156,9 @@ class Gallery extends Component
             }
 
             // Set data
-            $data['thumbnail']  = $this->thumbnail->getFilename();
+            $data['thumbnail'] = $this->thumbnail->getFilename();
             $data['video_link'] = $this->video_link ? $this->video_link : null;
-            $data['video_id']   = $this->video_link ? youtubeId($this->video_link) : null;
+            $data['video_id'] = $this->video_link ? youtubeId($this->video_link) : null;
 
             // Send this data to parent component
             $this->emit('data-saved-gallery', $data);
@@ -167,25 +167,22 @@ class Gallery extends Component
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

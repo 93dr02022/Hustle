@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Admin\Blog\Comments;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
 use App\Models\ArticleComment;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class CommentsComponent extends Component
 {
@@ -19,14 +19,13 @@ class CommentsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_comments'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_comments'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.blog.comments.comments', [
-            'comments' => $this->comments
+            'comments' => $this->comments,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get latest comments
@@ -35,14 +34,13 @@ class CommentsComponent extends Component
      */
     public function getCommentsProperty()
     {
-        return ArticleComment::latest()->paginate(40); 
+        return ArticleComment::latest()->paginate(40);
     }
-
 
     /**
      * Delete comment
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -52,54 +50,51 @@ class CommentsComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Approve comment
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function approve($id)
     {
         // Update comment
         ArticleComment::where('id', $id)->update([
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Hide comment
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function hide($id)
     {
         // Update comment
         ArticleComment::where('id', $id)->update([
-            'status' => 'hidden'
+            'status' => 'hidden',
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

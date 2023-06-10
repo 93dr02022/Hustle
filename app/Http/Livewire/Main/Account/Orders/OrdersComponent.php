@@ -3,18 +3,16 @@
 namespace App\Http\Livewire\Main\Account\Orders;
 
 use App\Models\Order;
-use Livewire\Component;
 use App\Models\OrderItem;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Notifications\User\Seller\OrderItemCanceled;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class OrdersComponent extends Component
 {
-
     use WithPagination, SEOToolsTrait, Actions;
-
 
     /**
      * Render component
@@ -24,10 +22,10 @@ class OrdersComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_my_orders') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_my_orders')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -39,7 +37,7 @@ class OrdersComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -50,10 +48,9 @@ class OrdersComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.account.orders.orders', [
-            'orders' => $this->orders
+            'orders' => $this->orders,
         ])->extends('livewire.main.layout.app')->section('content');
     }
-
 
     /**
      * Get list of orders
@@ -65,11 +62,10 @@ class OrdersComponent extends Component
         return Order::with(['quotation', 'items'])->where('buyer_id', auth()->id())->orderByDesc('id')->simplePaginate(10);
     }
 
-
     /**
-     * Cancel order 
+     * Cancel order
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function cancel($id)
@@ -84,16 +80,16 @@ class OrdersComponent extends Component
 
         // Remove item price from seller balance
         $item->owner()->update([
-            'balance_pending' => convertToNumber($item->owner->balance_pending) - convertToNumber($item->profit_value)
+            'balance_pending' => convertToNumber($item->owner->balance_pending) - convertToNumber($item->profit_value),
         ]);
 
         // Add item price to buyer balance
         $item->order->buyer()->update([
-            'balance_available' => convertToNumber($item->order->buyer->balance_available) + convertToNumber($item->total_value)
+            'balance_available' => convertToNumber($item->order->buyer->balance_available) + convertToNumber($item->total_value),
         ]);
 
         // Update item
-        $item->status      = 'canceled';
+        $item->status = 'canceled';
         $item->canceled_by = 'buyer';
         $item->canceled_at = now();
         $item->is_finished = true;
@@ -117,17 +113,17 @@ class OrdersComponent extends Component
 
         // Send notification
         notification([
-            'text'    => 't_buyer_has_canceled_order',
-            'action'  => url('seller/orders/details', $item->uid),
+            'text' => 't_buyer_has_canceled_order',
+            'action' => url('seller/orders/details', $item->uid),
             'user_id' => $item->owner_id,
-            'params'  => ['buyer' => auth()->user()->username]
+            'params' => ['buyer' => auth()->user()->username],
         ]);
 
         // success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_order_has_been_successfully_canceled'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
 }

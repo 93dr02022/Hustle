@@ -4,14 +4,13 @@ namespace App\Http\Livewire\Main\Includes;
 
 use App\Models\Category;
 use App\Models\ChMessage as Message;
-use App\Models\ConversationMessage;
+use App\Models\Gig;
 use App\Models\Language;
 use App\Models\Notification;
-use Livewire\Component;
-use App\Models\Gig;
 use App\Models\User;
 use Conner\Tagging\Model\Tag;
 use Cookie;
+use Livewire\Component;
 use WireUi\Traits\Actions;
 
 class Header extends Component
@@ -19,16 +18,21 @@ class Header extends Component
     use Actions;
 
     public $new_messages;
+
     public $notifications;
 
     public $q;
 
-    public $gigs    = [];
+    public $gigs = [];
+
     public $sellers = [];
-    public $tags    = [];
+
+    public $tags = [];
 
     public $default_language_name;
+
     public $default_language_code;
+
     public $default_country_code;
 
     /**
@@ -42,19 +46,19 @@ class Header extends Component
         if (auth()->check()) {
 
             // Count unread messages
-            $unread_message      = Message::where('to_id', auth()->id())
+            $unread_message = Message::where('to_id', auth()->id())
                 ->where('seen', false)
                 ->count();
 
             // Set unread messages
-            $this->new_messages  = $unread_message;
+            $this->new_messages = $unread_message;
 
             // Get notifications
             $this->notifications = Notification::where('user_id', auth()->id())->where('is_seen', false)->latest()->get();
         }
 
         // Get language from session
-        $locale   = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
+        $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
 
         // Get default language
         $language = Language::where('language_code', $locale)->first();
@@ -65,13 +69,13 @@ class Header extends Component
             // Set default language
             $this->default_language_name = $language->name;
             $this->default_language_code = $language->language_code;
-            $this->default_country_code  = $language->country_code;
+            $this->default_country_code = $language->country_code;
         } else {
 
             // Not found, set default
-            $this->default_language_name = "English";
-            $this->default_language_code = "en";
-            $this->default_country_code  = "us";
+            $this->default_language_name = 'English';
+            $this->default_language_code = 'en';
+            $this->default_country_code = 'us';
         }
     }
 
@@ -84,10 +88,9 @@ class Header extends Component
     {
         return view('livewire.main.includes.header', [
             'categories' => $this->categories,
-            'languages'  => $this->languages,
+            'languages' => $this->languages,
         ]);
     }
-
 
     /**
      * Listen when q keyword changes
@@ -99,7 +102,6 @@ class Header extends Component
         // Search
         $this->search();
     }
-
 
     /**
      * Search by query
@@ -113,10 +115,10 @@ class Header extends Component
         if ($this->q) {
 
             // Set keyword
-            $keyword       = $this->q;
+            $keyword = $this->q;
 
             // Get gigs same as this keyword
-            $gigs          = Gig::query()
+            $gigs = Gig::query()
                 ->active()
                 ->where(function ($query) use ($keyword) {
                     return $query->where('title', 'LIKE', "%{$keyword}%")
@@ -128,10 +130,10 @@ class Header extends Component
                 ->get();
 
             // Set gigs
-            $this->gigs    = $gigs;
+            $this->gigs = $gigs;
 
             // Get sellers
-            $sellers       = User::query()
+            $sellers = User::query()
                 ->whereIn('status', ['verified', 'active'])
                 ->where('account_type', 'seller')
                 ->where(function ($query) use ($keyword) {
@@ -149,21 +151,20 @@ class Header extends Component
             $this->sellers = $sellers;
 
             // Get tags
-            $tags          = Tag::query()
+            $tags = Tag::query()
                 ->where('name', 'LIKE', "%{$keyword}%")
                 ->select('slug', 'name')
                 ->limit(10)
                 ->get();
 
             // Set tags
-            $this->tags    = $tags;
+            $this->tags = $tags;
         } else {
 
             // Reset data
             $this->reset(['q', 'gigs', 'sellers', 'tags']);
         }
     }
-
 
     /**
      * Go to search page
@@ -173,22 +174,21 @@ class Header extends Component
     public function enter()
     {
         // Check if has a search term
-        if (!$this->q) {
+        if (! $this->q) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_info'),
+                'title' => __('messages.t_info'),
                 'description' => __('messages.t_pls_type_a_search_term_first'),
-                'icon'        => 'info'
+                'icon' => 'info',
             ]);
 
             return;
         }
 
         // Redirect to search page
-        return redirect('search?q=' . $this->q);
+        return redirect('search?q='.$this->q);
     }
-
 
     /**
      * Get all parent categories
@@ -200,7 +200,6 @@ class Header extends Component
         return Category::with('subcategories')->get();
     }
 
-
     /**
      * Get supported languages
      *
@@ -211,24 +210,22 @@ class Header extends Component
         return Language::orderBy('name', 'asc')->get();
     }
 
-
     /**
      * Mark notification as read
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function readNotification($id)
     {
         // Get notification
         Notification::where('uid', $id)->where('user_id', auth()->id())->update([
-            'is_seen' => true
+            'is_seen' => true,
         ]);
 
         // Refresh notifications
         $this->notifications = Notification::where('user_id', auth()->id())->where('is_seen', false)->latest()->get();
     }
-
 
     /**
      * Close announce
@@ -241,11 +238,10 @@ class Header extends Component
         Cookie::queue('header_announce_closed', true, 4320);
     }
 
-
     /**
      * Change locale
      *
-     * @param string $locale
+     * @param  string  $locale
      * @return void
      */
     public function setLocale($locale)
@@ -254,13 +250,13 @@ class Header extends Component
         $language = Language::where('language_code', $locale)->where('is_active', true)->first();
 
         // Check if language exists
-        if (!$language) {
+        if (! $language) {
 
             // Not found
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_selected_lang_does_not_found'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;

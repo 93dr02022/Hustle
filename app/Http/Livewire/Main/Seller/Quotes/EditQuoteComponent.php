@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
 use App\Http\Validators\Main\Seller\Quote\EditQuoteValidator;
+use App\Models\Order;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use DB;
@@ -15,6 +16,7 @@ class EditQuoteComponent extends Component
     use Actions;
 
     public $quotation;
+
     public $canUpdate = true;
 
     public function mount($quoteId)
@@ -57,8 +59,16 @@ class EditQuoteComponent extends Component
 
             Quotation::where('id', $this->quotation->id)->update([
                 ...$totals,
-                ...$quoteAttr
+                ...$quoteAttr,
             ]);
+
+            Order::where('id', $this->quotation->order_id)
+                ->update([
+                    'total_value' => $totals['total'] + $totals['total_tax'],
+                    'subtotal_value' => $totals['total'],
+                    'taxes_value' => $totals['total_tax'],
+                    'placed_at' => now(),
+                ]);
 
             QuotationItem::where('quotation_id', $this->quotation->id)->delete();
 
@@ -81,16 +91,15 @@ class EditQuoteComponent extends Component
             $this->notification([
                 'title' => 'Quotation Updated',
                 'description' => 'Quotation updated successfully. you can now share quotation to customers to pay',
-                'icon' => 'success'
+                'icon' => 'success',
             ]);
 
             return redirect()->to('/seller/quotes');
         } catch (\Throwable $th) {
-            dd($th);
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
         }
     }
@@ -102,6 +111,7 @@ class EditQuoteComponent extends Component
     {
         $taxRate = floatval(settings('commission')->tax_value) / 100;
         $priceAfterTax = $price - ($price * $taxRate);
+
         return $priceAfterTax;
     }
 
@@ -135,7 +145,7 @@ class EditQuoteComponent extends Component
             'total_discount' => $totalDiscount,
             'total_tax' => $totalTax,
             'total' => $totalPrice,
-            'total_quantity' => $totalQuantity
+            'total_quantity' => $totalQuantity,
         ];
     }
 }

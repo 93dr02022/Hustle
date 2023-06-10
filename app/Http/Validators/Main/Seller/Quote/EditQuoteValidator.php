@@ -16,7 +16,7 @@ class EditQuoteValidator
         'last_name' => ['required', 'string', 'min:3', 'max:255'],
         'email' => ['required', 'email', 'max:50'],
         'phone_number' => ['required', 'numeric', 'max_digits:11'],
-        'payment_method' => ['required', 'in:paystack,flutterwave'],
+        'payment_method' => ['required', 'in:paystack,cash'],
         'note' => ['required', 'string', 'max:1000'],
         'expires_at' => ['required', 'date'],
         'items.*.description' => ['required', 'string', 'min:3', 'max:255'],

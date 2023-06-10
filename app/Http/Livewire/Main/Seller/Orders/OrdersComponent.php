@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Main\Seller\Orders;
 
-use Livewire\Component;
 use App\Models\OrderItem;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Notifications\User\Buyer\OrderItemCanceled;
 use App\Notifications\User\Buyer\OrderItemInProgress;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class OrdersComponent extends Component
 {
@@ -22,10 +22,10 @@ class OrdersComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_my_orders') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_my_orders')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -37,7 +37,7 @@ class OrdersComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -48,10 +48,9 @@ class OrdersComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.seller.orders.orders', [
-            'orders' => $this->orders
+            'orders' => $this->orders,
         ])->extends('livewire.main.seller.layout.app')->section('content');
     }
-
 
     /**
      * Get seller's received orders
@@ -66,7 +65,6 @@ class OrdersComponent extends Component
         // Return orders
         return $orders;
     }
-
 
     /**
      * Undocumented function
@@ -89,25 +87,24 @@ class OrdersComponent extends Component
 
         // Confirm
         $this->dialog()->confirm([
-            'title'       => __('messages.t_confirm_cancellation'),
-            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_cancel_order') . "</div>",
-            'icon'        => 'error',
-            'accept'      => [
-                'label'  => __('messages.t_confirm'),
+            'title' => __('messages.t_confirm_cancellation'),
+            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_cancel_order').'</div>',
+            'icon' => 'error',
+            'accept' => [
+                'label' => __('messages.t_confirm'),
                 'method' => 'cancel',
                 'params' => $item->uid,
             ],
             'reject' => [
-                'label'  => __('messages.t_cancel')
+                'label' => __('messages.t_cancel'),
             ],
         ]);
     }
 
-
     /**
-     * Cancel order 
+     * Cancel order
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function cancel($id)
@@ -122,16 +119,16 @@ class OrdersComponent extends Component
 
         // Remove item price from seller balance
         $item->owner()->update([
-            'balance_pending' => convertToNumber($item->owner->balance_pending) - convertToNumber($item->profit_value)
+            'balance_pending' => convertToNumber($item->owner->balance_pending) - convertToNumber($item->profit_value),
         ]);
 
         // Add item price to buyer balance
         $item->order->buyer()->update([
-            'balance_available' => convertToNumber($item->order->buyer->balance_available) + convertToNumber($item->total_value)
+            'balance_available' => convertToNumber($item->order->buyer->balance_available) + convertToNumber($item->total_value),
         ]);
 
         // Update item
-        $item->status      = 'canceled';
+        $item->status = 'canceled';
         $item->canceled_by = 'seller';
         $item->canceled_at = now();
         $item->is_finished = true;
@@ -147,25 +144,24 @@ class OrdersComponent extends Component
 
         // Send notification
         notification([
-            'text'    => 't_seller_has_canceled_ur_order',
-            'action'  => url('account/orders'),
+            'text' => 't_seller_has_canceled_ur_order',
+            'action' => url('account/orders'),
             'user_id' => $item->order->buyer_id,
-            'params'  => ['seller' => auth()->user()->username]
+            'params' => ['seller' => auth()->user()->username],
         ]);
 
         // success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_order_has_been_successfully_canceled'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Confirm pgrogressing order
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function confirmProgress($id)
@@ -184,20 +180,20 @@ class OrdersComponent extends Component
             }
 
             // Check if requirements sent
-            if (!$item->expected_delivery_date) {
+            if (! $item->expected_delivery_date) {
 
                 // Confirm
                 $this->dialog()->confirm([
-                    'title'       => __('messages.t_confirm_cancellation'),
-                    'description' => "<div class='leading-relaxed'>" . __('messages.t_buyer_didnt_send_requirements_yet_continue') . "</div>",
-                    'icon'        => 'info',
-                    'accept'      => [
-                        'label'  => __('messages.t_i_have_all_info_needed'),
+                    'title' => __('messages.t_confirm_cancellation'),
+                    'description' => "<div class='leading-relaxed'>".__('messages.t_buyer_didnt_send_requirements_yet_continue').'</div>',
+                    'icon' => 'info',
+                    'accept' => [
+                        'label' => __('messages.t_i_have_all_info_needed'),
                         'method' => 'progress',
                         'params' => $item->uid,
                     ],
                     'reject' => [
-                        'label'  => __('messages.t_cancel')
+                        'label' => __('messages.t_cancel'),
                     ],
                 ]);
             } else {
@@ -209,18 +205,17 @@ class OrdersComponent extends Component
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
         }
     }
 
-
     /**
-     * Progress order 
+     * Progress order
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function progress($id)
@@ -234,10 +229,10 @@ class OrdersComponent extends Component
         }
 
         // Update item
-        if (!$item->expected_delivery_date) {
+        if (! $item->expected_delivery_date) {
             $item->expected_delivery_date = $this->calculateExpectedDeliveryDate($item);
         }
-        $item->status       = 'proceeded';
+        $item->status = 'proceeded';
         $item->proceeded_at = now();
         $item->save();
 
@@ -246,25 +241,24 @@ class OrdersComponent extends Component
 
         // Send notification
         notification([
-            'text'    => 't_seller_has_started_ur_order',
-            'action'  => url('account/orders'),
+            'text' => 't_seller_has_started_ur_order',
+            'action' => url('account/orders'),
             'user_id' => $item->order->buyer_id,
-            'params'  => ['seller' => auth()->user()->username]
+            'params' => ['seller' => auth()->user()->username],
         ]);
 
         // success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_order_has_been_successfully_marked_progress'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Caculate expected delivery date
      *
-     * @param object $item
+     * @param  object  $item
      * @return string
      */
     private function calculateExpectedDeliveryDate($item)

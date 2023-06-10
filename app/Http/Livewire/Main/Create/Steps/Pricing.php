@@ -2,21 +2,25 @@
 
 namespace App\Http\Livewire\Main\Create\Steps;
 
+use App\Http\Validators\Main\Create\PricingValidator;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use App\Http\Validators\Main\Create\PricingValidator;
 
 class Pricing extends Component
 {
     use Actions;
-    
-    public $price;
-    public $delivery_time;
-    public $currency_symbol;
-    public $upgrades             = [];
-    public $add_upgrade          = [];
-    public $available_deliveries = [];
 
+    public $price;
+
+    public $delivery_time;
+
+    public $currency_symbol;
+
+    public $upgrades = [];
+
+    public $add_upgrade = [];
+
+    public $available_deliveries = [];
 
     /**
      * Initialize component
@@ -37,11 +41,11 @@ class Pricing extends Component
             ['value' => 7, 'text' => __('messages.t_1_week')],
             ['value' => 14, 'text' => __('messages.t_2_weeks')],
             ['value' => 21, 'text' => __('messages.t_3_weeks')],
-            ['value' => 30, 'text' => __('messages.t_1_month')]
+            ['value' => 30, 'text' => __('messages.t_1_month')],
         ];
 
         // Get default currency
-        $currency              = settings('currency');
+        $currency = settings('currency');
 
         // Set currency symbol
         $this->currency_symbol = isset(config('money')[$currency->code]['symbol']) ? config('money')[$currency->code]['symbol'] : $currency->code;
@@ -58,7 +62,6 @@ class Pricing extends Component
         return view('livewire.main.create.steps.pricing');
     }
 
-
     /**
      * Init select2 on upgrades changes
      *
@@ -68,11 +71,10 @@ class Pricing extends Component
     {
         // Reload select2
         $this->dispatchBrowserEvent('pharaonic.select2.load', [
-            'target'    => '.select2_pricing',
-            'component' => $this->id
+            'target' => '.select2_pricing',
+            'component' => $this->id,
         ]);
     }
-
 
     /**
      * Add a service upgrade
@@ -89,8 +91,8 @@ class Pricing extends Component
 
             // Set upgrade
             $upgrade = [
-                'title'      => $this->add_upgrade['title'],
-                'price'      => $this->add_upgrade['price'],
+                'title' => $this->add_upgrade['title'],
+                'price' => $this->add_upgrade['price'],
                 'extra_days' => isset($this->add_upgrade['extra_days']) ? $this->add_upgrade['extra_days'] : 0,
             ];
 
@@ -105,62 +107,59 @@ class Pricing extends Component
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             // Scroll to see this upgrade
-            $this->dispatchBrowserEvent('scrollTo', 'scroll-to-upgrade-id-' . array_key_last($this->upgrades));
+            $this->dispatchBrowserEvent('scrollTo', 'scroll-to-upgrade-id-'.array_key_last($this->upgrades));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Remove select upgrade from list
      *
-     * @param integer $key
+     * @param  int  $key
      * @return void
      */
     public function removeUpgrade($key)
     {
         // Check if upgrade exists in list
         if (isset($this->upgrades[$key])) {
-            
+
             // Delete upgrade from list
             unset($this->upgrades[$key]);
 
@@ -168,11 +167,10 @@ class Pricing extends Component
 
         // Reload select2
         $this->dispatchBrowserEvent('pharaonic.select2.load', [
-            'target'    => '.select2_pricing',
-            'component' => $this->id
+            'target' => '.select2_pricing',
+            'component' => $this->id,
         ]);
     }
-
 
     /**
      * Go back to preview step
@@ -186,11 +184,10 @@ class Pricing extends Component
 
         // Reload select2
         $this->dispatchBrowserEvent('pharaonic.select2.load', [
-            'target'    => '.select2_pricing',
-            'component' => $this->id
+            'target' => '.select2_pricing',
+            'component' => $this->id,
         ]);
     }
-
 
     /**
      * Save pricing data section
@@ -205,61 +202,59 @@ class Pricing extends Component
             PricingValidator::all($this);
 
             // Set data
-            $data['price']         = $this->price;
+            $data['price'] = $this->price;
             $data['delivery_time'] = $this->delivery_time;
-            $data['upgrades']      = count($this->upgrades) ? $this->upgrades : [];
-            $data['component_id']  = $this->id;
+            $data['upgrades'] = count($this->upgrades) ? $this->upgrades : [];
+            $data['component_id'] = $this->id;
 
             // Send this data to parent component
             $this->emit('data-saved-pricing', $data);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_data_has_been_saved'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
             // Reload Select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload Select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload Select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $th;
-
         }
     }
 }

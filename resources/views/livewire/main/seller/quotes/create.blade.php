@@ -162,7 +162,7 @@
                             {{-- cash payment acknowlegement --}}
                             <div x-show="form.payment_method == 'cash'" class="col-span-2 bg-gray-100 border flex items-center gap-x-3  rounded py-5 px-3">
                                 <input id="checkbox-input" type="checkbox" class="focus:ring-primary-600 h-4 w-4 text-primary-600 border-gray-300 rounded" checked disabled>
-                                <label for="" class="text-gray-900">This is to affirm you have received cash payment from the quote recipient.</label>
+                                <label for="" class="text-sm text-gray-900">This is to affirm you have received cash payment from the quote recipient.</label>
                             </div>
 
                             <div class="col-span-2">

@@ -8,7 +8,6 @@ use App\Models\Quotation;
 use App\Models\QuotationItem;
 use DB;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
@@ -19,7 +18,7 @@ class CreateQuoteComponent extends Component
     public function render()
     {
         return view('livewire.main.seller.quotes.create', [
-            'commission' => settings('commission')
+            'commission' => settings('commission'),
         ])
             ->extends('livewire.main.seller.layout.app')
             ->section('content');
@@ -44,7 +43,7 @@ class CreateQuoteComponent extends Component
                 'total_value' => $totals['total'] + $totals['total_tax'],
                 'subtotal_value' => $totals['total'],
                 'taxes_value' => $totals['total_tax'],
-                'placed_at' => now()
+                'placed_at' => now(),
             ]);
 
             $quotation = Quotation::create([
@@ -56,7 +55,7 @@ class CreateQuoteComponent extends Component
                 'is_draft' => true,
                 'paid' => false,
                 ...$totals,
-                ...$quoteAttr
+                ...$quoteAttr,
             ]);
 
             QuotationItem::query()
@@ -78,15 +77,15 @@ class CreateQuoteComponent extends Component
             $this->notification([
                 'title' => 'Quotation Created',
                 'description' => 'Quotation created successfully. you can now share quotation to customers to pay',
-                'icon' => 'success'
+                'icon' => 'success',
             ]);
 
             return $quotation->toArray();
         } catch (\Throwable $th) {
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
         }
     }
@@ -98,6 +97,7 @@ class CreateQuoteComponent extends Component
     {
         $taxRate = floatval(settings('commission')->tax_value) / 100;
         $priceAfterTax = $price - ($price * $taxRate);
+
         return $priceAfterTax;
     }
 
@@ -131,7 +131,7 @@ class CreateQuoteComponent extends Component
             'total_discount' => $totalDiscount,
             'total_tax' => $totalTax,
             'total' => $totalPrice,
-            'total_quantity' => $totalQuantity
+            'total_quantity' => $totalQuantity,
         ];
     }
 }

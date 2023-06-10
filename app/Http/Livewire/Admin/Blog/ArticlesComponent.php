@@ -3,9 +3,9 @@
 namespace App\Http\Livewire\Admin\Blog;
 
 use App\Models\Article;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class ArticlesComponent extends Component
 {
@@ -19,14 +19,13 @@ class ArticlesComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_articles'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_articles'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.blog.articles', [
-            'articles' => $this->articles
+            'articles' => $this->articles,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get latest articles
@@ -35,14 +34,13 @@ class ArticlesComponent extends Component
      */
     public function getArticlesProperty()
     {
-        return Article::latest()->withCount('comments')->paginate(40); 
+        return Article::latest()->withCount('comments')->paginate(40);
     }
-
 
     /**
      * Delete article
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -64,10 +62,9 @@ class ArticlesComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

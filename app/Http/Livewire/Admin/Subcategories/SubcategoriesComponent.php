@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Admin\Subcategories;
 
 use App\Models\Gig;
-use Livewire\Component;
-use WireUi\Traits\Actions;
 use App\Models\Subcategory;
-use Livewire\WithPagination;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class SubcategoriesComponent extends Component
 {
@@ -21,14 +21,13 @@ class SubcategoriesComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_subcategories'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_subcategories'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.subcategories.subcategories', [
-            'subcategories' => $this->subcategories
+            'subcategories' => $this->subcategories,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of subcategories
@@ -40,11 +39,10 @@ class SubcategoriesComponent extends Component
         return Subcategory::orderByDesc('id')->paginate(42);
     }
 
-
     /**
      * Delete subcategory
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -53,16 +51,16 @@ class SubcategoriesComponent extends Component
         $subcategory = Subcategory::where('id', $id)->firstOrFail();
 
         // Count gigs in this category
-        $gigs     = Gig::where('subcategory_id', $subcategory->id)->count();
+        $gigs = Gig::where('subcategory_id', $subcategory->id)->count();
 
         // Check if category has any gig
         if ($gigs) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_this_subcategory_has_some_gigs_please_edit_it'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
@@ -84,10 +82,9 @@ class SubcategoriesComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

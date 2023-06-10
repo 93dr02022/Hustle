@@ -2,30 +2,30 @@
 
 namespace App\Http\Livewire\Admin\Users\Trash;
 
-use DB;
-use File;
-use App\Models\Gig;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Project;
-use Livewire\Component;
-use App\Models\Favorite;
-use App\Models\OrderItem;
-use WireUi\Traits\Actions;
-use App\Models\ReportedGig;
 use App\Models\Conversation;
-use App\Models\Notification;
-use App\Models\ReportedUser;
-use App\Models\UserPortfolio;
-use App\Models\DepositWebhook;
-use App\Models\ProjectMilestone;
 use App\Models\DepositTransaction;
+use App\Models\DepositWebhook;
+use App\Models\Favorite;
+use App\Models\Gig;
+use App\Models\Notification;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Project;
+use App\Models\ProjectMilestone;
 use App\Models\ProjectReportedBid;
-use App\Models\ProjectSubscription;
 use App\Models\ProjectRequiredSkill;
+use App\Models\ProjectSubscription;
+use App\Models\ReportedGig;
+use App\Models\ReportedUser;
+use App\Models\User;
+use App\Models\UserPortfolio;
 use App\Models\UserWithdrawalHistory;
 use App\Models\UserWithdrawalSettings;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use DB;
+use File;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class TrashComponent extends Component
 {
@@ -39,14 +39,13 @@ class TrashComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_trashed_users'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_trashed_users'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.users.trash.trash', [
-            'users' => $this->users
+            'users' => $this->users,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get Users
@@ -57,12 +56,11 @@ class TrashComponent extends Component
     {
         return User::onlyTrashed()->paginate(40);
     }
-    
 
     /**
      * Confirm restoration
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function confirmRestore($id)
@@ -72,25 +70,24 @@ class TrashComponent extends Component
 
         // Confirm restore
         $this->dialog()->confirm([
-            'title'       => __('messages.t_confirm_restore'),
-            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_restore_this_user') . "<br>". $user->username . "</div>",
-            'icon'        => 'error',
-            'accept'      => [
-                'label'  => __('messages.t_restore'),
+            'title' => __('messages.t_confirm_restore'),
+            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_restore_this_user').'<br>'.$user->username.'</div>',
+            'icon' => 'error',
+            'accept' => [
+                'label' => __('messages.t_restore'),
                 'method' => 'restore',
                 'params' => $user->id,
             ],
             'reject' => [
-                'label'  => __('messages.t_cancel')
+                'label' => __('messages.t_cancel'),
             ],
         ]);
     }
 
-
     /**
      * Restore user
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function restore($id)
@@ -103,17 +100,16 @@ class TrashComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Confirm delete
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function confirmDelete($id)
@@ -123,40 +119,39 @@ class TrashComponent extends Component
 
         // Confirm delete
         $this->dialog()->confirm([
-            'title'       => __('messages.t_confirm_delete'),
-            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_prmtly_delete_usr') . "<br>". $user->username ."<br>" . __('messages.t_all_records_related_to_user_will_erased') . "</div>",
-            'icon'        => 'error',
-            'accept'      => [
-                'label'  => __('messages.t_delete'),
+            'title' => __('messages.t_confirm_delete'),
+            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_prmtly_delete_usr').'<br>'.$user->username.'<br>'.__('messages.t_all_records_related_to_user_will_erased').'</div>',
+            'icon' => 'error',
+            'accept' => [
+                'label' => __('messages.t_delete'),
                 'method' => 'delete',
                 'params' => $user->id,
             ],
             'reject' => [
-                'label'  => __('messages.t_cancel')
+                'label' => __('messages.t_cancel'),
             ],
         ]);
     }
 
-
     /**
      * Permanently delete this user
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
     {
         try {
-            
+
             // Get user
             $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
-            
+
             // Get conversations from this user
             $conversations = Conversation::where('from_id', $user->id)->orWhere('to_id', $user->id)->get();
 
             // Loop through conversations
             foreach ($conversations as $conversation) {
-                
+
                 // Delete messages inside this conversation
                 $conversation->messages()->delete();
 
@@ -179,7 +174,7 @@ class TrashComponent extends Component
 
             // loop through orders (In case his a buyer)
             foreach ($orders as $order) {
-                
+
                 // Delete order invoice
                 $order->invoice()->delete();
 
@@ -188,10 +183,10 @@ class TrashComponent extends Component
 
                 // Loop through items inside this order
                 foreach ($order_items as $item) {
-                    
+
                     // Check item status
-                    if (in_array($item->status, ['pending', 'proceeded']) && !$item->is_finished) {
-                        
+                    if (in_array($item->status, ['pending', 'proceeded']) && ! $item->is_finished) {
+
                         // Update order in queue
                         if ($item->gig->orders_in_queue > 0) {
                             $item->gig()->decrement('orders_in_queue');
@@ -216,10 +211,10 @@ class TrashComponent extends Component
 
                     // Check if refund exists
                     if ($refund) {
-                        
+
                         // Delete refund conversation
                         $refund->conversation()->delete();
-    
+
                         // Delete refund
                         $refund->delete();
 
@@ -237,7 +232,7 @@ class TrashComponent extends Component
 
             // Loop through gigs
             foreach ($gigs as $gig) {
-                
+
                 // Delete gig faqs
                 $gig->faqs()->delete();
 
@@ -246,12 +241,12 @@ class TrashComponent extends Component
 
                 // Loop through documents
                 foreach ($documents as $doc) {
-                    
+
                     // Delete this file from local storage first
-                    if (File::exists(public_path('storage/gigs/documents/' . $doc->name))) {
-                        
+                    if (File::exists(public_path('storage/gigs/documents/'.$doc->name))) {
+
                         // File exists, delete it
-                        File::delete(public_path('storage/gigs/documents/' . $doc->name));
+                        File::delete(public_path('storage/gigs/documents/'.$doc->name));
 
                     }
 
@@ -265,7 +260,7 @@ class TrashComponent extends Component
 
                 // loop through images
                 foreach ($images as $img) {
-                    
+
                     // Delete large image
                     deleteModelFile($img->large);
 
@@ -303,7 +298,7 @@ class TrashComponent extends Component
 
                 // loop through requirements
                 foreach ($requirements as $req) {
-                    
+
                     // Delete options
                     $req->options()->delete();
 
@@ -323,7 +318,7 @@ class TrashComponent extends Component
 
                 // Loop through items
                 foreach ($order_items as $item) {
-                    
+
                     // Delete requirements
                     $item->requirements()->delete();
 
@@ -341,7 +336,7 @@ class TrashComponent extends Component
 
                     // Check if there is a refund
                     if ($refund) {
-                        
+
                         // Delete refund conversation
                         $refund->conversation()->delete();
 
@@ -349,7 +344,6 @@ class TrashComponent extends Component
                         $refund->delete();
 
                     }
-
 
                 }
 
@@ -366,7 +360,7 @@ class TrashComponent extends Component
 
             // Loop through projects
             foreach ($projects as $project) {
-                
+
                 // Delete required skills
                 ProjectRequiredSkill::whereProjectId($project->id)->delete();
 
@@ -381,7 +375,7 @@ class TrashComponent extends Component
 
                 // loop through bids
                 foreach ($bids as $bid) {
-                    
+
                     // If bid reported delete it
                     ProjectReportedBid::whereBidId($bid->id)->delete();
 
@@ -419,15 +413,15 @@ class TrashComponent extends Component
             // Get user portfolio
             $portfolio = UserPortfolio::whereUserId($user->id)->get();
 
-            // Lopp through his works 
+            // Lopp through his works
             foreach ($portfolio as $p) {
-                
+
                 // Get gallery
                 $gallery = $p->gallery;
 
                 // Loop through gallery
                 foreach ($gallery as $g) {
-                    
+
                     // Delete image
                     deleteModelFile($g->image);
 
@@ -464,21 +458,20 @@ class TrashComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Throwable $th) {
             throw $th;
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
-
 }

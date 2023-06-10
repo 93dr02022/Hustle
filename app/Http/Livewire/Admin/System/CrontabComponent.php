@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\Admin\System;
 
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class CrontabComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $command_queue;
+
     public $command_schedule;
 
     /**
@@ -21,10 +22,9 @@ class CrontabComponent extends Component
     public function mount()
     {
         // Set commands
-        $this->command_queue    = "curl " . url('tasks/queue');
-        $this->command_schedule = "curl " . url('tasks/schedule');
+        $this->command_queue = 'curl '.url('tasks/queue');
+        $this->command_schedule = 'curl '.url('tasks/schedule');
     }
-
 
     /**
      * Render component
@@ -34,10 +34,9 @@ class CrontabComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_task_scheduling'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_task_scheduling'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.system.crontab')->extends('livewire.admin.layout.app')->section('content');
     }
-
 }
