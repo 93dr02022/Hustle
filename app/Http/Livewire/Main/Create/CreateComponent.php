@@ -51,7 +51,7 @@ class CreateComponent extends Component
 
     public $isFinished   = false;
     public $is_approved  = false;
-    
+
 
     public $current_step = 'overview';
 
@@ -74,26 +74,26 @@ class CreateComponent extends Component
         $separator   = settings('general')->separator;
         $title       = __('messages.t_publish_new_gig') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage     = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.create.create')->extends('livewire.main.layout.app')->section('content');
@@ -133,7 +133,7 @@ class CreateComponent extends Component
     public function overview($data)
     {
         try {
-            
+
             // Set data
             $this->title           = $data['title'];
             $this->category        = $data['category'];
@@ -149,7 +149,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -165,7 +164,7 @@ class CreateComponent extends Component
     public function pricing($data)
     {
         try {
-            
+
             // Set data
             $this->price         = $data['price'];
             $this->delivery_time = $data['delivery_time'];
@@ -176,7 +175,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -192,7 +190,7 @@ class CreateComponent extends Component
     public function requirements($data)
     {
         try {
-            
+
             // Set requirements
             $this->requirements = $data['requirements'];
 
@@ -201,7 +199,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -216,7 +213,7 @@ class CreateComponent extends Component
      */
     public function gallery($data)
     {
-        
+
         try {
 
             // Loop through images
@@ -241,7 +238,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -264,7 +260,7 @@ class CreateComponent extends Component
             $title                = htmlspecialchars_decode(clean($this->title));
 
             // Generate unique slug for this gig
-            $slug                 = substr( Str::slug($title), 0, 138 ) . '-' . $uid;
+            $slug                 = substr(Str::slug($title), 0, 138) . '-' . $uid;
 
             // Get description
             $description          = clean($this->description);
@@ -336,10 +332,10 @@ class CreateComponent extends Component
 
             // Check if gig has upgrades
             if (is_array($this->upgrades) && count($this->upgrades)) {
-                
+
                 // Loop through upgrades
                 foreach ($this->upgrades as $upgrade) {
-                    
+
                     // Save uprade
                     GigUpgrade::create([
                         'uid'        => uid(),
@@ -348,34 +344,30 @@ class CreateComponent extends Component
                         'price'      => $upgrade['price'],
                         'extra_days' => isset($upgrade['extra_days']) ? $upgrade['extra_days'] : 0,
                     ]);
-
                 }
-
             }
 
             // Check if gig has faqs
             if (is_array($this->faqs) && count($this->faqs)) {
-                
+
                 // Loop through faqs
                 foreach ($this->faqs as $faq) {
-                    
+
                     // Save faq
                     GigFaq::create([
                         'gig_id'   => $gig->id,
                         'question' => clean($faq['question']),
                         'answer'   => clean($faq['answer'])
                     ]);
-
                 }
-
             }
 
             // Check if gig has requirements
             if (count($this->requirements)) {
-                
+
                 // Loop through requirements
                 foreach ($this->requirements as $req) {
-                    
+
                     // Save requirement
                     $requirement = GigRequirement::create([
                         'gig_id'      => $gig->id,
@@ -387,39 +379,34 @@ class CreateComponent extends Component
 
                     // Check if requirement multiple choices
                     if ($req['type'] === 'choice') {
-                        
+
                         // Loop through options
                         foreach ($req['options'] as $option) {
-                            
+
                             // Save option
                             GigRequirementOption::create([
                                 'requirement_id' => $requirement->id,
                                 'option'         => $option
                             ]);
-
                         }
-
                     }
-
                 }
-
             }
 
             // Check if gig has custom seo
             if ($this->seo_title && $this->seo_description) {
-                
+
                 // Save seo
                 GigSeo::create([
                     'gig_id'      => $gig->id,
                     'title'       => clean($this->seo_title),
                     'description' => clean($this->seo_description),
                 ]);
-
             }
 
             // Save gig images
             foreach ($this->images as $image) {
-                
+
                 // Upload small image
                 $img_thumb_id  = ImageUploader::make($image)->resize(400)->folder('gigs/gallery/small')->handle();
 
@@ -436,15 +423,14 @@ class CreateComponent extends Component
                     'img_medium_id' => $img_medium_id,
                     'img_large_id'  => $img_large_id
                 ]);
-
             }
 
             // Check if documents exists in request
             if (settings('publish')->is_documents_enabled && is_array($this->documents) && count($this->documents)) {
-                
+
                 // Loop through documents
                 foreach ($this->documents as $doc) {
-                    
+
                     // Generate document unique id
                     $doc_uid = uid();
 
@@ -464,26 +450,21 @@ class CreateComponent extends Component
                         'name'   => $name,
                         'size'   => $size
                     ]);
-
-
                 }
-
-            }   
+            }
 
             // Gig has been posted successfully
             $this->isFinished = url('service', $slug);
 
             // Send notification to admin
             if ($status === 'pending') {
-                
+
                 $this->is_approved = false;
 
-                Admin::first()->notify( (new PendingGig($gig))->locale(config('app.locale')) );
-
+                Admin::first()->notify((new PendingGig($gig))->locale(config('app.locale')));
             } else {
 
                 $this->is_approved = true;
-
             }
 
             // Success message
@@ -492,10 +473,8 @@ class CreateComponent extends Component
                 'description' => __('messages.t_gig_created_successfully'),
                 'icon'        => 'success'
             ]);
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-    
 }

@@ -8,13 +8,10 @@ use Livewire\WithFileUploads;
 use App\Models\VerificationCenter;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Main\Account\Verification\DocIDValidator;
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
-use App\Http\Validators\Main\Account\Verification\DocDriverValidator;
-use App\Http\Validators\Main\Account\Verification\DocPassportValidator;
 use App\Models\UserWithdrawalSettings;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -211,7 +208,9 @@ class VerificationComponent extends Component
             $extension  = $this->selfie->getClientOriginalExtension();
             $fileName = makeFileName($extension);
 
-            $path = $this->selfie->storeAs('verifications', $fileName, 'public');
+            $path = $this->selfie->storeAs('verifications', $fileName, 's3');
+
+            $url = Storage::disk('s3')->url($path);
 
             VerificationCenter::upsert([
                 [
@@ -219,7 +218,7 @@ class VerificationComponent extends Component
                     'user_id' => auth()->id(),
                     'document_type' => $this->document_type,
                     'status' => $this->bvn ? 'verified' : 'pending',
-                    'file_selfie' => $path
+                    'file_selfie' => $url
                 ]
             ], ['user_id'], ['document_type', 'file_selfie']);
 

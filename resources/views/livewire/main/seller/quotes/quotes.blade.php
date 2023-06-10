@@ -1,7 +1,7 @@
 <div class="w-full" x-data="window.SellerDashboardQuotesPage">
 
     {{-- Loading --}}
-    <x-forms.loading />
+    <x-forms.loading zindex="z-[1000]" />
 
     {{-- Heading --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-10">
@@ -97,13 +97,12 @@
                             <th>Total</th>
                             <th>Expires At</th>
                             <th>Paid</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($quotations as $quote)
-                            <tr class="tbody-tr">
-                                <td>{{ $quote->first_name }} {{ $quote->last_name }}</td>
+                            <tr class="tbody-tr cursor-pointer" @click="viewQuote({{ $quote->toJson() }})">
+                                <td class="text-blue-500">{{ $quote->first_name }} {{ $quote->last_name }}</td>
                                 <td>{{ $quote->reference }}</td>
                                 <td>{{ $quote->total_discount}}</td>
                                 <td>{{ $quote->total }}</td>
@@ -116,12 +115,6 @@
                                     @if ($quote->paid)
                                         <span class="px-2.5 py-1 rounded bg-green-200 text-green-600">Paid</span>
                                     @endif
-                                </td>
-                                <td>
-                                    <x-dropdown>                                     
-                                        <x-dropdown.item @click="viewQuote({{ $quote->toJson() }})" class="mx-2 my-2" label="View Quotation" />
-                                        <x-dropdown.item href="/seller/quotes/{{$quote->id}}/edit" class="mx-2 my-2" label="Edit Quotation" />
-                                    </x-dropdown>
                                 </td>
                             </tr>
                         @empty
@@ -146,12 +139,16 @@
     </div>
 
     {{-- seleted modal quoations items --}}
-    <x-forms.right-modal>
+    <x-forms.right-modal x-cloak>
         <x-slot name="title">
-            <div class="">Quotation information</div>
+            <div class="">Quotation Details</div>
+            <x-forms.close-button action="closeModal"></x-forms.close-button>
         </x-slot>
 
         <div class="">
+            <div class="flex justify-end">
+                <a :href="`/seller/quotes/${selectedQuote.quote.id}/edit`" class="btn-purple rounded px-3 py-2.5 text-xs">Edit Quote</a>
+            </div>
             <div class="border rounded mt-2 mb-5">
                 <div class="flex items-center px-4 py-3.5">
                    <div class="flex items-center flex-shrink-0 justify-center h-8 w-8 rounded-full bg-black mr-3">
@@ -223,6 +220,10 @@
                 async wireQuoteItems(quoteId) {
                     let res = await @this.getQuotationItems(quoteId)
                     this.selectedQuote.items = res
+                },
+
+                closeModal() {
+                    this.hidden = false
                 },
 
                 closeRightModal(event) {

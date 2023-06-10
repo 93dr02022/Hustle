@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->index();
+            $table->foreignId('order_id')->index();
             $table->string('payment_method')->index();
             $table->string('phone_number')->index();
             $table->string('first_name')->index();

@@ -1,0 +1,59 @@
+<td>
+   <x-dropdown>
+      <x-dropdown.item @click="viewQuote({{ $quote->toJson() }})" class="mx-2 my-2" label="View Quotation" />
+      <x-dropdown.item href="/seller/quotes/{{$quote->id}}/edit" class="mx-2 my-2" label="Edit Quotation" />
+   </x-dropdown>
+</td>
+
+
+<div class="bg-white dark:bg-zinc-800 justify-center pb-4 pt-5 px-4 rounded-md shadow-sm sm:align-middle sm:max-w-sm sm:p-6 sm:w-full mx-auto">
+   <div>
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-zinc-700">
+         <svg class="h-6 w-6 text-green-600 dark:text-zinc-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+         </svg>
+      </div>
+
+      <div class="mt-3 text-center sm:mt-5">
+         <h3 class="text-md leading-6 font-medium text-gray-900 dark:text-gray-200" id="modal-title">Gig created</h3>
+         <div class="mt-2">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Your gig has been created and our team is reviewing it right now</p>
+         </div>
+      </div>
+   </div>
+   <div class="mt-5 sm:mt-6">
+      <a href="http://localhost:3030/service/am-a-professional-concrete-removal-B7F9F79E16CA2D563061"
+         class="inline-flex justify-center items-center w-full rounded uppercase tracking-widest border border-transparent shadow-sm px-4 py-3 bg-primary-600 font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600 text-xs">
+         View gig
+         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+         </svg>
+      </a>
+   </div>
+</div>
+
+
+
+"quotation" => array:21 [▼
+"id" => 3
+"user_id" => 1
+"order_id" => 2
+"payment_method" => "paystack"
+"phone_number" => "08149617804"
+"first_name" => "james"
+"last_name" => "Afuwape"
+"email" => "afuwapesunny007@gmail.com"
+"quote_date" => "2023-06-10 14:39:40"
+"reference" => "B31B77D1F6825C3"
+"sharing_uid" => "e21e9afd92e93495507bce93f"
+"is_draft" => 1
+"paid" => false
+"total" => "440.00"
+"expires_at" => "2023-06-30T00:00:00.000000Z"
+"total_discount" => "50.00"
+"total_tax" => "10.00"
+"total_quantity" => "10.00"
+"note" => "Fugit, lorem duis ullamco quis, fuga porttitor maur Fugit, lorem duis ullamco quis, fuga porttitor maur Fugit, lorem duis ullamco quis, fuga porttitor maur Fugi ▶"
+"created_at" => "2023-06-10T14:39:40.000000Z"
+"updated_at" => "2023-06-10T14:39:40.000000Z"
+]

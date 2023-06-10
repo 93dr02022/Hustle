@@ -25,26 +25,26 @@ class OrdersComponent extends Component
         $separator   = settings('general')->separator;
         $title       = __('messages.t_my_orders') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage     = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.seller.orders.orders', [
@@ -78,9 +78,9 @@ class OrdersComponent extends Component
     {
         // Get item
         $item = OrderItem::where('uid', $id)
-                        ->where('owner_id', auth()->id())
-                        ->where('status', 'pending')
-                        ->firstOrFail();
+            ->where('owner_id', auth()->id())
+            ->where('status', 'pending')
+            ->firstOrFail();
 
         // Check if invoice paid
         if ($item->order->invoice->status === 'pending') {
@@ -143,7 +143,7 @@ class OrdersComponent extends Component
         }
 
         // Send notification to buyer
-        $item->order->buyer->notify( (new OrderItemCanceled($item))->locale(config('app.locale')) );
+        $item->order->buyer->notify((new OrderItemCanceled($item))->locale(config('app.locale')));
 
         // Send notification
         notification([
@@ -171,12 +171,12 @@ class OrdersComponent extends Component
     public function confirmProgress($id)
     {
         try {
-            
+
             // Get item
             $item = OrderItem::where('uid', $id)
-                            ->where('owner_id', auth()->id())
-                            ->where('status', 'pending')
-                            ->firstOrFail();
+                ->where('owner_id', auth()->id())
+                ->where('status', 'pending')
+                ->firstOrFail();
 
             // Offline payment, invoice must be paid
             if ($item->order->invoice->status === 'pending') {
@@ -185,7 +185,7 @@ class OrdersComponent extends Component
 
             // Check if requirements sent
             if (!$item->expected_delivery_date) {
-                
+
                 // Confirm
                 $this->dialog()->confirm([
                     'title'       => __('messages.t_confirm_cancellation'),
@@ -200,23 +200,19 @@ class OrdersComponent extends Component
                         'label'  => __('messages.t_cancel')
                     ],
                 ]);
-
             } else {
 
                 // Go to progress step
                 $this->progress($id);
-
             }
-
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
                 'title'       => __('messages.t_error'),
                 'description' => $th->getMessage(),
                 'icon'        => 'error'
             ]);
-
         }
     }
 
@@ -230,7 +226,7 @@ class OrdersComponent extends Component
     public function progress($id)
     {
         // Get item
-        $item               = OrderItem::where('uid', $id)->where('owner_id', auth()->id())->where('status', 'pending')->firstOrFail();
+        $item = OrderItem::where('uid', $id)->where('owner_id', auth()->id())->where('status', 'pending')->firstOrFail();
 
         // Offline payment, invoice must be paid
         if ($item->order->invoice->status === 'pending') {
@@ -246,7 +242,7 @@ class OrdersComponent extends Component
         $item->save();
 
         // Send notification to buyer
-        $item->order->buyer->notify( (new OrderItemInProgress($item))->locale(config('app.locale')) );
+        $item->order->buyer->notify((new OrderItemInProgress($item))->locale(config('app.locale')));
 
         // Send notification
         notification([
@@ -274,7 +270,7 @@ class OrdersComponent extends Component
     private function calculateExpectedDeliveryDate($item)
     {
         // Set empty days variable
-        $days  = 0;
+        $days = 0;
 
         // Culculate extra days for upgrades
         $days += $item->upgrades()->exists() ? $item->upgrades->sum('extra_days') : 0;
@@ -285,5 +281,4 @@ class OrdersComponent extends Component
         // Calculate expected delivery date
         return now()->addDays($days);
     }
-    
 }

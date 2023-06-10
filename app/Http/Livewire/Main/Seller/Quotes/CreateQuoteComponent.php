@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
 use App\Http\Validators\Main\Seller\Quote\CreateQuoteValidator;
+use App\Models\Order;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use DB;
@@ -38,8 +39,17 @@ class CreateQuoteComponent extends Component
             $quoteItems = collect($validator->safe()->only('items')['items']);
             $totals = $this->calculateTotals($quoteItems);
 
+            $order = Order::create([
+                'uid' => uid(20),
+                'total_value' => $totals['total'] + $totals['total_tax'],
+                'subtotal_value' => $totals['total'],
+                'taxes_value' => $totals['total_tax'],
+                'placed_at' => now()
+            ]);
+
             $quotation = Quotation::create([
                 'user_id' => auth()->id(),
+                'order_id' => $order->id,
                 'quote_date' => now(),
                 'reference' => uid(15),
                 'sharing_uid' => strtolower(uid(25)),

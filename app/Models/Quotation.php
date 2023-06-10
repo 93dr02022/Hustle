@@ -17,6 +17,7 @@ class Quotation extends Model
      */
     protected $fillable = [
         'user_id',
+        'order_id',
         'payment_method',
         'phone_number',
         'first_name',
