@@ -15,15 +15,10 @@ return new class extends Migration
     {
         Schema::create('gig_images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('gig_id');
-            $table->unsignedBigInteger('img_thumb_id');
-            $table->unsignedBigInteger('img_medium_id');
-            $table->unsignedBigInteger('img_large_id');
-
-            $table->foreign('gig_id')->references('id')->on('gigs');
-            $table->foreign('img_thumb_id')->references('id')->on('file_manager');
-            $table->foreign('img_medium_id')->references('id')->on('file_manager');
-            $table->foreign('img_large_id')->references('id')->on('file_manager');
+            $table->foreignId('gig_id')->constrained();
+            $table->mediumText('img_thumb_id');
+            $table->mediumText('img_medium_id');
+            $table->mediumText('img_large_id');
         });
     }
 

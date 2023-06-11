@@ -14,6 +14,7 @@ use App\Models\GigUpgrade;
 use App\Notifications\Admin\PendingGig;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
@@ -263,8 +264,6 @@ class CreateComponent extends Component
     public function finish()
     {
         try {
-
-            // Generate unique id for this gig
             $uid = uid();
 
             // Get title
@@ -306,37 +305,32 @@ class CreateComponent extends Component
             // Get gig preview image
             $preview = $this->thumbnail;
 
-            // Upload thumbnail image
-            $image_thumb_id = ImageUploader::make($preview)->resize(400)->folder('gigs/previews/small')->handle();
+            $imageThumbUrl = ImageUploader::make($preview)->size(400)->toBucket('gigs/previews/small');
+            $imageMediumUrl = ImageUploader::make($preview)->size(800)->toBucket('gigs/previews/medium');
+            $imageLargeUrl = ImageUploader::make($preview)->size(1200)->toBucket('gigs/previews/large');
 
-            // Upload medium image
-            $image_medium_id = ImageUploader::make($preview)->resize(800)->folder('gigs/previews/medium')->handle();
+            $gig = Gig::create([
+                'uid' => $uid,
+                'user_id' => auth()->id(),
+                'title' => $title,
+                'slug' => $slug,
+                'description' => $description,
+                'price' => $price,
+                'delivery_time' => $delivery_time,
+                'category_id' => $category_id,
+                'subcategory_id' => $subcategory_id,
+                'image_thumb_id' => $imageThumbUrl,
+                'image_medium_id' => $imageMediumUrl,
+                'image_large_id' => $imageLargeUrl,
+                'status' => $status,
+                'has_upgrades' => $has_upgrades,
+                'has_faqs' => $has_faqs,
+                'video_link' => $video_link,
+                'video_id' => $video_id,
+            ]);
+            
 
-            // Upload large image
-            $image_large_id = ImageUploader::make($preview)->resize(1200)->folder('gigs/previews/large')->handle();
-
-            // Save gig
-            $gig = new Gig();
-            $gig->uid = $uid;
-            $gig->user_id = auth()->id();
-            $gig->title = $title;
-            $gig->slug = $slug;
-            $gig->description = $description;
-            $gig->price = $price;
-            $gig->delivery_time = $delivery_time;
-            $gig->category_id = $category_id;
-            $gig->subcategory_id = $subcategory_id;
-            $gig->image_thumb_id = $image_thumb_id;
-            $gig->image_medium_id = $image_medium_id;
-            $gig->image_large_id = $image_large_id;
-            $gig->status = $status;
-            $gig->has_upgrades = $has_upgrades;
-            $gig->has_faqs = $has_faqs;
-            $gig->video_link = $video_link;
-            $gig->video_id = $video_id;
-            $gig->save();
-
-            // Save tags
+            // Save gig tag
             foreach ($this->tags as $tag) {
                 $gig->tag($tag);
             }
@@ -344,10 +338,7 @@ class CreateComponent extends Component
             // Check if gig has upgrades
             if (is_array($this->upgrades) && count($this->upgrades)) {
 
-                // Loop through upgrades
                 foreach ($this->upgrades as $upgrade) {
-
-                    // Save uprade
                     GigUpgrade::create([
                         'uid' => uid(),
                         'gig_id' => $gig->id,
@@ -355,26 +346,19 @@ class CreateComponent extends Component
                         'price' => $upgrade['price'],
                         'extra_days' => isset($upgrade['extra_days']) ? $upgrade['extra_days'] : 0,
                     ]);
-
                 }
-
             }
 
             // Check if gig has faqs
             if (is_array($this->faqs) && count($this->faqs)) {
 
-                // Loop through faqs
                 foreach ($this->faqs as $faq) {
-
-                    // Save faq
                     GigFaq::create([
                         'gig_id' => $gig->id,
                         'question' => clean($faq['question']),
                         'answer' => clean($faq['answer']),
                     ]);
-
                 }
-
             }
 
             // Check if gig has requirements
@@ -382,8 +366,6 @@ class CreateComponent extends Component
 
                 // Loop through requirements
                 foreach ($this->requirements as $req) {
-
-                    // Save requirement
                     $requirement = GigRequirement::create([
                         'gig_id' => $gig->id,
                         'question' => clean($req['question']),
@@ -403,19 +385,13 @@ class CreateComponent extends Component
                                 'requirement_id' => $requirement->id,
                                 'option' => $option,
                             ]);
-
                         }
-
                     }
-
                 }
-
             }
 
             // Check if gig has custom seo
             if ($this->seo_title && $this->seo_description) {
-
-                // Save seo
                 GigSeo::create([
                     'gig_id' => $gig->id,
                     'title' => clean($this->seo_title),
@@ -426,22 +402,15 @@ class CreateComponent extends Component
 
             // Save gig images
             foreach ($this->images as $image) {
+                $imgThumbUrl = ImageUploader::make($image)->size(400)->toBucket('gigs/gallery/small');
+                $imgMedium = ImageUploader::make($image)->size(800)->toBucket('gigs/gallery/medium');
+                $imgLargeUrl = ImageUploader::make($image)->size(1200)->toBucket('gigs/gallery/large');
 
-                // Upload small image
-                $img_thumb_id = ImageUploader::make($image)->resize(400)->folder('gigs/gallery/small')->handle();
-
-                // Upload medium image
-                $img_medium_id = ImageUploader::make($image)->resize(800)->folder('gigs/gallery/medium')->handle();
-
-                // Upload large image
-                $img_large_id = ImageUploader::make($image)->resize(1200)->folder('gigs/gallery/large')->handle();
-
-                // Save images
                 GigImage::create([
                     'gig_id' => $gig->id,
-                    'img_thumb_id' => $img_thumb_id,
-                    'img_medium_id' => $img_medium_id,
-                    'img_large_id' => $img_large_id,
+                    'img_thumb_id' => $imgThumbUrl,
+                    'img_medium_id' => $imgMedium,
+                    'img_large_id' => $imgLargeUrl,
                 ]);
 
             }
@@ -449,30 +418,22 @@ class CreateComponent extends Component
             // Check if documents exists in request
             if (settings('publish')->is_documents_enabled && is_array($this->documents) && count($this->documents)) {
 
-                // Loop through documents
-                foreach ($this->documents as $doc) {
+                collect($this->documents)->each(function ($doc) use ($gig) {
+                    $bucketFileName = uid().'.pdf';
+                    $uploadFileName = $doc->getClientOriginalName();
+                    $fileSize = $doc->getSize();
 
-                    // Generate document unique id
-                    $doc_uid = uid();
+                    // Move document to s3 bucket
+                    $path = $doc->storeAs('gigs/documents', $bucketFileName, 's3');
+                    $fileUrl = Storage::disk('s3')->url($path);
 
-                    // Get original name
-                    $name = $doc->getClientOriginalName();
-
-                    // Get file size
-                    $size = $doc->getSize();
-
-                    // Move document to local storage
-                    $doc->storeAs('gigs/documents', $doc_uid.'.pdf', 'custom');
-
-                    // Save document in database
                     GigDocument::create([
-                        'uid' => $doc_uid,
+                        'uid' => $fileUrl,
                         'gig_id' => $gig->id,
-                        'name' => $name,
-                        'size' => $size,
+                        'name' => $uploadFileName,
+                        'size' => $fileSize,
                     ]);
-
-                }
+                });
 
             }
 
