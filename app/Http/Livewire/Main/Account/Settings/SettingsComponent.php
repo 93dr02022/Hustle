@@ -2,30 +2,40 @@
 
 namespace App\Http\Livewire\Main\Account\Settings;
 
-use App\Models\User;
+use App\Http\Validators\Main\Account\Settings\EditValidator;
 use App\Models\Country;
+use App\Models\State;
+use App\Models\User;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use Illuminate\Support\Facades\Hash;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Main\Account\Settings\EditValidator;
-use App\Models\State;
-use Illuminate\Validation\ValidationException;
 
 class SettingsComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $username;
+
     public $email;
+
     public $firstname;
+
     public $lastname;
+
     public $country;
+
     public $state;
+
     public $city;
+
     public $postcode;
+
     public $localGovernmentZone;
+
     public $password;
+
     public $address;
 
     public $states = [];
@@ -56,7 +66,6 @@ class SettingsComponent extends Component
         $this->fetchStates($user->country_id);
     }
 
-
     /**
      * Render component
      *
@@ -65,10 +74,10 @@ class SettingsComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_account_settings') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_account_settings')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -80,7 +89,7 @@ class SettingsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -95,7 +104,6 @@ class SettingsComponent extends Component
             'states' => $this->states,
         ])->extends('livewire.main.layout.app')->section('content');
     }
-
 
     /**
      * Get list of countries
@@ -125,7 +133,6 @@ class SettingsComponent extends Component
         }
     }
 
-
     /**
      * Update user account settings
      *
@@ -140,7 +147,7 @@ class SettingsComponent extends Component
             $user = auth()->user();
 
             // Validate current password
-            if ($user->password && !Hash::check($this->password, $user->password)) {
+            if ($user->password && ! Hash::check($this->password, $user->password)) {
                 $this->toastError(__('messages.t_ur_current_pass_does_not_match'));
 
                 return;
@@ -168,9 +175,9 @@ class SettingsComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_ur_account_settings_updated'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
         } catch (ValidationException $e) {
 
@@ -191,9 +198,9 @@ class SettingsComponent extends Component
     public function toastError($message)
     {
         $this->notification([
-            'title'       => __('messages.t_error'),
+            'title' => __('messages.t_error'),
             'description' => $message,
-            'icon'        => 'error'
+            'icon' => 'error',
         ]);
     }
 }

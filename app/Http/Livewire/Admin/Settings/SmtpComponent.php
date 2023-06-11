@@ -2,25 +2,31 @@
 
 namespace App\Http\Livewire\Admin\Settings;
 
+use App\Http\Validators\Admin\Settings\SmtpValidator;
+use App\Mail\Admin\Settings\TrySmtp;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use App\Mail\Admin\Settings\TrySmtp;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Validators\Admin\Settings\SmtpValidator;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class SmtpComponent extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $host;
+
     public $port;
+
     public $encryption;
+
     public $username;
+
     public $password;
+
     public $from_address;
+
     public $from_name;
 
     public $email;
@@ -34,16 +40,15 @@ class SmtpComponent extends Component
     {
         // Fill default settings
         $this->fill([
-            'host'         => config('mail.mailers.smtp.host'),
-            'port'         => config('mail.mailers.smtp.port'),
-            'encryption'   => config('mail.mailers.smtp.encryption'),
-            'username'     => config('mail.mailers.smtp.username'),
+            'host' => config('mail.mailers.smtp.host'),
+            'port' => config('mail.mailers.smtp.port'),
+            'encryption' => config('mail.mailers.smtp.encryption'),
+            'username' => config('mail.mailers.smtp.username'),
             'from_address' => config('mail.from.address'),
-            'from_name'    => config('mail.from.name'),
-            'email'        => auth('admin')->user()->email
+            'from_name' => config('mail.from.name'),
+            'email' => auth('admin')->user()->email,
         ]);
     }
-
 
     /**
      * Render component
@@ -53,12 +58,11 @@ class SmtpComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_smtp_settings'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_smtp_settings'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.settings.smtp')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update settings
@@ -90,36 +94,33 @@ class SmtpComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Send a test email
@@ -129,7 +130,7 @@ class SmtpComponent extends Component
     public function send()
     {
         // check if insert email address
-        if (!$this->email) {
+        if (! $this->email) {
             return;
         }
 
@@ -138,10 +139,9 @@ class SmtpComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_smtp_email_test_sent_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

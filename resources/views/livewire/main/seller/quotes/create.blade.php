@@ -155,9 +155,14 @@
                                 <label class="label-text">Payment Method</label>
                                 <select class="form-ctr" x-model="form.payment_method" required>
                                     <option value="paystack">Paystack Payment</option>
-                                    <option value="flutterwave">Flutterwave Payment</option>
                                     <option value="cash">Cash Payment</option>
                                 </select>
+                            </div>
+
+                            {{-- cash payment acknowlegement --}}
+                            <div x-show="form.payment_method == 'cash'" class="col-span-2 bg-gray-100 border flex items-center gap-x-3  rounded py-5 px-3">
+                                <input id="checkbox-input" type="checkbox" class="focus:ring-primary-600 h-4 w-4 text-primary-600 border-gray-300 rounded" checked disabled>
+                                <label for="" class="text-sm text-gray-900">This is to affirm you have received cash payment from the quote recipient.</label>
                             </div>
 
                             <div class="col-span-2">
@@ -181,10 +186,12 @@
                     </div>
                 </div>
 
-                <div class="relative mt-7 mx-5">
+                <div class="text-center my-4">Quotation created successfully.</div>
+
+                <div x-show="form.payment_method == 'paystack'" class="relative mt-7 mx-5">
                     <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100" :value="`https://correcthustle.com/payments/${quote.sharing_uid}/pay`" readonly />
                     <div class="flex absolute inset-y-0 right-0 items-center pl-4 pr-2 py-3 pointer-events-auto">
-                        <button @click="copy(`https://correcthustle.com/payments/${quote.sharing_uid}/pay`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
+                        <button @click="copy(`https://correcthustle.com/quotations/${quote.sharing_uid}/payment`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
                     </div>
                 </div>
             </div>
@@ -239,7 +246,7 @@
                     let quote = this.form.items[index]
                     let quoteTotal = parseFloat(quote.price) - (parseFloat(this.tax.tax_value) / 100 * quote.price)
                     if(quote.discount > quoteTotal) {
-                        this.toastError('You cant input a discount amount greater than the quote taxed amount.')
+                        this.toastMessage('You cant input a discount amount greater than the quote taxed amount.')
                         this.form.items[index].discount = 0
                     }
                 },
@@ -262,6 +269,8 @@
                     let res = await @this.create(this.form);
                     if (res?.errors) {
                         this.errors = res.errors
+                        this.toastMessage('There was an error your with your input')
+                        return;
                     }
 
                     if(res) {
@@ -270,7 +279,7 @@
                     }
                 },
 
-                toastError(message, type="error") {
+                toastMessage(message, type="error") {
                     window.$wireui.notify({
                         title: type == 'success' ? 'Success' : 'Error occured',
                         description: message,

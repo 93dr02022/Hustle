@@ -2,32 +2,34 @@
 
 namespace App\Http\Livewire\Admin\Languages\Options;
 
-use Livewire\Component;
 use App\Models\Language;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class TranslateComponent extends Component
 {
     use WithPagination, SEOToolsTrait, Actions;
 
     public $language;
+
     public $data;
+
     public $q;
 
     /**
      * Init component
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function mount($id)
     {
         // Get language
-        $language       = Language::where('id', $id)->firstOrFail();
+        $language = Language::where('id', $id)->firstOrFail();
 
         // Set language
         $this->language = $language;
@@ -41,14 +43,13 @@ class TranslateComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_edit_translation'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_edit_translation'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.languages.options.translate', [
-            'translation' => $this->translation
+            'translation' => $this->translation,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get translation
@@ -58,7 +59,7 @@ class TranslateComponent extends Component
     public function getTranslationProperty()
     {
         // Get translation
-        $items = include lang_path($this->language->language_code . "/messages.php");
+        $items = include lang_path($this->language->language_code.'/messages.php');
 
         // Check if has a query
         if ($this->q) {
@@ -68,6 +69,7 @@ class TranslateComponent extends Component
                 if (stripos($item, $this->q) !== false) {
                     return true;
                 }
+
                 return false;
             });
 
@@ -75,51 +77,49 @@ class TranslateComponent extends Component
 
         $this->data = $items;
 
-        $page  = $this->page;
+        $page = $this->page;
         $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, 40), $items->count(), 40, $page, ['path' => admin_url('languages/translate/' . $this->language->id)]);
-   
-    }
 
+        return new LengthAwarePaginator($items->forPage($page, 40), $items->count(), 40, $page, ['path' => admin_url('languages/translate/'.$this->language->id)]);
+
+    }
 
     /**
      * Check when value updated
      *
-     * @param string $value
-     * @param string $key
+     * @param  string  $value
+     * @param  string  $key
      * @return void
      */
     public function updatedData($value, $key)
     {
         try {
-            
+
             // Get language path
-            $path             = lang_path($this->language->language_code . "/messages.php");
+            $path = lang_path($this->language->language_code.'/messages.php');
 
             // Set new writer
-            $writer           = new \October\Rain\Config\DataWriter\Rewrite;
+            $writer = new \October\Rain\Config\DataWriter\Rewrite;
 
             // Clear value from any bad characters
-            $clean            = str_replace(array('"', ';', '\\'), ' ', $value);
+            $clean = str_replace(['"', ';', '\\'], ' ', $value);
 
             $remove_new_lines = trim(preg_replace('/\s+/', ' ', str_replace("'", '’', $clean)));
 
             // Update data
             $writer->toFile($path, [
-                $key => $remove_new_lines
+                $key => $remove_new_lines,
             ]);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_language_value_updated_successfully'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
-
 
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-    
 }

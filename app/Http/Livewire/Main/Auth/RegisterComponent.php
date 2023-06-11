@@ -2,30 +2,34 @@
 
 namespace App\Http\Livewire\Main\Auth;
 
-use App\Models\User;
+use App\Http\Validators\Main\Auth\RegisterValidator;
 use App\Models\Admin;
+use App\Models\EmailVerification;
+use App\Models\User;
+use App\Notifications\Admin\PendingUser;
+use App\Notifications\User\Everyone\VerifyEmail;
+use App\Notifications\User\Everyone\Welcome;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use WireUi\Traits\Actions;
-use App\Models\EmailVerification;
-use Illuminate\Support\Facades\Hash;
-use App\Notifications\Admin\PendingUser;
-use App\Notifications\User\Everyone\Welcome;
-use App\Notifications\User\Everyone\VerifyEmail;
-use App\Http\Validators\Main\Auth\RegisterValidator;
-use App\Models\UserWithdrawalSettings;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use DB;
 
 class RegisterComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $email;
+
     public $username;
+
     public $password;
+
     public $fullname;
+
     public $firstname;
+
     public $lastname;
+
     public $recaptcha_token;
 
     public $social_grid;
@@ -72,7 +76,6 @@ class RegisterComponent extends Component
         $this->social_grid = $social_grid_counter;
     }
 
-
     /**
      * Render component
      *
@@ -81,10 +84,10 @@ class RegisterComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_signup') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_signup')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -96,7 +99,7 @@ class RegisterComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -109,17 +112,16 @@ class RegisterComponent extends Component
         return view('livewire.main.auth.register')->extends('livewire.main.auth.layout.auth')->section('content');
     }
 
-
     /**
      * Create new account
      *
-     * @param array $form
+     * @param  array  $form
      * @return mixed
      */
     public function register($form)
     {
         try {
-            if (!is_array($form) || !isset($form['email']) || !isset($form['password']) || !isset($form['firstname']) || !isset($form['lastname']) || !isset($form['username'])) {
+            if (! is_array($form) || ! isset($form['email']) || ! isset($form['password']) || ! isset($form['firstname']) || ! isset($form['lastname']) || ! isset($form['username'])) {
                 return;
             }
 
@@ -128,7 +130,7 @@ class RegisterComponent extends Component
             $this->password = $form['password'];
             $this->firstname = $form['firstname'];
             $this->lastname = $form['lastname'];
-            $this->username  = $form['username'];
+            $this->username = $form['username'];
             $this->recaptcha_token = $form['recaptcha_token'];
 
             $this->verifyRecaptcha();
@@ -155,7 +157,7 @@ class RegisterComponent extends Component
                     $verification = EmailVerification::create([
                         'token' => $token,
                         'email' => $this->email,
-                        'expires_at' => now()->addMinutes($settings->verification_expiry_period)
+                        'expires_at' => now()->addMinutes($settings->verification_expiry_period),
                     ]);
 
                     // Send notification to user
@@ -165,9 +167,9 @@ class RegisterComponent extends Component
                     return redirect('auth/register')
                         ->with('success', __('messages.t_register_verification_email_sent', [
                             'email' => $this->email,
-                            'minutes' => $settings->verification_expiry_period
+                            'minutes' => $settings->verification_expiry_period,
                         ]));
-                } else if ($settings->verification_type === 'admin') {
+                } elseif ($settings->verification_type === 'admin') {
 
                     // Send notification to admin
                     Admin::first()
@@ -187,6 +189,7 @@ class RegisterComponent extends Component
             return redirect('/');
         } catch (\Throwable $th) {
             $this->toastError($th->getMessage());
+
             return;
         }
     }
@@ -201,12 +204,12 @@ class RegisterComponent extends Component
                 $recaptcha_secret = config('recaptcha.secret_key');
 
                 // post request to server
-                $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) .  '&response=' . urlencode($this->recaptcha_token);
+                $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($recaptcha_secret).'&response='.urlencode($this->recaptcha_token);
 
                 $recaptcha_response = file_get_contents($verify_recaptcha_url);
                 $recaptcha_decoded_response = json_decode($recaptcha_response, true);
 
-                if (!isset($recaptcha_decoded_response["success"])) {
+                if (! isset($recaptcha_decoded_response['success'])) {
                     throw new \Exception(__('messages.t_recaptcha_error_message'));
                 }
             } catch (\Throwable $th) {
@@ -221,9 +224,9 @@ class RegisterComponent extends Component
     public function toastError($message)
     {
         $this->notification([
-            'title'       => __('messages.t_error'),
+            'title' => __('messages.t_error'),
             'description' => $message,
-            'icon'        => 'error'
+            'icon' => 'error',
         ]);
     }
 }

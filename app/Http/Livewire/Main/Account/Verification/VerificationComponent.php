@@ -2,40 +2,46 @@
 
 namespace App\Http\Livewire\Main\Account\Verification;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
-use App\Models\VerificationCenter;
-use App\Utils\Uploader\ImageUploader;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Main\Account\Verification\DocIDValidator;
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
-use App\Http\Validators\Main\Account\Verification\DocDriverValidator;
-use App\Http\Validators\Main\Account\Verification\DocPassportValidator;
 use App\Models\UserWithdrawalSettings;
-use Illuminate\Http\UploadedFile;
+use App\Models\VerificationCenter;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class VerificationComponent extends Component
 {
-
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $verification;
+
     public $document_type = 'bvn';
+
     public $selfie;
+
     public $currentStep = 1;
+
     public $doc_id = [];
+
     public $doc_driver_license = [];
+
     public $doc_passport = [];
 
     public $first_name;
+
     public $last_name;
+
     public $bank;
+
     public $bvn = null;
+
     public $accountNumber;
+
     public $accountName;
 
     /**
@@ -55,7 +61,6 @@ class VerificationComponent extends Component
         $this->last_name = auth()->user()->last_name;
     }
 
-
     /**
      * Render component
      *
@@ -64,10 +69,10 @@ class VerificationComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_verification_center') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_verification_center')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -79,7 +84,7 @@ class VerificationComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -90,7 +95,7 @@ class VerificationComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.account.verification.verification', [
-            'banks' => $this->banks
+            'banks' => $this->banks,
         ])
             ->extends('livewire.main.layout.app')
             ->section('content');
@@ -102,7 +107,7 @@ class VerificationComponent extends Component
     public function getBanksProperty()
     {
         $banks = Http::withToken(config('paystack.secretKey'))
-            ->get("https://api.paystack.co/bank?per_page=100")
+            ->get('https://api.paystack.co/bank?per_page=100')
             ->collect()
             ->toArray();
 
@@ -128,22 +133,24 @@ class VerificationComponent extends Component
     public function bvnMatch()
     {
         $response = Http::withToken(config('paystack.secretKey'))
-            ->post("https://api.paystack.co/bvn/match", [
-                "bvn" => $this->bvn,
-                "bank_code" => $this->bank,
-                "account_number" => $this->accountNumber,
-                "first_name" => $this->first_name,
-                "last_name" => $this->last_name
+            ->post('https://api.paystack.co/bvn/match', [
+                'bvn' => $this->bvn,
+                'bank_code' => $this->bank,
+                'account_number' => $this->accountNumber,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
             ])
             ->object();
 
-        if (!$response->status) {
-            $this->toastError("Sorry error occured unable to validate your information.");
+        if (! $response->status) {
+            $this->toastError('Sorry error occured unable to validate your information.');
+
             return false;
         }
 
-        if (!$response->data->first_name || !$response->data->last_name) {
-            $this->toastError("Sorry we are unable to validate your names");
+        if (! $response->data->first_name || ! $response->data->last_name) {
+            $this->toastError('Sorry we are unable to validate your names');
+
             return false;
         }
 
@@ -151,7 +158,7 @@ class VerificationComponent extends Component
     }
 
     /**
-     * Run paystack api to validate name via account number 
+     * Run paystack api to validate name via account number
      * if BVN is not provided.
      */
     public function accountMatch()
@@ -160,37 +167,38 @@ class VerificationComponent extends Component
             ->get("https://api.paystack.co/bank/resolve?account_number={$this->accountNumber}&bank_code={$this->bank}")
             ->object();
 
-        if (!$response->status) {
-            $this->toastError("Sorry error occured unable to validate your information.");
+        if (! $response->status) {
+            $this->toastError('Sorry error occured unable to validate your information.');
+
             return false;
         }
 
         $containsAll = Str::containsAll($response->data->account_name, [
             $this->first_name,
-            $this->last_name
+            $this->last_name,
         ], true);
 
-        if (!$containsAll) {
-            $this->toastError("Sorry we are unable to validate your names");
+        if (! $containsAll) {
+            $this->toastError('Sorry we are unable to validate your names');
+
             return false;
         }
 
         return $response->data->account_name;
     }
 
-
     /**
-     * Very the seller supplied account information 
+     * Very the seller supplied account information
      */
     public function verify()
     {
-        if ($this->bvn && !$this->bvnMatch()) {
+        if ($this->bvn && ! $this->bvnMatch()) {
             return;
         }
 
         $accountName = $this->accountMatch();
 
-        if (!$accountName) {
+        if (! $accountName) {
             return;
         }
 
@@ -198,7 +206,6 @@ class VerificationComponent extends Component
 
         $this->currentStep = 2;
     }
-
 
     /**
      * Complete Verification forma and submits the form
@@ -208,10 +215,12 @@ class VerificationComponent extends Component
         try {
             SelfieValidator::validate($this);
 
-            $extension  = $this->selfie->getClientOriginalExtension();
+            $extension = $this->selfie->getClientOriginalExtension();
             $fileName = makeFileName($extension);
 
-            $path = $this->selfie->storeAs('verifications', $fileName, 'public');
+            $path = $this->selfie->storeAs('verifications', $fileName, 's3');
+
+            $url = Storage::disk('s3')->url($path);
 
             VerificationCenter::upsert([
                 [
@@ -219,8 +228,8 @@ class VerificationComponent extends Component
                     'user_id' => auth()->id(),
                     'document_type' => $this->document_type,
                     'status' => $this->bvn ? 'verified' : 'pending',
-                    'file_selfie' => $path
-                ]
+                    'file_selfie' => $url,
+                ],
             ], ['user_id'], ['document_type', 'file_selfie']);
 
             UserWithdrawalSettings::upsert([
@@ -231,7 +240,7 @@ class VerificationComponent extends Component
                     'bank_name' => $this->getBankName(),
                     'bank_code' => $this->bank,
                     'account_name' => $this->accountName,
-                ]
+                ],
             ], ['user_id'], ['gateway_provider_id', 'bank_name', 'bank_code', 'account_name']);
 
             // Success, now refresh page
@@ -244,7 +253,6 @@ class VerificationComponent extends Component
             throw $th;
         }
     }
-
 
     /**
      * Go back
@@ -261,11 +269,10 @@ class VerificationComponent extends Component
         if ($this->currentStep == 2 && $this->document_type == 'bvn') {
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
                 'component' => $this->id,
-                'target'    => '#select2-id-bank'
+                'target' => '#select2-id-bank',
             ]);
         }
     }
-
 
     /**
      * Start verification again and resend files
@@ -285,9 +292,9 @@ class VerificationComponent extends Component
     public function toastError($message)
     {
         $this->notification([
-            'title'       => __('messages.t_error'),
+            'title' => __('messages.t_error'),
             'description' => $message,
-            'icon'        => 'error'
+            'icon' => 'error',
         ]);
     }
 }

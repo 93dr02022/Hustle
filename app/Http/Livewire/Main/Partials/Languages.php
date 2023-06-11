@@ -2,16 +2,18 @@
 
 namespace App\Http\Livewire\Main\Partials;
 
-use Livewire\Component;
 use App\Models\Language;
+use Livewire\Component;
 use WireUi\Traits\Actions;
 
 class Languages extends Component
 {
     use Actions;
-    
+
     public $default_language_name;
+
     public $default_language_code;
+
     public $default_country_code;
 
     /**
@@ -22,25 +24,25 @@ class Languages extends Component
     public function mount()
     {
         // Get language from session
-        $locale   = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
+        $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
 
         // Get default language
         $language = Language::where('language_code', $locale)->first();
 
         // Check if language exists
         if ($language) {
-            
+
             // Set default language
             $this->default_language_name = $language->name;
             $this->default_language_code = $language->language_code;
-            $this->default_country_code  = $language->country_code;
+            $this->default_country_code = $language->country_code;
 
         } else {
 
             // Not found, set default
-            $this->default_language_name = "English";
-            $this->default_language_code = "en";
-            $this->default_country_code  = "us";
+            $this->default_language_name = 'English';
+            $this->default_language_code = 'en';
+            $this->default_country_code = 'us';
 
         }
     }
@@ -55,11 +57,10 @@ class Languages extends Component
         return view('livewire.main.partials.languages');
     }
 
-
     /**
      * Change locale
      *
-     * @param string $locale
+     * @param  string  $locale
      * @return void
      */
     public function setLocale($locale)
@@ -68,13 +69,13 @@ class Languages extends Component
         $language = Language::where('language_code', $locale)->where('is_active', true)->first();
 
         // Check if language exists
-        if (!$language) {
-            
+        if (! $language) {
+
             // Not found
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_selected_lang_does_not_found'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
@@ -87,5 +88,4 @@ class Languages extends Component
         // Refresh the page
         $this->dispatchBrowserEvent('refresh');
     }
-    
 }

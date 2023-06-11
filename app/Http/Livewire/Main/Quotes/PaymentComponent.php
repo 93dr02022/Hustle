@@ -15,11 +15,17 @@ class PaymentComponent extends Component
     use Actions;
 
     public $quotation;
+
     public $expired = false;
+
     public $goToPay = false;
+
     public $inSelection = false;
+
     public $paymentMethod = 'paystack';
+
     public $payHasError = false;
+
     public $payCompleted = false;
 
     public function mount($uid)
@@ -48,17 +54,18 @@ class PaymentComponent extends Component
 
     /**
      * Begin processing After succussfull payment
-     * 
+     *
      * @return mixed
      */
-    public function checkout(String $reference)
+    public function checkout(string $reference)
     {
         if ($this->paymentMethod === 'paystack') {
 
             $response = $this->paystack($reference);
 
-            if (!$response['success']) {
+            if (! $response['success']) {
                 $this->toastError($response['message']);
+
                 return;
             }
 
@@ -98,9 +105,9 @@ class PaymentComponent extends Component
     public function toastError($message)
     {
         $this->notification([
-            'title'       => 'Payment Failed',
+            'title' => 'Payment Failed',
             'description' => $message,
-            'icon'        => 'error'
+            'icon' => 'error',
         ]);
     }
 
@@ -110,24 +117,24 @@ class PaymentComponent extends Component
     public function toastSuccess($message)
     {
         $this->notification([
-            'title'       => 'Payment Completed',
+            'title' => 'Payment Completed',
             'description' => $message,
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
 
     /**
-     * check for paystack payment verification 
+     * check for paystack payment verification
      *
      * @return array<string, mixed>
      */
-    protected function paystack(String $referenceId)
+    protected function paystack(string $referenceId)
     {
         try {
             $total = $this->quotation->total;
 
             $payment = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('paystack.secretKey'),
+                'Authorization' => 'Bearer '.config('paystack.secretKey'),
                 'Accept' => 'application/json',
             ])
                 ->get("https://api.paystack.co/transaction/verify/$referenceId")
@@ -140,30 +147,30 @@ class PaymentComponent extends Component
                 // This amount must equals amount in order
                 if ($amountPaid != $total) {
                     return [
-                        'success'  => false,
-                        'message'  => __('messages.t_amount_in_cart_not_equals_received')
+                        'success' => false,
+                        'message' => __('messages.t_amount_in_cart_not_equals_received'),
                     ];
                 }
 
                 // Payment succeeded
                 return [
-                    'success'     => true,
+                    'success' => true,
                     'transaction' => [
-                        'payment_id'     => $payment->data->id,
+                        'payment_id' => $payment->data->id,
                         'payment_method' => 'paystack',
                         'amount_paid' => $amountPaid,
-                    ]
+                    ],
                 ];
             } else {
-                return  [
-                    'success'  => false,
-                    'message'  => __('messages.t_we_could_not_handle_ur_payment')
+                return [
+                    'success' => false,
+                    'message' => __('messages.t_we_could_not_handle_ur_payment'),
                 ];
             }
         } catch (\Throwable $th) {
             return [
-                'success'  => false,
-                'message'  => $th->getMessage()
+                'success' => false,
+                'message' => $th->getMessage(),
             ];
         }
     }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Main\Auth\Social\Twitter;
 
-use App\Models\User;
-use Livewire\Component;
-use Illuminate\Support\Str;
-use App\Utils\Uploader\ImageUploader;
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use Livewire\Component;
 
 class CallbackComponent extends Component
 {
@@ -22,10 +22,10 @@ class CallbackComponent extends Component
     public function mount()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_twitter_login') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_twitter_login')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -37,7 +37,7 @@ class CallbackComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -48,22 +48,22 @@ class CallbackComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         // Get tokens
-        $tokens          = $this->access_token(request()->get('oauth_token'), request()->get('oauth_verifier'));
+        $tokens = $this->access_token(request()->get('oauth_token'), request()->get('oauth_verifier'));
 
         // Let's get our user data
-        $user            = Socialite::driver('twitter')->userFromTokenAndSecret($tokens->oauth_token, $tokens->oauth_token_secret);
+        $user = Socialite::driver('twitter')->userFromTokenAndSecret($tokens->oauth_token, $tokens->oauth_token_secret);
 
         // Generate username
-        $nickname        = $this->username($user->getNickname(), $user->getName());
+        $nickname = $this->username($user->getNickname(), $user->getName());
 
         // Get email address
-        $email           = $user->getEmail();
+        $email = $user->getEmail();
 
         // Get name
-        $name            = $user->getName();
+        $name = $user->getName();
 
         // Get avatar
-        $avatar          = $user->getAvatar();
+        $avatar = $user->getAvatar();
 
         // Get user from database where this twitter email is same
         $is_email_exists = User::withTrashed()->where('email', $email)->first();
@@ -72,9 +72,9 @@ class CallbackComponent extends Component
         if ($is_email_exists) {
 
             // Go back to login page with error
-            if (!is_null($is_email_exists->password)) {
+            if (! is_null($is_email_exists->password)) {
                 return redirect('auth/login')->with('error', __('messages.t_socialite_error_email_exists'));
-            } else if ($is_email_exists->provider_id !== $user->getId()) {
+            } elseif ($is_email_exists->provider_id !== $user->getId()) {
                 return redirect('auth/login')->with('error', __('messages.t_socialite_error_email_exists'));
             }
         }
@@ -87,7 +87,7 @@ class CallbackComponent extends Component
 
         // Check if username exists
         if ($is_username_exists) {
-            $username = $nickname . "_" . substr(md5(microtime()), rand(0, 26), 4);
+            $username = $nickname.'_'.substr(md5(microtime()), rand(0, 26), 4);
         } else {
             $username = $nickname;
         }
@@ -104,18 +104,18 @@ class CallbackComponent extends Component
         // Now we can create this user
         $save = User::firstOrCreate(
             [
-                'email'         => $email,
-                'provider_id'   => $user->getId(),
-                'provider_name' => "twitter"
+                'email' => $email,
+                'provider_id' => $user->getId(),
+                'provider_name' => 'twitter',
             ],
             [
-                'avatar_id'         => $avatar_id,
+                'avatar_id' => $avatar_id,
                 'email_verified_at' => now(),
-                'status'            => 'active',
-                'level_id'          => 1,
-                'uid'               => uid(),
-                'username'          => $username,
-                'fullname'          => $name ? $name : null
+                'status' => 'active',
+                'level_id' => 1,
+                'uid' => uid(),
+                'username' => $username,
+                'fullname' => $name ? $name : null,
             ]
         );
 
@@ -126,12 +126,11 @@ class CallbackComponent extends Component
         return redirect('/');
     }
 
-
     /**
      * Generate username
      *
-     * @param string $nickname
-     * @param string $name
+     * @param  string  $nickname
+     * @param  string  $name
      * @return string
      */
     private function username($nickname, $name)
@@ -141,36 +140,35 @@ class CallbackComponent extends Component
 
             // Generate username
             $username = strtolower(Str::slug($nickname, '_'));
-        } else if ($name) {
+        } elseif ($name) {
 
             // Generate username
             $username = strtolower(Str::slug($name, '_'));
         } else {
 
             // Generate username
-            $username = "u" . rand(1111111, 9999999);
+            $username = 'u'.rand(1111111, 9999999);
         }
 
         // Return username
         return $username;
     }
 
-
     /**
      * Get access token
      *
-     * @param string $oauth_token
-     * @param string $oauth_verifier
+     * @param  string  $oauth_token
+     * @param  string  $oauth_verifier
      * @return object
      */
     private function access_token($oauth_token, $oauth_verifier)
     {
 
-        $config     = config('services')['twitter'];
+        $config = config('services')['twitter'];
 
         $connection = new TwitterOAuth($config['client_id'], $config['client_secret']);
 
-        $tokens     = $connection->oauth("oauth/access_token", ["oauth_verifier" => $oauth_verifier, "oauth_token" => $oauth_token]);
+        $tokens = $connection->oauth('oauth/access_token', ['oauth_verifier' => $oauth_verifier, 'oauth_token' => $oauth_token]);
 
         return (object) $tokens;
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Admin\Reports;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
 use App\Models\ReportedGig;
-use Livewire\WithPagination;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class GigsComponent extends Component
 {
@@ -21,7 +21,7 @@ class GigsComponent extends Component
     {
         // Mark new reports as seen
         ReportedGig::where('status', 'pending')->update([
-            'status' => 'seen'
+            'status' => 'seen',
         ]);
     }
 
@@ -33,14 +33,13 @@ class GigsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_reported_gigs'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_reported_gigs'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.reports.gigs', [
-            'reports' => $this->reports
+            'reports' => $this->reports,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of reports
@@ -52,11 +51,10 @@ class GigsComponent extends Component
         return ReportedGig::latest()->paginate(42);
     }
 
-
     /**
      * Delete report
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -66,10 +64,9 @@ class GigsComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_report_has_been_successfully_deleted'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire\Admin\Newsletter;
 
-use Mail;
-use Excel;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
-use App\Models\NewsletterList;
 use App\Exports\NewsletterExport;
+use App\Mail\User\Everyone\NewsletterVerification as EveryoneNewsletterVerification;
+use App\Models\NewsletterList;
 use App\Models\NewsletterVerification;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Mail\User\Everyone\NewsletterVerification as EveryoneNewsletterVerification;
+use Excel;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Mail;
+use WireUi\Traits\Actions;
 
 class NewsletterComponent extends Component
 {
@@ -25,14 +25,13 @@ class NewsletterComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_newsletter'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_newsletter'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.newsletter.newsletter', [
-            'lists' => $this->lists
+            'lists' => $this->lists,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of newsletter lists
@@ -44,23 +43,22 @@ class NewsletterComponent extends Component
         return NewsletterList::latest()->paginate(42);
     }
 
-
     /**
      * Export emails
      *
-     * @param string $type
+     * @param  string  $type
      * @return void
      */
     public function export($type)
     {
         // Check type of export
-        if (!in_array($type, ['all', 'pending', 'verified'])) {
-            
+        if (! in_array($type, ['all', 'pending', 'verified'])) {
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_pls_select_export_type'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             return;
@@ -71,11 +69,10 @@ class NewsletterComponent extends Component
         return Excel::download(new NewsletterExport($type), 'data.xlsx');
     }
 
-
     /**
      * Resend verification token
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function resend($id)
@@ -87,9 +84,9 @@ class NewsletterComponent extends Component
         NewsletterVerification::where('list_id', $list->id)->delete();
 
         // Generate new verification token
-        $verification          = new NewsletterVerification();
+        $verification = new NewsletterVerification();
         $verification->list_id = $list->id;
-        $verification->token   = uid(60);
+        $verification->token = uid(60);
         $verification->save();
 
         // Send verification message again
@@ -97,17 +94,16 @@ class NewsletterComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_a_verification_link_sent_to_this_email'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * delete email from list
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -123,10 +119,9 @@ class NewsletterComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_email_newsletter_deleted_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

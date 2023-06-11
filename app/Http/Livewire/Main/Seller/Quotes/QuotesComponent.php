@@ -9,12 +9,13 @@ use Livewire\Component;
 class QuotesComponent extends Component
 {
     public $quoteItems = [];
+
     public $simpleModal;
 
     public function render()
     {
         return view('livewire.main.seller.quotes.quotes', [
-            'quotations' => $this->quotations
+            'quotations' => $this->quotations,
         ])
             ->extends('livewire.main.seller.layout.app')
             ->section('content');
@@ -22,7 +23,7 @@ class QuotesComponent extends Component
 
     /**
      * Quotation computed properties
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getQuotationsProperty()

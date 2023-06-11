@@ -2,29 +2,32 @@
 
 namespace App\Http\Livewire\Admin\Settings;
 
-use App\Models\Gig;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Spatie\Sitemap\Sitemap;
-use Livewire\WithFileUploads;
-use App\Utils\Uploader\ImageUploader;
 use App\Http\Validators\Admin\Settings\SeoValidator;
 use App\Models\Category;
+use App\Models\Gig;
 use App\Models\Project;
 use App\Models\ProjectCategory;
-use App\Models\Subcategory;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use Spatie\Sitemap\SitemapGenerator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Spatie\Sitemap\Sitemap;
+use WireUi\Traits\Actions;
 
 class SeoComponent extends Component
 {
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $description;
+
     public $facebook_page_id;
+
     public $facebook_app_id;
+
     public $twitter_username;
+
     public $ogimage;
+
     public $is_sitemap;
 
     /**
@@ -39,14 +42,13 @@ class SeoComponent extends Component
 
         // Fill default settings
         $this->fill([
-            'description'      => $settings->description,
+            'description' => $settings->description,
             'facebook_page_id' => $settings->facebook_page_id,
-            'facebook_app_id'  => $settings->facebook_app_id,
+            'facebook_app_id' => $settings->facebook_app_id,
             'twitter_username' => $settings->twitter_username,
-            'is_sitemap'       => $settings->is_sitemap,
+            'is_sitemap' => $settings->is_sitemap,
         ]);
     }
-
 
     /**
      * Render component
@@ -56,12 +58,11 @@ class SeoComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_seo_settings'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_seo_settings'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.settings.seo')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update settings
@@ -81,22 +82,22 @@ class SeoComponent extends Component
             // Upload ogimage
             if ($this->ogimage) {
                 $ogimage_id = ImageUploader::make($this->ogimage)
-                                        ->folder('site/ogimage')
-                                        ->deleteById($settings->ogimage_id)
-                                        ->handle();
+                    ->folder('site/ogimage')
+                    ->deleteById($settings->ogimage_id)
+                    ->handle();
             } else {
                 $ogimage_id = $settings->ogimage_id;
             }
 
             // Update settings
-            $settings->description      = $this->description;
+            $settings->description = $this->description;
             $settings->facebook_page_id = $this->facebook_page_id;
-            $settings->facebook_app_id  = $this->facebook_app_id;
+            $settings->facebook_app_id = $this->facebook_app_id;
             $settings->twitter_username = $this->twitter_username;
             if ($this->ogimage) {
-                $settings->ogimage_id       = $ogimage_id;
+                $settings->ogimage_id = $ogimage_id;
             }
-            $settings->is_sitemap       = $this->is_sitemap;
+            $settings->is_sitemap = $this->is_sitemap;
             $settings->save();
 
             // Refresh data from cache
@@ -104,36 +105,33 @@ class SeoComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Generate sitemap
@@ -143,48 +141,47 @@ class SeoComponent extends Component
     public function generateSitemap()
     {
         try {
-            
+
             if (settings('seo')->is_sitemap) {
 
                 // Get gigs
-                $gigs                = Gig::active()->get();
-    
+                $gigs = Gig::active()->get();
+
                 // Get projects
-                $projects            = Project::whereIn('status', ['active', 'completed', 'closed', 'incomplete', 'under_development'])->get();
-    
+                $projects = Project::whereIn('status', ['active', 'completed', 'closed', 'incomplete', 'under_development'])->get();
+
                 // Get gigs categories
-                $gigs_categories     = Category::latest()->select('slug')->get();
-    
+                $gigs_categories = Category::latest()->select('slug')->get();
+
                 // Get projects categories
                 $projects_categories = ProjectCategory::latest()->select('slug')->get();
-    
+
                 // Create sitemap
                 Sitemap::create()
-                        ->add($gigs)
-                        ->add($projects)
-                        ->add($gigs_categories)
-                        ->add($projects_categories)
-                        ->writeToFile(base_path('sitemap.xml'));
+                    ->add($gigs)
+                    ->add($projects)
+                    ->add($gigs_categories)
+                    ->add($projects_categories)
+                    ->writeToFile(base_path('sitemap.xml'));
 
                 // Success
                 $this->notification([
-                    'title'       => __('messages.t_success'),
+                    'title' => __('messages.t_success'),
                     'description' => __('messages.t_toast_operation_success'),
-                    'icon'        => 'success'
+                    'icon' => 'success',
                 ]);
 
             }
 
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
-    
 }

@@ -1,0 +1,6 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "declare_equal_normalize": true
+    }
+}

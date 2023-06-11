@@ -25,6 +25,7 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^2.11",
         "loveycom/cashfree": "^2.1",
         "lukeraymonddowning/honey": "^0.5.0",
@@ -63,6 +64,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.10",
         "laravel/sail": "^1.22",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.1",

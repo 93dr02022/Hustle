@@ -2,27 +2,34 @@
 
 namespace App\Http\Livewire\Admin\Services;
 
-use Config;
-use Artisan;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
+use App\Http\Validators\Admin\Services\RazorpayValidator;
 use App\Models\RazorpaySettings;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Services\RazorpayValidator;
+use Artisan;
+use Config;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class RazorpayComponent extends Component
 {
     use SEOToolsTrait, WithFileUploads, Actions;
-    
+
     public $is_enabled;
+
     public $name;
+
     public $logo;
+
     public $currency;
+
     public $exchange_rate;
+
     public $deposit_fee;
+
     public $key_id;
+
     public $key_secret;
 
     /**
@@ -37,16 +44,15 @@ class RazorpayComponent extends Component
 
         // Fill default settings
         $this->fill([
-            'is_enabled'    => $settings->is_enabled ? 1 : 0,
-            'name'          => $settings->name,
-            'currency'      => $settings->currency,
+            'is_enabled' => $settings->is_enabled ? 1 : 0,
+            'name' => $settings->name,
+            'currency' => $settings->currency,
             'exchange_rate' => $settings->exchange_rate,
-            'deposit_fee'   => $settings->deposit_fee,
-            'key_id'        => config('razorpay.key_id'),
-            'key_secret'    => config('razorpay.key_secret')
+            'deposit_fee' => $settings->deposit_fee,
+            'key_id' => config('razorpay.key_id'),
+            'key_secret' => config('razorpay.key_secret'),
         ]);
     }
-
 
     /**
      * Render component
@@ -56,14 +62,13 @@ class RazorpayComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_razorpay_payment_settings'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_razorpay_payment_settings'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.services.razorpay', [
-            'currencies' => config('money')
+            'currencies' => config('money'),
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update settings
@@ -82,12 +87,12 @@ class RazorpayComponent extends Component
 
             // Check if request has a logo file
             if ($this->logo) {
-                
+
                 // Upload new logo
                 $logo_id = ImageUploader::make($this->logo)
-                                        ->folder('services')
-                                        ->deleteById($settings->logo_id)
-                                        ->handle();
+                    ->folder('services')
+                    ->deleteById($settings->logo_id)
+                    ->handle();
 
             } else {
 
@@ -98,12 +103,12 @@ class RazorpayComponent extends Component
 
             // Save settings
             RazorpaySettings::first()->update([
-                'is_enabled'    => $this->is_enabled ? 1 : 0,
-                'name'          => $this->name,
-                'logo_id'       => $logo_id,
-                'currency'      => $this->currency,
+                'is_enabled' => $this->is_enabled ? 1 : 0,
+                'name' => $this->name,
+                'logo_id' => $logo_id,
+                'currency' => $this->currency,
                 'exchange_rate' => $this->exchange_rate,
-                'deposit_fee'   => $this->deposit_fee
+                'deposit_fee' => $this->deposit_fee,
             ]);
 
             // Set keys
@@ -118,34 +123,31 @@ class RazorpayComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

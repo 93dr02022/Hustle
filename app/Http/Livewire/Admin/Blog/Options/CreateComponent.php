@@ -2,27 +2,31 @@
 
 namespace App\Http\Livewire\Admin\Blog\Options;
 
-use App\Models\Article;
-use Livewire\Component;
-use App\Models\ArticleSeo;
-use WireUi\Traits\Actions;
-use Livewire\WithFileUploads;
-use App\Utils\Uploader\ImageUploader;
 use App\Http\Validators\Admin\Blog\CreateValidator;
+use App\Models\Article;
+use App\Models\ArticleSeo;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class CreateComponent extends Component
 {
     use SEOToolsTrait, WithFileUploads, Actions;
 
     public $title;
-    public $slug;
-    public $content;
-    public $image;
-    public $reading_time;
-    public $seo_description;
 
+    public $slug;
+
+    public $content;
+
+    public $image;
+
+    public $reading_time;
+
+    public $seo_description;
 
     /**
      * Render component
@@ -38,7 +42,6 @@ class CreateComponent extends Component
         return view('livewire.admin.blog.options.create')->extends('livewire.admin.layout.app')->section('content');
     }
 
-
     /**
      * Create new article
      *
@@ -52,17 +55,17 @@ class CreateComponent extends Component
             CreateValidator::validate($this);
 
             // Upload image
-            $image_id              = ImageUploader::make($this->image)
+            $image_id = ImageUploader::make($this->image)
                 ->folder('blog')
                 ->handle();
 
             // Create new article
-            $article               = new Article();
-            $article->uid          = uid();
-            $article->title        = $this->title;
-            $article->slug         = Str::slug($this->slug);
-            $article->content      = $this->content;
-            $article->image_id     = $image_id;
+            $article = new Article();
+            $article->uid = uid();
+            $article->title = $this->title;
+            $article->slug = Str::slug($this->slug);
+            $article->content = $this->content;
+            $article->image_id = $image_id;
             $article->reading_time = $this->reading_time;
             $article->save();
 
@@ -70,9 +73,9 @@ class CreateComponent extends Component
             if ($this->seo_description) {
 
                 // Set seo
-                $seo              = new ArticleSeo();
-                $seo->article_id  = $article->id;
-                $seo->title       = $this->title;
+                $seo = new ArticleSeo();
+                $seo->article_id = $article->id;
+                $seo->title = $this->title;
                 $seo->description = $this->seo_description;
                 $seo->save();
             }
@@ -82,17 +85,17 @@ class CreateComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
@@ -101,9 +104,9 @@ class CreateComponent extends Component
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;

@@ -2,21 +2,26 @@
 
 namespace App\Http\Livewire\Admin\Settings;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
+use App\Http\Validators\Admin\Settings\CommissionValidator;
 use App\Models\SettingsCommission;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Settings\CommissionValidator;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class CommissionComponent extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $enable_taxes;
+
     public $tax_type;
+
     public $tax_value;
+
     public $commission_from;
+
     public $commission_type;
+
     public $commission_value;
 
     /**
@@ -31,15 +36,14 @@ class CommissionComponent extends Component
 
         // Fill default settings
         $this->fill([
-            'enable_taxes'     => $settings->enable_taxes ? 1 : 0,
-            'tax_type'         => $settings->tax_type,
-            'tax_value'        => $settings->tax_value,
-            'commission_from'  => $settings->commission_from,
-            'commission_type'  => $settings->commission_type,
-            'commission_value' => $settings->commission_value
+            'enable_taxes' => $settings->enable_taxes ? 1 : 0,
+            'tax_type' => $settings->tax_type,
+            'tax_value' => $settings->tax_value,
+            'commission_from' => $settings->commission_from,
+            'commission_type' => $settings->commission_type,
+            'commission_value' => $settings->commission_value,
         ]);
     }
-
 
     /**
      * Render component
@@ -49,12 +53,11 @@ class CommissionComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_commission_settings'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_commission_settings'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.settings.commission')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update settings
@@ -70,12 +73,12 @@ class CommissionComponent extends Component
 
             // Update settings
             SettingsCommission::where('id', 1)->update([
-                'enable_taxes'     => $this->enable_taxes ? 1 : 0,
-                'tax_type'         => $this->tax_type,
-                'tax_value'        => $this->tax_value,
-                'commission_from'  => $this->commission_from,
-                'commission_type'  => $this->commission_type,
-                'commission_value' => $this->commission_value
+                'enable_taxes' => $this->enable_taxes ? 1 : 0,
+                'tax_type' => $this->tax_type,
+                'tax_value' => $this->tax_value,
+                'commission_from' => $this->commission_from,
+                'commission_type' => $this->commission_type,
+                'commission_value' => $this->commission_value,
             ]);
 
             // Refresh data from cache
@@ -83,34 +86,31 @@ class CommissionComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

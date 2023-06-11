@@ -6,7 +6,6 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
-
     public $links;
 
     /**
@@ -24,10 +23,10 @@ class Sidebar extends Component
 
             // Home
             [
-                'icon'   => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"> <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>',
-                'text'   => __('messages.t_dashboard'),
-                'href'   => $dashboard,
-                'childs' => null
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"> <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>',
+                'text' => __('messages.t_dashboard'),
+                'href' => $dashboard,
+                'childs' => null,
             ],
 
             // Users
@@ -36,11 +35,11 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_users'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/users" ],
-                    [ 'text' => __('messages.t_create_new'), 'href' => "$dashboard/users/create" ],
-                    [ 'text' => __('messages.t_levels'), 'href' => "$dashboard/levels" ],
-                    [ 'text' => __('messages.t_verifications'), 'href' => "$dashboard/verifications" ],
-                    [ 'text' => __('messages.t_transactions'), 'href' => "$dashboard/users/transactions" ],
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/users"],
+                    ['text' => __('messages.t_create_new'), 'href' => "$dashboard/users/create"],
+                    ['text' => __('messages.t_levels'), 'href' => "$dashboard/levels"],
+                    ['text' => __('messages.t_verifications'), 'href' => "$dashboard/verifications"],
+                    ['text' => __('messages.t_transactions'), 'href' => "$dashboard/users/transactions"],
                 ],
             ],
 
@@ -50,7 +49,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_withdrawals'),
                 'childs' => [
-                    [ 'text' => __('messages.t_withdrawals_history'), 'href' => "$dashboard/withdrawals" ]
+                    ['text' => __('messages.t_withdrawals_history'), 'href' => "$dashboard/withdrawals"],
                 ],
             ],
 
@@ -60,7 +59,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_portfolios'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/portfolios" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/portfolios"],
                 ],
             ],
 
@@ -70,7 +69,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_gigs'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/gigs" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/gigs"],
                 ],
             ],
 
@@ -80,7 +79,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_invoices'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/invoices" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/invoices"],
                 ],
             ],
 
@@ -90,7 +89,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_orders'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/orders" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/orders"],
                 ],
             ],
 
@@ -100,7 +99,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_refunds'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/refunds" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/refunds"],
                 ],
             ],
 
@@ -110,7 +109,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_reviews'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/reviews" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/reviews"],
                 ],
             ],
 
@@ -120,13 +119,13 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_projects'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/projects" ],
-                    [ 'text' => __('messages.t_bids'), 'href' => "$dashboard/projects/bids" ],
-                    [ 'text' => __('messages.t_categories'), 'href' => "$dashboard/projects/categories" ],
-                    [ 'text' => __('messages.t_skills'), 'href' => "$dashboard/projects/skills" ],
-                    [ 'text' => __('messages.t_plans'), 'href' => "$dashboard/projects/plans" ],
-                    [ 'text' => __('messages.t_subscriptions'), 'href' => "$dashboard/projects/subscriptions" ],
-                    [ 'text' => __('messages.t_settings'), 'href' => "$dashboard/projects/settings" ],
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/projects"],
+                    ['text' => __('messages.t_bids'), 'href' => "$dashboard/projects/bids"],
+                    ['text' => __('messages.t_categories'), 'href' => "$dashboard/projects/categories"],
+                    ['text' => __('messages.t_skills'), 'href' => "$dashboard/projects/skills"],
+                    ['text' => __('messages.t_plans'), 'href' => "$dashboard/projects/plans"],
+                    ['text' => __('messages.t_subscriptions'), 'href' => "$dashboard/projects/subscriptions"],
+                    ['text' => __('messages.t_settings'), 'href' => "$dashboard/projects/settings"],
                 ],
             ],
 
@@ -136,8 +135,8 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_categories'),
                 'childs' => [
-                    [ 'text' => __('messages.t_categories'), 'href' => "$dashboard/categories" ],
-                    [ 'text' => __('messages.t_subcategories'), 'href' => "$dashboard/subcategories" ]
+                    ['text' => __('messages.t_categories'), 'href' => "$dashboard/categories"],
+                    ['text' => __('messages.t_subcategories'), 'href' => "$dashboard/subcategories"],
                 ],
             ],
 
@@ -147,10 +146,10 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_reports'),
                 'childs' => [
-                    [ 'text' => __('messages.t_users'), 'href' => "$dashboard/reports/users" ],
-                    [ 'text' => __('messages.t_gigs'), 'href' => "$dashboard/reports/gigs" ],
-                    [ 'text' => __('messages.t_projects'), 'href' => "$dashboard/reports/projects" ],
-                    [ 'text' => __('messages.t_bids'), 'href' => "$dashboard/reports/bids" ],
+                    ['text' => __('messages.t_users'), 'href' => "$dashboard/reports/users"],
+                    ['text' => __('messages.t_gigs'), 'href' => "$dashboard/reports/gigs"],
+                    ['text' => __('messages.t_projects'), 'href' => "$dashboard/reports/projects"],
+                    ['text' => __('messages.t_bids'), 'href' => "$dashboard/reports/bids"],
                 ],
             ],
 
@@ -180,10 +179,10 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_blog'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_articles'), 'href' => "$dashboard/blog" ],
-                    [ 'text' => __('messages.t_comments'), 'href' => "$dashboard/blog/comments" ],
-                    [ 'text' => __('messages.t_create_article'), 'href' => "$dashboard/blog/create" ],
-                    [ 'text' => __('messages.t_blog_settings'), 'href' => "$dashboard/blog/settings" ],
+                    ['text' => __('messages.t_browse_articles'), 'href' => "$dashboard/blog"],
+                    ['text' => __('messages.t_comments'), 'href' => "$dashboard/blog/comments"],
+                    ['text' => __('messages.t_create_article'), 'href' => "$dashboard/blog/create"],
+                    ['text' => __('messages.t_blog_settings'), 'href' => "$dashboard/blog/settings"],
                 ],
             ],
 
@@ -193,7 +192,7 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_support'),
                 'childs' => [
-                    [ 'text' => __('messages.t_messages'), 'href' => "$dashboard/support" ]
+                    ['text' => __('messages.t_messages'), 'href' => "$dashboard/support"],
                 ],
             ],
 
@@ -203,8 +202,8 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_newsletter'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/newsletter" ],
-                    [ 'text' => __('messages.t_settings'), 'href' => "$dashboard/newsletter/settings" ],
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/newsletter"],
+                    ['text' => __('messages.t_settings'), 'href' => "$dashboard/newsletter/settings"],
                 ],
             ],
 
@@ -214,8 +213,8 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_languages'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/languages" ],
-                    [ 'text' => __('messages.t_create_new'), 'href' => "$dashboard/languages/create" ]
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/languages"],
+                    ['text' => __('messages.t_create_new'), 'href' => "$dashboard/languages/create"],
                 ],
             ],
 
@@ -225,8 +224,8 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_pages'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/pages" ],
-                    [ 'text' => __('messages.t_create_new'), 'href' => "$dashboard/pages/create" ],
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/pages"],
+                    ['text' => __('messages.t_create_new'), 'href' => "$dashboard/pages/create"],
                 ],
             ],
 
@@ -236,8 +235,8 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_countries'),
                 'childs' => [
-                    [ 'text' => __('messages.t_browse_all'), 'href' => "$dashboard/countries" ],
-                    [ 'text' => __('messages.t_create_new'), 'href' => "$dashboard/countries/create" ],
+                    ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/countries"],
+                    ['text' => __('messages.t_create_new'), 'href' => "$dashboard/countries/create"],
                 ],
             ],
 
@@ -247,49 +246,49 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_services'),
                 'childs' => [
-                    [ 'text' => __('messages.t_paypal'), 'href' => "$dashboard/services/paypal" ],
-                    [ 'text' => __('messages.t_stripe'), 'href' => "$dashboard/services/stripe" ],
-                    [ 'text' => __('messages.t_paystack'), 'href' => "$dashboard/services/paystack" ],
-                    [ 'text' => __('messages.t_cashfree'), 'href' => "$dashboard/services/cashfree" ],
-                    [ 'text' => __('messages.t_xendit'), 'href' => "$dashboard/services/xendit" ],
-                    [ 'text' => __('messages.t_flutterwave'), 'href' => "$dashboard/services/flutterwave" ],
-                    [ 'text' => __('messages.t_vnpay'), 'href' => "$dashboard/services/vnpay" ],
-                    [ 'text' => __('messages.t_paymob'), 'href' => "$dashboard/services/paymob" ],
-                    [ 'text' => __('messages.t_mercadopago'), 'href' => "$dashboard/services/mercadopago" ],
-                    [ 'text' => __('messages.t_paytabs'), 'href' => "$dashboard/services/paytabs" ],
-                    [ 'text' => __('messages.t_razorpay'), 'href' => "$dashboard/services/razorpay" ],
-                    [ 'text' => __('messages.t_mollie'), 'href' => "$dashboard/services/mollie" ],
-                    [ 'text' => __('messages.t_paytr'), 'href' => "$dashboard/services/paytr" ],
-                    [ 'text' => __('messages.t_jazzcash'), 'href' => "$dashboard/services/jazzcash" ],
-                    [ 'text' => __('messages.t_offline_payment'), 'href' => "$dashboard/services/offline" ],
-                    [ 'text' => 'YouCanPay', 'href' => "$dashboard/services/youcanpay" ],
-                    [ 'text' => 'NowPayments.io', 'href' => "$dashboard/services/nowpayments" ],
-                    [ 'text' => 'Epoint.az', 'href' => "$dashboard/services/epoint" ],
-                    [ 'text' => __('messages.t_recaptcha'), 'href' => "$dashboard/services/recaptcha" ],
-                    [ 'text' => __('messages.t_cloudinary'), 'href' => "$dashboard/services/cloudinary" ],
+                    ['text' => __('messages.t_paypal'), 'href' => "$dashboard/services/paypal"],
+                    ['text' => __('messages.t_stripe'), 'href' => "$dashboard/services/stripe"],
+                    ['text' => __('messages.t_paystack'), 'href' => "$dashboard/services/paystack"],
+                    ['text' => __('messages.t_cashfree'), 'href' => "$dashboard/services/cashfree"],
+                    ['text' => __('messages.t_xendit'), 'href' => "$dashboard/services/xendit"],
+                    ['text' => __('messages.t_flutterwave'), 'href' => "$dashboard/services/flutterwave"],
+                    ['text' => __('messages.t_vnpay'), 'href' => "$dashboard/services/vnpay"],
+                    ['text' => __('messages.t_paymob'), 'href' => "$dashboard/services/paymob"],
+                    ['text' => __('messages.t_mercadopago'), 'href' => "$dashboard/services/mercadopago"],
+                    ['text' => __('messages.t_paytabs'), 'href' => "$dashboard/services/paytabs"],
+                    ['text' => __('messages.t_razorpay'), 'href' => "$dashboard/services/razorpay"],
+                    ['text' => __('messages.t_mollie'), 'href' => "$dashboard/services/mollie"],
+                    ['text' => __('messages.t_paytr'), 'href' => "$dashboard/services/paytr"],
+                    ['text' => __('messages.t_jazzcash'), 'href' => "$dashboard/services/jazzcash"],
+                    ['text' => __('messages.t_offline_payment'), 'href' => "$dashboard/services/offline"],
+                    ['text' => 'YouCanPay', 'href' => "$dashboard/services/youcanpay"],
+                    ['text' => 'NowPayments.io', 'href' => "$dashboard/services/nowpayments"],
+                    ['text' => 'Epoint.az', 'href' => "$dashboard/services/epoint"],
+                    ['text' => __('messages.t_recaptcha'), 'href' => "$dashboard/services/recaptcha"],
+                    ['text' => __('messages.t_cloudinary'), 'href' => "$dashboard/services/cloudinary"],
                 ],
             ],
-            
+
             // Settings
             [
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>',
                 'href' => null,
                 'text' => __('messages.t_settings'),
                 'childs' => [
-                    [ 'text' => __('messages.t_general_settings_sidebar'), 'href' => "$dashboard/settings/general" ],
-                    [ 'text' => __('messages.t_appearance_settings_sidebar'), 'href' => "$dashboard/settings/appearance" ],
-                    [ 'text' => __('messages.t_currency_settings_sidebar'), 'href' => "$dashboard/settings/currency" ],
-                    [ 'text' => __('messages.t_auth_settings_sidebar'), 'href' => "$dashboard/settings/auth" ],
-                    [ 'text' => __('messages.t_live_chat_settings_sidebar'), 'href' => "$dashboard/settings/chat" ],
-                    [ 'text' => __('messages.t_commission_settings_sidebar'), 'href' => "$dashboard/settings/commission" ],
-                    [ 'text' => __('messages.t_footer_settings_sidebar'), 'href' => "$dashboard/settings/footer" ],
-                    [ 'text' => __('messages.t_media_settings_sidebar'), 'href' => "$dashboard/settings/media" ],
-                    [ 'text' => __('messages.t_publish_settings_sidebar'), 'href' => "$dashboard/settings/publish" ],
+                    ['text' => __('messages.t_general_settings_sidebar'), 'href' => "$dashboard/settings/general"],
+                    ['text' => __('messages.t_appearance_settings_sidebar'), 'href' => "$dashboard/settings/appearance"],
+                    ['text' => __('messages.t_currency_settings_sidebar'), 'href' => "$dashboard/settings/currency"],
+                    ['text' => __('messages.t_auth_settings_sidebar'), 'href' => "$dashboard/settings/auth"],
+                    ['text' => __('messages.t_live_chat_settings_sidebar'), 'href' => "$dashboard/settings/chat"],
+                    ['text' => __('messages.t_commission_settings_sidebar'), 'href' => "$dashboard/settings/commission"],
+                    ['text' => __('messages.t_footer_settings_sidebar'), 'href' => "$dashboard/settings/footer"],
+                    ['text' => __('messages.t_media_settings_sidebar'), 'href' => "$dashboard/settings/media"],
+                    ['text' => __('messages.t_publish_settings_sidebar'), 'href' => "$dashboard/settings/publish"],
                     // [ 'text' => __('messages.t_security_settings_sidebar'), 'href' => "$dashboard/settings/security" ],
-                    [ 'text' => __('messages.t_seo_settings_sidebar'), 'href' => "$dashboard/settings/seo" ],
-                    [ 'text' => __('messages.t_smtp_settings_sidebar'), 'href' => "$dashboard/settings/smtp" ],
-                    [ 'text' => __('messages.t_hero_section'), 'href' => "$dashboard/settings/hero" ],
-                    [ 'text' => __('messages.t_withdrawal_settings_sidebar'), 'href' => "$dashboard/settings/withdrawal" ],
+                    ['text' => __('messages.t_seo_settings_sidebar'), 'href' => "$dashboard/settings/seo"],
+                    ['text' => __('messages.t_smtp_settings_sidebar'), 'href' => "$dashboard/settings/smtp"],
+                    ['text' => __('messages.t_hero_section'), 'href' => "$dashboard/settings/hero"],
+                    ['text' => __('messages.t_withdrawal_settings_sidebar'), 'href' => "$dashboard/settings/withdrawal"],
                 ],
             ],
 
@@ -299,16 +298,15 @@ class Sidebar extends Component
                 'href' => null,
                 'text' => __('messages.t_system'),
                 'childs' => [
-                    [ 'text' => __('messages.t_cron_jobs'), 'href' => "$dashboard/system/crontab" ],
-                    [ 'text' => __('messages.t_logs'), 'href' => "$dashboard/system/logs" ],
-                    [ 'text' => __('messages.t_cache'), 'href' => "$dashboard/system/cache" ],
-                    [ 'text' => __('messages.t_maintenance'), 'href' => "$dashboard/system/maintenance" ],
+                    ['text' => __('messages.t_cron_jobs'), 'href' => "$dashboard/system/crontab"],
+                    ['text' => __('messages.t_logs'), 'href' => "$dashboard/system/logs"],
+                    ['text' => __('messages.t_cache'), 'href' => "$dashboard/system/cache"],
+                    ['text' => __('messages.t_maintenance'), 'href' => "$dashboard/system/maintenance"],
                 ],
-            ]
+            ],
 
         ];
     }
-
 
     /**
      * Render component
@@ -319,5 +317,4 @@ class Sidebar extends Component
     {
         return view('livewire.admin.includes.sidebar');
     }
-    
 }

@@ -3,13 +3,13 @@
 namespace App\Http\Livewire\Admin\Verifications;
 
 use App\Models\User;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Models\VerificationCenter;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use App\Notifications\User\Everyone\VerificationApproved;
 use App\Notifications\User\Everyone\VerificationDeclined;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class VerificationsComponent extends Component
 {
@@ -23,14 +23,13 @@ class VerificationsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_verification_center'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_verification_center'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.verifications.verifications', [
-            'verifications' => $this->verifications
+            'verifications' => $this->verifications,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of verifications
@@ -42,11 +41,10 @@ class VerificationsComponent extends Component
         return VerificationCenter::latest()->paginate(42);
     }
 
-
     /**
      * Approve selected verification
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function approve($id)
@@ -55,40 +53,39 @@ class VerificationsComponent extends Component
         $verification = VerificationCenter::where('id', $id)->where('status', 'pending')->firstOrFail();
 
         // Get user
-        $user         = User::where('id', $verification->user_id)->firstOrFail();
+        $user = User::where('id', $verification->user_id)->firstOrFail();
 
         // Update user status
         $user->status = 'verified';
         $user->save();
 
         // Send notification
-        $user->notify( (new VerificationApproved)->locale(config('app.locale')) );
+        $user->notify((new VerificationApproved)->locale(config('app.locale')));
 
         // Update verification status
-        $verification->status      = 'verified';
+        $verification->status = 'verified';
         $verification->verified_at = now();
         $verification->save();
 
         // Send notification
         notification([
-            'text'    => 't_ur_account_has_verified',
-            'action'  => url('account/verification'),
-            'user_id' => $user->id
+            'text' => 't_ur_account_has_verified',
+            'action' => url('account/verification'),
+            'user_id' => $user->id,
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Decline selected verification
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function decline($id)
@@ -97,29 +94,28 @@ class VerificationsComponent extends Component
         $verification = VerificationCenter::where('id', $id)->where('status', 'pending')->firstOrFail();
 
         // Get user
-        $user         = User::where('id', $verification->user_id)->firstOrFail();
+        $user = User::where('id', $verification->user_id)->firstOrFail();
 
         // Send notification
-        $user->notify( (new VerificationDeclined)->locale(config('app.locale')) );
+        $user->notify((new VerificationDeclined)->locale(config('app.locale')));
 
         // Update verification status
-        $verification->status      = 'declined';
+        $verification->status = 'declined';
         $verification->declined_at = now();
         $verification->save();
 
         // Send notification
         notification([
-            'text'    => 't_verification_files_declined',
-            'action'  => url('account/verification'),
-            'user_id' => $user->id
+            'text' => 't_verification_files_declined',
+            'action' => url('account/verification'),
+            'user_id' => $user->id,
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_toast_operation_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 }

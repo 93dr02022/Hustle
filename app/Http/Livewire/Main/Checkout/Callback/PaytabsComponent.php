@@ -3,21 +3,21 @@
 namespace App\Http\Livewire\Main\Checkout\Callback;
 
 use App\Models\Gig;
-use App\Models\Order;
-use Livewire\Component;
-use App\Models\OrderItem;
 use App\Models\GigUpgrade;
-use WireUi\Traits\Actions;
+use App\Models\Order;
 use App\Models\OrderInvoice;
+use App\Models\OrderItem;
 use App\Models\OrderItemUpgrade;
 use App\Notifications\User\Buyer\OrderPlaced;
 use App\Notifications\User\Seller\PendingOrder;
+use Livewire\Component;
 use Paytabscom\Laravel_paytabs\Facades\paypage;
+use WireUi\Traits\Actions;
 
 class PaytabsComponent extends Component
-{    
+{
     use Actions;
-    
+
     public $cart;
 
     /**
@@ -30,32 +30,32 @@ class PaytabsComponent extends Component
         try {
 
             // Set cart
-            $cart                      = session('cart', []);
+            $cart = session('cart', []);
 
             // Set cart
-            $this->cart                = $cart;
+            $this->cart = $cart;
 
             // Get payment
-            $payment                   = paypage::queryTransaction(request()->get('tranRef'));
+            $payment = paypage::queryTransaction(request()->get('tranRef'));
 
             // Get payment gateway exchange rate
-            $gateway_currency_exchange = (float)settings('paytabs')->exchange_rate;
+            $gateway_currency_exchange = (float) settings('paytabs')->exchange_rate;
 
             // Get total amount
-            $total_amount              = $this->calculateExchangeAmount($gateway_currency_exchange);
-            
+            $total_amount = $this->calculateExchangeAmount($gateway_currency_exchange);
+
             // Let's see if payment suuceeded
-            if ( $payment && $payment->success && $payment->payment_result->response_status === 'A' ) {
+            if ($payment && $payment->success && $payment->payment_result->response_status === 'A') {
 
                 // Get paid amount
-                $amount   = $payment->tran_total;
+                $amount = $payment->tran_total;
 
                 // Get currency
                 $currency = $payment->tran_currency;
 
                 // Check currency
                 if (strtolower($currency) != strtolower(config('paytabs.currency'))) {
-                    
+
                     // Error
                     return redirect('checkout')->with('error', __('messages.t_checkout_currency_invalid'));
 
@@ -63,13 +63,13 @@ class PaytabsComponent extends Component
 
                 // This amount must equals amount in order
                 if ($amount != $total_amount) {
-                    
+
                     // Error
                     return redirect('checkout')->with('error', __('messages.t_amount_in_cart_not_equals_received'));
 
                 }
 
-                // Place order 
+                // Place order
                 $this->checkout($payment);
 
             } else {
@@ -80,7 +80,7 @@ class PaytabsComponent extends Component
             }
 
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             return redirect('checkout')->with('error', $th->getMessage());
 
@@ -90,8 +90,8 @@ class PaytabsComponent extends Component
     /**
      * Count total price of an item in cart
      *
-     * @param string $id
-     * @return integer
+     * @param  string  $id
+     * @return int
      */
     public function itemTotalPrice($id)
     {
@@ -100,18 +100,17 @@ class PaytabsComponent extends Component
 
         // Loop throug items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Check if item exists
             if ($item['id'] === $id) {
-                
+
                 // Get quantity
                 $quantity = (int) $item['quantity'];
 
                 // Sum upgrades total price
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
-                    $total_upgrades_price = array_reduce($item['upgrades'], function($i, $obj)
-                    {
+
+                    $total_upgrades_price = array_reduce($item['upgrades'], function ($i, $obj) {
                         // Calculate only selected upgrades
                         if ($obj['checked'] == true) {
                             return $i += $obj['price'];
@@ -140,11 +139,10 @@ class PaytabsComponent extends Component
 
     }
 
-
     /**
      * Calculate subtotal price
      *
-     * @return integer
+     * @return int
      */
     public function subtotal()
     {
@@ -155,11 +153,10 @@ class PaytabsComponent extends Component
         return $subtotal;
     }
 
-
     /**
      * Calculate taxes
      *
-     * @return integer
+     * @return int
      */
     public function taxes()
     {
@@ -168,10 +165,10 @@ class PaytabsComponent extends Component
 
         // Check if taxes enabled
         if ($settings->enable_taxes) {
-            
+
             // Check if type of taxes percentage
             if ($settings->tax_type === 'percentage') {
-                
+
                 // Get tax amount
                 $tax = bcmul($this->total(), $settings->tax_value) / 100;
 
@@ -179,7 +176,7 @@ class PaytabsComponent extends Component
                 return $tax;
 
             } else {
-                
+
                 // Fixed price
                 $tax = $settings->tax_value;
 
@@ -196,11 +193,10 @@ class PaytabsComponent extends Component
         }
     }
 
-
     /**
      * Calculate total price
      *
-     * @return integer
+     * @return int
      */
     public function total()
     {
@@ -209,7 +205,7 @@ class PaytabsComponent extends Component
 
         // Loop through items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
 
@@ -219,12 +215,11 @@ class PaytabsComponent extends Component
         return $total;
     }
 
-
     /**
      * Calculate commission
      *
-     * @param string $price
-     * @return integer
+     * @param  string  $price
+     * @return int
      */
     public function commission($price)
     {
@@ -233,7 +228,7 @@ class PaytabsComponent extends Component
 
         // Commission percentage
         if ($settings->commission_type === 'percentage') {
-            
+
             // Calculate commission
             $commission = $settings->commission_value * $price / 100;
 
@@ -248,7 +243,6 @@ class PaytabsComponent extends Component
         return $commission;
     }
 
-
     /**
      * Place order now
      *
@@ -259,92 +253,92 @@ class PaytabsComponent extends Component
         try {
 
             // Get user billing info
-            $billing_info          = auth()->user()->billing;
+            $billing_info = auth()->user()->billing;
 
             // Get commission settings
-            $commission_settings   = settings('commission');
+            $commission_settings = settings('commission');
 
             // Set unique id for this order
-            $uid                   = uid();
+            $uid = uid();
 
             // Get buyer id
-            $buyer_id              = auth()->id();
+            $buyer_id = auth()->id();
 
             // Count taxes amount
-            $taxes                 = $this->taxes();
+            $taxes = $this->taxes();
 
             // Count subtotal amount
-            $subtotal              = $this->subtotal();
+            $subtotal = $this->subtotal();
 
             // Count total amount
-            $total                 = $this->total() + $taxes;
+            $total = $this->total() + $taxes;
 
             // Save order
-            $order                 = new Order();
-            $order->uid            = $uid;
-            $order->buyer_id       = $buyer_id;
-            $order->total_value    = $total;
+            $order = new Order();
+            $order->uid = $uid;
+            $order->buyer_id = $buyer_id;
+            $order->total_value = $total;
             $order->subtotal_value = $subtotal;
-            $order->taxes_value    = $taxes;
+            $order->taxes_value = $taxes;
             $order->save();
 
             // Now let's loop through items in this cart and save them
             foreach ($this->cart as $key => $item) {
-                
+
                 // Get gig
                 $gig = Gig::where('uid', $item['id'])->active()->first();
 
                 // Check if gig exists
                 if ($gig) {
-                    
+
                     // Get item total price
-                    $item_total_price                   = $this->itemTotalPrice($item['id']);
+                    $item_total_price = $this->itemTotalPrice($item['id']);
 
                     // Calculate commission first
-                    $commisssion                        = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
+                    $commisssion = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
 
                     // Save order item
-                    $order_item                         = new OrderItem();
-                    $order_item->uid                    = uid();
-                    $order_item->order_id               = $order->id;
-                    $order_item->gig_id                 = $gig->id;
-                    $order_item->owner_id               = $gig->user_id;
-                    $order_item->quantity               = (int) $item['quantity'];
-                    $order_item->has_upgrades           = is_array($item['upgrades']) && count($item['upgrades']) ? true : false;
-                    $order_item->total_value            = $item_total_price;
-                    $order_item->profit_value           = $item_total_price - $commisssion;
-                    $order_item->commission_value       = $commisssion;
+                    $order_item = new OrderItem();
+                    $order_item->uid = uid();
+                    $order_item->order_id = $order->id;
+                    $order_item->gig_id = $gig->id;
+                    $order_item->owner_id = $gig->user_id;
+                    $order_item->quantity = (int) $item['quantity'];
+                    $order_item->has_upgrades = is_array($item['upgrades']) && count($item['upgrades']) ? true : false;
+                    $order_item->total_value = $item_total_price;
+                    $order_item->profit_value = $item_total_price - $commisssion;
+                    $order_item->commission_value = $commisssion;
                     $order_item->save();
 
                     // Check if this item has upgrades
-                    if ( is_array($item['upgrades']) && count($item['upgrades']) ) {
-                        
+                    if (is_array($item['upgrades']) && count($item['upgrades'])) {
+
                         // Loop through upgrades
                         foreach ($item['upgrades'] as $index => $upg) {
-                            
+
                             // Get upgrade
                             $upgrade = GigUpgrade::where('uid', $upg['id'])->where('gig_id', $gig->id)->first();
 
                             // Check if upgrade exists
                             if ($upgrade) {
-                                
+
                                 // Save item upgrade
-                                $order_item_upgrade             = new OrderItemUpgrade();
-                                $order_item_upgrade->item_id    = $order_item->id;
-                                $order_item_upgrade->title      = $upgrade->title;
-                                $order_item_upgrade->price      = $upgrade->price;
+                                $order_item_upgrade = new OrderItemUpgrade();
+                                $order_item_upgrade->item_id = $order_item->id;
+                                $order_item_upgrade->title = $upgrade->title;
+                                $order_item_upgrade->price = $upgrade->price;
                                 $order_item_upgrade->extra_days = $upgrade->extra_days;
                                 $order_item_upgrade->save();
 
                             }
-                            
+
                         }
 
                     }
 
                     // Update seller pending balance
                     $gig->owner()->update([
-                        'balance_pending' => $gig->owner->balance_pending + $order_item->profit_value
+                        'balance_pending' => $gig->owner->balance_pending + $order_item->profit_value,
                     ]);
 
                     // Increment orders in queue
@@ -352,13 +346,13 @@ class PaytabsComponent extends Component
 
                     // Order item placed successfully
                     // Let's notify the seller about new order
-                    $gig->owner->notify( (new PendingOrder($order_item))->locale(config('app.locale')) );
+                    $gig->owner->notify((new PendingOrder($order_item))->locale(config('app.locale')));
 
                     // Send notification
                     notification([
-                        'text'    => 't_u_received_new_order_seller',
-                        'action'  => url('seller/orders/details', $order_item->uid),
-                        'user_id' => $order_item->owner_id
+                        'text' => 't_u_received_new_order_seller',
+                        'action' => url('seller/orders/details', $order_item->uid),
+                        'user_id' => $order_item->owner_id,
                     ]);
 
                 }
@@ -366,21 +360,21 @@ class PaytabsComponent extends Component
             }
 
             // Save invoice
-            $invoice                 = new OrderInvoice();
-            $invoice->order_id       = $order->id;
+            $invoice = new OrderInvoice();
+            $invoice->order_id = $order->id;
             $invoice->payment_method = 'paytabs';
-            $invoice->payment_id     = $payment->tran_ref;
-            $invoice->firstname      = $billing_info->firstname ? $billing_info->firstname : auth()->user()->username;
-            $invoice->lastname       = $billing_info->lastname ? $billing_info->lastname : auth()->user()->username;
-            $invoice->email          = auth()->user()->email;
-            $invoice->company        = $billing_info->company ? clean($billing_info->company) : null;
-            $invoice->address        = clean($billing_info->address);
-            $invoice->status         = 'paid';
+            $invoice->payment_id = $payment->tran_ref;
+            $invoice->firstname = $billing_info->firstname ? $billing_info->firstname : auth()->user()->username;
+            $invoice->lastname = $billing_info->lastname ? $billing_info->lastname : auth()->user()->username;
+            $invoice->email = auth()->user()->email;
+            $invoice->company = $billing_info->company ? clean($billing_info->company) : null;
+            $invoice->address = clean($billing_info->address);
+            $invoice->status = 'paid';
             $invoice->save();
 
             // Update balance
             auth()->user()->update([
-                'balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($total)
+                'balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($total),
             ]);
 
             // Now everything succeeded
@@ -388,54 +382,53 @@ class PaytabsComponent extends Component
             session()->forget('cart');
 
             // Now let's notify the buyer that his order has been placed
-            auth()->user()->notify( (new OrderPlaced($order, $total))->locale(config('app.locale')) );
+            auth()->user()->notify((new OrderPlaced($order, $total))->locale(config('app.locale')));
 
             // After that the buyer has to send the seller the required form to start
             return redirect('account/orders')->with('message', __('messages.t_u_have_send_reqs_asap_to_seller'));
 
         } catch (\Throwable $th) {
-            
+
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
 
-
     /**
      * Calculate exchange rate
      *
-     * @param float $amount
-     * @param float $gateway_exchange_rate
+     * @param  float  $amount
+     * @param  float  $gateway_exchange_rate
      * @return mixed
      */
     protected function calculateExchangeAmount($gateway_exchange_rate = null)
     {
         try {
-            
+
             // Get total amount
-            $amount                = $this->total() + $this->taxes();
+            $amount = $this->total() + $this->taxes();
 
             // Get default currency exchange rate
             $default_exchange_rate = (float) settings('currency')->exchange_rate;
 
             // Set gateway exchange rate
             $gateway_exchange_rate = is_null($gateway_exchange_rate) ? $default_exchange_rate : (float) $gateway_exchange_rate;
-            
+
             // Check if same exchange rate
             if ($default_exchange_rate == $gateway_exchange_rate) {
-                
+
                 // No need to calculate amount
                 return $amount;
 
             } else {
 
                 // Return new amount
-                return (float)number_format( ($amount * $gateway_exchange_rate) / $default_exchange_rate , 2, '.', '');
+                return (float) number_format(($amount * $gateway_exchange_rate) / $default_exchange_rate, 2, '.', '');
 
             }
 
@@ -443,5 +436,4 @@ class PaytabsComponent extends Component
             return $amount;
         }
     }
-   
 }

@@ -6,7 +6,6 @@ use Livewire\Component;
 
 class XenditComponent extends Component
 {
-    
     /**
      * Init component
      *
@@ -21,7 +20,7 @@ class XenditComponent extends Component
 
             // Check if cart is empty
             if (count($cart) === 0) {
-                
+
                 // Go back to home page
                 return redirect('/');
 
@@ -32,10 +31,10 @@ class XenditComponent extends Component
 
             // Check if status is valid
             if (in_array($status, ['success', 'failed'])) {
-                
+
                 // Check if payment succeeded
                 if ($status === 'success') {
-                    
+
                     // Let's empty the cart
                     session()->forget('cart');
 
@@ -55,13 +54,12 @@ class XenditComponent extends Component
                 return redirect('account/orders');
 
             }
-            
+
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             return redirect('checkout')->with('error', $th->getMessage());
 
         }
     }
-   
 }

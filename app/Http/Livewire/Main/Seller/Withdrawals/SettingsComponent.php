@@ -2,20 +2,23 @@
 
 namespace App\Http\Livewire\Main\Seller\Withdrawals;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
+use App\Http\Validators\Main\Seller\Withdrawals\SettingsValidator;
 use App\Models\UserWithdrawalSettings;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Main\Seller\Withdrawals\SettingsValidator;
 use Illuminate\Validation\ValidationException;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class SettingsComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $offline_info;
+
     public $bank;
+
     public $accountName;
+
     public $accountNumber;
 
     /**
@@ -34,7 +37,6 @@ class SettingsComponent extends Component
         }
     }
 
-
     /**
      * Render component
      *
@@ -43,10 +45,10 @@ class SettingsComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_withdrawal_settings') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_withdrawal_settings')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src(settings('seo')->ogimage);
+        $ogimage = src(settings('seo')->ogimage);
 
         $this->seo()->setTitle($title);
         $this->seo()->setDescription($description);
@@ -58,7 +60,7 @@ class SettingsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite("@" . settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -71,7 +73,6 @@ class SettingsComponent extends Component
         return view('livewire.main.seller.withdrawals.settings')->extends('livewire.main.seller.layout.app')->section('content');
     }
 
-
     /**
      * Update withdrawal settings
      *
@@ -83,8 +84,8 @@ class SettingsComponent extends Component
             SettingsValidator::validate($this);
 
             UserWithdrawalSettings::where('user_id', auth()->id())->update([
-                'gateway_provider_id'   => $this->offline_info,
-                'gateway_provider_name' => 'offline'
+                'gateway_provider_id' => $this->offline_info,
+                'gateway_provider_name' => 'offline',
             ]);
 
             $this->toastSuccess(__('messages.t_toast_operation_success'));
@@ -105,7 +106,7 @@ class SettingsComponent extends Component
         $this->notification([
             'title' => __('messages.t_error'),
             'description' => $message,
-            'icon' => 'error'
+            'icon' => 'error',
         ]);
     }
 
@@ -117,7 +118,7 @@ class SettingsComponent extends Component
         $this->notification([
             'title' => __('messages.t_success'),
             'description' => $message,
-            'icon' => 'success'
+            'icon' => 'success',
         ]);
     }
 }

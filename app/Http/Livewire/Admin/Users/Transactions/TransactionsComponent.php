@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Admin\Users\Transactions;
 
 use App\Http\Validators\Admin\Users\RejectDepositValidator;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Models\DepositTransaction;
 use App\Notifications\User\Everyone\DepositRejected;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class TransactionsComponent extends Component
 {
@@ -24,14 +24,13 @@ class TransactionsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_transactions_history'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_transactions_history'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.users.transactions.transactions', [
-            'transactions' => $this->transactions
+            'transactions' => $this->transactions,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of transactions
@@ -43,23 +42,22 @@ class TransactionsComponent extends Component
         return DepositTransaction::latest()->paginate(42);
     }
 
-
     /**
      * Approve selected transaction
      *
-     * @param int $id
+     * @param  int  $id
      * @return mixed
      */
     public function approve($id)
     {
         try {
-            
+
             // Get transaction
             $transaction = DepositTransaction::where('id', $id)->where('status', 'pending')->firstOrFail();
 
             // approve user deposit
             $transaction->user->update([
-                'balance_available' => $transaction->user->balance_available + $transaction->amount_net
+                'balance_available' => $transaction->user->balance_available + $transaction->amount_net,
             ]);
 
             // Update transaction status
@@ -68,9 +66,9 @@ class TransactionsComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Throwable $th) {
@@ -78,17 +76,16 @@ class TransactionsComponent extends Component
         }
     }
 
-
     /**
      * Reject payment
      *
-     * @param int $id
+     * @param  int  $id
      * @return mixed
      */
     public function reject($id)
     {
         try {
-            
+
             // Get transaction
             $transaction = DepositTransaction::where('id', $id)->where('status', 'pending')->firstOrFail();
 
@@ -96,7 +93,7 @@ class TransactionsComponent extends Component
             RejectDepositValidator::validate($this);
 
             // Update transaction status
-            $transaction->status        = 'rejected';
+            $transaction->status = 'rejected';
             $transaction->reject_reason = $this->rejection_reason;
             $transaction->save();
 
@@ -104,39 +101,37 @@ class TransactionsComponent extends Component
             $transaction->user->notify(new DepositRejected($transaction, $this->rejection_reason));
 
             // Close modal
-            $this->dispatchBrowserEvent('close-modal', 'modal-reject-payment-container-' . $id);
+            $this->dispatchBrowserEvent('close-modal', 'modal-reject-payment-container-'.$id);
 
             // Reset form
             $this->reset('rejection_reason');
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
-        } 
+        }
     }
-    
 }
