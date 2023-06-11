@@ -26,9 +26,9 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained();
             $table->foreignId('subcategory_id')->constrained();
 
-            $table->mediumText('image_thumb_id')->nullable();
-            $table->mediumText('image_medium_id')->nullable();
-            $table->mediumText('image_large_id')->nullable();
+            $table->string('image_thumb_id')->nullable();
+            $table->string('image_medium_id')->nullable();
+            $table->string('image_large_id')->nullable();
 
             $table->enum('status', ['pending', 'active', 'deleted', 'boosted', 'trending', 'featured'])->default('pending');
             $table->mediumInteger('counter_visits')->default(0);

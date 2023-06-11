@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Image;
-use Livewire\TemporaryUploadedFile;
 
 class ImageUploader
 {
@@ -114,9 +113,9 @@ class ImageUploader
         $fileName = self::fileName();
         $filePath = "{$path}/{$fileName}";
 
-        Storage::disk('s3')->put($filePath,  ImageUploader::$image);
+        Storage::disk('s3')->put($filePath, ImageUploader::$image);
 
-        return Storage::disk('s3')->url($filePath);
+        return $filePath;
     }
 
     /**

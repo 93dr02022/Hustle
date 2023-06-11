@@ -57,6 +57,7 @@ use App\Models\UserWithdrawalHistory;
 use Illuminate\Support\Facades\Cache;
 use App\Models\OfflinePaymentSettings;
 use App\Models\ProjectBid;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Generate unique string
@@ -114,31 +115,25 @@ function format_bytes($size, $precision = 2)
 }
 
 /**
- * Get file source
+ * Check if file exists or return default
  *
  * @param object $file
  * @return string
  */
-function src($file)
+function src($filePath)
 {
-    // Check if file set
-    if ($file) {
+    if(is_string($filePath)) {
+        if ($filePath) {
+            if (! Storage::disk('s3')->exists($filePath)) {
+                return placeholder_img();
+            }
 
-        // Get file path
-        $path = public_path('storage/' . $file->file_folder . '/' . $file->uid . "." . $file->file_extension);
-
-        // Check if file exists
-        if (File::exists($path)) {
-
-            // File exists, return url
-            return url('storage/' . $file->file_folder . '/' . $file->uid . "." . $file->file_extension);
+            return Storage::disk('s3')->url($filePath);
         }
-
-        // File not found
+    
         return placeholder_img();
     }
 
-    // No file set
     return placeholder_img();
 }
 
