@@ -15,12 +15,10 @@ return new class extends Migration
     {
         Schema::create('gig_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('uid', 20)->unique();
-            $table->unsignedBigInteger('gig_id');
-            $table->string('name', 100)->nullable();
+            $table->string('uid', 255)->unique();
+            $table->foreignId('gig_id')->constrained();
+            $table->mediumText('name', 100)->nullable();
             $table->string('size', 20);
-
-            $table->foreign('gig_id')->references('id')->on('gigs');
         });
     }
 

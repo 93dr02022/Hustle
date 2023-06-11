@@ -113,14 +113,14 @@
                                         {{-- Check if gig has video --}}
                                         @if ($gig->video_id)
                                             <li class="splide__slide dark:bg-zinc-700 bg-gray-200 object-contain" data-splide-youtube="https://www.youtube.com/watch?v={{ $gig->video_id }}">
-                                                <img src="{{ src($gig->imageLarge) }}" alt="{{ $gig->title }}" class=" object-contain">
+                                                <img src="{{ src($gig->image_large_id) }}" alt="{{ $gig->title }}" class=" object-contain">
                                             </li>
                                         @endif
 
                                         {{-- List of images --}}
                                         @foreach ($gig->images as $image)
                                             <li class="splide__slide dark:bg-zinc-700 bg-gray-200 object-contain">
-                                                <img src="{{ src($image->large) }}" alt="{{ $gig->title }}" class="object-contain ">
+                                                <img src="{{ src($image->img_large_id) }}" alt="{{ $gig->title }}" class="object-contain ">
                                             </li>
                                         @endforeach
 
@@ -136,14 +136,14 @@
                                         {{-- Check if gig has video --}}
                                         @if ($gig->video_link)
                                             <li class="splide__slide !sr-only" data-splide-youtube="{{ $gig->video_link }}">
-                                                <img src="{{ src($gig->thumbnail) }}" alt="{{ $gig->title }}" class=" object-cover">
+                                                <img src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}" class=" object-cover">
                                             </li>
                                         @endif
 
                                         {{-- List of images --}}
                                         @foreach ($gig->images as $image)
                                             <li class="splide__slide">
-                                                <img src="{{ src($image->small) }}" alt="{{ $gig->title }}" class=" object-cover shadow">
+                                                <img src="{{ src($image->img_thumb_id) }}" alt="{{ $gig->title }}" class=" object-cover shadow">
                                             </li>
                                         @endforeach
                                     </ul>
@@ -179,7 +179,7 @@
                             <a href="{{ url('profile', $gig->owner->username) }}" target="_blank" class="flex-shrink-0 group block">
                                 <div class="flex items-center">
                                     <span class="inline-block relative">
-                                        <img class="h-6 w-6 rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($gig->owner->avatar) }}" alt="{{ $gig->owner->username }}">
+                                        <img class="h-6 w-6 rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
                                     </span>
                                     <div class="ltr:ml-3 rtl:mr-3">
                                         <div class="text-gray-500 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100 flex items-center">
@@ -514,7 +514,7 @@
                                         <div class="py-6">
                                             <div class="flex items-center">
                                                 <a href="{{ url('profile', $review->user->username) }}" target="_blank">
-                                                    <img src="{{ placeholder_img() }}" data-src="{{ src($review->user->avatar) }}" alt="{{ $review->user->username }}" class="lazy h-8 w-8 rounded-full">
+                                                    <img src="{{ placeholder_img() }}" data-src="{{ src($review->user->avatar_id) }}" alt="{{ $review->user->username }}" class="lazy h-8 w-8 rounded-full">
                                                 </a>
                                                 <div class="ltr:ml-4 rtl:mr-4 group">
                                                     <a href="{{ url('profile', $review->user->username) }}" target="_blank" class="text-sm font-bold text-gray-900 dark:text-gray-200 flex items-center group-hover:text-primary-600">

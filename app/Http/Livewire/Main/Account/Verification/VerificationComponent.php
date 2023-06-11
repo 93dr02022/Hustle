@@ -220,15 +220,13 @@ class VerificationComponent extends Component
 
             $path = $this->selfie->storeAs('verifications', $fileName, 's3');
 
-            $url = Storage::disk('s3')->url($path);
-
             VerificationCenter::upsert([
                 [
                     'uid' => uid(),
                     'user_id' => auth()->id(),
                     'document_type' => $this->document_type,
                     'status' => $this->bvn ? 'verified' : 'pending',
-                    'file_selfie' => $url,
+                    'file_selfie' => $path,
                 ],
             ], ['user_id'], ['document_type', 'file_selfie']);
 
