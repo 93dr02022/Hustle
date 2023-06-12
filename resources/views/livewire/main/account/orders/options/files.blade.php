@@ -188,7 +188,7 @@
 
                                                 {{-- Download button --}}
                                                 @if ($item->delivered_work->attached_work)
-                                                    <a href="{{ url('uploads/delivered/' . $item->order->uid . '/' . $item->uid . '/' . $item->delivered_work->id . '/' . $item->delivered_work->attached_work['id']) }}" target="_blank" class="w-full inline-flex items-center justify-center py-3 px-4 border border-transparent rounded-full bg-gray-100 dark:bg-zinc-800 dark:hover:bg-zinc-900 hover:bg-gray-200 focus:outline-none focus:ring-0 mb-6">
+                                                    <a href="{{ src($item->delivered_work->attached_work['path']) }}" target="_blank" class="w-full inline-flex items-center justify-center py-3 px-4 border border-transparent rounded-full bg-gray-100 dark:bg-zinc-800 dark:hover:bg-zinc-900 hover:bg-gray-200 focus:outline-none focus:ring-0 mb-6">
                                                         <span class="text-sm font-medium text-gray-700 dark:text-gray-400">
                                                             {{ __('messages.t_download') }}
                                                         </span>

@@ -480,7 +480,8 @@
                                         // Get payment gateway currency
                                         $gateway_currency      = settings('paystack')->currency;
                                         $gateway_exchange_rate = (float)settings('paystack')->exchange_rate;
-                                        $exchange_total_amount = $this->calculateExchangeAmount($gateway_exchange_rate);
+                                        $exchange_total_amount = $this->calculateExchangeAmount();
+                                        $paystackInlineAmount = $exchange_total_amount * 100;
 
                                         break;
 
@@ -885,7 +886,7 @@
                                             let handler = PaystackPop.setup({
                                                 key     : "{{ config('paystack.publicKey') }}",
                                                 email   : '{{ auth()->user()->email }}',
-                                                amount  : Number({{ $exchange_total_amount }}) * 100,
+                                                amount  : Number({{ $paystackInlineAmount }}),
                                                 currency: "{{ settings('paystack')->currency }}",
                                                 ref     : '{{ uid(32) }}',
                                                 onClose : function(){

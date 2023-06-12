@@ -248,6 +248,7 @@ class VerificationComponent extends Component
             $this->toastError(__('messages.t_toast_form_validation_error'));
             throw $e;
         } catch (\Throwable $th) {
+            dd($th);
             throw $th;
         }
     }

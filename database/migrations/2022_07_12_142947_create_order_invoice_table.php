@@ -15,17 +15,18 @@ return new class extends Migration
     {
         Schema::create('order_invoice', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->string('payment_method', 40);
+            $table->foreignId('order_id')->constrained();
+            $table->string('payment_method', 40)->index();
             $table->string('payment_id', 120);
+            $table->decimal('amount_paid', 16)->default(0.00)->index();
             $table->string('firstname', 60)->nullable();
             $table->string('lastname', 60)->nullable();
             $table->string('email', 60);
             $table->string('company', 60)->nullable();
             $table->text('address');
-            $table->timestamp('created_at');
+            $table->enum('status', ['paid', 'pending'])->default('paid');
 
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->timestamps();
         });
     }
 

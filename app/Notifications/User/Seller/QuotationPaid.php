@@ -41,8 +41,8 @@ class QuotationPaid extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Quotation Paid', url("/seller/quotations"))
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->action('You just received a new order, click button below to see order details', url("/seller/quotations"))
             ->line('Thank you for using our application!');
     }
 

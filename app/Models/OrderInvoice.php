@@ -17,13 +17,6 @@ class OrderInvoice extends Model
     protected $table = 'order_invoice';
 
     /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
-    const UPDATED_AT = null;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -32,11 +25,13 @@ class OrderInvoice extends Model
         'order_id',
         'payment_method',
         'payment_id',
+        'amount_paid',
         'firstname',
         'lastname',
         'email',
         'company',
         'address',
+        'status'
     ];
 
 

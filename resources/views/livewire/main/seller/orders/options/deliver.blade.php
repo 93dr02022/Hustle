@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <a href="{{ url('uploads/delivered/' . $order->order->uid . '/' . $order->uid . '/' . $order->delivered_work->id . '/' . $order->delivered_work->attached_work['id']) }}" target="_blank" class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0">
+                                    <a href="{{ src($order->delivered_work->attached_work['path']) }}" target="_blank" class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0" download>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="ltr:mr-2 rtl:ml-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                         <span class="text-sm font-medium text-gray-700 dark:text-zinc-300">
                                             {{ __('messages.t_download') }}

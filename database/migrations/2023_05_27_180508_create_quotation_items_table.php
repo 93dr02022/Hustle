@@ -20,10 +20,8 @@ return new class extends Migration
             $table->string('description', 1000)->index();
             $table->integer('quantity')->index();
             $table->decimal('price')->index();
-            $table->decimal('tax_rates')->index();
-            $table->decimal('taxed_price')->index();
-            $table->decimal('total_price')->index();
             $table->decimal('discount')->index();
+            $table->decimal('total_price')->index();
             $table->timestamps();
         });
     }
