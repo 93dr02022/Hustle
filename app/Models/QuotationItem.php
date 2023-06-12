@@ -20,9 +20,7 @@ class QuotationItem extends Model
         'description',
         'quantity',
         'price',
-        'tax_rates',
-        'taxed_price',
-        'total_price',
         'discount',
+        'total_price',
     ];
 }

@@ -25,7 +25,6 @@ class Quotation extends Model
         'email',
         'quote_date',
         'reference',
-        'sharing_uid',
         'is_draft',
         'paid',
         'total',
@@ -33,6 +32,9 @@ class Quotation extends Model
         'total_discount',
         'total_tax',
         'total_quantity',
+
+        'profit_value',
+        'commission_value',
         'note',
     ];
 

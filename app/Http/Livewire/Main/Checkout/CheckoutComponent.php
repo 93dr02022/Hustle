@@ -142,7 +142,7 @@ class CheckoutComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_checkout')." $separator ".settings('general')->title;
+        $title = __('messages.t_checkout') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -156,7 +156,7 @@ class CheckoutComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -310,7 +310,7 @@ class CheckoutComponent extends Component
 
                 // Set payment parameters
                 $params = [
-                    'external_id' => 'CHECKOUT'.uid(),
+                    'external_id' => 'CHECKOUT' . uid(),
                     'amount' => $total_amount,
                     'description' => __('messages.t_checkout'),
                     'invoice_duration' => 86400,
@@ -379,16 +379,16 @@ class CheckoutComponent extends Component
                     'currency' => settings('epoint')->currency,
                     'language' => 'az',
                     'order_id' => $transaction_id,
-                    'description' => 'Order ID: '.$transaction_id,
-                    'success_redirect_url' => url('checkout/callback/epoint/success?order_id='.$transaction_id),
-                    'error_redirect_url' => url('checkout/callback/epoint/failed?order_id='.$transaction_id),
+                    'description' => 'Order ID: ' . $transaction_id,
+                    'success_redirect_url' => url('checkout/callback/epoint/success?order_id=' . $transaction_id),
+                    'error_redirect_url' => url('checkout/callback/epoint/failed?order_id=' . $transaction_id),
                 ];
 
                 // Encode values
                 $data = base64_encode(json_encode($values));
 
                 // Generate signature
-                $signature = base64_encode(sha1($private_key.$data.$private_key, 1));
+                $signature = base64_encode(sha1($private_key . $data . $private_key, 1));
 
                 // Set post fields
                 $fields = http_build_query(['data' => $data, 'signature' => $signature]);
@@ -603,7 +603,7 @@ class CheckoutComponent extends Component
             ];
 
             // Payment gateway is required
-            if (! array_key_exists($this->payment_method, $supported_payment_gateways) || ! isset($supported_payment_gateways[$this->payment_method]) || ! $supported_payment_gateways[$this->payment_method]) {
+            if (!array_key_exists($this->payment_method, $supported_payment_gateways) || !isset($supported_payment_gateways[$this->payment_method]) || !$supported_payment_gateways[$this->payment_method]) {
 
                 // Error
                 $this->notification([
@@ -619,7 +619,7 @@ class CheckoutComponent extends Component
             // Check selected payment gateway
             switch ($this->payment_method) {
 
-                // Paypal
+                    // Paypal
                 case 'paypal':
 
                     // Get response
@@ -756,21 +756,21 @@ class CheckoutComponent extends Component
 
                     foreach ($inputData as $key => $value) {
                         if ($i == 1) {
-                            $hashdata .= '&'.urlencode($key).'='.urlencode($value);
+                            $hashdata .= '&' . urlencode($key) . '=' . urlencode($value);
                         } else {
-                            $hashdata .= urlencode($key).'='.urlencode($value);
+                            $hashdata .= urlencode($key) . '=' . urlencode($value);
                             $i = 1;
                         }
-                        $query .= urlencode($key).'='.urlencode($value).'&';
+                        $query .= urlencode($key) . '=' . urlencode($value) . '&';
                     }
 
                     // Set payment url
-                    $vnp_Url = $vnp_Url.'?'.$query;
+                    $vnp_Url = $vnp_Url . '?' . $query;
 
                     // Generate secure hash
                     if (isset($vnp_HashSecret)) {
                         $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
-                        $vnp_Url .= 'vnp_SecureHash='.$vnpSecureHash;
+                        $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                     }
 
                     // Go to payment url
@@ -950,6 +950,7 @@ class CheckoutComponent extends Component
                 $invoice->order_id = $order->id;
                 $invoice->payment_method = $response['transaction']['payment_method'];
                 $invoice->payment_id = $response['transaction']['payment_id'];
+                $invoice->amount_paid = $response['transaction']['amount_paid'];
                 $invoice->firstname = $billing_info?->firstname ? $billing_info->firstname : auth()->user()->username;
                 $invoice->lastname = $billing_info?->lastname ? $billing_info->lastname : auth()->user()->username;
                 $invoice->email = auth()->user()->email;
@@ -1067,7 +1068,7 @@ class CheckoutComponent extends Component
                 $gig = Gig::where('uid', $id)->active()->where('user_id', '!=', $user_id)->first();
 
                 // Check if gig does not exists
-                if (! $gig) {
+                if (!$gig) {
 
                     // Remove this item from cart
                     unset($items[$key]);
@@ -1199,6 +1200,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $order['id'],
                         'payment_method' => 'paypal',
                         'payment_status' => 'paid',
+                        'amount_paid' => $amount
                     ],
                 ];
 
@@ -1265,6 +1267,7 @@ class CheckoutComponent extends Component
                         'payment_id' => uid(),
                         'payment_method' => 'wallet',
                         'payment_status' => 'paid',
+                        'amount_paid' => $total_amount
                     ],
                 ];
 
@@ -1298,14 +1301,14 @@ class CheckoutComponent extends Component
             $gateway_currency_exchange = (float) settings('paystack')->exchange_rate;
 
             // Get total amount
-            $total_amount = $this->calculateExchangeAmount($gateway_currency_exchange);
+            $total_amount = $this->calculateExchangeAmount();
 
             // Get paystack secret key
             $paystack_secret_key = config('paystack.secretKey');
 
             // Send request
             $client = Http::withHeaders([
-                'Authorization' => 'Bearer '.$paystack_secret_key,
+                'Authorization' => 'Bearer ' . $paystack_secret_key,
                 'Accept' => 'application/json',
             ])->get("https://api.paystack.co/transaction/verify/$reference_id");
 
@@ -1352,6 +1355,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $payment['data']['id'],
                         'payment_method' => 'paystack',
                         'payment_status' => 'paid',
+                        'amount_paid' => $amount
                     ],
                 ];
 
@@ -1492,6 +1496,7 @@ class CheckoutComponent extends Component
                             'payment_id' => $payment['cf_order_id'],
                             'payment_method' => 'cashfree',
                             'payment_status' => 'paid',
+                            'amount_paid' => $amount
                         ],
                     ];
 
@@ -1624,6 +1629,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $payment->id,
                         'payment_method' => 'razorpay',
                         'payment_status' => 'paid',
+                        'amount_paid' => $amount
                     ],
                 ];
 
@@ -1673,7 +1679,7 @@ class CheckoutComponent extends Component
                 'x-api-key' => config('nowpayments.api_key'),
                 'Content-Type' => 'application/json',
             ];
-            $request = new Request('GET', config('nowpayments.payment_url').'/'.$this->nowpayments_payment_id, $headers);
+            $request = new Request('GET', config('nowpayments.payment_url') . '/' . $this->nowpayments_payment_id, $headers);
             $res = $client->sendAsync($request)->wait();
             $data = json_decode($res->getBody(), true);
 
@@ -1720,6 +1726,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $data['payment_id'],
                         'payment_method' => 'nowpayments',
                         'payment_status' => 'paid',
+                        'amount_paid' => $amount
                     ],
                 ];
 
@@ -1794,7 +1801,7 @@ class CheckoutComponent extends Component
         try {
 
             // Validate form
-            if (! $this->paymob_firstname || ! $this->paymob_lastname || ! $this->paymob_phone) {
+            if (!$this->paymob_firstname || !$this->paymob_lastname || !$this->paymob_phone) {
 
                 // Error
                 $this->notification([

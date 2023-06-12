@@ -1,7 +1,7 @@
 <div class="w-full" x-data="window.SellerDashboardQuotesPage">
 
     {{-- Loading --}}
-    <x-forms.loading zindex="z-[1000]" />
+    <x-forms.loading zindex="1000" />
 
     {{-- Heading --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-10">
@@ -170,7 +170,7 @@
 
             <div class="text-sm font-semibold mb-3">Quote Items</div>
             <template x-for="item in selectedQuote.items" :key="item.id">
-                <div class="border rounded py-4 px-3 grid grid-cols-3 gap-y-2 gap-x-3 sm:gap-x-5">
+                <div class="border rounded py-4 px-3 grid grid-cols-3 gap-y-2 gap-x-3 sm:gap-x-5 mb-3">
                     <div class="col-span-2 md:col-span-3">
                         <div class="text-sm text-gray-500">Description</div>
                         <div class="text-sm" x-text="item.description"></div>

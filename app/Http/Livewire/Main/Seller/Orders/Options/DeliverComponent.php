@@ -42,7 +42,7 @@ class DeliverComponent extends Component
         $order = OrderItem::where('owner_id', $user_id)->where('uid', $id)->with(['gig', 'order'])->firstOrFail();
 
         // // Order item must be in ['delivered', 'proceeded'] status and not finished yet
-        if (! in_array($order->status, ['proceeded', 'delivered'])) {
+        if (!in_array($order->status, ['proceeded', 'delivered'])) {
             return redirect('seller/orders')->with('message', __('messages.t_u_cant_send_delivered_work_anymore_status_wrong'));
         }
 
@@ -59,7 +59,7 @@ class DeliverComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_deliver_completed_work')." $separator ".settings('general')->title;
+        $title = __('messages.t_deliver_completed_work') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -73,7 +73,7 @@ class DeliverComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -96,7 +96,7 @@ class DeliverComponent extends Component
         try {
 
             // Either quick response or files should be exist in request
-            if (! $this->quick_response && ! $this->work) {
+            if (!$this->quick_response && !$this->work) {
 
                 // Error
                 $this->notification([
@@ -106,7 +106,6 @@ class DeliverComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Check if seller already uploaded work before
@@ -120,7 +119,6 @@ class DeliverComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Validate form
@@ -142,21 +140,20 @@ class DeliverComponent extends Component
                 $size = $this->work->getSize();
 
                 // Move this file to local storage
-                $this->work->storeAs('orders/delivered_work', "$id.$extension", $disk = 'custom');
+                $path = $this->work->storeAs('orders/delivered_work', "$id.$extension", 's3');
 
                 // Set file data
                 $file = [
                     'id' => $id,
+                    'path' => $path,
                     'extension' => $extension,
                     'mime' => $mime,
                     'size' => $size,
                 ];
-
             } else {
 
                 // No files selected
                 $file = null;
-
             }
 
             // Save work
@@ -181,7 +178,7 @@ class DeliverComponent extends Component
             // Send notification
             notification([
                 'text' => 't_seller_has_delivered_ur_order',
-                'action' => url('account/orders/files?orderId='.$this->order->order->uid.'&itemId='.$this->order->uid),
+                'action' => url('account/orders/files?orderId=' . $this->order->order->uid . '&itemId=' . $this->order->uid),
                 'user_id' => $this->order->order->buyer_id,
                 'params' => ['seller' => auth()->user()->username],
             ]);
@@ -198,7 +195,6 @@ class DeliverComponent extends Component
 
             // Refresh
             redirect(Url::current());
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -239,16 +235,14 @@ class DeliverComponent extends Component
             if ($work->attached_work) {
 
                 // Get file
-                $file = public_path('storage/orders/delivered_work/'.$work->attached_work['id'].'.'.$work->attached_work['extension']);
+                $file = public_path('storage/orders/delivered_work/' . $work->attached_work['id'] . '.' . $work->attached_work['extension']);
 
                 // Check if file exists
                 if (File::exists($file)) {
 
                     // Delete file
                     File::delete($file);
-
                 }
-
             }
 
             // Delete this files and reset
@@ -266,7 +260,6 @@ class DeliverComponent extends Component
 
             // Refresh
             redirect(Url::current());
-
         }
     }
 
@@ -308,7 +301,6 @@ class DeliverComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

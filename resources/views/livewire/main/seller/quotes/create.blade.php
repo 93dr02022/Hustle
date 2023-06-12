@@ -101,7 +101,7 @@
                         <span x-text="errors['items.0.description']"></span>
                         <template x-for="(order, index) in form.items" :key="index">
                             <div class="px-3 py-6 sm:px-6 odd:bg-gray-50 dark:odd:bg-black/20 even:bg-neutral-50 dark:even:bg-black/50">
-                                <div class="grid grid-cols-2 gap-y-2 gap-x-3 sm:gap-x-5 md:grid-cols-4">
+                                <div class="grid grid-cols-2 gap-y-2 gap-x-3 sm:gap-x-5 md:grid-cols-3">
                                     <div class="col-span-2 md:col-span-4">
                                         <div class="flex justify-between mb-1">
                                             <label class="mb-0 label-text"><span x-text="`${index + 1}.`"></span> Item Description</label>
@@ -118,11 +118,6 @@
                                     <div class="">
                                         <label class="label-text">Price</label>
                                         <input type="number" placeholder="Price" x-model="form.items[index].price" @input="sumTotal(index)" class="form-ctr" min="100" max="1000000" required>
-                                    </div>
-
-                                    <div class="">
-                                        <label class="label-text">Tax Rate %</label>
-                                        <input type="number" placeholder="Tax" :value="tax.tax_value" class="form-ctr read-only:bg-slate-100" readonly>
                                     </div>
 
                                     <div class="">
@@ -160,9 +155,11 @@
                             </div>
 
                             {{-- cash payment acknowlegement --}}
-                            <div x-show="form.payment_method == 'cash'" class="col-span-2 bg-gray-100 border flex items-center gap-x-3  rounded py-5 px-3">
+                            <div x-show="form.payment_method == 'cash'" class="col-span-2 bg-gray-100 border flex items-center gap-x-3  rounded py-5 px-3" x-cloak>
                                 <input id="checkbox-input" type="checkbox" class="focus:ring-primary-600 h-4 w-4 text-primary-600 border-gray-300 rounded" checked disabled>
-                                <label for="" class="text-sm text-gray-900">This is to affirm you have received cash payment from the quote recipient.</label>
+                                <label for="" class="text-sm text-gray-900">
+                                    This is to affirm you have received cash payment from the quote recipient. Note this is a one time action and store commission will be deducted from your wallet.
+                                </label>
                             </div>
 
                             <div class="col-span-2">
@@ -191,7 +188,7 @@
                 <div x-show="form.payment_method == 'paystack'" class="relative mt-7 mx-5">
                     <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100" :value="`https://correcthustle.com/payments/${quote.sharing_uid}/pay`" readonly />
                     <div class="flex absolute inset-y-0 right-0 items-center pl-4 pr-2 py-3 pointer-events-auto">
-                        <button @click="copy(`https://correcthustle.com/quotations/${quote.sharing_uid}/payment`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
+                        <button @click="copy(`https://correcthustle.com/quotations/${quote.reference}/payment`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
                     </div>
                 </div>
             </div>
@@ -214,7 +211,6 @@
                         description: "",
                         quantity: 0,
                         price: 0,
-                        tax_rates: 0,
                         discount: 0,
                     }],
                     expires_at: "",
@@ -236,18 +232,17 @@
                         return Number(acc) + Number(item.discount);
                     }, 0).toFixed(2);
 
-                    let taxedAmount = ((parseFloat(this.tax.tax_value * this.form.items.length) / 100) * this.total)
-                    this.total = (this.total - totalDiscount - taxedAmount).toFixed(2)
+                    this.total = (this.total - totalDiscount).toFixed(2)
 
                     this.checkDiscount(index)
                 },
 
                 checkDiscount(index) {
                     let quote = this.form.items[index]
-                    let quoteTotal = parseFloat(quote.price) - (parseFloat(this.tax.tax_value) / 100 * quote.price)
-                    if(quote.discount > quoteTotal) {
+                    if(Number(quote.discount) > Number(quote.price)) {
                         this.toastMessage('You cant input a discount amount greater than the quote taxed amount.')
                         this.form.items[index].discount = 0
+                        this.form.items[index].price = 0
                     }
                 },
 

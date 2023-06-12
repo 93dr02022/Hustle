@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('email')->index();
             $table->dateTime('quote_date')->index();
             $table->string('reference')->unique();
-            $table->string('sharing_uid')->unique();
             $table->boolean('is_draft')->index()->default(false);
             $table->boolean('paid')->index();
             $table->decimal('total')->index();
@@ -32,6 +31,9 @@ return new class extends Migration
             $table->decimal('total_discount')->index();
             $table->decimal('total_tax')->index();
             $table->decimal('total_quantity')->index();
+
+            $table->decimal('profit_value')->index();
+            $table->decimal('commission_value')->index();
             $table->longText('note')->nullable();
             $table->timestamps();
         });
