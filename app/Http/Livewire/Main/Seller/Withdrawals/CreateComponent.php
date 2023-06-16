@@ -198,8 +198,6 @@ class CreateComponent extends Component
                 'balance_available' => DB::raw("balance_available - {$this->amount}"),
             ]);
 
-
-
             // Send notification to admin
             Admin::first()->notify((new AdminPendingWithdrawal($withdrawal))->locale(config('app.locale')));
             auth()->user()->notify((new SellerPendingWithdrawal($withdrawal))->locale(config('app.locale')));

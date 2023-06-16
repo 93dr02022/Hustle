@@ -33,6 +33,7 @@ class SendMoney implements ShouldQueue
     public function handle()
     {
         $response = Http::withToken(config('paystack.secretKey'))
+            ->retry(3)
             ->post('https://api.paystack.co/transfer', [
                 "source" => "balance",
                 "amount" => $this->withdrawal->amount,
@@ -42,9 +43,6 @@ class SendMoney implements ShouldQueue
             ])
             ->object();
 
-        if ($response->status) {
-        }
-
-        // if error ouccured silently ignore
+        // fails if endpoint throws exception
     }
 }

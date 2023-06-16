@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
+        'webhook/paystack',
         'checkout/callback/cashfree',
         'checkout/callback/paytabs',
         'callback/paytabs',
@@ -24,10 +25,10 @@ class VerifyCsrfToken extends Middleware
         'callback/mollie/deposit',
         'callback/epoint/success',
         'callback/epoint/failed',
-        'callback/epoint/results'
+        'callback/epoint/results',
     ];
 
-    
+
     public function handle($request, Closure $next)
     {
         unset($request['_token']);

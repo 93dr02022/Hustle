@@ -740,4 +740,4 @@ Route::get('checkout/callback/mollie/redirect', 'App\Http\Controllers\Main\Check
 Route::get('checkout/callback/mollie/webhook', 'App\Http\Controllers\Main\Checkout\MollieController@webhook');
 
 // Paystack transfer webhook
-Route::post('webhook/paystack', [App\Http\Controllers\Main\Callback\PaystackEventController::class, '']);
+Route::post('webhook/paystack', [App\Http\Controllers\Main\Callback\PaystackEventController::class, 'paystackEventBus']);

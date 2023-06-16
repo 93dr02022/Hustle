@@ -86,7 +86,7 @@ class CreateComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_publish_new_gig')." $separator ".settings('general')->title;
+        $title = __('messages.t_publish_new_gig') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -100,7 +100,7 @@ class CreateComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -161,7 +161,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -187,7 +186,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -211,7 +209,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -250,7 +247,6 @@ class CreateComponent extends Component
 
             // Scroll up
             $this->dispatchBrowserEvent('scrollUp');
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -270,7 +266,7 @@ class CreateComponent extends Component
             $title = htmlspecialchars_decode(clean($this->title));
 
             // Generate unique slug for this gig
-            $slug = substr(Str::slug($title), 0, 138).'-'.$uid;
+            $slug = substr(Str::slug($title), 0, 138) . '-' . $uid;
 
             // Get description
             $description = clean($this->description);
@@ -328,7 +324,7 @@ class CreateComponent extends Component
                 'video_link' => $video_link,
                 'video_id' => $video_id,
             ]);
-            
+
 
             // Save gig tag
             foreach ($this->tags as $tag) {
@@ -397,7 +393,6 @@ class CreateComponent extends Component
                     'title' => clean($this->seo_title),
                     'description' => clean($this->seo_description),
                 ]);
-
             }
 
             // Save gig images
@@ -412,14 +407,13 @@ class CreateComponent extends Component
                     'img_medium_id' => $imgMedium,
                     'img_large_id' => $imgLargeUrl,
                 ]);
-
             }
 
             // Check if documents exists in request
             if (settings('publish')->is_documents_enabled && is_array($this->documents) && count($this->documents)) {
 
                 collect($this->documents)->each(function ($doc) use ($gig) {
-                    $bucketFileName = uid().'.pdf';
+                    $bucketFileName = uid() . '.pdf';
                     $uploadFileName = $doc->getClientOriginalName();
                     $fileSize = $doc->getSize();
 
@@ -434,7 +428,6 @@ class CreateComponent extends Component
                         'size' => $fileSize,
                     ]);
                 });
-
             }
 
             // Gig has been posted successfully
@@ -446,11 +439,9 @@ class CreateComponent extends Component
                 $this->is_approved = false;
 
                 Admin::first()->notify((new PendingGig($gig))->locale(config('app.locale')));
-
             } else {
 
                 $this->is_approved = true;
-
             }
 
             // Success message
@@ -459,9 +450,9 @@ class CreateComponent extends Component
                 'description' => __('messages.t_gig_created_successfully'),
                 'icon' => 'success',
             ]);
-
         } catch (\Throwable $th) {
             throw $th;
+            // dd($th);
         }
     }
 }
