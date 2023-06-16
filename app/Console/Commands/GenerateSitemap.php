@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use App\Models\Gig;
 use App\Models\Project;
-use App\Models\Category;
-use Spatie\Sitemap\Sitemap;
 use App\Models\ProjectCategory;
 use Illuminate\Console\Command;
+use Spatie\Sitemap\Sitemap;
 
 class GenerateSitemap extends Command
 {
@@ -33,26 +33,26 @@ class GenerateSitemap extends Command
     public function handle()
     {
         if (settings('seo')->is_sitemap) {
-            
+
             // Get gigs
-            $gigs                = Gig::active()->get();
-    
+            $gigs = Gig::active()->get();
+
             // Get projects
-            $projects            = Project::whereIn('status', ['active', 'completed', 'closed', 'incomplete', 'under_development'])->get();
+            $projects = Project::whereIn('status', ['active', 'completed', 'closed', 'incomplete', 'under_development'])->get();
 
             // Get gigs categories
-            $gigs_categories     = Category::latest()->select('slug')->get();
+            $gigs_categories = Category::latest()->select('slug')->get();
 
             // Get projects categories
             $projects_categories = ProjectCategory::latest()->select('slug')->get();
 
             // Create sitemap
             Sitemap::create()
-                    ->add($gigs)
-                    ->add($projects)
-                    ->add($gigs_categories)
-                    ->add($projects_categories)
-                    ->writeToFile(base_path('sitemap.xml'));
+                ->add($gigs)
+                ->add($projects)
+                ->add($gigs_categories)
+                ->add($projects_categories)
+                ->writeToFile(base_path('sitemap.xml'));
         }
     }
 }

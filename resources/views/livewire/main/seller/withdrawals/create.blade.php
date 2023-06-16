@@ -72,34 +72,36 @@
 
     {{-- Content --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-        <main class="rounded-lg bg-white dark:bg-zinc-800 shadow border border-gray-200 dark:border-zinc-800 py-12 px-6 md:px-10">
+        <main class="rounded-lg bg-white dark:bg-zinc-800 shadow border border-gray-200 dark:border-zinc-800 py-12 px-[14px] sm:px-6 md:px-10">
+            <div class="bg-gray-100 border border-gray-200 rounded-md py-7 px-3 mb-7">
+                <div class="grid grid-cols-1 gap-y-5 sm:gap-y-8 sm:grid-cols-3 md:grid-cols-4">
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Wallet Balance</dt>
+                        <dd class="mt-1 text-xs text-gray-500 capitalize">
+                            {{ money(auth()->user()->balance_available, settings('currency')->code, true) }}
+                        </dd>
+                    </div>
+
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Account Number</dt>
+                        <dd class="mt-1 text-xs text-gray-500">{{ $withdrawalSettings?->gateway_provider_id }}</dd>
+                    </div>
+
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Account Name</dt>
+                        <dd class="mt-1 text-xs text-gray-500 capitalize">{{ strtolower($withdrawalSettings?->account_name) }}</dd>
+                    </div>
+
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Bank Name</dt>
+                        <dd class="mt-1 text-xs text-gray-500">{{ $withdrawalSettings?->bank_name }}</dd>
+                    </div>
+                </div>
+            </div>
 
             {{-- Check if he can make withdrawals --}}
             @if ($can_withdraw)
-                
                 <div class="grid grid-cols-12 md:gap-x-6 gap-y-6">
-
-                    {{-- Paypal email --}}
-                    @if ($paypal_email)
-                        <div class="col-span-12">
-                            <x-forms.text-input disabled
-                                :label="__('messages.t_paypal_email')"
-                                :placeholder="__('messages.t_enter_paypal_email')"
-                                model="paypal_email"
-                                type="email"
-                                svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><path fill="none" d="M0 0h24v24H0z"></path><path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 3.993-.032.17a.804.804 0 0 1-.794.679H7.72a.483.483 0 0 1-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.75-2.203 8.796-6.502zm-2.96-5.09c.762.868.983 1.81.752 3.285-.019.123-.04.24-.062.36-.735 3.773-3.089 5.446-6.956 5.446H8.957c-.63 0-1.174.414-1.354 1.002l-.014-.002-.93 5.894H3.121a.051.051 0 0 1-.05-.06l2.598-16.51A.95.95 0 0 1 6.607 2h5.976c2.183 0 3.716.469 4.523 1.388z"></path></g></svg>' />
-                        </div>
-                    @elseif ($offline_info)
-                        <div class="col-span-12">
-                            <x-forms.textarea disabled
-                                :label="config('payouts.offline.name')"
-                                placeholder=""
-                                model="offline_info"
-                                :rows="10"
-                                svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M894 462c30.9 0 43.8-39.7 18.7-58L530.8 126.2a31.81 31.81 0 0 0-37.6 0L111.3 404c-25.1 18.2-12.2 58 18.8 58H192v374h-72c-4.4 0-8 3.6-8 8v52c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-52c0-4.4-3.6-8-8-8h-72V462h62zM381 836H264V462h117v374zm189 0H453V462h117v374zm190 0H642V462h118v374z"></path></svg>' />
-                        </div>
-                    @endif
-
                     {{-- Amount requested --}}
                     <div class="col-span-12">
                         <x-forms.text-input

@@ -62,7 +62,7 @@
 
     </head>
 
-    <body class="antialiased bg-[#f8fafc] text-gray-600 min-h-full flex flex-col application application-ltr overflow-x-hidden overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-zinc-900 dark:scrollbar-track-zinc-600" x-data="window.QCwuToAKMICZSdT">
+    <body class="antialiased bg-[#f8fafc] text-gray-600 min-h-full flex flex-col application application-ltr overflow-x-hidden overflow-y-hidden scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-zinc-900 dark:scrollbar-track-zinc-600" x-data="window.QCwuToAKMICZSdT">
 
         {{-- Notification --}}
         <x-notifications position="top-center" z-index="z-[60]" />

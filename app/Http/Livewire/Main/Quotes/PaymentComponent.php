@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Main\Quotes;
 use App\Models\Order;
 use App\Models\OrderInvoice;
 use App\Models\Quotation;
-use App\Models\QuotationPayment;
 use App\Notifications\User\Seller\QuotationPaid;
 use DB;
 use Illuminate\Support\Facades\Http;
@@ -99,17 +98,17 @@ class PaymentComponent extends Component
                         ->update(['buyer_id' => auth()->id()]);
                 }
 
-                // Seller new Available Balance
+                // Pending Balance until resolve by cron
                 $this->quotation->owner()
-                ->update([
-                    'balance_available' => $this->quotation->owner->balance_available + $this->quotation->profit_value
-                ]);
+                    ->update([
+                        'balance_pending' => DB::raw("balance_pending + {$this->quotation->profit_value}")
+                    ]);
+
+                DB::commit();
 
                 $this->quotation->owner
                     ->notify((new QuotationPaid($this->quotation))
                         ->locale(config('app.locale')));
-
-                DB::commit();
 
                 $this->toastSuccess('Payment Completed successfully.');
 

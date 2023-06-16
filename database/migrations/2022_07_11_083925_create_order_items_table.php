@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('gig_id');
             $table->unsignedBigInteger('owner_id');
             $table->integer('quantity')->default(1);
+
             $table->boolean('has_upgrades')->default(false);
             $table->boolean('is_requirements_sent')->default(false);
             $table->string('total_value');
@@ -27,6 +28,8 @@ return new class extends Migration
             $table->string('commission_value')->default(0);
             $table->enum('status', ['pending', 'proceeded', 'delivered', 'canceled', 'refunded'])->default('pending');
             $table->boolean('is_finished')->default(false);
+            $table->boolean('can_wallet')->default(false);
+
             $table->timestamp('placed_at');
             $table->timestamp('expected_delivery_date')->nullable();
             $table->enum('canceled_by', ['seller', 'buyer'])->nullable();
@@ -38,7 +41,6 @@ return new class extends Migration
             $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('gig_id')->references('id')->on('gigs');
             $table->foreign('owner_id')->references('id')->on('users');
-
         });
     }
 

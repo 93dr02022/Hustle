@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('reference')->unique();
             $table->boolean('is_draft')->index()->default(false);
             $table->boolean('paid')->index();
+
+            $table->boolean('can_wallet')->default(false)->index();
             $table->decimal('total')->index();
             $table->dateTime('expires_at')->index();
             $table->decimal('total_discount')->index();

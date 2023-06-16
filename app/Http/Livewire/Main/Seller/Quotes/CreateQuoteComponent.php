@@ -8,6 +8,7 @@ use App\Models\OrderInvoice;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use App\Models\User;
+use App\Notifications\User\Seller\QuotationCreated;
 use DB;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -65,7 +66,7 @@ class CreateQuoteComponent extends Component
                 ...$quoteAttr,
             ]);
 
-            if($paymentMethod === 'cash') {
+            if ($paymentMethod === 'cash') {
                 $quotation->owner()->update([
                     'balance_available' => DB::raw("balance_available - {$commission}")
                 ]);
@@ -94,6 +95,11 @@ class CreateQuoteComponent extends Component
                 })->toArray());
 
             DB::commit();
+
+            $this->quotation->owner
+                ->notify((new QuotationCreated())
+                    ->locale(config('app.locale')));
+
 
             $this->notification([
                 'title' => 'Quotation Created',

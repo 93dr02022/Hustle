@@ -27,6 +27,7 @@ class Quotation extends Model
         'reference',
         'is_draft',
         'paid',
+        'can_wallet',
         'total',
         'expires_at',
         'total_discount',
@@ -45,7 +46,8 @@ class Quotation extends Model
      */
     protected $casts = [
         'paid' => 'boolean',
-        'expires_at' => 'date'
+        'expires_at' => 'date',
+        'can_wallet' => 'boolean',
     ];
 
     /**
