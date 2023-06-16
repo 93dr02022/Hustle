@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PaystackValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -25,9 +25,6 @@ class PaystackValidator
                 'currency'       => 'required|max:3|min:3',
                 'exchange_rate'  => 'required|numeric',
                 'deposit_fee'    => 'required|integer',
-                'public_key'     => 'required',
-                'secret_key'     => 'required',
-                'merchant_email' => 'nullable|email'
             ];
 
             // Set errors messages
@@ -44,9 +41,6 @@ class PaystackValidator
                 'exchange_rate.numeric'  => __('messages.t_validator_numeric'),
                 'deposit_fee.required'   => __('messages.t_validator_required'),
                 'deposit_fee.integer'    => __('messages.t_validator_integer'),
-                'public_key.required'    => __('messages.t_validator_required'),
-                'secret_key.required'    => __('messages.t_validator_required'),
-                'merchant_email.email'   => __('messages.t_validator_email')
             ];
 
             // Set data to validate
@@ -57,9 +51,6 @@ class PaystackValidator
                 'currency'       => $request->currency,
                 'exchange_rate'  => $request->exchange_rate,
                 'deposit_fee'    => $request->deposit_fee,
-                'public_key'     => $request->public_key,
-                'secret_key'     => $request->secret_key,
-                'merchant_email' => $request->merchant_email
             ];
 
             // Validate data
@@ -67,10 +58,8 @@ class PaystackValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }
