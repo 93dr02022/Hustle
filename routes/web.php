@@ -738,3 +738,6 @@ Route::post('checkout/callback/cashfree/token', 'App\Http\Controllers\Main\Check
 // Mollie checkout callback
 Route::get('checkout/callback/mollie/redirect', 'App\Http\Controllers\Main\Checkout\MollieController@redirect');
 Route::get('checkout/callback/mollie/webhook', 'App\Http\Controllers\Main\Checkout\MollieController@webhook');
+
+// Paystack transfer webhook
+Route::post('webhook/paystack', [App\Http\Controllers\Main\Callback\PaystackEventController::class, '']);

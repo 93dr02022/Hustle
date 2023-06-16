@@ -102,7 +102,6 @@
             {{-- Check if he can make withdrawals --}}
             @if ($can_withdraw)
                 <div class="grid grid-cols-12 md:gap-x-6 gap-y-6">
-                    {{-- Amount requested --}}
                     <div class="col-span-12">
                         <x-forms.text-input
                             :label="__('messages.t_amount_to_withdraw')"
@@ -112,19 +111,10 @@
                             :hint="__('messages.t_available_balance_amount', ['amount' => money(auth()->user()->balance_available, settings('currency')->code, true)])" />
                     </div>
 
-                    {{-- Save --}}
-                    @if (settings('commission')->commission_from === 'withdrawals')
-                        <div class="col-span-12">
-                            <x-forms.button action="confirm" :text="__('messages.t_make_withdrawal')" :block="true" />
-                        </div>
-                    @else
-                        <div class="col-span-12">
-                            <x-forms.button action="withdraw" :text="__('messages.t_make_withdrawal')" :block="true" />
-                        </div>
-                    @endif
-
+                    <div class="col-span-12">
+                        <x-forms.button action="withdraw" :text="__('messages.t_make_withdrawal')" :block="true" />
+                    </div>
                 </div>
-
             @else
 
                 {{-- Error --}}

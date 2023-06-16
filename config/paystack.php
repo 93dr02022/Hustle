@@ -15,24 +15,24 @@ return [
      * Public Key From Paystack Dashboard
      *
      */
-    'publicKey' => 'pk_test_ac11e590ba2a641bff759f0dce17ee04a3f59cd1',
+    'publicKey' => env('PAYSTACK_PUBLIC_KEY'),
 
     /**
      * Secret Key From Paystack Dashboard
      *
      */
-    'secretKey' => 'sk_test_b950524a98be8c4269643f7dcd36f28f4c6f0719',
+    'secretKey' => env('PAYSTACK_SECRET_KEY'),
 
     /**
      * Paystack Payment URL
      *
      */
-    'paymentUrl' => "https://api.paystack.co",
+    'paymentUrl' =>  env('PAYSTACK_PAYMENT_URL'),
 
     /**
      * Optional email address of the merchant
      *
      */
-    'merchantEmail' => 'afuwapesunday12@gmail.com',
+    'merchantEmail' => env('PAYSTACK_MERCHANT_EMAIL'),
 
 ];
