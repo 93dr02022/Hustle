@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Admin\Portfolios;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Models\UserPortfolio;
 use App\Notifications\User\Seller\PortfolioPublished;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class PortfoliosComponent extends Component
 {
@@ -21,14 +21,13 @@ class PortfoliosComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_portfolios'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_portfolios'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.portfolios.portfolios', [
-            'portfolios' => $this->portfolios
+            'portfolios' => $this->portfolios,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of portfolios
@@ -40,11 +39,10 @@ class PortfoliosComponent extends Component
         return UserPortfolio::latest()->paginate(42);
     }
 
-
     /**
      * Delete portfolio
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -59,7 +57,7 @@ class PortfoliosComponent extends Component
 
         // Loop through gallery
         foreach ($portfolio->gallery as $img) {
-            
+
             // Delete file first
             deleteModelFile($img->image);
 
@@ -73,45 +71,43 @@ class PortfoliosComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_portfolio_deleted_successfully'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Activate portfolio
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function activate($id)
     {
         // Get portfolio
-        $portfolio         = UserPortfolio::where('id', $id)->where('status', 'pending')->firstOrFail();
+        $portfolio = UserPortfolio::where('id', $id)->where('status', 'pending')->firstOrFail();
 
         // Activate portfolio
         $portfolio->status = 'active';
         $portfolio->save();
 
         // Send notification to user
-        $portfolio->user->notify( (new PortfolioPublished($portfolio))->locale(config('app.locale')) );
+        $portfolio->user->notify((new PortfolioPublished($portfolio))->locale(config('app.locale')));
 
         // Send notification
         notification([
-            'text'    => 't_ur_portfolio_title_has_been_published',
-            'action'  => url('projects', $portfolio->slug),
+            'text' => 't_ur_portfolio_title_has_been_published',
+            'action' => url('projects', $portfolio->slug),
             'user_id' => $portfolio->user_id,
-            'params'  => ['title' => $portfolio->title]
+            'params' => ['title' => $portfolio->title],
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_portfolio_published_successfully'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }

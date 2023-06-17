@@ -2,22 +2,25 @@
 
 namespace App\Http\Livewire\Admin\System;
 
-use Config;
-use Artisan;
 use App\Models\Admin;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Illuminate\Support\Str;
 use App\Notifications\Admin\SiteIsDown;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Artisan;
+use Config;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class MaintenanceComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $status;
+
     public $headline;
+
     public $message;
+
     public $secret;
 
     /**
@@ -29,15 +32,14 @@ class MaintenanceComponent extends Component
     {
         // Check maintenance mode
         $this->status = app()->isDownForMaintenance() ? 'down' : 'up';
-        
+
         // Fill form
         $this->fill([
             'headline' => config('maintenance.headline'),
-            'message'  => config('maintenance.message'),
-            'secret'   => config('maintenance.secret')
+            'message' => config('maintenance.message'),
+            'secret' => config('maintenance.secret'),
         ]);
     }
-
 
     /**
      * Render component
@@ -47,12 +49,11 @@ class MaintenanceComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_maintenance_mode'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_maintenance_mode'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.system.maintenance')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update maintenance mode
@@ -62,18 +63,18 @@ class MaintenanceComponent extends Component
     public function update()
     {
         try {
-            
+
             // Check status
             if ($this->status === 'up') {
-                
+
                 // Site is up
                 Artisan::call('up');
 
                 // Clear cache
                 Artisan::call('config:clear');
 
-            } else if ($this->status === 'down') {
-                
+            } elseif ($this->status === 'down') {
+
                 // Generate secret
                 $secret = (string) Str::uuid()->toString();
 
@@ -93,9 +94,9 @@ class MaintenanceComponent extends Component
 
                 // Success
                 $this->notification([
-                    'title'       => __('messages.t_success'),
+                    'title' => __('messages.t_success'),
                     'description' => __('messages.t_toast_operation_success'),
-                    'icon'        => 'success'
+                    'icon' => 'success',
                 ]);
 
             }
@@ -104,12 +105,11 @@ class MaintenanceComponent extends Component
             throw $th;
             // Something went wrong
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
-
 }

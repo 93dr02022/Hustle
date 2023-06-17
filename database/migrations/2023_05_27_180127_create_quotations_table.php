@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->index();
+            $table->foreignId('order_id')->index();
             $table->string('payment_method')->index();
             $table->string('phone_number')->index();
             $table->string('first_name')->index();
@@ -23,7 +24,6 @@ return new class extends Migration
             $table->string('email')->index();
             $table->dateTime('quote_date')->index();
             $table->string('reference')->unique();
-            $table->string('sharing_uid')->unique();
             $table->boolean('is_draft')->index()->default(false);
             $table->boolean('paid')->index();
             $table->decimal('total')->index();
@@ -31,6 +31,9 @@ return new class extends Migration
             $table->decimal('total_discount')->index();
             $table->decimal('total_tax')->index();
             $table->decimal('total_quantity')->index();
+
+            $table->decimal('profit_value')->index();
+            $table->decimal('commission_value')->index();
             $table->longText('note')->nullable();
             $table->timestamps();
         });

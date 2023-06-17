@@ -18,12 +18,24 @@ class UserSeeder extends Seeder
     {
         User::create([
             'uid' => uid(),
-            'fullname' => 'sunny afuwape',
+            'first_name' => 'sunny',
+            'last_name' => 'afuwape',
             'email' => 'sunny@surehustle.com',
             'username' => 'sunny',
             'password' => Hash::make('12345678'),
             'status' => 'active',
             'level_id' => 1
+        ]);
+
+        User::create([
+            'uid' => uid(),
+            'first_name' => 'joshy',
+            'last_name' => 'afuwape',
+            'email' => 'joshy@surehustle.com',
+            'username' => 'joshy',
+            'password' => Hash::make('12345678'),
+            'status' => 'active',
+            'level_id' => 2
         ]);
     }
 }

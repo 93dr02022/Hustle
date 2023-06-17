@@ -3,14 +3,15 @@
 namespace App\Http\Livewire\Admin\Gigs\Options;
 
 use App\Models\Gig;
-use Livewire\Component;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
 
 class EditComponent extends Component
 {
     use SEOToolsTrait;
 
     public $gig;
+
     public $step;
 
     protected $queryString = ['step'];
@@ -18,7 +19,7 @@ class EditComponent extends Component
     /**
      * Init component
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function mount($id)

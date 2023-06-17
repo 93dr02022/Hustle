@@ -3,26 +3,30 @@
 namespace App\Http\Livewire\Main\Search;
 
 use App\Models\Gig;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Arr;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Arr;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class SearchComponent extends Component
 {
-
     use WithPagination, SEOToolsTrait;
 
     public $q;
+
     protected $queryString = ['q', 'min_price', 'max_price', 'delivery_time', 'rating', 'sort_by'];
 
     public $delivery_times;
 
     // filters
     public $sort_by;
+
     public $min_price;
+
     public $max_price;
+
     public $delivery_time;
+
     public $rating;
 
     /**
@@ -43,10 +47,9 @@ class SearchComponent extends Component
             ['value' => 7, 'text' => __('messages.t_1_week')],
             ['value' => 14, 'text' => __('messages.t_2_weeks')],
             ['value' => 21, 'text' => __('messages.t_3_weeks')],
-            ['value' => 30, 'text' => __('messages.t_1_month')]
+            ['value' => 30, 'text' => __('messages.t_1_month')],
         ];
     }
-
 
     /**
      * Render component
@@ -56,36 +59,35 @@ class SearchComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_search_results_for_q', ['q' => $this->q]) . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_search_results_for_q', ['q' => $this->q])." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.search.search', [
-            'gigs' => $this->gigs
+            'gigs' => $this->gigs,
         ])->extends('livewire.main.layout.app')->section('content');
     }
-
 
     /**
      * Get gigs
@@ -94,7 +96,7 @@ class SearchComponent extends Component
      */
     public function getGigsProperty()
     {
-        $keyword = str_replace(['-', ' ', '_', "'", '"', "/", "`", "+"], ' ', $this->q);
+        $keyword = str_replace(['-', ' ', '_', "'", '"', '/', '`', '+'], ' ', $this->q);
 
         // start a new query
         $query = Gig::query()->active();
@@ -116,7 +118,7 @@ class SearchComponent extends Component
 
         // Check rating
         if ($this->rating) {
-            $query->whereBetween('rating', [$this->rating, $this->rating +1]);
+            $query->whereBetween('rating', [$this->rating, $this->rating + 1]);
         }
 
         // Check sort by
@@ -128,31 +130,31 @@ class SearchComponent extends Component
                     $query->orderByDesc('counter_visits');
                     break;
 
-                // Best rating
+                    // Best rating
                 case 'rating':
                     $query->orderByDesc('rating');
                     break;
 
-                // Most sales
+                    // Most sales
                 case 'sales':
                     $query->orderByDesc('counter_sales');
                     break;
 
-                // Newest
+                    // Newest
                 case 'newest':
                     $query->orderByDesc('id');
                     break;
 
-                // Price low to high
+                    // Price low to high
                 case 'price_low_high':
                     $query->orderBy('price', 'ASC');
                     break;
 
-                // Price high to low
+                    // Price high to low
                 case 'price_high_low':
                     $query->orderBy('price', 'DESC');
                     break;
-                
+
                 default:
                     $query->orderByRaw('RAND()');
                     break;
@@ -160,16 +162,15 @@ class SearchComponent extends Component
         }
 
         // Set results
-        return $query->where(function($builder) use($keyword) {
-                        return $builder->where('title', 'LIKE', "%{$keyword}%")
-                        ->orWhere('description', 'LIKE', "%{$keyword}%")
-                        ->orWhereHas('tagged', function($query) use ($keyword) {
-                            return $query->where('tag_name', 'LIKE', "%{$keyword}%");
-                        });
-                    })
-                    ->paginate(42);
+        return $query->where(function ($builder) use ($keyword) {
+            return $builder->where('title', 'LIKE', "%{$keyword}%")
+                ->orWhere('description', 'LIKE', "%{$keyword}%")
+                ->orWhereHas('tagged', function ($query) use ($keyword) {
+                    return $query->where('tag_name', 'LIKE', "%{$keyword}%");
+                });
+        })
+            ->paginate(42);
     }
-
 
     /**
      * Filter data
@@ -182,7 +183,7 @@ class SearchComponent extends Component
         $queries = [];
 
         // Check if rating
-        if ($this->rating && in_array($this->rating, [1,2,3,4,5])) {
+        if ($this->rating && in_array($this->rating, [1, 2, 3, 4, 5])) {
             $queries['rating'] = $this->rating;
         }
 
@@ -205,11 +206,10 @@ class SearchComponent extends Component
         $string = Arr::query($queries);
 
         // Generate url
-        $url    = url("search?q=" . $this->q . '&' . $string);
-        
+        $url = url('search?q='.$this->q.'&'.$string);
+
         return redirect($url);
     }
-
 
     /**
      * Reset filter
@@ -219,7 +219,6 @@ class SearchComponent extends Component
     public function resetFilter()
     {
         // Reset filter
-        return redirect('search?q=' . $this->q);
+        return redirect('search?q='.$this->q);
     }
-    
 }

@@ -14,18 +14,16 @@ class SettingsCurrencyTableSeeder extends Seeder
      */
     public function run()
     {
-        
-        
-        \DB::table('settings_currency')->insert(array (
-            0 => 
-            array (
+
+
+        \DB::table('settings_currency')->insert(array(
+            0 =>
+            array(
                 'id' => 1,
-                'name' => 'US Dollar',
-                'code' => 'USD',
-                'exchange_rate' => '1',
+                'name' => 'Naira',
+                'code' => 'NGN',
+                'exchange_rate' => '465',
             ),
         ));
-        
-        
     }
 }

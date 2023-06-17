@@ -3,7 +3,7 @@
 
         {{-- Preview --}}
         <a href="{{ url('service', $gig->slug) }}" class="flex items-center justify-center overflow-hidden w-full h-52 bg-gray-100 dark:bg-zinc-700">
-            <img class="object-contain max-h-52 lazy h-52 w-auto" width="200" src="{{ placeholder_img() }}" data-src="{{ src($gig->thumbnail) }}" alt="{{ $gig->title }}">
+            <img class="object-contain max-h-52 lazy h-52 w-auto" width="200" src="{{ placeholder_img() }}" data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
         </a>
 
         {{-- Gig content --}}
@@ -15,7 +15,7 @@
                     <a href="{{ url('profile', $gig->owner->username) }}" target="_blank" class="flex-shrink-0 group block">
                         <div class="flex items-center">
                             <span class="inline-block relative">
-                                <img class="h-6 w-6 rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($gig->owner->avatar) }}" alt="{{ $gig->owner->username }}">
+                                <img class="h-6 w-6 rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
                             </span>
                         <div class="ltr:ml-3 rtl:mr-3">
                             <div class="text-gray-500 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-300 flex items-center mb-0.5 font-extrabold tracking-wide text-[13px]">

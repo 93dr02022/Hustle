@@ -2,26 +2,30 @@
 
 namespace App\Http\Livewire\Admin\Subcategories\Options;
 
-use Livewire\Component;
+use App\Http\Validators\Admin\Subcategories\CreateValidator;
 use App\Models\Category;
-use WireUi\Traits\Actions;
 use App\Models\Subcategory;
-use Livewire\WithFileUploads;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Subcategories\CreateValidator;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class CreateComponent extends Component
 {
-
     use WithFileUploads, SEOToolsTrait, Actions;
 
     public $name;
+
     public $slug;
+
     public $description;
+
     public $icon;
+
     public $image;
+
     public $parent_id;
 
     /**
@@ -36,10 +40,9 @@ class CreateComponent extends Component
         $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.subcategories.options.create', [
-            'categories' => $this->categories
+            'categories' => $this->categories,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get all parent categories
@@ -50,7 +53,6 @@ class CreateComponent extends Component
     {
         return Category::orderBy('name')->get();
     }
-
 
     /**
      * Create new subcategory
@@ -79,14 +81,14 @@ class CreateComponent extends Component
             }
 
             // Save subcategory
-            $subcategory              = new Subcategory();
-            $subcategory->uid         = uid();
-            $subcategory->name        = $this->name;
-            $subcategory->slug        = Str::slug($this->slug);
+            $subcategory = new Subcategory();
+            $subcategory->uid = uid();
+            $subcategory->name = $this->name;
+            $subcategory->slug = Str::slug($this->slug);
             $subcategory->description = $this->description ? $this->description : null;
-            $subcategory->icon_id     = $icon_id;
-            $subcategory->image_id    = $image_id;
-            $subcategory->parent_id  = $this->parent_id;
+            $subcategory->icon_id = $icon_id;
+            $subcategory->image_id = $image_id;
+            $subcategory->parent_id = $this->parent_id;
             $subcategory->save();
 
             // Reset form
@@ -94,17 +96,17 @@ class CreateComponent extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
@@ -112,9 +114,9 @@ class CreateComponent extends Component
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;

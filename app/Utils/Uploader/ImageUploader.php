@@ -2,43 +2,43 @@
 
 namespace App\Utils\Uploader;
 
-use DB;
-use Image;
 use App\Models\FileManager;
+use DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Image;
 
 class ImageUploader
 {
-
     private static $image;
+
     private $folder;
+
     private static $extension = 'webp';
 
     /**
      * Initialize image maker
      *
-     * @param object $image
-     * @return object
+     * @param  object  $image
+     * @return  static  $this
      */
-    static function make($image)
+    public static function make($image)
     {
         // Make image
-        $img             = Image::make($image);
+        $img = Image::make($image);
 
         // Set selected image
-        self::$image     = $img;
+        self::$image = $img;
 
         // Return this
         return new self;
     }
 
-
     /**
      * Set folder to upload this image
      *
-     * @param string $folder
+     * @param  string  $folder
      * @return object
      */
     public function folder($folder)
@@ -47,7 +47,7 @@ class ImageUploader
         $path = public_path("storage/$folder");
 
         // Create this folder if not exists
-        if (!File::isDirectory($path)) {
+        if (! File::isDirectory($path)) {
             File::makeDirectory($path, 0755, true, true);
         }
 
@@ -58,11 +58,10 @@ class ImageUploader
         return $this;
     }
 
-
     /**
      * Set image width
      *
-     * @param integer $width
+     * @param  int  $width
      * @return object
      */
     public function resize($width, $height = null)
@@ -80,24 +79,62 @@ class ImageUploader
         return $this;
     }
 
+    /**
+     * Resize image to given dimensions
+     *
+     * @param  int  $width
+     */
+    public function size($width, $height = null)
+    {
+        $image = ImageUploader::$image;
+
+        $image->resize($width, $height, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })
+            ->encode();
+
+        return $this;
+    }
+
+    /**
+     * Create file name for image instance
+     */
+    public static function fileName()
+    {
+        return uid(25).'.'.self::$extension;
+    }
+
+    /**
+     * store the image to s3 storage
+     */
+    public function toBucket($path)
+    {
+        $fileName = self::fileName();
+        $filePath = "{$path}/{$fileName}";
+
+        Storage::disk('s3')->put($filePath, ImageUploader::$image);
+
+        return $filePath;
+    }
 
     /**
      * Set default extension
      *
-     * @param string $extension
+     * @param  string  $extension
      * @return void
      */
     public function extension($extension)
     {
         self::$extension = $extension;
+
         return $this;
     }
-
 
     /**
      * Delete old file by id
      *
-     * @param integer $id
+     * @param  int  $id
      * @return object
      */
     public function deleteById($id)
@@ -134,41 +171,40 @@ class ImageUploader
         }
     }
 
-
     /**
      * Upload selected file
      *
-     * @return integer
+     * @return int
      */
     public function handle()
     {
         // Get image
-        $image                = ImageUploader::$image;
+        $image = ImageUploader::$image;
 
         // Generate unique file id
-        $uid                  = uid();
+        $uid = uid();
 
         // Generate file name
-        $name                 = $uid . "." . self::$extension;
+        $name = $uid.'.'.self::$extension;
 
         // Get mime type
-        $mime                 = $image->mime();
+        $mime = $image->mime();
 
         // Set path
-        $path                 = public_path("storage/$this->folder/$name");
+        $path = public_path("storage/$this->folder/$name");
 
         // Save image in local storage
         $image->save($path, 80, self::$extension);
 
         // Get uploaded file size
-        $size                 = File::size($path);
+        $size = File::size($path);
 
         // Save file
-        $file                 = new FileManager();
-        $file->uid            = $uid;
-        $file->file_folder    = $this->folder;
-        $file->file_size      = $size;
-        $file->file_mimetype  = $mime;
+        $file = new FileManager();
+        $file->uid = $uid;
+        $file->file_folder = $this->folder;
+        $file->file_size = $size;
+        $file->file_mimetype = $mime;
         $file->file_extension = self::$extension;
         $file->save();
 
@@ -179,42 +215,41 @@ class ImageUploader
     /**
      * Save image from url
      *
-     * @param string $url
-     * @return integer
+     * @param  string  $url
+     * @return int
      */
     public static function fromUrl($url, $folder)
     {
-
         try {
 
             // Get image contents
-            $contents             = file_get_contents($url);
+            $contents = file_get_contents($url);
 
             // Generate unique file id
-            $uid                  = uid();
+            $uid = uid();
 
             // Generate file name
-            $name                 = "$uid.jpg";
+            $name = "$uid.jpg";
 
             // Get mime type
-            $mime                 = 'image/jpeg';
+            $mime = 'image/jpeg';
 
             // Set path
-            $path                 = public_path("storage/$folder/$name");
+            $path = public_path("storage/$folder/$name");
 
             // Save image in local storage
             Storage::disk('custom')->put("$folder/$name", $contents);
 
             // Get uploaded file size
-            $size                 = File::size($path);
+            $size = File::size($path);
 
             // Save file
-            $file                 = new FileManager();
-            $file->uid            = $uid;
-            $file->file_folder    = $folder;
-            $file->file_size      = $size;
-            $file->file_mimetype  = $mime;
-            $file->file_extension = "jpg";
+            $file = new FileManager();
+            $file->uid = $uid;
+            $file->file_folder = $folder;
+            $file->file_size = $size;
+            $file->file_mimetype = $mime;
+            $file->file_extension = 'jpg';
             $file->save();
 
             // Return file id

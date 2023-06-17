@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire\Admin\Projects\Bids;
 
-use Livewire\Component;
+use App\Http\Validators\Admin\Projects\Bids\RejectValidator;
 use App\Models\ProjectBid;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Models\ProjectBidUpgrade;
 use App\Models\ProjectReportedBid;
 use App\Notifications\User\Everyone\YourBidApproved;
 use App\Notifications\User\Everyone\YourBidRejected;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Projects\Bids\RejectValidator;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class BidsComponent extends Component
 {
@@ -27,14 +27,13 @@ class BidsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_bids'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_bids'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.projects.bids.bids', [
-            'bids' => $this->bids
+            'bids' => $this->bids,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of bids
@@ -46,17 +45,16 @@ class BidsComponent extends Component
         return ProjectBid::with(['project', 'user', 'upgrades'])->latest()->paginate(42);
     }
 
-
     /**
      * Approve a bid
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function approve($id)
     {
         try {
-                
+
             // Get bid
             $bid = ProjectBid::whereStatus('pending_approval')->whereId($id)->firstOrFail();
 
@@ -68,38 +66,37 @@ class BidsComponent extends Component
             $bid->user->notify(new YourBidApproved($bid));
 
             // Close modal
-            $this->dispatchBrowserEvent('close-modal', 'modal-approve-bid-container-' . $bid->uid);
+            $this->dispatchBrowserEvent('close-modal', 'modal-approve-bid-container-'.$bid->uid);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
 
-
     /**
      * Reject bid
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function reject($id)
     {
         try {
-                
+
             // Get bid
             $bid = ProjectBid::whereStatus('pending_approval')->whereId($id)->firstOrFail();
 
@@ -107,7 +104,7 @@ class BidsComponent extends Component
             RejectValidator::validate($this);
 
             // Reject bid
-            $bid->status                 = 'rejected';
+            $bid->status = 'rejected';
             $bid->admin_rejection_reason = $this->rejection_reason;
             $bid->save();
 
@@ -118,52 +115,50 @@ class BidsComponent extends Component
             $this->reset('rejection_reason');
 
             // Close modal
-            $this->dispatchBrowserEvent('close-modal', 'modal-reject-bid-container-' . $bid->uid);
+            $this->dispatchBrowserEvent('close-modal', 'modal-reject-bid-container-'.$bid->uid);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
-        }catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
 
-
     /**
      * Delete bid
      *
-     * @param int $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
     {
         try {
-            
+
             // Get bid
             $bid = ProjectBid::where('id', $id)->firstOrFail();
-            
+
             // Delete reports
             ProjectReportedBid::where('bid_id', $id)->delete();
 
@@ -174,25 +169,24 @@ class BidsComponent extends Component
             $bid->delete();
 
             // Close modal
-            $this->dispatchBrowserEvent('close-modal', 'modal-delete-bid-container-' . $bid->uid);
+            $this->dispatchBrowserEvent('close-modal', 'modal-delete-bid-container-'.$bid->uid);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Throwable $th) {
-            
+
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => $th->getMessage(),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
         }
     }
-    
 }

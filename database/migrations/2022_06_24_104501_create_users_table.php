@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 60)->nullable();
             $table->enum('account_type', ['seller', 'buyer'])->default('buyer');
-            $table->unsignedBigInteger('avatar_id')->nullable();
-            $table->unsignedBigInteger('level_id')->nullable();
+            $table->string('avatar_id')->nullable();
+            $table->foreignId('level_id')->nullable()->constrained();
             $table->string('provider_name', 60)->nullable();
             $table->string('provider_id', 60)->nullable();
 
@@ -43,16 +43,12 @@ return new class extends Migration
             $table->timestamp('last_activity')->nullable();
             $table->timestamps();
 
-            $table->foreignId('country_id')->nullable()->index();
+            $table->foreignId('country_id')->nullable()->constrained();
             $table->foreignId('state_id')->nullable()->index();
             $table->string('city')->nullable()->index();
             $table->string('post_code')->nullable()->index();
             $table->mediumText('address')->nullable();
             $table->string('local_government_zone')->nullable();
-
-            $table->foreign('avatar_id')->references('id')->on('file_manager');
-            $table->foreign('level_id')->references('id')->on('levels');
-            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

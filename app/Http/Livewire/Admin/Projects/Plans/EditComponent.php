@@ -2,23 +2,30 @@
 
 namespace App\Http\Livewire\Admin\Projects\Plans;
 
-use Livewire\Component;
-use WireUi\Traits\Actions;
+use App\Http\Validators\Admin\Projects\Plans\EditValidator;
 use App\Models\ProjectPlan;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use App\Http\Validators\Admin\Projects\Plans\EditValidator;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class EditComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
     public $title;
+
     public $description;
+
     public $price;
+
     public $days;
+
     public $badge_text_color;
+
     public $badge_bg_color;
+
     public $is_active;
+
     public $plan;
 
     /**
@@ -33,19 +40,18 @@ class EditComponent extends Component
 
         // fill form
         $this->fill([
-            'title'            => $plan->title,
-            'description'      => $plan->description,
-            'price'            => $plan->price,
-            'days'             => $plan->days,
+            'title' => $plan->title,
+            'description' => $plan->description,
+            'price' => $plan->price,
+            'days' => $plan->days,
             'badge_text_color' => $plan->badge_text_color,
-            'badge_bg_color'   => $plan->badge_bg_color,
-            'is_active'        => $plan->is_active ? 1 : 0
+            'badge_bg_color' => $plan->badge_bg_color,
+            'is_active' => $plan->is_active ? 1 : 0,
         ]);
 
         // Set plan
         $this->plan = $plan;
     }
-
 
     /**
      * Render component
@@ -55,12 +61,11 @@ class EditComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_edit_project_plan'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_edit_project_plan'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.projects.plans.edit')->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Update plan
@@ -73,47 +78,44 @@ class EditComponent extends Component
 
             // Validate form
             EditValidator::validate($this);
-            
+
             // Update plan
-            $this->plan->title            = $this->title;
-            $this->plan->description      = $this->description;
-            $this->plan->price            = $this->price;
-            $this->plan->days             = $this->plan->type === 'alert' ? null : $this->days;
+            $this->plan->title = $this->title;
+            $this->plan->description = $this->description;
+            $this->plan->price = $this->price;
+            $this->plan->days = $this->plan->type === 'alert' ? null : $this->days;
             $this->plan->badge_text_color = $this->badge_text_color;
-            $this->plan->badge_bg_color   = $this->badge_bg_color;
-            $this->plan->is_active        = $this->is_active ? 1 : 0;
+            $this->plan->badge_bg_color = $this->badge_bg_color;
+            $this->plan->is_active = $this->is_active ? 1 : 0;
             $this->plan->save();
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_toast_operation_success'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

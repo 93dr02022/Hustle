@@ -2,22 +2,27 @@
 
 namespace App\Http\Livewire\Admin\Gigs\Options\Steps;
 
-use App\Models\Gig;
-use Livewire\Component;
-use App\Models\GigUpgrade;
-use WireUi\Traits\Actions;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use App\Http\Validators\Admin\Gigs\Edit\PricingValidator;
+use App\Models\Gig;
+use App\Models\GigUpgrade;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class Pricing extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $price;
+
     public $delivery_time;
+
     public $currency_symbol;
-    public $upgrades             = [];
-    public $add_upgrade          = [];
+
+    public $upgrades = [];
+
+    public $add_upgrade = [];
+
     public $available_deliveries = [];
 
     public $gig;
@@ -25,7 +30,7 @@ class Pricing extends Component
     /**
      * Init component
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function mount(Gig $gig)
@@ -35,14 +40,14 @@ class Pricing extends Component
 
         // Set gig upgrades
         if ($gig->upgrades()->count()) {
-            
+
             // Loop through upgrades
             foreach ($gig->upgrades as $upgrade) {
 
                 // Add this upgrade to list
                 array_push($this->upgrades, [
-                    'title'      => $upgrade->title,
-                    'price'      => $upgrade->price,
+                    'title' => $upgrade->title,
+                    'price' => $upgrade->price,
                     'extra_days' => $upgrade->extra_days,
                 ]);
 
@@ -52,8 +57,8 @@ class Pricing extends Component
 
         // Fill form
         $this->fill([
-            'price'         => $gig->price,
-            'delivery_time' => $gig->delivery_time
+            'price' => $gig->price,
+            'delivery_time' => $gig->delivery_time,
         ]);
 
         // Set available deliveries dates
@@ -68,11 +73,11 @@ class Pricing extends Component
             ['value' => 7, 'text' => __('messages.t_1_week')],
             ['value' => 14, 'text' => __('messages.t_2_weeks')],
             ['value' => 21, 'text' => __('messages.t_3_weeks')],
-            ['value' => 30, 'text' => __('messages.t_1_month')]
+            ['value' => 30, 'text' => __('messages.t_1_month')],
         ];
 
         // Get default currency
-        $currency              = settings('currency');
+        $currency = settings('currency');
 
         // Set currency symbol
         $this->currency_symbol = isset(config('money')[$currency->code]['symbol']) ? config('money')[$currency->code]['symbol'] : $currency->code;
@@ -86,12 +91,11 @@ class Pricing extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_edit_pricing'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_edit_pricing'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.gigs.options.steps.pricing');
     }
-
 
     /**
      * Init select2 on upgrades changes
@@ -102,11 +106,10 @@ class Pricing extends Component
     {
         // Reload select2
         $this->dispatchBrowserEvent('pharaonic.select2.load', [
-            'target'    => '.select2_pricing',
-            'component' => $this->id
+            'target' => '.select2_pricing',
+            'component' => $this->id,
         ]);
     }
-
 
     /**
      * Add a service upgrade
@@ -123,8 +126,8 @@ class Pricing extends Component
 
             // Set upgrade
             $upgrade = [
-                'title'      => $this->add_upgrade['title'],
-                'price'      => $this->add_upgrade['price'],
+                'title' => $this->add_upgrade['title'],
+                'price' => $this->add_upgrade['price'],
                 'extra_days' => isset($this->add_upgrade['extra_days']) ? $this->add_upgrade['extra_days'] : 0,
             ];
 
@@ -139,62 +142,59 @@ class Pricing extends Component
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             // Scroll to see this upgrade
-            $this->dispatchBrowserEvent('scrollTo', 'scroll-to-upgrade-id-' . array_key_last($this->upgrades));
+            $this->dispatchBrowserEvent('scrollTo', 'scroll-to-upgrade-id-'.array_key_last($this->upgrades));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Remove select upgrade from list
      *
-     * @param integer $key
+     * @param  int  $key
      * @return void
      */
     public function removeUpgrade($key)
     {
         // Check if upgrade exists in list
         if (isset($this->upgrades[$key])) {
-            
+
             // Delete upgrade from list
             unset($this->upgrades[$key]);
 
@@ -202,11 +202,10 @@ class Pricing extends Component
 
         // Reload select2
         $this->dispatchBrowserEvent('pharaonic.select2.load', [
-            'target'    => '.select2_pricing',
-            'component' => $this->id
+            'target' => '.select2_pricing',
+            'component' => $this->id,
         ]);
     }
-
 
     /**
      * Go back to preview step
@@ -216,9 +215,8 @@ class Pricing extends Component
     public function back()
     {
         // Go back to preview step
-        return redirect( config('global.dashboard_prefix') . "/gigs/edit/" . $this->gig->uid . "?step=overview" );
+        return redirect(config('global.dashboard_prefix').'/gigs/edit/'.$this->gig->uid.'?step=overview');
     }
-
 
     /**
      * Save pricing data section
@@ -237,61 +235,58 @@ class Pricing extends Component
 
             // Create new upgrades
             foreach ($this->upgrades as $upgrade) {
-                
+
                 // Save uprade
                 GigUpgrade::create([
-                    'uid'        => uid(),
-                    'gig_id'     => $this->gig->id,
-                    'title'      => $upgrade['title'],
-                    'price'      => $upgrade['price'],
+                    'uid' => uid(),
+                    'gig_id' => $this->gig->id,
+                    'title' => $upgrade['title'],
+                    'price' => $upgrade['price'],
                     'extra_days' => isset($upgrade['extra_days']) ? $upgrade['extra_days'] : 0,
                 ]);
 
             }
 
             // Update gig
-            $this->gig->price         = $this->price;
+            $this->gig->price = $this->price;
             $this->gig->delivery_time = $this->delivery_time;
             $this->gig->save();
 
             // Success
-            return redirect( config('global.dashboard_prefix') . "/gigs/edit/" . $this->gig->uid . "?step=requirements" )->with('success', __('messages.t_pricing_section_has_been_saved'));
+            return redirect(config('global.dashboard_prefix').'/gigs/edit/'.$this->gig->uid.'?step=requirements')->with('success', __('messages.t_pricing_section_has_been_saved'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload Select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             // Reload Select2
             $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'target'    => '.select2_pricing',
-                'component' => $this->id
+                'target' => '.select2_pricing',
+                'component' => $this->id,
             ]);
 
             throw $th;
-
         }
     }
-    
 }

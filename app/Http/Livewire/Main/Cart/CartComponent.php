@@ -3,15 +3,15 @@
 namespace App\Http\Livewire\Main\Cart;
 
 use App\Models\Gig;
-use Livewire\Component;
 use App\Models\GigUpgrade;
-use WireUi\Traits\Actions;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class CartComponent extends Component
 {
     use SEOToolsTrait, Actions;
-    
+
     public $cart;
 
     /**
@@ -25,7 +25,6 @@ class CartComponent extends Component
         $this->cart = session('cart', []);
     }
 
-
     /**
      * Render component
      *
@@ -34,39 +33,38 @@ class CartComponent extends Component
     public function render()
     {
         // SEO
-        $separator   = settings('general')->separator;
-        $title       = __('messages.t_my_cart') . " $separator " . settings('general')->title;
+        $separator = settings('general')->separator;
+        $title = __('messages.t_my_cart')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
-        $ogimage     = src( settings('seo')->ogimage );
+        $ogimage = src(settings('seo')->ogimage);
 
-        $this->seo()->setTitle( $title );
-        $this->seo()->setDescription( $description );
-        $this->seo()->setCanonical( url()->current() );
-        $this->seo()->opengraph()->setTitle( $title );
-        $this->seo()->opengraph()->setDescription( $description );
-        $this->seo()->opengraph()->setUrl( url()->current() );
+        $this->seo()->setTitle($title);
+        $this->seo()->setDescription($description);
+        $this->seo()->setCanonical(url()->current());
+        $this->seo()->opengraph()->setTitle($title);
+        $this->seo()->opengraph()->setDescription($description);
+        $this->seo()->opengraph()->setUrl(url()->current());
         $this->seo()->opengraph()->setType('website');
-        $this->seo()->opengraph()->addImage( $ogimage );
-        $this->seo()->twitter()->setImage( $ogimage );
-        $this->seo()->twitter()->setUrl( url()->current() );
-        $this->seo()->twitter()->setSite( "@" . settings('seo')->twitter_username );
+        $this->seo()->opengraph()->addImage($ogimage);
+        $this->seo()->twitter()->setImage($ogimage);
+        $this->seo()->twitter()->setUrl(url()->current());
+        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
         $this->seo()->metatags()->addMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1', 'name');
-        $this->seo()->jsonLd()->setTitle( $title );
-        $this->seo()->jsonLd()->setDescription( $description );
-        $this->seo()->jsonLd()->setUrl( url()->current() );
+        $this->seo()->jsonLd()->setTitle($title);
+        $this->seo()->jsonLd()->setDescription($description);
+        $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.cart.cart')->extends('livewire.main.layout.app')->section('content');
     }
-    
 
     /**
      * Remove item from cart
      *
-     * @param string $id
+     * @param  string  $id
      * @return void
      */
     public function remove($id)
@@ -76,13 +74,13 @@ class CartComponent extends Component
 
         // Loop through cart
         foreach ($cart as $key => $item) {
-            
+
             // Check if item exists in cart
             if ($item['id'] === $id) {
-                
+
                 // Delete item from cart
                 unset($cart[$key]);
-                
+
                 // Break
                 break;
 
@@ -104,18 +102,17 @@ class CartComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_item_removed_from_cart_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Count total price of an item in cart
      *
-     * @param string $id
-     * @return integer
+     * @param  string  $id
+     * @return int
      */
     public function itemTotalPrice($id)
     {
@@ -124,18 +121,17 @@ class CartComponent extends Component
 
         // Loop throug items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Check if item exists
             if ($item['id'] === $id) {
-                
+
                 // Get quantity
                 $quantity = (int) $item['quantity'];
 
                 // Sum upgrades total price
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
-                    $total_upgrades_price = array_reduce($item['upgrades'], function($i, $obj)
-                    {
+
+                    $total_upgrades_price = array_reduce($item['upgrades'], function ($i, $obj) {
                         // Calculate only selected upgrades
                         if ($obj['checked'] == true) {
                             return $i += $obj['price'];
@@ -164,11 +160,10 @@ class CartComponent extends Component
 
     }
 
-
     /**
      * Calculate subtotal price
      *
-     * @return integer
+     * @return int
      */
     public function subtotal()
     {
@@ -179,11 +174,10 @@ class CartComponent extends Component
         return $subtotal;
     }
 
-
     /**
      * Calculate taxes
      *
-     * @return integer
+     * @return int
      */
     public function taxes()
     {
@@ -192,10 +186,10 @@ class CartComponent extends Component
 
         // Check if taxes enabled
         if ($settings->enable_taxes) {
-            
+
             // Check if type of taxes percentage
             if ($settings->tax_type === 'percentage') {
-                
+
                 // Get tax amount
                 $tax = bcmul($this->total(), $settings->tax_value) / 100;
 
@@ -203,7 +197,7 @@ class CartComponent extends Component
                 return $tax;
 
             } else {
-                
+
                 // Fixed price
                 $tax = $settings->tax_value;
 
@@ -220,11 +214,10 @@ class CartComponent extends Component
         }
     }
 
-
     /**
      * Calculate total price
      *
-     * @return integer
+     * @return int
      */
     public function total()
     {
@@ -233,7 +226,7 @@ class CartComponent extends Component
 
         // Loop through items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
 
@@ -242,7 +235,6 @@ class CartComponent extends Component
         // Return total price
         return $total;
     }
-
 
     /**
      * Now time to checkout
@@ -257,32 +249,32 @@ class CartComponent extends Component
 
         // Loop through items in cart
         foreach ($cart as $key => $item) {
-            
+
             // Get gig
             $gig = Gig::where('uid', $item['id'])->where('status', 'active')->first();
 
             // Check if gig exists
             if ($gig) {
-                
+
                 // Check if cart item has upgrades
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
+
                     // We need to loop inside upgrades to make sure they exist
                     foreach ($item['upgrades'] as $index => $upgrade_id) {
-                        
+
                         // Get upgrade
                         $upgrade = GigUpgrade::where('uid', $upgrade_id['id'])->where('gig_id', $gig->id)->first();
 
                         // Check if upgrade exists
                         if ($upgrade) {
-                            
+
                             // Check if upgrade selected
                             if ($upgrade_id['checked']) {
-                                
+
                                 // Upgrade exist, update price, title, extra days
-                                $cart[$key]['upgrades'][$index]['id']       = $upgrade->uid;
-                                $cart[$key]['upgrades'][$index]['title']    = $upgrade->title;
-                                $cart[$key]['upgrades'][$index]['price']    = $upgrade->price;
+                                $cart[$key]['upgrades'][$index]['id'] = $upgrade->uid;
+                                $cart[$key]['upgrades'][$index]['title'] = $upgrade->title;
+                                $cart[$key]['upgrades'][$index]['price'] = $upgrade->price;
                                 $cart[$key]['upgrades'][$index]['delivery'] = $upgrade->extra_days;
 
                             } else {
@@ -312,9 +304,9 @@ class CartComponent extends Component
 
                             // Show error message
                             $this->notification([
-                                'title'       => __('messages.t_error'),
+                                'title' => __('messages.t_error'),
                                 'description' => __('messages.t_an_upgrade_in_item_in_cart_not_found'),
-                                'icon'        => 'error'
+                                'icon' => 'error',
                             ]);
 
                             // Return back
@@ -332,20 +324,20 @@ class CartComponent extends Component
                 }
 
                 // Check quantity must be between 1 and 10
-                if (!in_array($cart[$key]['quantity'], range(1, 10))) {
-                    
+                if (! in_array($cart[$key]['quantity'], range(1, 10))) {
+
                     // Quantity must be between 1 and 10
                     $this->notification([
-                        'title'       => __('messages.t_error'),
+                        'title' => __('messages.t_error'),
                         'description' => __('messages.t_selected_quantity_is_not_correct'),
-                        'icon'        => 'error'
+                        'icon' => 'error',
                     ]);
 
                     // Return back
                     return;
 
                 }
-                
+
             } else {
 
                 // In this case this item no longer exists
@@ -365,9 +357,9 @@ class CartComponent extends Component
 
                 // Show error message
                 $this->notification([
-                    'title'       => __('messages.t_error'),
+                    'title' => __('messages.t_error'),
                     'description' => __('messages.t_an_item_in_your_cart_doesnot_exist'),
-                    'icon'        => 'error'
+                    'icon' => 'error',
                 ]);
 
                 // Return back
@@ -390,5 +382,4 @@ class CartComponent extends Component
         // Now go to checkout
         return redirect('checkout');
     }
-    
 }

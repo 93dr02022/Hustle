@@ -6,7 +6,6 @@ use Livewire\Component;
 
 class Header extends Component
 {
-
     /**
      * Render component
      *
@@ -16,5 +15,4 @@ class Header extends Component
     {
         return view('livewire.admin.includes.header');
     }
-    
 }

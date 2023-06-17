@@ -4,40 +4,40 @@ namespace App\Http\Livewire\Main\Newsletter;
 
 use App\Mail\User\Everyone\NewsletterApproved;
 use App\Models\NewsletterVerification;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use Mail;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class VerifyComponent extends Component
 {
     use SEOToolsTrait;
-    
+
     public $token;
 
     protected $queryString = [
-        'token' => ['as' => 'id']
+        'token' => ['as' => 'id'],
     ];
 
     /**
      * Init component
      *
-     * @param string $slug
+     * @param  string  $slug
      * @return void
      */
     public function mount()
     {
-        
+
         // Get email
         $verification = NewsletterVerification::where('token', $this->token)->first();
 
         // Check if it exists
-        if (!$verification) {
+        if (! $verification) {
             return redirect('/');
         }
 
         // Verify email
         $verification->list->update([
-            'status' => "verified"
+            'status' => 'verified',
         ]);
 
         // Send welcome message
@@ -49,5 +49,4 @@ class VerifyComponent extends Component
         // Success
         return redirect('/');
     }
-    
 }

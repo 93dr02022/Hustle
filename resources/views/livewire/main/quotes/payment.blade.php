@@ -56,27 +56,36 @@
                                 <tbody>
                                     @foreach ($quotation->items as $item)
                                     <tr class="[&>td]:px-6 [&>td]:py-3">
-                                        <td class="font-medium text-sm dark:text-gray-300">{{ $item->description }}</td>
-                                        <td class="font-medium text-sm dark:text-gray-300">{{ $item->quantity }}</td>
-                                        <td class="font-medium text-sm dark:text-gray-300">{{ $item->taxed_price }}</td>
-                                        <td class="font-medium text-sm dark:text-gray-300">{{ $item->discount }}</td>
-                                        <td class="font-medium text-sm dark:text-gray-300">{{ $item->total_price }}</td>
+                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->description }}</td>
+                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->quantity }}</td>
+                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->taxed_price }}</td>
+                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->discount }}</td>
+                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->total_price }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    <tr class="border-t dark:border-gray-600">
-                                        <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Total</th>
-                                        <th class="px-6 pt-4 pb-0.5 w-32 text-right">{{ $quotation->total }}</th>
-                                    </tr>
-
-                                    <tr class="text-lg">
-                                        <th colspan="4" class="px-6 py-0.5 text-right">Grand Total</th>
-                                        <th class="px-6 py-0.5 w-32 text-right">{{ $quotation->total }}</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
+
+                        {{-- Quotation payment total and grand total --}}
+                        <table width="100%">
+                            <tr class="border-t dark:border-gray-600">
+                                <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Total</th>
+                                <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total, settings('currency')->code, true)</th>
+                            </tr>
+
+                            <tr class="border-t dark:border-gray-600">
+                                <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Tax</th>
+                                <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total_tax, settings('currency')->code, true)</th>
+                            </tr>
+
+                            <tr class="text-lg">
+                                <th colspan="4" class="px-6 py-0.5 text-right">Grand Total</th>
+                                <th class="px-6 py-0.5 w-32 font-medium text-right">
+                                    @money($quotation->total + $quotation->total_tax, settings('currency')->code, true)
+                                </th>
+                            </tr>
+                        </table>
                     </div>
 
                     {{-- proceed to payment button --}}
@@ -131,7 +140,7 @@
                                             <dt class="text-gray-600 dark:text-gray-300">
                                                 Total </dt>
                                             <dd class="font-medium text-gray-500 dark:text-gray-300">
-                                                @money($quotation->total, 'NGN', true)
+                                                @money($toPay, settings('currency')->code, true)
                                             </dd>
                                         </div>
                                     </dl>
@@ -198,7 +207,7 @@
                     let handler = PaystackPop.setup({
                         key     : "{{ config('paystack.publicKey') }}",
                         email   : "{{ $quotation?->email }}",
-                        amount  : Number({{ $quotation?->total ?? 0 }}) * 100,
+                        amount  : Number({{ $toPay }}) * 100,
                         currency: "{{ settings('paystack')->currency }}",
                         ref     : '{{ uid(32) }}',
                         onClose : function(){

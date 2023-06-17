@@ -6,14 +6,12 @@ use Livewire\Component;
 
 class Steps extends Component
 {
-
     public $current_step;
-
 
     /**
      * Initialize component
      *
-     * @param string $current
+     * @param  string  $current
      * @return void
      */
     public function mount($current)
@@ -32,13 +30,12 @@ class Steps extends Component
             case 'gallery':
                 $this->current_step = 4;
                 break;
-            
+
             default:
                 $this->current_step = 1;
                 break;
         }
     }
-
 
     /**
      * Render component
@@ -49,5 +46,4 @@ class Steps extends Component
     {
         return view('livewire.main.create.steps');
     }
-    
 }

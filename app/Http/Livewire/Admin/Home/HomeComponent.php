@@ -9,26 +9,38 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\UserWithdrawalHistory;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class HomeComponent extends Component
 {
     use SEOToolsTrait;
 
     public $net_income;
+
     public $income_from_taxes;
+
     public $income_from_commission;
+
     public $withdrawn_money;
+
     public $total_sales;
+
     public $total_gigs;
+
     public $total_users;
+
     public $total_messages;
+
     public $visits_by_countries;
+
     public $latest_users;
+
     public $browsers;
+
     public $os;
+
     public $devices;
 
     /**
@@ -38,9 +50,9 @@ class HomeComponent extends Component
      */
     public function mount()
     {
-     
+
         // Calculate net income
-        $this->net_income = Order::whereHas('items', function($query) {
+        $this->net_income = Order::whereHas('items', function ($query) {
             return $query->whereIn('status', ['pending', 'proceeded', 'delivered']);
         })->sum('total_value');
 
@@ -67,38 +79,36 @@ class HomeComponent extends Component
 
         // Get visits by countries
         $this->visits_by_countries = GigVisit::whereNotNull('country_code')
-                                            ->select('country_code',DB::raw('COUNT(country_code) as count'))
-                                            ->groupBy('country_code')
-                                            ->orderBy('count', 'desc')
-                                            ->get();
+            ->select('country_code', DB::raw('COUNT(country_code) as count'))
+            ->groupBy('country_code')
+            ->orderBy('count', 'desc')
+            ->get();
 
         // Get latest 10 users
         $this->latest_users = User::latest()->take(10)->get();
 
         // Get top browsers
-        $this->browsers  = GigVisit::whereNotNull('browser_name')
-                            ->select('browser_name',DB::raw('COUNT(browser_name) as count'))
-                            ->groupBy('browser_name')
-                            ->orderBy('count', 'desc')
-                            ->get();
+        $this->browsers = GigVisit::whereNotNull('browser_name')
+            ->select('browser_name', DB::raw('COUNT(browser_name) as count'))
+            ->groupBy('browser_name')
+            ->orderBy('count', 'desc')
+            ->get();
 
         // Get top os
-        $this->os  = GigVisit::whereNotNull('os_name')
-                            ->select('os_name',DB::raw('COUNT(os_name) as count'))
-                            ->groupBy('os_name')
-                            ->orderBy('count', 'desc')
-                            ->get();
+        $this->os = GigVisit::whereNotNull('os_name')
+            ->select('os_name', DB::raw('COUNT(os_name) as count'))
+            ->groupBy('os_name')
+            ->orderBy('count', 'desc')
+            ->get();
 
         // Get top devices
-        $this->devices  = GigVisit::whereNotNull('device_type')
-                            ->select('device_type',DB::raw('COUNT(device_type) as count'))
-                            ->groupBy('device_type')
-                            ->orderBy('count', 'desc')
-                            ->get();
-
+        $this->devices = GigVisit::whereNotNull('device_type')
+            ->select('device_type', DB::raw('COUNT(device_type) as count'))
+            ->groupBy('device_type')
+            ->orderBy('count', 'desc')
+            ->get();
 
     }
-
 
     /**
      * Render component
@@ -108,10 +118,9 @@ class HomeComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( __('messages.t_dashboard') . " " . settings('general')->separator . " " . settings('general')->title );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(__('messages.t_dashboard').' '.settings('general')->separator.' '.settings('general')->title);
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.home.home')->extends('livewire.admin.layout.app')->section('content');
     }
-    
 }

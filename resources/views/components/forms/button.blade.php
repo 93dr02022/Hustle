@@ -1,7 +1,7 @@
-@props(['text', 'action', 'disabled' => 'bg-gray-200 hover:bg-gray-300 text-gray-500 dark:bg-zinc-600 dark:text-zinc-400', 'active' => 'bg-primary-600 hover:bg-primary-700 text-white', 'block' => false])
+@props(['text', 'action', 'disabled' => 'bg-gray-200 hover:bg-gray-300 text-gray-500 dark:bg-zinc-600 dark:text-zinc-400', 'active' => 'bg-primary-600 hover:bg-primary-700 text-white', 'block' => false, 'usewire' => true])
 
 <button 
-    wire:click="{{ $action }}"
+    @if ($usewire) wire:click="{{ $action }}" @endif
     wire:loading.class="{{ $disabled }} cursor-not-allowed "
     wire:loading.class.remove="{{ $active }} cursor-pointer"
     wire:loading.attr="disabled"

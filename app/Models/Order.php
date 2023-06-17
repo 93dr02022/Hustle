@@ -56,6 +56,14 @@ class Order extends Model
     }
 
     /**
+     * Get the quotation the order has
+     */
+    public function quotation()
+    {
+        return $this->hasOne(Quotation::class);
+    }
+
+    /**
      * Get order items
      *
      * @return object

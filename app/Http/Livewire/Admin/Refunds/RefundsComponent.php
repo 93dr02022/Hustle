@@ -3,9 +3,9 @@
 namespace App\Http\Livewire\Admin\Refunds;
 
 use App\Models\Refund;
-use Livewire\WithPagination;
-use Livewire\Component;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class RefundsComponent extends Component
 {
@@ -19,14 +19,13 @@ class RefundsComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_refunds'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_refunds'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.refunds.refunds', [
-            'refunds' => $this->refunds
+            'refunds' => $this->refunds,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of refunds
@@ -37,5 +36,4 @@ class RefundsComponent extends Component
     {
         return Refund::latest()->paginate(42);
     }
-    
 }

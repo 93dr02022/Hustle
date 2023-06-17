@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Admin\Users;
 
 use App\Models\User;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use Livewire\WithPagination;
 use App\Notifications\User\Everyone\AccountActivated;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class UsersComponent extends Component
 {
@@ -25,10 +25,9 @@ class UsersComponent extends Component
         $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.users.users', [
-            'users' => $this->users
+            'users' => $this->users,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of users
@@ -40,33 +39,31 @@ class UsersComponent extends Component
         return User::latest()->paginate(42);
     }
 
-
     /**
      * Ban selected user
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function ban($id)
     {
         // Update user
         User::where('id', $id)->where('status', '!=', 'banned')->update([
-            'status' => 'banned'
+            'status' => 'banned',
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_user_has_been_banned_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Delete user
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -75,11 +72,10 @@ class UsersComponent extends Component
         User::where('id', $id)->delete();
     }
 
-
     /**
      * Activate account
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function activate($id)
@@ -91,14 +87,14 @@ class UsersComponent extends Component
         $user->notify((new AccountActivated)->locale(config('app.locale')));
 
         // Activate account
-        $user->status = "active";
+        $user->status = 'active';
         $user->save();
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_user_has_been_activated_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
 }

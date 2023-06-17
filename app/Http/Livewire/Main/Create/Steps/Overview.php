@@ -2,26 +2,36 @@
 
 namespace App\Http\Livewire\Main\Create\Steps;
 
-use Livewire\Component;
-use App\Models\Category;
-use WireUi\Traits\Actions;
-use App\Models\Subcategory;
 use App\Http\Validators\Main\Create\OverviewValidator;
+use App\Models\Category;
+use App\Models\Subcategory;
+use Livewire\Component;
+use WireUi\Traits\Actions;
 
 class Overview extends Component
 {
     use Actions;
-    
+
     public $title;
+
     public $category;
+
     public $subcategory;
+
     public $description;
+
     public $seo_title;
+
     public $seo_description;
+
     public $question;
+
     public $answer;
-    public $tags          = [];
-    public $faqs          = [];
+
+    public $tags = [];
+
+    public $faqs = [];
+
     public $subcategories = [];
 
     /**
@@ -30,12 +40,11 @@ class Overview extends Component
      * @return Illuminate\View\View
      */
     public function render()
-    {   
+    {
         return view('livewire.main.create.steps.overview', [
-            'categories' => $this->categories
+            'categories' => $this->categories,
         ]);
     }
-
 
     /**
      * Get all parent categories
@@ -47,11 +56,10 @@ class Overview extends Component
         return Category::orderBy('name')->get();
     }
 
-
     /**
      * Get subcategories
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function updatedCategory($id)
@@ -59,7 +67,6 @@ class Overview extends Component
         // Get all subcategories in this parent category
         $this->subcategories = Subcategory::where('parent_id', $id)->orderBy('name')->get();
     }
-
 
     /**
      * Add a FAQ to list
@@ -77,7 +84,7 @@ class Overview extends Component
             // Set faq
             $faq = [
                 'question' => $this->question,
-                'answer'   => $this->answer
+                'answer' => $this->answer,
             ];
 
             // Add this faq to list
@@ -88,58 +95,54 @@ class Overview extends Component
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_faq_added_successfully'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
 
     /**
      * Remove item from list
      *
-     * @param integer $key
+     * @param  int  $key
      * @return void
      */
     public function removeFaq($key)
     {
         // Check if item set in array
         if (isset($this->faqs[$key])) {
-            
+
             // Remove it
             unset($this->faqs[$key]);
 
         }
     }
 
-
     /**
      * Add tag to list
      *
-     * @param string $tag
      * @return void
      */
     public function addTag(string $tag)
@@ -151,7 +154,7 @@ class Overview extends Component
             OverviewValidator::tag($tag);
 
             // Clear tag
-            $clean = str_replace(['"', "'", ";", ":", "/", ",", ".", "-", "_", "&", "!"], "", $tag);
+            $clean = str_replace(['"', "'", ';', ':', '/', ',', '.', '-', '_', '&', '!'], '', $tag);
 
             // Add add tag to list
             array_push($this->tags, $clean);
@@ -163,32 +166,29 @@ class Overview extends Component
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-
 
     /**
      * Remove tag from list
      *
-     * @param string $tag
+     * @param  string  $tag
      * @return void
      */
     public function removeTag($tag)
@@ -198,7 +198,7 @@ class Overview extends Component
 
         // Check if tag exists
         if (isset($this->tags[$key])) {
-            
+
             // Delete this tag
             unset($this->tags[$key]);
 
@@ -208,7 +208,6 @@ class Overview extends Component
         }
     }
 
-
     /**
      * Save overview data section
      *
@@ -217,53 +216,50 @@ class Overview extends Component
     public function save()
     {
         try {
-            
+
             // Validate form
             OverviewValidator::all($this);
 
             // Set data
-            $data['title']           = $this->title;
-            $data['category']        = $this->category;
-            $data['subcategory']     = $this->subcategory;
-            $data['description']     = $this->description;
-            $data['seo_title']       = $this->seo_title ? $this->seo_title : null;
+            $data['title'] = $this->title;
+            $data['category'] = $this->category;
+            $data['subcategory'] = $this->subcategory;
+            $data['description'] = $this->description;
+            $data['seo_title'] = $this->seo_title ? $this->seo_title : null;
             $data['seo_description'] = $this->seo_description ? $this->seo_description : null;
-            $data['tags']            = $this->tags;
-            $data['faqs']            = $this->faqs ? $this->faqs : null;
+            $data['tags'] = $this->tags;
+            $data['faqs'] = $this->faqs ? $this->faqs : null;
 
             // Send this data to parent component
             $this->emit('data-saved-overview', $data);
 
             // Success
             $this->notification([
-                'title'       => __('messages.t_success'),
+                'title' => __('messages.t_success'),
                 'description' => __('messages.t_data_has_been_saved'),
-                'icon'        => 'success'
+                'icon' => 'success',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $e;
-
         } catch (\Throwable $th) {
 
             // Error
             $this->notification([
-                'title'       => __('messages.t_error'),
+                'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_something_went_wrong'),
-                'icon'        => 'error'
+                'icon' => 'error',
             ]);
 
             throw $th;
-
         }
     }
-    
 }

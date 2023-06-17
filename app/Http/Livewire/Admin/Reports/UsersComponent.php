@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Admin\Reports;
 
-use App\Models\User;
-use Livewire\Component;
-use WireUi\Traits\Actions;
 use App\Models\ReportedUser;
-use Livewire\WithPagination;
+use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 class UsersComponent extends Component
 {
@@ -22,7 +22,7 @@ class UsersComponent extends Component
     {
         // Mark new reports as seen
         ReportedUser::where('is_seen', false)->update([
-            'is_seen' => true
+            'is_seen' => true,
         ]);
     }
 
@@ -34,14 +34,13 @@ class UsersComponent extends Component
     public function render()
     {
         // Seo
-        $this->seo()->setTitle( setSeoTitle(__('messages.t_reported_users'), true) );
-        $this->seo()->setDescription( settings('seo')->description );
+        $this->seo()->setTitle(setSeoTitle(__('messages.t_reported_users'), true));
+        $this->seo()->setDescription(settings('seo')->description);
 
         return view('livewire.admin.reports.users', [
-            'reports' => $this->reports
+            'reports' => $this->reports,
         ])->extends('livewire.admin.layout.app')->section('content');
     }
-
 
     /**
      * Get list of reports
@@ -53,11 +52,10 @@ class UsersComponent extends Component
         return ReportedUser::latest()->paginate(42);
     }
 
-
     /**
      * Ban user
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function ban($id)
@@ -67,22 +65,21 @@ class UsersComponent extends Component
 
         // Ban user
         User::where('id', $report->reported_id)->update([
-            'status' => 'banned'
+            'status' => 'banned',
         ]);
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_user_has_been_banned_success'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-
 
     /**
      * Delete report
      *
-     * @param integer $id
+     * @param  int  $id
      * @return void
      */
     public function delete($id)
@@ -92,10 +89,9 @@ class UsersComponent extends Component
 
         // Success
         $this->notification([
-            'title'       => __('messages.t_success'),
+            'title' => __('messages.t_success'),
             'description' => __('messages.t_report_has_been_successfully_deleted'),
-            'icon'        => 'success'
+            'icon' => 'success',
         ]);
     }
-    
 }
