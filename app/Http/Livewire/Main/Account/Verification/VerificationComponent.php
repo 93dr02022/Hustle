@@ -44,6 +44,8 @@ class VerificationComponent extends Component
 
     public $accountName;
 
+    public $transferCode;
+
     /**
      * Init component
      *
@@ -70,7 +72,7 @@ class VerificationComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_verification_center')." $separator ".settings('general')->title;
+        $title = __('messages.t_verification_center') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -84,7 +86,7 @@ class VerificationComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -142,13 +144,13 @@ class VerificationComponent extends Component
             ])
             ->object();
 
-        if (! $response->status) {
+        if (!$response->status) {
             $this->toastError('Sorry error occured unable to validate your information.');
 
             return false;
         }
 
-        if (! $response->data->first_name || ! $response->data->last_name) {
+        if (!$response->data->first_name || !$response->data->last_name) {
             $this->toastError('Sorry we are unable to validate your names');
 
             return false;
@@ -167,7 +169,7 @@ class VerificationComponent extends Component
             ->get("https://api.paystack.co/bank/resolve?account_number={$this->accountNumber}&bank_code={$this->bank}")
             ->object();
 
-        if (! $response->status) {
+        if (!$response->status) {
             $this->toastError('Sorry error occured unable to validate your information.');
 
             return false;
@@ -178,7 +180,7 @@ class VerificationComponent extends Component
             $this->last_name,
         ], true);
 
-        if (! $containsAll) {
+        if (!$containsAll) {
             $this->toastError('Sorry we are unable to validate your names');
 
             return false;
@@ -188,21 +190,47 @@ class VerificationComponent extends Component
     }
 
     /**
+     * Create Paystack Transfer code for recipient
+     */
+    public function paystackRecipient()
+    {
+        $response = Http::withToken(config('paystack.secretKey'))
+            ->post("https://api.paystack.co/transferrecipient", [
+                'type' => 'nuban',
+                'name' => "{$this->first_name} {$this->last_name}",
+                'account_number' => $this->accountNumber,
+                'bank_code' =>  $this->bank,
+                'currency' => 'NGN',
+            ])
+            ->object();
+
+        if (!$response->status) {
+            $this->toastError('Sorry error occured unable to validate your information.');
+
+            return false;
+        }
+
+        return $response->data->recipient_code;
+    }
+
+    /**
      * Very the seller supplied account information
      */
     public function verify()
     {
-        if ($this->bvn && ! $this->bvnMatch()) {
+        if ($this->bvn && !$this->bvnMatch()) {
             return;
         }
 
         $accountName = $this->accountMatch();
+        $transferCode = $this->paystackRecipient();
 
-        if (! $accountName) {
+        if (!$accountName || !$transferCode) {
             return;
         }
 
         $this->accountName = $accountName;
+        $this->transferCode = $transferCode;
 
         $this->currentStep = 2;
     }
@@ -230,16 +258,27 @@ class VerificationComponent extends Component
                 ],
             ], ['user_id'], ['document_type', 'file_selfie']);
 
-            UserWithdrawalSettings::upsert([
+            UserWithdrawalSettings::upsert(
                 [
-                    'user_id' => auth()->id(),
-                    'gateway_provider_name' => 'offline',
-                    'gateway_provider_id' => $this->accountNumber,
-                    'bank_name' => $this->getBankName(),
-                    'bank_code' => $this->bank,
-                    'account_name' => $this->accountName,
+                    [
+                        'user_id' => auth()->id(),
+                        'gateway_provider_name' => 'offline',
+                        'gateway_provider_id' => $this->accountNumber,
+                        'bank_name' => $this->getBankName(),
+                        'bank_code' => $this->bank,
+                        'transfer_code' => $this->transferCode,
+                        'account_name' => $this->accountName,
+                    ],
                 ],
-            ], ['user_id'], ['gateway_provider_id', 'bank_name', 'bank_code', 'account_name']);
+                ['user_id'],
+                [
+                    'gateway_provider_id',
+                    'bank_name',
+                    'bank_code',
+                    'transfer_code',
+                    'account_name'
+                ]
+            );
 
             // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
@@ -248,7 +287,6 @@ class VerificationComponent extends Component
             $this->toastError(__('messages.t_toast_form_validation_error'));
             throw $e;
         } catch (\Throwable $th) {
-            dd($th);
             throw $th;
         }
     }

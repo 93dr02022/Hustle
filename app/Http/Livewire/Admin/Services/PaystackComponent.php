@@ -28,12 +28,6 @@ class PaystackComponent extends Component
 
     public $deposit_fee;
 
-    public $public_key;
-
-    public $secret_key;
-
-    public $merchant_email;
-
     /**
      * Initialize component
      *
@@ -51,9 +45,6 @@ class PaystackComponent extends Component
             'currency' => $settings->currency,
             'exchange_rate' => $settings->exchange_rate,
             'deposit_fee' => $settings->deposit_fee,
-            'public_key' => config('paystack.publicKey'),
-            'secret_key' => config('paystack.secretKey'),
-            'merchant_email' => config('paystack.merchantEmail'),
         ]);
     }
 
@@ -81,46 +72,29 @@ class PaystackComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             PaystackValidator::validate($this);
 
-            // Get old settings
             $settings = settings('paystack');
 
-            // Check if request has a logo file
             if ($this->logo) {
+                $path = ImageUploader::make($this->logo)
+                    ->size(200)
+                    ->toBucket('services');
 
-                // Upload new logo
-                $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                ImageUploader::deBucket("{$settings->logo_id}");
             } else {
-
-                // Use old value
-                $logo_id = $settings->logo_id;
-
+                $path = $settings->logo_id;
             }
 
             // Save settings
             PaystackSettings::first()->update([
                 'is_enabled' => $this->is_enabled ? 1 : 0,
                 'name' => $this->name,
-                'logo_id' => $logo_id,
+                'logo_id' => $path,
                 'currency' => $this->currency,
                 'exchange_rate' => $this->exchange_rate,
                 'deposit_fee' => $this->deposit_fee,
             ]);
-
-            // Set keys
-            Config::write('paystack.publicKey', $this->public_key);
-            Config::write('paystack.secretKey', $this->secret_key);
-            Config::write('paystack.merchantEmail', $this->merchant_email);
-
-            // Clear config cache
-            Artisan::call('config:clear');
 
             // Update cache
             settings('paystack', true);
@@ -131,7 +105,6 @@ class PaystackComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

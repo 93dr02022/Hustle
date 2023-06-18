@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('user_withdrawal_history', function (Blueprint $table) {
-            $table->decimal('fee')->nullable()->after('amount');
+        Schema::create('paystack_settlements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('payment_id')->index();
+            $table->string('status')->index();
+            $table->decimal('amount', 16)->index();
+            $table->string('reference')->index();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('user_withdrawal_history', function (Blueprint $table) {
-            $table->dropColumn('fee');
-        });
+        Schema::dropIfExists('paystack_settlements');
     }
 };

@@ -47,7 +47,7 @@ class ImageUploader
         $path = public_path("storage/$folder");
 
         // Create this folder if not exists
-        if (! File::isDirectory($path)) {
+        if (!File::isDirectory($path)) {
             File::makeDirectory($path, 0755, true, true);
         }
 
@@ -91,8 +91,7 @@ class ImageUploader
         $image->resize($width, $height, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
-        })
-            ->encode();
+        });
 
         return $this;
     }
@@ -102,7 +101,7 @@ class ImageUploader
      */
     public static function fileName()
     {
-        return uid(25).'.'.self::$extension;
+        return uid(25) . '.' . self::$extension;
     }
 
     /**
@@ -113,7 +112,7 @@ class ImageUploader
         $fileName = self::fileName();
         $filePath = "{$path}/{$fileName}";
 
-        Storage::disk('s3')->put($filePath, ImageUploader::$image);
+        Storage::disk('s3')->put($filePath, ImageUploader::$image->encode());
 
         return $filePath;
     }
@@ -129,6 +128,14 @@ class ImageUploader
         self::$extension = $extension;
 
         return $this;
+    }
+
+    /**
+     * Delete image from bucket
+     */
+    public static function deBucket($path)
+    {
+        Storage::disk('s3')->delete($path);
     }
 
     /**
@@ -185,7 +192,7 @@ class ImageUploader
         $uid = uid();
 
         // Generate file name
-        $name = $uid.'.'.self::$extension;
+        $name = $uid . '.' . self::$extension;
 
         // Get mime type
         $mime = $image->mime();

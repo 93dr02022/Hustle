@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('gateway_provider_name', 20)->default('offline');
             $table->string('gateway_provider_id', 60)->nullable(); // account number
             $table->string('bank_name')->nullable()->index();
-            $table->string('bank_code')->nullable()->index();
             $table->string('account_name')->nullable()->index();
-
+            $table->string('bank_code')->nullable()->index();
+            $table->string('transfer_code')->unique();
             $table->timestamps();
         });
     }

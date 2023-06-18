@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class QuotationPaid extends Notification implements ShouldQueue
+class QuotationCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,7 +16,7 @@ class QuotationPaid extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public $quotation)
+    public function __construct()
     {
         $this->afterCommit();
     }
@@ -40,10 +40,13 @@ class QuotationPaid extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $subject = config('app.name') . ": Quotation Created.";
+
         return (new MailMessage)
+            ->subject($subject)
             ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-            ->action('You just received a new order, click button below to see order details', url("/seller/quotations"))
-            ->line('Thank you for using our application!');
+            ->line('Quotation created successfully you can now share your quotation with your buyer.')
+            ->action('Quotation Details', url('seller/quotation'));
     }
 
     /**
