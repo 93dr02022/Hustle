@@ -18,11 +18,11 @@ ENV LOG_DEPRECATIONS_CHANNEL=null
 ENV LOG_LEVEL=debug
 
 ENV DB_CONNECTION=mysql
-ENV DB_HOST=host.docker.internal
+ENV DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
 ENV DB_PORT=3306
 ENV DB_DATABASE=riverr
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=123Dollar4@
+ENV DB_USERNAME=admin
+ENV DB_PASSWORD=Y9D#6!qY7NTro6^
 
 # host: correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
 # username: admin
@@ -112,9 +112,12 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
-
 # Set permissions
-RUN chmod 777 /
+RUN chown -R www-data:www-data storage
+RUN chmod -R 777 storage 
+RUN chown -R www-data:www-data /var/www/storage
+RUN chmod -R 777 /var/www/storage
+RUN chown -R www-data:www-data docker
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -123,5 +126,8 @@ RUN composer install --no-scripts
 # RUN php artisan migrate:status
 #RUN php artisan migrate --seed --force 
 RUN php artisan optimize
+
+# Set up volume
+VOLUME /var/www/html/storage
 
 CMD php artisan serve --host=0.0.0.0 --port 80
