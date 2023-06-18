@@ -18,11 +18,11 @@ ENV LOG_DEPRECATIONS_CHANNEL=null
 ENV LOG_LEVEL=debug
 
 ENV DB_CONNECTION=mysql
-ENV DB_HOST=host.docker.internal
+ENV DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
 ENV DB_PORT=3306
 ENV DB_DATABASE=riverr
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=123Dollar4@
+ENV DB_USERNAME=admin
+ENV DB_PASSWORD=Y9D#6!qY7NTro6^
 
 
 ENV BROADCAST_DRIVER=log
@@ -82,6 +82,13 @@ RUN apk update && apk add \
     oniguruma-dev \
     curl
 
+RUN apk add --no-cache \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libwebp-dev \
+        freetype-dev \
+        nodejs 
+
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
 #RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 RUN docker-php-ext-configure gd
@@ -102,6 +109,9 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
+
+# Set permissions
+RUN chmod 777 /
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
