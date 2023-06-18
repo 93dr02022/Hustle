@@ -10,6 +10,8 @@ class PaystackEventController extends Controller
 {
     /**
      * Handle Paystack events
+     * 
+     * @todo refactor controller to use services
      */
     public function paystackEventBus(Request $request)
     {

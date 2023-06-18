@@ -18,12 +18,15 @@ ENV LOG_DEPRECATIONS_CHANNEL=null
 ENV LOG_LEVEL=debug
 
 ENV DB_CONNECTION=mysql
-ENV DB_HOST=host.docker.internal
+ENV DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
 ENV DB_PORT=3306
 ENV DB_DATABASE=riverr
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=123Dollar4@
+ENV DB_USERNAME=admin
+ENV DB_PASSWORD=Y9D#6!qY7NTro6^
 
+# host: correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
+# username: admin
+# password: Y9D#6!qY7NTro6^
 
 ENV BROADCAST_DRIVER=log
 ENV CACHE_DRIVER=file
@@ -47,11 +50,12 @@ ENV MAIL_ENCRYPTION=null
 ENV MAIL_FROM_ADDRESS="hello@example.com"
 ENV MAIL_FROM_NAME="${APP_NAME}"
 
-ENV AWS_ACCESS_KEY_ID=
-ENV AWS_SECRET_ACCESS_KEY=
+ENV AWS_ACCESS_KEY_ID=AKIA525LDBK2M3KUXK3R
+ENV AWS_SECRET_ACCESS_KEY=mzbEVDLdWPF/Ez4eumkkBh7STtrTdVx30D+arXhM
 ENV AWS_DEFAULT_REGION=us-east-1
-ENV AWS_BUCKET=
+ENV AWS_BUCKET=hustlebucket
 ENV AWS_USE_PATH_STYLE_ENDPOINT=false
+
 
 ENV PUSHER_APP_ID=
 ENV PUSHER_APP_KEY=
@@ -82,9 +86,15 @@ RUN apk update && apk add \
     oniguruma-dev \
     curl
 
+RUN apk add --no-cache \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    freetype-dev
+
+
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
-#RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-RUN docker-php-ext-configure gd
+RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
 RUN docker-php-ext-install gd
 
 
@@ -107,8 +117,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY composer.json .
 RUN composer install --no-scripts
-RUN php artisan migrate:status
-RUN php artisan migrate --seed --force 
+# RUN php artisan migrate:status
+#RUN php artisan migrate --seed --force 
 RUN php artisan optimize
 
 CMD php artisan serve --host=0.0.0.0 --port 80
