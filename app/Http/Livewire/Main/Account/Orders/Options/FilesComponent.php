@@ -57,7 +57,6 @@ class FilesComponent extends Component
 
             // Set item
             $this->item = $item;
-
         } else {
             return redirect('account/orders')->with('message', __('messages.t_u_cant_submit_requirements_for_item'));
         }
@@ -72,7 +71,7 @@ class FilesComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_delivered_work')." $separator ".settings('general')->title;
+        $title = __('messages.t_delivered_work') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -86,7 +85,7 @@ class FilesComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -148,7 +147,6 @@ class FilesComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -191,12 +189,6 @@ class FilesComponent extends Component
         $item->is_finished = true;
         $item->save();
 
-        // Give seller his money
-        $item->owner()->update([
-            'balance_pending' => convertToNumber($item->owner->balance_pending) - convertToNumber($item->profit_value),
-            'balance_available' => convertToNumber($item->owner->balance_available) + convertToNumber($item->profit_value),
-        ]);
-
         // Remove item from queue list and success sales
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');
@@ -226,7 +218,6 @@ class FilesComponent extends Component
         $item->order->buyer->notify((new BuyerOrderItemCompleted($item))->locale(config('app.locale')));
 
         // Redirect user to give a review
-        return redirect('account/reviews/create/'.$item->uid);
-
+        return redirect('account/reviews/create/' . $item->uid);
     }
 }

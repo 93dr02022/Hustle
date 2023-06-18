@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('sitemap:generate')->everyMinute();
+        $schedule->command('paystack:mark-payables')->everyMinute();
         $schedule->command('orders:complete')->daily();
         $schedule->command('sellers:unavailable')->daily();
         $schedule->command('expired:bids')->daily();
@@ -29,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('user_withdrawal_history', function (Blueprint $table) {
             $table->id();
-            $table->string('uid', 20)->unique();
-            $table->unsignedBigInteger('user_id');
-            $table->string('gateway_provider_name', 20)->default('paypal');
-            $table->string('gateway_provider_id', 60);
+            $table->string('uid', 50)->unique();
+            $table->foreignId('user_id')->constrained();
+            $table->string('gateway_provider_name', 20)->default('offline');
+            $table->string('gateway_provider_id', 10);
             $table->string('amount', 20);
+            $table->string('transfer_code')->index();
+            $table->decimal('fee')->nullable();
             $table->enum('status', ['pending', 'paid', 'rejected'])->default('pending');
             $table->timestamp('created_at');
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

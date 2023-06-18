@@ -3,12 +3,15 @@
 namespace App\Http\Livewire\Main\Seller\Withdrawals;
 
 use App\Http\Validators\Main\Seller\Withdrawals\MakeValidator;
+use App\Jobs\Main\Seller\SendMoney;
 use App\Models\Admin;
 use App\Models\UserWithdrawalHistory;
 use App\Models\UserWithdrawalSettings;
 use App\Notifications\Admin\PendingWithdrawal as AdminPendingWithdrawal;
 use App\Notifications\User\Seller\PendingWithdrawal as SellerPendingWithdrawal;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use DB;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
@@ -26,6 +29,8 @@ class CreateComponent extends Component
 
     public $amount;
 
+    public $withdrawalSettings;
+
     /**
      * Init component
      *
@@ -33,11 +38,12 @@ class CreateComponent extends Component
      */
     public function mount()
     {
-        // Get user withdrawal settings
-        $user_withdrawal_settings = UserWithdrawalSettings::where('user_id', auth()->id())->whereNotNull('gateway_provider_id')->first();
+        $withdrawSettings = UserWithdrawalSettings::where('user_id', auth()->id())
+            ->whereNotNull('gateway_provider_id')
+            ->first();
 
-        // Check if user has withdrawal email or not
-        if (! $user_withdrawal_settings) {
+        // Check if user has withdrawal settings or not
+        if (!$withdrawSettings) {
             return redirect('seller/withdrawals/settings');
         }
 
@@ -52,101 +58,35 @@ class CreateComponent extends Component
 
         // Check if user a pending withdrawal
         if ($pending) {
-
-            // Cannot withdrawal right now
             $this->can_withdraw = false;
-
-            // Set reason
             $this->reason = __('messages.t_cant_withdraw_reason_pending_request');
-
         }
 
-        // User does not have pending withdrawal requests, let's check his latest withdrawal
-        $latest = UserWithdrawalHistory::where('user_id', auth()->id())->where('status', 'paid')->latest()->first();
+        // check user latest withdrawal
+        $latest = UserWithdrawalHistory::where('user_id', auth()->id())
+            ->where('status', 'paid')
+            ->latest()
+            ->first();
 
         // Check if he has a paid withdrawal
-        if ($latest) {
-
-            // Get now date
-            $now = now();
-
-            // Let's check withdrawal period settings
-            switch ($settings->withdrawal_period) {
-
-                // Daily
-                case 'daily':
-
-                    if ($latest->created_at->diffInHours($now) < 24) { // 24 hours = 1 day
-                        // Cannot withdrawal right now
-                        $this->can_withdraw = false;
-
-                        // Set reason
-                        $this->reason = __('messages.t_cant_withdraw_reason_period_24_hours');
-                    }
-
-                    break;
-
-                    // Weekly
-                case 'weekly':
-
-                    if ($latest->created_at->diffInHours($now) < 168) { // 168 hours = 7 days
-                        // Cannot withdrawal right now
-                        $this->can_withdraw = false;
-
-                        // Set reason
-                        $this->reason = __('messages.t_cant_withdraw_reason_period_7_days');
-                    }
-
-                    break;
-
-                    // Monthly
-                case 'monthly':
-
-                    if ($latest->created_at->diffInHours($now) < 720) { // 720 hours = 30 days
-                        // Cannot withdrawal right now
-                        $this->can_withdraw = false;
-
-                        // Set reason
-                        $this->reason = __('messages.t_cant_withdraw_reason_period_monthly');
-                    }
-
-                    break;
-
-                default:
-                    // code...
-                    break;
-            }
-
+        $passedLimit = $this->checkWithdrawLimit($settings, $latest);
+        if ($passedLimit !== true) {
+            return redirect('seller/withdrawals')
+                ->with('message', $passedLimit);
         }
 
         // User does not have any withdrawal, let's check minimum withdrawal amount
         if ($settings->min_withdrawal_amount > $available_balance) {
 
-            // Cannot withdrawal right now
             $this->can_withdraw = false;
 
-            // Set reason
-            $this->reason = __('messages.t_cant_withdraw_reason_min_amount', ['amount' => money($settings->min_withdrawal_amount, settings('currency')->code, true)]);
-
+            $this->reason = __('messages.t_cant_withdraw_reason_min_amount', [
+                'amount' => money($settings->min_withdrawal_amount, settings('currency')->code, true),
+            ]);
         }
 
-        // Check seller default payout method
-        if ($user_withdrawal_settings->gateway_provider_name === 'paypal' && boolval(config('payouts.paypal.enabled'))) {
-
-            // Set paypal email
-            $this->paypal_email = $user_withdrawal_settings->gateway_provider_id;
-
-        } elseif ($user_withdrawal_settings->gateway_provider_name === 'offline' && boolval(config('payouts.offline.enabled'))) {
-
-            // Set offline info
-            $this->offline_info = $user_withdrawal_settings->gateway_provider_id;
-
-        } else {
-
-            // Nothing enabled
-            return redirect('seller/withdrawals/settings');
-
-        }
+        $this->offline_info = $withdrawSettings->gateway_provider_id;
+        $this->withdrawalSettings = $withdrawSettings;
     }
 
     /**
@@ -158,7 +98,7 @@ class CreateComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_withdrawal')." $separator ".settings('general')->title;
+        $title = __('messages.t_withdrawal') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -172,7 +112,7 @@ class CreateComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -186,211 +126,6 @@ class CreateComponent extends Component
     }
 
     /**
-     * Check if we have to take a commission from this payout or not
-     *
-     * @return void
-     */
-    public function confirm()
-    {
-        try {
-
-            // Validate form
-            MakeValidator::validate($this);
-
-            // Get user withdrawal settings
-            $user_withdrawal_settings = UserWithdrawalSettings::where('user_id', auth()->id())->whereNotNull('gateway_provider_id')->first();
-
-            // Check if user has withdrawal email or not
-            if (! $user_withdrawal_settings) {
-                return redirect('seller/withdrawals/settings');
-            }
-
-            // Get withdrawal settings
-            $settings = settings('withdrawal');
-
-            // Get user available balance
-            $available_balance = auth()->user()->balance_available;
-
-            // Check if user has this money in his account
-            if ($this->amount > $available_balance) {
-
-                // Error
-                $this->notification([
-                    'title' => __('messages.t_error'),
-                    'description' => __('messages.t_withdrawal_money_not_enough'),
-                    'icon' => 'error',
-                ]);
-
-                return;
-
-            }
-
-            // Get user pending withdrawal
-            $pending = UserWithdrawalHistory::where('user_id', auth()->id())->where('status', 'pending')->first();
-
-            // Check if user a pending withdrawal
-            if ($pending) {
-
-                // Cannot withdrawal right now
-                return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_pending_request'));
-
-            }
-
-            // User does not have pending withdrawal requests, let's check his latest withdrawal
-            $latest = UserWithdrawalHistory::where('user_id', auth()->id())->where('status', 'paid')->latest()->first();
-
-            // Check if he has a paid withdrawal
-            if ($latest) {
-
-                // Get now date
-                $now = now();
-
-                // Let's check withdrawal period settings
-                switch ($settings->withdrawal_period) {
-
-                    // Daily
-                    case 'daily':
-
-                        if ($latest->created_at->diffInHours($now) < 24) { // 24 hours = 1 day
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_24_hours'));
-                        }
-
-                        break;
-
-                        // Weekly
-                    case 'weekly':
-
-                        if ($latest->created_at->diffInHours($now) < 168) { // 168 hours = 7 days
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_7_days'));
-                        }
-
-                        break;
-
-                        // Monthly
-                    case 'monthly':
-
-                        if ($latest->created_at->diffInHours($now) < 720) { // 720 hours = 30 days
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_monthly'));
-                        }
-
-                        break;
-
-                    default:
-                        // code...
-                        break;
-                }
-
-            }
-
-            // User does not have any withdrawal, let's check minimum withdrawal amount
-            if ($this->amount < $settings->min_withdrawal_amount) {
-
-                // Minimum amount error
-                $this->notification([
-                    'title' => __('messages.t_error'),
-                    'description' => __('messages.t_cant_withdraw_reason_min_amount', ['amount' => money($settings->min_withdrawal_amount, settings('currency')->code, true)]),
-                    'icon' => 'error',
-                ]);
-
-                // Return
-                return;
-
-            }
-
-            // Check if commission from payouts
-            if (settings('commission')->commission_from === 'withdrawals') {
-
-                // Check commission type
-                if (settings('commission')->commission_type === 'fixed') {
-
-                    // Set commission value
-                    $commission_value = convertToNumber(settings('commission')->commission_value);
-
-                    // To output value must be a positive number
-                    if (convertToNumber($this->amount) - $commission_value <= 0) {
-
-                        // Error
-                        $this->notification([
-                            'title' => __('messages.t_error'),
-                            'description' => __('messages.t_toast_something_went_wrong'),
-                            'icon' => 'error',
-                        ]);
-
-                        return;
-
-                    }
-
-                } else {
-
-                    // Set commission value
-                    $commission_value = convertToNumber(settings('commission')->commission_value) * convertToNumber($this->amount) / 100;
-
-                }
-
-                // Show confirmation dialog
-                $this->dialog()->confirm([
-                    'title' => '<h1 class="text-base font-bold tracking-wide -mt-1 mb-4">'.__('messages.t_withdraw_funds').'</h1>',
-                    'description' => "<div class='leading-relaxed'>".__('messages.t_pls_review_ur_withdrawal_details')."<br></div>
-                    <div class='rounded border dark:border-secondary-600 my-8'>
-                    <dl class='divide-y divide-gray-200 dark:divide-gray-600'>
-                        <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                            <dt class='text-sm font-medium text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right whitespace-nowrap'>".__('messages.t_requested_amount')."</dt>
-                            <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left whitespace-nowrap'>".money(convertToNumber($this->amount), settings('currency')->code, true)."</dd>
-                        </div>  
-                        <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                            <dt class='text-sm font-medium text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right whitespace-nowrap'>".__('messages.t_withdrawal_fee')."</dt>
-                            <dd class='text-sm font-semibold text-red-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left whitespace-nowrap'>- ".money(convertToNumber($commission_value), settings('currency')->code, true)."</dd>
-                        </div>  
-                        <div class='grid grid-cols-3 gap-4 py-3 px-4 bg-gray-100/60 dark:bg-secondary-700 rounded-b'>
-                            <dt class='text-sm font-medium text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right whitespace-nowrap'>".__('messages.t_u_will_get')."</dt>
-                            <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left whitespace-nowrap'>".money(convertToNumber($this->amount) - convertToNumber($commission_value), settings('currency')->code, true).'</dd>
-                        </div>  
-                    </dl>
-                    </div>
-                    ',
-                    'icon' => 'cash',
-                    'iconColor' => 'text-slate-500 dark:text-secondary-400 p-1',
-                    'iconBackground' => 'bg-slate-100 rounded-full p-3 dark:bg-secondary-700',
-                    'accept' => [
-                        'label' => __('messages.t_confirm'),
-                        'method' => 'withdraw',
-                        'color' => 'secondary',
-                    ],
-                    'reject' => [
-                        'label' => __('messages.t_cancel'),
-                    ],
-                ]);
-
-            } else {
-
-                // Error
-                return;
-
-            }
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-
-            // Validation error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon' => 'error',
-            ]);
-
-            throw $e;
-        } catch (\Throwable $th) {
-
-            // Error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => $th->getMessage(),
-                'icon' => 'error',
-            ]);
-
-        }
-    }
-
-    /**
      * Make a withdrawal
      *
      * @return void
@@ -398,191 +133,144 @@ class CreateComponent extends Component
     public function withdraw()
     {
         try {
-
-            // Validate form
             MakeValidator::validate($this);
 
-            // Get user withdrawal settings
-            $user_withdrawal_settings = UserWithdrawalSettings::where('user_id', auth()->id())->whereNotNull('gateway_provider_id')->first();
+            $userWithdrawSettings = UserWithdrawalSettings::where('user_id', auth()->id())
+                ->whereNotNull('gateway_provider_id')
+                ->first();
 
             // Check if user has withdrawal email or not
-            if (! $user_withdrawal_settings) {
+            if (!$userWithdrawSettings) {
                 return redirect('seller/withdrawals/settings');
             }
 
             // Get withdrawal settings
             $settings = settings('withdrawal');
-
-            // Get user available balance
             $available_balance = auth()->user()->balance_available;
 
             // Check if user has this money in his account
             if ($this->amount > $available_balance) {
-
-                // Error
-                $this->notification([
-                    'title' => __('messages.t_error'),
-                    'description' => __('messages.t_withdrawal_money_not_enough'),
-                    'icon' => 'error',
-                ]);
+                $this->toastError(__('messages.t_withdrawal_money_not_enough'));
 
                 return;
-
             }
 
             // Get user pending withdrawal
-            $pending = UserWithdrawalHistory::where('user_id', auth()->id())->where('status', 'pending')->first();
+            $pending = UserWithdrawalHistory::userPending()->first();
 
             // Check if user a pending withdrawal
             if ($pending) {
-
-                // Cannot withdrawal right now
-                return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_pending_request'));
-
+                return redirect('seller/withdrawals')
+                    ->with('message', __('messages.t_cant_withdraw_reason_pending_request'));
             }
 
-            // User does not have pending withdrawal requests, let's check his latest withdrawal
-            $latest = UserWithdrawalHistory::where('user_id', auth()->id())->where('status', 'paid')->latest()->first();
+            $latest = UserWithdrawalHistory::userLatestPaid()->first();
 
             // Check if he has a paid withdrawal
-            if ($latest) {
-
-                // Get now date
-                $now = now();
-
-                // Let's check withdrawal period settings
-                switch ($settings->withdrawal_period) {
-
-                    // Daily
-                    case 'daily':
-
-                        if ($latest->created_at->diffInHours($now) < 24) { // 24 hours = 1 day
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_24_hours'));
-                        }
-
-                        break;
-
-                        // Weekly
-                    case 'weekly':
-
-                        if ($latest->created_at->diffInHours($now) < 168) { // 168 hours = 7 days
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_7_days'));
-                        }
-
-                        break;
-
-                        // Monthly
-                    case 'monthly':
-
-                        if ($latest->created_at->diffInHours($now) < 720) { // 720 hours = 30 days
-                            return redirect('seller/withdrawals')->with('message', __('messages.t_cant_withdraw_reason_period_monthly'));
-                        }
-
-                        break;
-
-                    default:
-                        // code...
-                        break;
-                }
-
+            $passedLimit = $this->checkWithdrawLimit($settings, $latest);
+            if ($passedLimit !== true) {
+                return redirect('seller/withdrawals')
+                    ->with('message', $passedLimit);
             }
 
             // User does not have any withdrawal, let's check minimum withdrawal amount
             if ($this->amount < $settings->min_withdrawal_amount) {
+                $this->toastError(__('messages.t_cant_withdraw_reason_min_amount', [
+                    'amount' => money($settings->min_withdrawal_amount, settings('currency')->code, true),
+                ]));
 
-                // Minimum amount error
-                $this->notification([
-                    'title' => __('messages.t_error'),
-                    'description' => __('messages.t_cant_withdraw_reason_min_amount', ['amount' => money($settings->min_withdrawal_amount, settings('currency')->code, true)]),
-                    'icon' => 'error',
-                ]);
-
-                // Return
                 return;
-
             }
 
-            // Check if commission on payouts enabled
-            if (settings('commission')->commission_from === 'withdrawals') {
-
-                // Check commission type
-                if (settings('commission')->commission_type === 'fixed') {
-
-                    // Set commission value
-                    $commission_value = convertToNumber(settings('commission')->commission_value);
-
-                    // To output value must be a positive number
-                    if (convertToNumber($this->amount) - $commission_value <= 0) {
-
-                        // Error
-                        $this->notification([
-                            'title' => __('messages.t_error'),
-                            'description' => __('messages.t_toast_something_went_wrong'),
-                            'icon' => 'error',
-                        ]);
-
-                        return;
-
-                    }
-
-                } else {
-
-                    // Set commission value
-                    $commission_value = convertToNumber(settings('commission')->commission_value) * convertToNumber($this->amount) / 100;
-
-                }
-
-            } else {
-
-                // No commission
-                $commission_value = 0;
-
-            }
-
-            // Save withdrawal request
-            $withdrawal = new UserWithdrawalHistory();
-            $withdrawal->uid = uid();
-            $withdrawal->user_id = auth()->id();
-            $withdrawal->gateway_provider_id = $user_withdrawal_settings->gateway_provider_id;
-            $withdrawal->gateway_provider_name = $user_withdrawal_settings->gateway_provider_name;
-            $withdrawal->amount = convertToNumber($this->amount) - convertToNumber($commission_value);
-            $withdrawal->fee = convertToNumber($commission_value) ? convertToNumber($commission_value) : null;
-            $withdrawal->save();
+            $withdrawal = UserWithdrawalHistory::create([
+                'uid' => uid(25),
+                'user_id' => auth()->id(),
+                'gateway_provider_id' => $userWithdrawSettings->gateway_provider_id,
+                'gateway_provider_name' => $userWithdrawSettings->gateway_provider_name,
+                'amount' => convertToNumber($this->amount),
+                'transfer_code' => $userWithdrawSettings->transfer_code,
+                'fee' => null,
+            ]);
 
             // Update user balance
             auth()->user()->update([
-                'balance_withdrawn' => convertToNumber(auth()->user()->balance_withdrawn) + convertToNumber($this->amount),
-                'balance_available' => convertToNumber(auth()->user()->balance_available) - convertToNumber($this->amount),
+                'balance_withdrawn' => DB::raw("balance_withdrawn + {$this->amount}"),
+                'balance_available' => DB::raw("balance_available - {$this->amount}"),
             ]);
 
             // Send notification to admin
             Admin::first()->notify((new AdminPendingWithdrawal($withdrawal))->locale(config('app.locale')));
-
-            // Send notification to user
             auth()->user()->notify((new SellerPendingWithdrawal($withdrawal))->locale(config('app.locale')));
+
+            SendMoney::dispatch($withdrawal);
 
             // Success
             return redirect('seller/withdrawals')->with('success', __('messages.t_ur_withdrawal_request_under_review'));
+        } catch (ValidationException $e) {
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-
-            // Validation error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon' => 'error',
-            ]);
+            $this->toastError(__('messages.t_toast_form_validation_error'));
 
             throw $e;
         } catch (\Throwable $th) {
 
-            // Error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => $th->getMessage(),
-                'icon' => 'error',
-            ]);
-
+            $this->toastError($th->getMessage());
         }
+    }
+
+    /**
+     * Validate user withdrawal limit by heck withdrawal
+     * period settings
+     */
+    public function checkWithdrawLimit($settings, $latest)
+    {
+        $now = now();
+        $message = true;
+
+        if ($latest) {
+            switch ($settings->withdrawal_period) {
+                case 'daily':
+
+                    if ($latest->created_at->diffInHours($now) < 24) {
+                        $message = __('messages.t_cant_withdraw_reason_period_24_hours');
+                    }
+
+                    break;
+                case 'weekly':
+
+                    if ($latest->created_at->diffInHours($now) < 168) {
+                        $message = __('messages.t_cant_withdraw_reason_period_7_days');
+                    }
+
+                    break;
+                case 'monthly':
+
+                    if ($latest->created_at->diffInHours($now) < 720) {
+                        $message = __('messages.t_cant_withdraw_reason_period_monthly');
+                    }
+
+                    break;
+                default:
+                    // code...
+                    break;
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * Send 
+     */
+
+    /**
+     * Toast error message to user.
+     */
+    public function toastError($message)
+    {
+        $this->notification([
+            'title' => __('messages.t_error'),
+            'description' => $message,
+            'icon' => 'error',
+        ]);
     }
 }

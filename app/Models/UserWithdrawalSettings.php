@@ -27,6 +27,7 @@ class UserWithdrawalSettings extends Model
         'gateway_provider_id',
         'bank_name',
         'bank_code',
+        'transfer_code',
         'account_name',
     ];
 }

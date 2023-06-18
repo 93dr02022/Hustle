@@ -30,14 +30,14 @@ class UnavailableSellers extends Command
     {
         // Get sellers
         $sellers = User::where('account_type', 'seller')
-                        ->whereHas('availability', function($query) {
-                            return $query->where('expected_available_date', '<=', now());
-                        })
-                        ->get();
+            ->whereHas('availability', function ($query) {
+                return $query->where('expected_available_date', '<=', now());
+            })
+            ->get();
 
         // Loop through unavailable sellers
         foreach ($sellers as $seller) {
-            
+
             // Delete unavailability
             $seller->availability->delete();
 

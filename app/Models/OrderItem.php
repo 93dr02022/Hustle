@@ -48,12 +48,22 @@ class OrderItem extends Model
         'commission_value',
         'status',
         'is_finished',
+        'can_wallet',
         'expected_delivery_date',
         'canceled_by',
         'proceeded_at',
         'delivered_at',
         'canceled_at',
         'refunded_at',
+    ];
+
+    /**
+     * The attributes that should be casts.
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'can_wallet' => 'boolean',
     ];
 
     /**

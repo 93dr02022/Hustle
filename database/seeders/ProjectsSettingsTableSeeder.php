@@ -14,18 +14,18 @@ class ProjectsSettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
         try {
-            \DB::table('projects_settings')->insert(array (
-                0 => 
-                array (
+            \DB::table('projects_settings')->insert(array(
+                0 =>
+                array(
                     'id'                         => 1,
-                    'is_enabled'                 => 0,
+                    'is_enabled'                 => 1,
                     'auto_approve_projects'      => 1,
                     'auto_approve_bids'          => 1,
                     'is_free_posting'            => 1,
-                    'is_premium_posting'         => 0,
-                    'is_premium_bidding'         => 0,
+                    'is_premium_posting'         => 1,
+                    'is_premium_bidding'         => 1,
                     'commission_type'            => 'percentage',
                     'commission_from_freelancer' => '2.3',
                     'commission_from_publisher'  => '2.2',
@@ -35,7 +35,5 @@ class ProjectsSettingsTableSeeder extends Seeder
         } catch (\Throwable $th) {
             //throw $th;
         }
-        
-        
     }
 }
