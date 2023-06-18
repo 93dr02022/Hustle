@@ -96,7 +96,7 @@ class CreateQuoteComponent extends Component
 
             DB::commit();
 
-            $this->quotation->owner
+            $quotation->owner
                 ->notify((new QuotationCreated())
                     ->locale(config('app.locale')));
 
