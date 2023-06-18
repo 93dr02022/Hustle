@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -25,7 +25,8 @@ class CreateValidator
                 'account_type' => 'required|in:seller,buyer',
                 'level'        => 'required|exists:levels,id',
                 'country'      => 'nullable|exists:countries,id',
-                'fullname'     => 'nullable|max:60',
+                'firstName'     => 'nullable|max:60',
+                'lastName'     => 'nullable|max:60',
                 'headline'     => 'nullable|max:100',
                 'description'  => 'nullable|max:750',
                 'balance'      => 'required|numeric',
@@ -48,7 +49,8 @@ class CreateValidator
                 'level.required'        => __('messages.t_validator_required'),
                 'level.exists'          => __('messages.t_validator_exists'),
                 'country.exists'        => __('messages.t_validator_exists'),
-                'fullname.max'          => __('messages.t_validator_max', ['max' => 60]),
+                'firstName.max'          => __('messages.t_validator_max', ['max' => 60]),
+                'lastName.max'          => __('messages.t_validator_max', ['max' => 60]),
                 'headline.max'          => __('messages.t_validator_max', ['max' => 100]),
                 'description.max'       => __('messages.t_validator_max', ['max' => 750]),
                 'balance.required'      => __('messages.t_validator_required'),
@@ -67,7 +69,8 @@ class CreateValidator
                 'account_type' => $request->account_type,
                 'level'        => $request->level,
                 'country'      => $request->country,
-                'fullname'     => $request->fullname,
+                'firstName'     => $request->firstName,
+                'lastName'     => $request->lastName,
                 'headline'     => $request->headline,
                 'description'  => $request->description,
                 'balance'      => $request->balance,
@@ -80,10 +83,8 @@ class CreateValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }

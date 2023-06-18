@@ -29,7 +29,9 @@ class CreateComponent extends Component
 
     public $country;
 
-    public $fullname;
+    public $firstName;
+
+    public $lastName;
 
     public $headline;
 
@@ -106,14 +108,12 @@ class CreateComponent extends Component
                 return;
             }
 
-            // Check if request has avatar image
             if ($this->avatar) {
-                $avatar_id = ImageUploader::make($this->avatar)
-                    ->resize(100)
-                    ->folder('avatars')
-                    ->handle();
+                $avatarPath = ImageUploader::make($this->avatar)
+                    ->size(100)
+                    ->toBucket('avatars');
             } else {
-                $avatar_id = null;
+                $avatarPath = null;
             }
 
             // create new user
@@ -125,12 +125,13 @@ class CreateComponent extends Component
             $user->account_type = $this->account_type;
             $user->level_id = $this->level;
             $user->country_id = $this->country;
-            $user->fullname = $this->fullname;
+            $user->first_name = $this->firstName;
+            $user->last_name = $this->lastName;
             $user->headline = $this->headline;
             $user->description = $this->description;
             $user->status = $this->status;
             $user->balance_available = $this->balance;
-            $user->avatar_id = $avatar_id;
+            $user->avatar_id = $avatarPath;
             $user->save();
 
             // Reset form
