@@ -46,7 +46,7 @@
                         <td class="ltr:pl-4 rtl:pr-4">
                             <a href="{{ url('profile', $user->username) }}" target="_blank" class="flex items-center">
                                 <div class="w-8 h-8">
-                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($user->avatar) }}" alt="{{ $user->username }}" />
+                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($user->avatar_id) }}" alt="{{ $user->username }}" />
                                 </div>
                                 <div class="ltr:pl-4 rtl:pr-4">
                                     <p class="font-medium text-xs flex items-center">

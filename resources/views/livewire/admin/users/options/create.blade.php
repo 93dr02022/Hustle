@@ -91,17 +91,26 @@
                     </div>
                 </div>
 
-                {{-- Fullname --}}
-                <div class="col-span-6">
+                {{-- Firstname --}}
+                <div class="col-span-4">
                     <x-forms.text-input
-                        :label="__('messages.t_fullname')"
-                        :placeholder="__('messages.t_enter_fullname')"
-                        model="fullname"
+                        :label="__('First Name')"
+                        :placeholder="__('Enter Firstname')"
+                        model="firstName"
+                        icon="badge-account-horizontal" />
+                </div>
+
+                {{-- Lastname --}}
+                <div class="col-span-4">
+                    <x-forms.text-input
+                        :label="__('Last Name')"
+                        :placeholder="__('Enter Lastname')"
+                        model="lastName"
                         icon="badge-account-horizontal" />
                 </div>
 
                 {{-- Headline --}}
-                <div class="col-span-6">
+                <div class="col-span-4">
                     <x-forms.text-input
                         :label="__('messages.t_headline')"
                         :placeholder="__('messages.t_enter_your_headline')"
