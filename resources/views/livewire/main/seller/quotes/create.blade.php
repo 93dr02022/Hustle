@@ -186,7 +186,7 @@
                 <div class="text-center my-4">Quotation created successfully.</div>
 
                 <div x-show="form.payment_method == 'paystack'" class="relative mt-7 mx-5">
-                    <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100" :value="`https://correcthustle.com/payments/${quote.sharing_uid}/pay`" readonly />
+                    <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100" :value="`https://correcthustle.com/quotations/${quote.reference}/payment`" readonly />
                     <div class="flex absolute inset-y-0 right-0 items-center pl-4 pr-2 py-3 pointer-events-auto">
                         <button @click="copy(`https://correcthustle.com/quotations/${quote.reference}/payment`)" :class="{'!bg-green-200': copying}" class="text-blue-500 rounded flex border-none py-2 px-3">Copy</button>
                     </div>
