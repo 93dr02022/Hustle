@@ -91,13 +91,13 @@
     {{-- filter dropdown --}}
     <div class="flex justify-end px-4 mx-auto max-w-7xl sm:px-6 md:px-12">
         <div class="static">
-            <a class="btn-purple flex items-center [&>*]:pointer-events-none [&.active>span>svg]:rotate-180" data-offset="10" data-lc-toggle="dropdown" data-popper-placement="bottom-end">
+            <a class="btn-purple cursor-pointer flex items-center [&>*]:pointer-events-none [&.active>span>svg]:rotate-180" data-offset="10" data-lc-toggle="dropdown" data-popper-placement="bottom-end">
                 Filter
             </a>
             <div class="z-10 hidden w-48 px-3 py-4 bg-white border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
                 <label for="" class="block mb-1 text-gray-700 dark:text-zinc-300">Status</label>
-                <select class="!py-2.5 form-ctr mb-4" id="">
-                    <option value="pending">All Status</option>
+                <select class="!py-2.5 form-ctr mb-4" id="" wire:model="orderStatus">
+                    <option value="">All Status</option>
                     <option value="pending">Pending</option>
                     <option value="proceeded">Proceeded</option>
                     <option value="delivered">Delivered</option>
