@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Main\Callback;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Main\Callback\PaystackEventRequest;
+use App\Jobs\Paystack\Transfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -13,17 +15,8 @@ class PaystackEventController extends Controller
      * 
      * @todo refactor controller to use services
      */
-    public function paystackEventBus(Request $request)
+    public function paystackEventBus(PaystackEventRequest $request)
     {
-        if (
-            $request->header('HTTP_X_PAYSTACK_SIGNATURE') !==
-            hash_hmac('sha512', json_encode($request->all()), config('paystack.secretKey'))
-        ) {
-            Log::info('Logging from inner code block');
-            Log::info($request->all());
-        }
-
-        Log::info('Logging from outter code block');
-        Log::info($request->all());
+        Transfer::dispatch($request->input('data'), $request->event);
     }
 }

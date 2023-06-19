@@ -20,10 +20,15 @@ return new class extends Migration
             $table->string('gateway_provider_name', 20)->default('offline');
             $table->string('gateway_provider_id', 10);
             $table->string('amount', 20);
-            $table->string('transfer_code')->index();
+            $table->string('transfer_recipient')->index();
+            $table->string('transfer_code')->nullable()->index();
             $table->decimal('fee')->nullable();
-            $table->enum('status', ['pending', 'paid', 'rejected'])->default('pending');
-            $table->timestamp('created_at');
+            $table->enum('status', ['pending', 'paid', 'rejected', 'declined'])->default('pending');
+            $table->dateTime('paid_at')->nullable()->index();
+            $table->dateTime('failed_at')->nullable()->index();
+            $table->dateTime('reversed_at')->nullable()->index();
+
+            $table->timestamps();
         });
     }
 

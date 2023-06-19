@@ -13,7 +13,11 @@ class PaystackEventRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $signature = request()->header('x-paystack-signature');
+
+        $hash = hash_hmac('sha512', request()->getContent(), config('paystack.secretKey'));
+
+        return $hash === $signature;
     }
 
     /**

@@ -183,12 +183,12 @@ class CreateComponent extends Component
             }
 
             $withdrawal = UserWithdrawalHistory::create([
-                'uid' => uid(25),
+                'uid' => strtolower(uid(25)),
                 'user_id' => auth()->id(),
                 'gateway_provider_id' => $userWithdrawSettings->gateway_provider_id,
                 'gateway_provider_name' => $userWithdrawSettings->gateway_provider_name,
                 'amount' => convertToNumber($this->amount),
-                'transfer_code' => $userWithdrawSettings->transfer_code,
+                'transfer_recipient' => $userWithdrawSettings->transfer_recipient,
                 'fee' => null,
             ]);
 

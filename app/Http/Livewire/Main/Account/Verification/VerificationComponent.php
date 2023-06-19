@@ -266,7 +266,7 @@ class VerificationComponent extends Component
                         'gateway_provider_id' => $this->accountNumber,
                         'bank_name' => $this->getBankName(),
                         'bank_code' => $this->bank,
-                        'transfer_code' => $this->transferCode,
+                        'transfer_recipient' => $this->transferCode,
                         'account_name' => $this->accountName,
                     ],
                 ],
@@ -275,7 +275,7 @@ class VerificationComponent extends Component
                     'gateway_provider_id',
                     'bank_name',
                     'bank_code',
-                    'transfer_code',
+                    'transfer_recipient',
                     'account_name'
                 ]
             );

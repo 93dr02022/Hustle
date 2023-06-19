@@ -15,6 +15,7 @@ require("laravel-mix-blade-reload");
 
 mix.js("resources/js/app.js", "public/js")
     .vue()
+    .js("resources/js/dropdown.js", "public/js/dropdown.js")
     .js("node_modules/select2/dist/js/select2.min.js", "public/js/select2.js")
     .bladeReload()
     .postCss("resources/css/mdi.css", "public/css")
