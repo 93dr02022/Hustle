@@ -59,6 +59,7 @@
   'admin.projects.skills.options.edit-component' => 'App\\Http\\Livewire\\Admin\\Projects\\Skills\\Options\\EditComponent',
   'admin.projects.skills.skills-component' => 'App\\Http\\Livewire\\Admin\\Projects\\Skills\\SkillsComponent',
   'admin.projects.subscriptions.subscriptions-component' => 'App\\Http\\Livewire\\Admin\\Projects\\Subscriptions\\SubscriptionsComponent',
+  'admin.quotes.quotes-component' => 'App\\Http\\Livewire\\Admin\\Quotes\\QuotesComponent',
   'admin.refunds.options.details-component' => 'App\\Http\\Livewire\\Admin\\Refunds\\Options\\DetailsComponent',
   'admin.refunds.refunds-component' => 'App\\Http\\Livewire\\Admin\\Refunds\\RefundsComponent',
   'admin.reports.bids-component' => 'App\\Http\\Livewire\\Admin\\Reports\\BidsComponent',

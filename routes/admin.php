@@ -3,48 +3,44 @@
 use Illuminate\Support\Facades\Route;
 
 // Dashboard routes
-Route::middleware(['web', 'auth:admin'])->group(function() {
+Route::middleware(['web', 'auth:admin'])->group(function () {
 
     // Home
-    Route::namespace('Home')->group(function() {
-    
+    Route::namespace('Home')->group(function () {
+
         // Index
         Route::get('/', HomeComponent::class);
-    
     });
 
     // Profile
-    Route::namespace('Profile')->group(function() {
+    Route::namespace('Profile')->group(function () {
 
         // Edit
         Route::get('profile', ProfileComponent::class);
-
     });
 
     // Logout
-    Route::namespace('Auth')->group(function() {
+    Route::namespace('Auth')->group(function () {
 
         // Logout
         Route::get('logout', LogoutComponent::class);
-
     });
 
     // Invoices
-    Route::namespace('Invoices')->prefix('invoices')->group(function() {
+    Route::namespace('Invoices')->prefix('invoices')->group(function () {
 
         // Index
         Route::get('/', InvoicesComponent::class);
-
     });
 
     // Users
-    Route::namespace('Users')->prefix('users')->group(function() {
+    Route::namespace('Users')->prefix('users')->group(function () {
 
         // Users
         Route::get('/', UsersComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Create
             Route::get('create', CreateComponent::class);
@@ -57,123 +53,114 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
             // Balance
             Route::get('balance/{id}', BalanceComponent::class);
-
         });
 
         // Transactions
-        Route::namespace('Transactions')->prefix('transactions')->group(function() {
+        Route::namespace('Transactions')->prefix('transactions')->group(function () {
 
             // All
             Route::get('/', TransactionsComponent::class);
-
         });
 
         // Trashed users
-        Route::namespace('Trash')->prefix('trash')->group(function() {
+        Route::namespace('Trash')->prefix('trash')->group(function () {
 
             // Get trashed users
             Route::get('/', TrashComponent::class);
-
         });
-
     });
 
     // Levels
-    Route::namespace('Levels')->prefix('levels')->group(function() {
+    Route::namespace('Levels')->prefix('levels')->group(function () {
 
         // Levels
         Route::get('/', LevelsComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Create
             Route::get('create', CreateComponent::class);
 
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-
         });
-
     });
 
     // Withdrawals
-    Route::namespace('Withdrawals')->prefix('withdrawals')->group(function() {
+    Route::namespace('Withdrawals')->prefix('withdrawals')->group(function () {
 
         // History
         Route::get('/', WithdrawalsComponent::class);
-
     });
 
     // Gigs
-    Route::namespace('Gigs')->prefix('gigs')->group(function() {
+    Route::namespace('Gigs')->prefix('gigs')->group(function () {
 
         // Gigs
         Route::get('/', GigsComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Edit
             Route::get('edit/{id}', EditComponent::class);
 
             // Analytics
             Route::get('analytics/{id}', AnalyticsComponent::class);
-
         });
 
         // Trash
-        Route::namespace('Trash')->prefix('trash')->group(function() {
+        Route::namespace('Trash')->prefix('trash')->group(function () {
 
             // Get trashed gigs
             Route::get('/', TrashComponent::class);
-
         });
+    });
 
+    // Quotes
+    Route::namespace('Quotes')->prefix('quotes')->group(function () {
+        // Orders
+        Route::get('/', QuotesComponent::class);
     });
 
     // Orders
-    Route::namespace('Orders')->prefix('orders')->group(function() {
+    Route::namespace('Orders')->prefix('orders')->group(function () {
 
         // Orders
         Route::get('/', OrdersComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Details
             Route::get('details/{id}', DetailsComponent::class);
-
         });
-
     });
 
     // Portfolios
-    Route::namespace('Portfolios')->prefix('portfolios')->group(function() {
+    Route::namespace('Portfolios')->prefix('portfolios')->group(function () {
 
         // Portfolios
         Route::get('/', PortfoliosComponent::class);
-
     });
 
     // Refunds
-    Route::namespace('Refunds')->prefix('refunds')->group(function() {
+    Route::namespace('Refunds')->prefix('refunds')->group(function () {
 
         // Refunds
         Route::get('/', RefundsComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Details
             Route::get('details/{id}', DetailsComponent::class);
-
         });
-
     });
 
     // Projects
-    Route::namespace('Projects')->prefix('projects')->group(function() {
+    Route::namespace('Projects')->prefix('projects')->group(function () {
 
         // Get projects
         Route::get('/', ProjectsComponent::class);
@@ -182,15 +169,14 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         Route::get('settings', SettingsComponent::class);
 
         // Milestones
-        Route::namespace('Milestones')->prefix('milestones')->group(function() {
+        Route::namespace('Milestones')->prefix('milestones')->group(function () {
 
             // Index
             Route::get('{id}', MilestonesComponent::class);
-
         });
 
         // Plans
-        Route::namespace('Plans')->prefix('plans')->group(function() {
+        Route::namespace('Plans')->prefix('plans')->group(function () {
 
             // Index
             Route::get('/', PlansComponent::class);
@@ -199,127 +185,112 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
             Route::get('edit/{id}', EditComponent::class);
 
             // Bidding
-            Route::namespace('Bidding')->prefix('bidding')->group(function() {
+            Route::namespace('Bidding')->prefix('bidding')->group(function () {
 
                 // Edit
                 Route::get('edit/{id}', EditComponent::class);
-
             });
-
         });
 
         // Categories
-        Route::namespace('Categories')->prefix('categories')->group(function() {
+        Route::namespace('Categories')->prefix('categories')->group(function () {
 
             // Categories
             Route::get('/', CategoriesComponent::class);
 
             // Options
-            Route::namespace('Options')->group(function() {
+            Route::namespace('Options')->group(function () {
 
                 // Create
                 Route::get('create', CreateComponent::class);
 
                 // Edit
                 Route::get('edit/{id}', EditComponent::class);
-
             });
-
         });
 
         // Skills
-        Route::namespace('Skills')->prefix('skills')->group(function() {
+        Route::namespace('Skills')->prefix('skills')->group(function () {
 
             // Skills
             Route::get('/', SkillsComponent::class);
 
             // Options
-            Route::namespace('Options')->group(function() {
+            Route::namespace('Options')->group(function () {
 
                 // Create
                 Route::get('create', CreateComponent::class);
 
                 // Edit
                 Route::get('edit/{id}', EditComponent::class);
-
             });
-
         });
 
         // Subscriptions
-        Route::namespace('Subscriptions')->prefix('subscriptions')->group(function() {
+        Route::namespace('Subscriptions')->prefix('subscriptions')->group(function () {
 
             // Get subscriptions
             Route::get('/', SubscriptionsComponent::class);
-
         });
 
         // Bids
-        Route::namespace('Bids')->prefix('bids')->group(function() {
+        Route::namespace('Bids')->prefix('bids')->group(function () {
 
             // Bids
             Route::get('/', BidsComponent::class);
 
             // Subscriptions
-            Route::namespace('Subscriptions')->prefix('subscriptions')->group(function() {
+            Route::namespace('Subscriptions')->prefix('subscriptions')->group(function () {
 
                 // Subscriptions
                 Route::get('/', SubscriptionsComponent::class);
-
             });
-
         });
-
     });
-    
+
     // Categories
-    Route::namespace('Categories')->prefix('categories')->group(function() {
-    
+    Route::namespace('Categories')->prefix('categories')->group(function () {
+
         // All
         Route::get('/', CategoriesComponent::class);
-    
+
         // Options
-        Route::namespace('Options')->group(function() {
-    
+        Route::namespace('Options')->group(function () {
+
             // Create
             Route::get('create', CreateComponent::class);
-    
+
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-    
         });
-    
     });
-    
+
     // Subcategories
-    Route::namespace('Subcategories')->prefix('subcategories')->group(function() {
-    
+    Route::namespace('Subcategories')->prefix('subcategories')->group(function () {
+
         // All
         Route::get('/', SubcategoriesComponent::class);
-    
+
         // Options
-        Route::namespace('Options')->group(function() {
-    
+        Route::namespace('Options')->group(function () {
+
             // Create
             Route::get('create', CreateComponent::class);
-    
+
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-    
         });
-    
     });
 
     // Reviews
-    Route::namespace('Reviews')->prefix('reviews')->group(function() {
+    Route::namespace('Reviews')->prefix('reviews')->group(function () {
 
         // Reviews
         Route::get('/', ReviewsComponent::class);
-
     });
 
     // Reports
-    Route::namespace('Reports')->prefix('reports')->group(function() {
+    Route::namespace('Reports')->prefix('reports')->group(function () {
 
         // Users
         Route::get('users', UsersComponent::class);
@@ -329,58 +300,53 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Projects
         Route::get('projects', ProjectsComponent::class);
-        
+
         // Bids
         Route::get('bids', BidsComponent::class);
-
     });
 
     // Conversations
-    Route::namespace('Conversations')->prefix('conversations')->group(function() {
+    Route::namespace('Conversations')->prefix('conversations')->group(function () {
 
         // Conversations
         Route::get('/', ConversationsComponent::class);
 
         // Messages
         Route::get('messages/{id}', MessagesComponent::class);
-
     });
 
     // Advertisements
-    Route::namespace('Advertisements')->prefix('advertisements')->group(function() {
+    Route::namespace('Advertisements')->prefix('advertisements')->group(function () {
 
         // Ads
         Route::get('/', AdvertisementsComponent::class);
-
     });
 
     // Support
-    Route::namespace('Support')->prefix('support')->group(function() {
+    Route::namespace('Support')->prefix('support')->group(function () {
 
         // Messages
         Route::get('/', SupportComponent::class);
-
     });
 
     // Newsletter
-    Route::namespace('Newsletter')->prefix('newsletter')->group(function() {
+    Route::namespace('Newsletter')->prefix('newsletter')->group(function () {
 
         // Newsletter
         Route::get('/', NewsletterComponent::class);
 
         // Settings
         Route::get('settings', SettingsComponent::class);
-
     });
 
     // Languages
-    Route::namespace('Languages')->prefix('languages')->group(function() {
+    Route::namespace('Languages')->prefix('languages')->group(function () {
 
         // Languages
         Route::get('/', LanguagesComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Create
             Route::get('create', CreateComponent::class);
@@ -390,51 +356,45 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
             // Translate
             Route::get('translate/{id}', TranslateComponent::class);
-
         });
-
     });
 
     // Pages
-    Route::namespace('Pages')->prefix('pages')->group(function() {
+    Route::namespace('Pages')->prefix('pages')->group(function () {
 
         // Pages
         Route::get('/', PagesComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // create
             Route::get('create', CreateComponent::class);
 
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-
         });
-
     });
 
     // Countries
-    Route::namespace('Countries')->prefix('countries')->group(function() {
+    Route::namespace('Countries')->prefix('countries')->group(function () {
 
         // Countries
         Route::get('/', CountriesComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Create
             Route::get('create', CreateComponent::class);
 
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-
         });
-
     });
 
     // Services
-    Route::namespace('Services')->prefix('services')->group(function() {
+    Route::namespace('Services')->prefix('services')->group(function () {
 
         // PayPal
         Route::get('paypal', PaypalComponent::class);
@@ -450,7 +410,7 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Xendit
         Route::get('xendit', XenditComponent::class);
-        
+
         // Offline payment
         Route::get('offline', OfflineComponent::class);
 
@@ -495,15 +455,14 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Epoint
         Route::get('epoint', EpointComponent::class);
-
     });
-    
+
     // Settings
-    Route::namespace('Settings')->prefix('settings')->group(function() {
+    Route::namespace('Settings')->prefix('settings')->group(function () {
 
         // General
         Route::get('general', GeneralComponent::class);
-    
+
         // Currency
         Route::get('currency', CurrencyComponent::class);
 
@@ -542,19 +501,17 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Chat
         Route::get('chat', ChatComponent::class);
-    
     });
 
     // Verifications
-    Route::namespace('Verifications')->prefix('verifications')->group(function() {
+    Route::namespace('Verifications')->prefix('verifications')->group(function () {
 
         // verifications
         Route::get('/', VerificationsComponent::class);
-
     });
 
     // Blog
-    Route::namespace('Blog')->prefix('blog')->group(function() {
+    Route::namespace('Blog')->prefix('blog')->group(function () {
 
         // Articles
         Route::get('/', ArticlesComponent::class);
@@ -563,36 +520,32 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         Route::get('settings', SettingsComponent::class);
 
         // Comments
-        Route::namespace('Comments')->prefix('comments')->group(function() {
+        Route::namespace('Comments')->prefix('comments')->group(function () {
 
             // Index
             Route::get('/', CommentsComponent::class);
 
             // Options
-            Route::namespace('Options')->group(function() {
+            Route::namespace('Options')->group(function () {
 
                 // Edit
                 Route::get('edit/{id}', EditComponent::class);
-
             });
-
         });
 
         // Options
-        Route::namespace('Options')->group(function() {
+        Route::namespace('Options')->group(function () {
 
             // Create
             Route::get('create', CreateComponent::class);
 
             // Edit
             Route::get('edit/{slug}', EditComponent::class);
-
         });
-
     });
 
     // System
-    Route::namespace('System')->prefix('system')->group(function() {
+    Route::namespace('System')->prefix('system')->group(function () {
 
         // Crontab
         Route::get('crontab', CrontabComponent::class);
@@ -602,15 +555,12 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Maintenance
         Route::get('maintenance', MaintenanceComponent::class);
-
     });
-    
 });
 
 // Dashboard login
-Route::namespace('Auth')->middleware(['web', 'banned.ip', 'guest:admin'])->group(function() {
+Route::namespace('Auth')->middleware(['web', 'banned.ip', 'guest:admin'])->group(function () {
 
     // Login
     Route::get('login', LoginComponent::class);
-
 });
