@@ -32,17 +32,24 @@ class SendMoney implements ShouldQueue
      */
     public function handle()
     {
-        $response = Http::withToken(config('paystack.secretKey'))
-            ->retry(3)
-            ->post('https://api.paystack.co/transfer', [
-                "source" => "balance",
-                "amount" => $this->withdrawal->amount,
-                "reference" => $this->withdrawal->uid,
-                "recipient" => $this->withdrawal->transfer_code,
-                "reason" => "Wallet Balance Withdrawal"
-            ])
-            ->object();
+        try {
+            $response = Http::withToken(config('paystack.secretKey'))
+                ->retry(3)
+                ->post('https://api.paystack.co/transfer', [
+                    "source" => "balance",
+                    "amount" => floatval($this->withdrawal->amount) * 100,
+                    "reference" => $this->withdrawal->uid,
+                    "recipient" => $this->withdrawal->transfer_recipient,
+                    "reason" => "Wallet Balance Withdrawal"
+                ])
+                ->object();
 
-        // fails if endpoint throws exception
+            if ($response->status) {
+                $this->withdrawal->transfer_code = $response->data->transfer_code;
+                $this->withdrawal->save();
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

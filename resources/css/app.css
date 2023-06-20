@@ -19,44 +19,47 @@
         .break-inside {
             break-inside: avoid;
         }
-
     }
 }
 
 @layer components {
-   .thead-tr {
-      @apply bg-slate-200 dark:bg-zinc-600
-   }
+    .thead-tr {
+        @apply bg-slate-200 dark:bg-zinc-600;
+    }
 
-   .thead-tr th {
-      @apply font-bold tracking-wider text-gray-600 px-4 py-4.5 border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md rtl:text-right
-   } 
+    .thead-tr th {
+        @apply font-bold tracking-wider text-gray-600 px-4 py-4.5 border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md rtl:text-right;
+    }
 
-   .tbody-tr {
-      @apply shadow-sm bg-white dark:bg-zinc-800 rounded-md h-16
-   }
+    .tbody-tr {
+        @apply h-16 bg-white rounded-md shadow-sm dark:bg-zinc-800;
+    }
 
-   .tbody-tr td {
-      @apply text-sm px-4 py-3 first:rounded-l-md last:rounded-r-md text-left
-   }
+    .tbody-tr td {
+        @apply px-4 py-3 text-sm text-left first:rounded-l-md last:rounded-r-md;
+    }
 
-   .form-ctr {
-      @apply disabled:cursor-not-allowed focus:!ring-0 outline-0 block w-full py-3 placeholder:font-normal placeholder:text-sm dark:placeholder-zinc-300 text-sm font-normal text-zinc-800 dark:text-white rounded-md dark:bg-transparent focus:!border-primary-600 border-gray-300 dark:border-zinc-500
-   }
+    .form-ctr {
+        @apply disabled:cursor-not-allowed focus:!ring-0 outline-0 block w-full py-3 placeholder:font-normal placeholder:text-sm dark:placeholder-zinc-300 text-sm font-normal text-zinc-800 dark:text-white rounded-md dark:bg-transparent focus:!border-primary-600 border-gray-300 dark:border-zinc-500;
+    }
 
-   .label-text {
-      @apply block text-sm text-gray-700 dark:text-white mb-1
-   }
+    .label-text {
+        @apply block mb-1 text-sm text-gray-700 dark:text-white;
+    }
 
-   .btn-light {
-      @apply text-sm py-2.5 px-3 border dark:border-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800
-   }
+    .btn-light {
+        @apply text-sm py-2.5 px-3 border dark:border-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800;
+    }
 
-   .btn-purple {
-      @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500
-   }
+    .btn-purple {
+        @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500;
+    }
 }
 
-[x-cloak] { 
-   display: none !important; 
+[x-cloak] {
+    display: none !important;
+}
+
+[data-dropdown-toggle] + * {
+    box-shadow: 0 12px 40px 8px rgba(140, 152, 164, 0.19) !important;
 }
