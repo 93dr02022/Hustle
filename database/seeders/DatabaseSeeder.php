@@ -75,7 +75,8 @@ class DatabaseSeeder extends Seeder
         if (App::environment('local')) {
             $this->call([
                 UserSeeder::class,
-                StatesTableSeeder::class
+                StatesTableSeeder::class,
+                GigSeeder::class
             ]);
         }
     }
