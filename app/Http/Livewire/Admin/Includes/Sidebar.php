@@ -77,7 +77,7 @@ class Sidebar extends Component
             [
                 'icon' => '<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v1a1 1 0 1 0 0 2v2a1 1 0 1 0 0 2v2a1 1 0 1 0 0 2v2a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6Z" class="duoicon-secondary-layer" opacity=".3"></path><path fill="currentColor" fill-rule="evenodd" d="M8.5 6A1.5 1.5 0 0 0 7 7.5v1A1.5 1.5 0 0 0 8.5 10h7A1.5 1.5 0 0 0 17 8.5v-1A1.5 1.5 0 0 0 15.5 6h-7Z" class="duoicon-primary-layer"></path></svg>',
                 'href' => null,
-                'text' => __('quotes'),
+                'text' => __('Quotes'),
                 'childs' => [
                     ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/quotes"],
                 ],

@@ -122,6 +122,7 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
     Route::namespace('Quotes')->prefix('quotes')->group(function () {
         // Orders
         Route::get('/', QuotesComponent::class);
+        Route::get('/{reference}/details', QuoteViewComponent::class);
     });
 
     // Orders
