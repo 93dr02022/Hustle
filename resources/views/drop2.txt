@@ -1,0 +1,215 @@
+{{-- @if ($gigs && !$gigs->isEmpty())
+            <div class="col-span-12 mb-16">
+                <div class="block mb-6">
+                    <div class="flex justify-between items-center bg-transparent py-2">
+
+                        <div>
+                            <span class="font-extrabold text-xl text-gray-800 dark:text-gray-100 pb-1 block">
+                                @lang('messages.t_selected_gigs_for_u')    
+                            </span>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('search') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                {{ __('messages.t_view_more') }}
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden ltr:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden rtl:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 sm:gap-x-9 gap-y-6">
+                    @foreach ($gigs as $gig)
+                        <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-3 xl:col-span-3">
+                            @livewire('main.cards.gig', ['gig' => $gig], key('gig-item-' . $gig->uid))
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ {{-- @foreach ($categories as $category)
+            @if ($category->gigs()->active()->count())
+                <div class="col-span-12">
+                    <div class="flex justify-between items-center bg-transparent py-2">
+
+                        <div>
+                            <span class="font-extrabold text-xl text-gray-800 dark:text-gray-100 pb-1 block tracking-wider">{{ $category->name }}</span>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                {{ __('messages.t_view_more') }}
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden ltr:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden rtl:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-span-12 mb-16">
+                    <div class="grid grid-cols-12 sm:gap-x-9 gap-y-6">
+                        @foreach ($category->gigs()->active()->inRandomOrder()->take(4)->get() as $gig)
+                            <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3">
+                                @livewire('main.cards.gig', ['gig' => $gig], key('gig-item-' . $category->id . '-' . $gig->uid))
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+            @endif
+        @endforeach --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@if (settings('projects')->is_enabled && !is_null($projects) && !$projects->isEmpty())
+            <div class="col-span-12 mb-16">
+            
+                {{-- Section title --}}
+                <div class="block mb-6">
+                    <div class="flex justify-between items-center bg-transparent py-2">
+
+                        <div>
+                            <span class="font-extrabold text-xl text-gray-800 dark:text-gray-100 pb-1 block tracking-wider">
+                                @lang('messages.t_latest_projects')    
+                            </span>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('explore/projects') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                {{ __('messages.t_view_more') }}
+                                
+                                {{-- LTR arrow --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden ltr:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+
+                                {{-- RTL arrow --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden rtl:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                {{-- Projects --}}
+                <div class="space-y-6">
+                    @foreach ($projects as $project)
+
+                        @livewire('main.cards.project', [ 'id' => $project->uid ], key('project-card-id-' . $project->uid))
+                        
+                    @endforeach
+                </div>
+
+            </div>
+        @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         @if (settings('newsletter')->is_enabled)
+            <div class="col-span-12">
+                <div class="bg-gray-100 dark:bg-zinc-800 rounded-md p-6 flex items-center sm:p-10">
+                    <div class="max-w-lg mx-auto">
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ __('messages.t_sign_up_for_newsletter') }}</h3>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">{{__('messages.t_sign_up_for_newsletter_subtitle')}}</p>
+                        <div class="mt-4 sm:mt-6 sm:flex">
+                            <label for="email-address" class="sr-only">Email address</label>
+                            <input wire:model.defer="email" id="email-address" type="text" autocomplete="email" required="" placeholder="{{ __('messages.t_enter_email_address') }}" class="h-14 appearance-none min-w-0 w-full bg-white dark:bg-zinc-700 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm py-2 px-4 text-sm text-gray-900 dark:text-gray-300 placeholder-gray-500 focus:outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600" readonly onfocus="this.removeAttribute('readonly');">
+                            <div class="mt-3 sm:flex-shrink-0 sm:mt-0 ltr:sm:ml-4 rtl:sm:mr-4">
+                                <button wire:click="newsletter" wire:loading.attr="disabled" wire:target="newsletter" type="button" class="dark:disabled:bg-zinc-500 dark:disabled:text-zinc-400 disabled:cursor-not-allowed disabled:!bg-gray-400 disabled:text-gray-500 h-14 w-full bg-primary-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-sm font-bold tracking-wider text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-600">
+                                    {{ __('messages.t_signup') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
