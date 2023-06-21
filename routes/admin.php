@@ -7,10 +7,10 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
     // Home
     Route::namespace('Home')->group(function() {
-    
+
         // Index
         Route::get('/', HomeComponent::class);
-    
+
     });
 
     // Profile
@@ -271,43 +271,43 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         });
 
     });
-    
+
     // Categories
     Route::namespace('Categories')->prefix('categories')->group(function() {
-    
+
         // All
         Route::get('/', CategoriesComponent::class);
-    
+
         // Options
         Route::namespace('Options')->group(function() {
-    
+
             // Create
             Route::get('create', CreateComponent::class);
-    
+
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-    
+
         });
-    
+
     });
-    
+
     // Subcategories
     Route::namespace('Subcategories')->prefix('subcategories')->group(function() {
-    
+
         // All
         Route::get('/', SubcategoriesComponent::class);
-    
+
         // Options
         Route::namespace('Options')->group(function() {
-    
+
             // Create
             Route::get('create', CreateComponent::class);
-    
+
             // Edit
             Route::get('edit/{id}', EditComponent::class);
-    
+
         });
-    
+
     });
 
     // Reviews
@@ -329,7 +329,7 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Projects
         Route::get('projects', ProjectsComponent::class);
-        
+
         // Bids
         Route::get('bids', BidsComponent::class);
 
@@ -450,7 +450,7 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Xendit
         Route::get('xendit', XenditComponent::class);
-        
+
         // Offline payment
         Route::get('offline', OfflineComponent::class);
 
@@ -497,13 +497,13 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         Route::get('epoint', EpointComponent::class);
 
     });
-    
+
     // Settings
     Route::namespace('Settings')->prefix('settings')->group(function() {
 
         // General
         Route::get('general', GeneralComponent::class);
-    
+
         // Currency
         Route::get('currency', CurrencyComponent::class);
 
@@ -528,7 +528,7 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         // Seo
         Route::get('seo', SeoComponent::class);
 
-        // Smtp 
+        // Smtp
         Route::get('smtp', SmtpComponent::class);
 
         // Withdrawal
@@ -542,7 +542,7 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
 
         // Chat
         Route::get('chat', ChatComponent::class);
-    
+
     });
 
     // Verifications
@@ -604,13 +604,13 @@ Route::middleware(['web', 'auth:admin'])->group(function() {
         Route::get('maintenance', MaintenanceComponent::class);
 
     });
-    
+
 });
 
 // Dashboard login
 Route::namespace('Auth')->middleware(['web', 'banned.ip', 'guest:admin'])->group(function() {
 
     // Login
-    Route::get('login', LoginComponent::class);
+    Route::get('login', LoginComponent::class)->name('admin.login');
 
 });

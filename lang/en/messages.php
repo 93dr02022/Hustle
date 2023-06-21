@@ -1207,6 +1207,8 @@ return [
     "t_export_verified"                                        => "Export verified",
     "t_my_messages"                                            => "My messages",
     "t_favorite_list"                                          => "Favorite list",
+    "t_notifications_settings"                                          => "Notifications Settings",
+    "t_notifications"                                          => "Notifications",
     "t_my_reviews"                                             => "My reviews",
     "t_account_reviews_subtitle"                               => "Your reviews for purchased gigs, you can edit or delete them",
     "t_are_u_sure_u_want_to_delete_this_review"                => "Are you sure you want to delete this review?",

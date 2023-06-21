@@ -3,9 +3,10 @@
 namespace App\Notifications\User\Buyer;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class OrderDelivered extends Notification implements ShouldQueue
 {
@@ -31,7 +32,8 @@ class OrderDelivered extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        //Get the notification channels that the user has allowed to be notified of.
+        return $this->getActiveChannels($notifiable);
     }
 
     /**
@@ -46,10 +48,29 @@ class OrderDelivered extends Notification implements ShouldQueue
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_delivered');
 
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_ur_order_item_has_delivered'))
-                    ->action(__('messages.t_view_delivered_work'), url( "account/orders/files?orderId=" . $this->order->order->uid . "&itemId=" . $this->order->uid ));
+            ->subject($subject)
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->line(__('messages.t_notification_ur_order_item_has_delivered'))
+            ->action(__('messages.t_view_delivered_work'), url("account/orders/files?orderId=" . $this->order->order->uid . "&itemId=" . $this->order->uid));
+    }
+    /**
+     * Create the push notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Kutia\Larafirebase\Facades\Larafirebase;
+     */
+    public function toFirebase($notifiable)
+    {
+        // Set subject
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_delivered');
+        $url =  url('account/orders');
+        return  Larafirebase::withTitle($subject)
+            ->withBody(__('messages.t_view_delivered_work'))
+            ->withClickAction($url)
+            ->withIcon(asset('img/default/no-favicon.png'))
+            ->withImage(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendMessage([$notifiable->push_notification_id]);
     }
 
     /**
@@ -63,5 +84,14 @@ class OrderDelivered extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    private function getActiveChannels($notifiable)
+    {
+        //Check if user has allowed push notifications for order updates
+        if ($notifiable->push_order_updates) {
+            $this->toFirebase($notifiable);
+        }
+        return ['mail'];
     }
 }

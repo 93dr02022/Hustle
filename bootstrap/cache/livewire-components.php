@@ -120,6 +120,7 @@
   'main.account.deposit.deposit-component' => 'App\\Http\\Livewire\\Main\\Account\\Deposit\\DepositComponent',
   'main.account.deposit.history-component' => 'App\\Http\\Livewire\\Main\\Account\\Deposit\\HistoryComponent',
   'main.account.favorite.favorite-component' => 'App\\Http\\Livewire\\Main\\Account\\Favorite\\FavoriteComponent',
+  'main.account.notifications.notifications-component' => 'App\\Http\\Livewire\\Main\\Account\\Notifications\\NotificationsComponent',
   'main.account.orders.options.files-component' => 'App\\Http\\Livewire\\Main\\Account\\Orders\\Options\\FilesComponent',
   'main.account.orders.options.requirements-component' => 'App\\Http\\Livewire\\Main\\Account\\Orders\\Options\\RequirementsComponent',
   'main.account.orders.orders-component' => 'App\\Http\\Livewire\\Main\\Account\\Orders\\OrdersComponent',

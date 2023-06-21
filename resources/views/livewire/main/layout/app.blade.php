@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ config()->get('direction') }}" @class(['dark' => current_theme() === 'dark'])>
-    
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -69,13 +69,13 @@
                 background-size: cover;
                 height: {{ settings('hero')->bg_large_height }}px;
             }
-            
+
             {{-- Check if background image enabled --}}
             @if (settings('hero')->enable_bg_img)
-                
+
                 {{-- Background image for small devices --}}
                 @if (settings('hero')->background_small)
-                
+
                     @media only screen and (max-width: 600px) {
                         .home-hero-section {
                             background-image: url('{{ src(settings('hero')->background_small) }}');
@@ -87,7 +87,7 @@
 
                 {{-- Background image for medium devices --}}
                 @if (settings('hero')->background_medium)
-                
+
                     @media only screen and (min-width: 600px) {
                         .home-hero-section {
                             background-image: url('{{ src(settings('hero')->background_medium) }}')
@@ -98,7 +98,7 @@
 
                 {{-- Background image for large devices --}}
                 @if (settings('hero')->background_large)
-                
+
                     @media only screen and (min-width: 768px) {
                         .home-hero-section {
                             background-image: url('{{ src(settings('hero')->background_large) }}');
@@ -109,7 +109,7 @@
 
                 {{-- Background image for large devices --}}
                 @if (settings('hero')->background_large)
-                
+
                     @media only screen and (min-width: 992px) {
                         .home-hero-section {
                             background-image: url('{{ src(settings('hero')->background_large) }}');
@@ -120,7 +120,7 @@
 
                 {{-- Background image for large devices --}}
                 @if (settings('hero')->background_large)
-                
+
                     @media only screen and (min-width: 1200px) {
                         .home-hero-section {
                             background-image: url('{{ src(settings('hero')->background_large) }}');
@@ -130,7 +130,7 @@
                 @endif
 
             @endif
-            
+
         </style>
 
         {{-- Styles --}}
@@ -156,6 +156,57 @@
             {!! settings('appearance')->custom_code_head_main_layout !!}
         @endif
 
+        {{-- Notification Initialization --}}
+
+        <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
+        <script>
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+                        apiKey: "AIzaSyB4H3R1_H5xi0NvV_n6NXCG73tr_t6GjFg",
+                        authDomain: "hustle-7d66f.firebaseapp.com",
+                        projectId: "hustle-7d66f",
+                        storageBucket: "hustle-7d66f.appspot.com",
+                        messagingSenderId: "378681680907",
+                        appId: "1:378681680907:web:0488b453643915a367930e",
+                        measurementId: "G-B31LGQ7JG1"
+                    };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            const messaging = firebase.messaging();
+            @if(auth()->check())
+
+                function initFirebaseMessagingRegistration() {
+                    messaging.requestPermission().then(function () {
+                        return messaging.getToken()
+                    }).then(function(token) {
+                        window.axios.post("{{ route('subscribe-to-notifications') }}",{
+                            _method:"PATCH",
+                            token
+                        }).then(({data})=>{
+                            console.log(data)
+                        }).catch(({response:{data}})=>{
+                            console.error(data)
+                        })
+
+                    }).catch(function (err) {
+                        console.log(`Token Error :: ${err}`);
+                    });
+                }
+
+                initFirebaseMessagingRegistration();
+
+                messaging.onMessage(function({data:{body,title}}){
+                    new Notification(title, {body});
+                });
+
+            @endif
+        </script>
+
+
+
     </head>
 
     <body class="antialiased bg-gray-50 dark:bg-[#161616] text-gray-600 min-h-full flex flex-col application application-ltr overflow-x-hidden overflow-y-scroll {{ app()->getLocale() === 'ar' ? 'application-ar' : '' }}" style="overflow-y: scroll">
@@ -176,16 +227,16 @@
             <div class="home-hero-section">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
                     <div class="w-full md:max-w-lg">
-                        
+
                         {{-- Hero section title --}}
                         <h1 class="text-center sm:ltr:text-left sm:rtl:text-right mt-4 text-xl tracking-tight font-extrabold text-white sm:mt-5 sm:text-3xl lg:mt-6 xl:text-4xl">
                             {{ __('messages.t_find_best') }} {{ __('messages.t_freelance') }}<br> {{ __('messages.t_services_for_ur_business') }}
                         </h1>
                         <div class="mt-10 sm:mt-12">
-    
+
                             {{-- Search form --}}
-                            <form class="flex items-center mb-4" action="{{ url('search') }}" accept="GET">   
-    
+                            <form class="flex items-center mb-4" action="{{ url('search') }}" accept="GET">
+
                                 {{-- Input --}}
                                 <div class="relative w-full">
                                     <div class="absolute inset-y-0 ltr:left-0 rtl:right-0 flex items-center ltr:pl-3 rtl:pr-3 pointer-events-none">
@@ -193,20 +244,20 @@
                                     </div>
                                     <input type="search" name="q" class="bg-white border-none text-gray-900 text-sm font-medium rounded-md block w-full ltr:pl-10 rtl:pr-10 px-2.5 py-4 focus:outline-none focus:ring-0" placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" required>
                                 </div>
-    
+
                                 {{-- Button --}}
                                 <button type="submit" class="px-5 py-4 ltr:ml-2 rtl:mr-2 text-sm font-medium text-white bg-primary-600 rounded-md border-none hover:bg-primary-800 focus:ring-0 focus:outline-none">
                                     @lang('messages.t_search')
                                 </button>
-    
+
                             </form>
-    
+
                             {{-- Popular tags --}}
                             @php
                                 $popular_tags = App\Models\Category::whereHas('gigs')->withCount('gigs')->take(5)->orderBy('gigs_count')->get();
                             @endphp
                             <div class="hidden sm:flex items-center text-white font-semibold text-sm whitespace-nowrap">
-                                @lang('messages.t_popular_colon') 
+                                @lang('messages.t_popular_colon')
                                 <ul class="flex ltr:ml-3 rtl:mr-3">
                                     @foreach ($popular_tags as $tag)
                                         <li class="flex ltr:mr-3 rtl:ml-3 whitespace-nowrap">
@@ -217,9 +268,9 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            
+
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -227,7 +278,7 @@
         @endif
 
         {{-- Content --}}
-        <main class="flex-grow"> 
+        <main class="flex-grow">
             <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 pb-24 space-y-8 min-h-screen">
                 @yield('content')
             </div>
@@ -251,7 +302,7 @@
 
         {{-- Custom JS codes --}}
         <script defer>
-            
+
             document.addEventListener("DOMContentLoaded", function(){
 
                 jQuery.event.special.touchstart = {
@@ -325,7 +376,7 @@
             document.ontouchmove = function(event){
                 event.preventDefault();
             }
-            
+
         </script>
 
         {{-- Custom scripts --}}

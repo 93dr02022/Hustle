@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class OrderItemCanceled extends Notification implements ShouldQueue
 {
@@ -31,7 +32,8 @@ class OrderItemCanceled extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        //Get the notification channels that the user has allowed to be notified of.
+        return $this->getActiveChannels($notifiable);
     }
 
     /**
@@ -51,6 +53,19 @@ class OrderItemCanceled extends Notification implements ShouldQueue
                     ->line(__('messages.t_notification_buyer_item_canceled'))
                     ->action(__('messages.t_my_orders'), url('account/orders'));
     }
+    public function toFirebase($notifiable)
+    {
+        // Set subject
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_canceled');
+        $url =  url('account/orders');
+        return  Larafirebase::withTitle($subject)
+            ->withBody(__('messages.t_notification_buyer_item_canceled'))
+            ->withClickAction($url)
+            ->withIcon(asset('img/default/no-favicon.png'))
+            ->withImage(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendMessage([$notifiable->push_notification_id]);
+    }
 
     /**
      * Get the array representation of the notification.
@@ -63,5 +78,13 @@ class OrderItemCanceled extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+    private function getActiveChannels($notifiable)
+    {
+        //Check if user has allowed push notifications for order updates
+        if ($notifiable->push_order_updates) {
+            $this->toFirebase($notifiable);
+        }
+        return ['mail'];
     }
 }
