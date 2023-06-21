@@ -14,6 +14,7 @@ use App\Models\ChMessage as Message;
 use App\Models\ChFavorite as Favorite;
 use Illuminate\Support\Facades\Response;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class MessagesController extends Controller
 {
@@ -260,6 +261,12 @@ class MessagesController extends Controller
                 'to_id'   => $request->get('id'),
                 'message' => $this->chat->messageCard($messageData, 'default')
             ]);
+            $toUser = User::find($request['id']);
+            if ($toUser->push_inbox_messages) {
+                Larafirebase::withTitle("New Message!")
+                ->withBody("You have a new message")
+                ->sendMessage([$toUser->push_notification_id]);
+            }
         }
 
         // Send the response
