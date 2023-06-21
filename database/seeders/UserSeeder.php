@@ -18,24 +18,40 @@ class UserSeeder extends Seeder
     {
         User::create([
             'uid' => uid(),
-            'first_name' => 'sunny',
+            'first_name' => 'sunday',
             'last_name' => 'afuwape',
             'email' => 'sunny@surehustle.com',
             'username' => 'sunny',
             'password' => Hash::make('12345678'),
             'status' => 'active',
-            'level_id' => 1
+            'level_id' => 2,
+            'account_type' => 'seller'
         ]);
 
         User::create([
             'uid' => uid(),
-            'first_name' => 'joshy',
-            'last_name' => 'afuwape',
-            'email' => 'joshy@surehustle.com',
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'email' => 'josh@surehustle.com',
             'username' => 'joshy',
             'password' => Hash::make('12345678'),
             'status' => 'active',
-            'level_id' => 2
+            'level_id' => 1
         ]);
+
+
+        collect()->times(200)->each(function () {
+            User::create([
+                'uid' => uid(),
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'email' => fake()->unique()->email(),
+                'username' => fake()->unique()->userName(),
+                'password' => Hash::make('12345678'),
+                'status' => 'active',
+                'level_id' => 2,
+                'account_type' => 'seller'
+            ]);
+        });
     }
 }
