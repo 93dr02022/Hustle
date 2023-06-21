@@ -121,12 +121,11 @@ class AuthComponent extends Component
 
             // Check if request has auth wallpaper
             if ($this->auth_img_id) {
-                $auth_img_id = ImageUploader::make($this->auth_img_id)
-                    ->folder('site/auth')
-                    ->deleteById($settings->auth_img_id)
-                    ->handle();
+                $authImagePath = ImageUploader::make($this->auth_img_id)
+                    ->unBucket($settings->auth_img_id)
+                    ->toBucket('site/auth');
             } else {
-                $auth_img_id = $settings->auth_img_id;
+                $authImagePath = $settings->auth_img_id;
             }
 
             // Update settings
@@ -135,7 +134,7 @@ class AuthComponent extends Component
                 'verification_type' => $this->verification_type,
                 'verification_expiry_period' => $this->verification_expiry_period,
                 'password_reset_expiry_period' => $this->password_reset_expiry_period,
-                'auth_img_id' => $auth_img_id,
+                'auth_img_id' => $authImagePath,
                 'is_facebook_login' => $this->is_facebook_login ? 1 : 0,
                 'is_google_login' => $this->is_google_login ? 1 : 0,
                 'is_twitter_login' => $this->is_twitter_login ? 1 : 0,
@@ -172,7 +171,6 @@ class AuthComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

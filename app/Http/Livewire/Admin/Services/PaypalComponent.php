@@ -81,8 +81,6 @@ class PaypalComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             PaypalValidator::validate($this);
 
             // Get old settings
@@ -93,15 +91,12 @@ class PaypalComponent extends Component
 
                 // Upload new logo
                 $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('services');
             } else {
 
                 // Use old value
                 $logo_id = $settings->logo_id;
-
             }
 
             // Save settings
@@ -120,14 +115,12 @@ class PaypalComponent extends Component
                 Config::write('paypal.mode', 'sandbox');
                 Config::write('paypal.sandbox.client_id', $this->client_id);
                 Config::write('paypal.sandbox.client_secret', $this->client_secret);
-
             } else {
 
                 // Write live config
                 Config::write('paypal.mode', 'live');
                 Config::write('paypal.live.client_id', $this->client_id);
                 Config::write('paypal.live.client_secret', $this->client_secret);
-
             }
 
             // Update currency
@@ -145,7 +138,6 @@ class PaypalComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

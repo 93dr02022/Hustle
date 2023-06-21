@@ -86,23 +86,20 @@ class MollieComponent extends Component
             if ($this->logo) {
 
                 // Upload new logo
-                $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                $logoPath = ImageUploader::make($this->logo)
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('services');
             } else {
 
                 // Use old value
-                $logo_id = $settings->logo_id;
-
+                $logoPath = $settings->logo_id;
             }
 
             // Save settings
             MollieSettings::first()->update([
                 'is_enabled' => $this->is_enabled ? 1 : 0,
                 'name' => $this->name,
-                'logo_id' => $logo_id,
+                'logo_id' => $logoPath,
                 'currency' => $this->currency,
                 'exchange_rate' => $this->exchange_rate,
                 'deposit_fee' => $this->deposit_fee,
@@ -123,7 +120,6 @@ class MollieComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

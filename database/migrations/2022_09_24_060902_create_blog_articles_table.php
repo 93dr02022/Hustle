@@ -19,11 +19,9 @@ return new class extends Migration
             $table->string('title', 100)->unique();
             $table->string('slug', 160)->unique();
             $table->longText('content');
-            $table->unsignedBigInteger('image_id');
+            $table->string('image_id')->nullable();
             $table->integer('reading_time')->default(5);
             $table->timestamps();
-
-            $table->foreign('image_id')->references('id')->on('file_manager');
         });
     }
 

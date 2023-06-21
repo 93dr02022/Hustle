@@ -101,35 +101,32 @@ class GeneralComponent extends Component
 
             // Check if request has logo
             if ($this->logo) {
-                $logo_id = ImageUploader::make($this->logo)
+                $logoPath = ImageUploader::make($this->logo)
                     ->extension('png')
-                    ->folder('site/logo')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('site/logo');
             } else {
-                $logo_id = $settings->logo_id;
+                $logoPath = $settings->logo_id;
             }
 
             // Check if request has logo dark
             if ($this->logo_dark) {
-                $logo_dark_id = ImageUploader::make($this->logo_dark)
-                    ->folder('site/logo')
+                $logoDarkPath = ImageUploader::make($this->logo_dark)
                     ->extension('png')
-                    ->deleteById($settings->logo_dark__id)
-                    ->handle();
+                    ->unBucket($settings->logo_dark__id)
+                    ->toBucket('site/logo');
             } else {
-                $logo_dark_id = $settings->logo_dark_id;
+                $logoDarkPath = $settings->logo_dark_id;
             }
 
             // Check if request has favicon
             if ($this->favicon) {
-                $favicon_id = ImageUploader::make($this->favicon)
-                    ->folder('site/favicon')
+                $faviconPath = ImageUploader::make($this->favicon)
                     ->extension('png')
-                    ->deleteById($settings->favicon_id)
-                    ->handle();
+                    ->unBucket($settings->favicon_id)
+                    ->toBucket('site/favicon');
             } else {
-                $favicon_id = $settings->favicon_id;
+                $faviconPath = $settings->favicon_id;
             }
 
             // Save settings
@@ -142,18 +139,18 @@ class GeneralComponent extends Component
             $settings->default_language = $this->default_language;
 
             // Save logo
-            if ($logo_id) {
-                $settings->logo_id = $logo_id;
+            if ($logoPath) {
+                $settings->logo_id = $logoPath;
             }
 
             // Save dark logo
-            if ($logo_dark_id) {
-                $settings->logo_dark_id = $logo_dark_id;
+            if ($logoDarkPath) {
+                $settings->logo_dark_id = $logoDarkPath;
             }
 
             // Save favicon
-            if ($favicon_id) {
-                $settings->favicon_id = $favicon_id;
+            if ($faviconPath) {
+                $settings->favicon_id = $faviconPath;
             }
 
             $settings->save();
@@ -173,7 +170,6 @@ class GeneralComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

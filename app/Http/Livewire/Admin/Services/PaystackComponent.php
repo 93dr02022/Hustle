@@ -78,10 +78,9 @@ class PaystackComponent extends Component
 
             if ($this->logo) {
                 $path = ImageUploader::make($this->logo)
+                    ->unBucket($settings->logo_id)
                     ->size(200)
                     ->toBucket('services');
-
-                ImageUploader::deBucket("{$settings->logo_id}");
             } else {
                 $path = $settings->logo_id;
             }

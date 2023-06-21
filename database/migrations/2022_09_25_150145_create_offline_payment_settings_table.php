@@ -18,11 +18,9 @@ return new class extends Migration
             $table->boolean('is_enabled')->default(false);
             $table->string('name', 60)->default('Bank transfer');
             $table->text('details')->nullable();
-            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->string('logo_id')->nullable();
             $table->decimal('exchange_rate')->default(1);
             $table->integer('deposit_fee')->default(0);
-
-            $table->foreign('logo_id')->references('id')->on('file_manager');
         });
     }
 

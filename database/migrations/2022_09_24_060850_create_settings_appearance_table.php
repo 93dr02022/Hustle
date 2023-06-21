@@ -20,8 +20,19 @@ return new class extends Migration
             $table->boolean('is_dark_mode')->default(0);
             $table->text('font_link')->nullable();
             $table->string('font_family', 60)->nullable();
+            $table->string('placeholder_img_id')->nullable();
+
             $table->boolean('is_featured_categories')->default(false);
             $table->boolean('is_best_sellers')->default(false);
+            $table->enum('default_theme', ['light', 'dark'])->default('light');
+            $table->boolean('is_theme_switcher')->default(true);
+
+            $table->mediumText('custom_code_head_main_layout')->nullable();
+            $table->mediumText('custom_code_footer_main_layout')->nullable();
+            $table->mediumText('custom_code_head_admin_layout')->nullable();
+            $table->mediumText('custom_code_footer_admin_layout')->nullable();
+            $table->mediumText('custom_code_head_freelancer_layout')->nullable();
+            $table->mediumText('custom_code_footer_freelancer_layout')->nullable();
         });
     }
 

@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('currency', 3)->default('AZN');
             $table->decimal('exchange_rate')->default(1.7);
             $table->decimal('deposit_fee')->default(2);
-
-            $table->foreign('logo_id')->references('id')->on('file_manager');
         });
     }
 

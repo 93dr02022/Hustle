@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_language_switcher')->default(true);
             $table->unsignedBigInteger('page_terms_id')->nullable();
             $table->unsignedBigInteger('page_policy_id')->nullable();
-            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->string('logo_id')->nullable();
             $table->text('copyrights')->nullable();
             $table->string('social_facebook')->nullable();
             $table->string('social_twitter')->nullable();
@@ -28,10 +28,8 @@ return new class extends Migration
             $table->string('social_youtube')->nullable();
             $table->string('social_github')->nullable();
 
-            $table->foreign('logo_id')->references('id')->on('file_manager');
             $table->foreign('page_terms_id')->references('id')->on('pages');
             $table->foreign('page_policy_id')->references('id')->on('pages');
-
         });
     }
 

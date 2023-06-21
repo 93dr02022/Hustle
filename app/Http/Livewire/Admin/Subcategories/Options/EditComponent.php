@@ -87,38 +87,34 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             EditValidator::validate($this);
 
             // Upload categorory icon
             if ($this->icon) {
-                $icon_id = ImageUploader::make($this->icon)
-                    ->deleteById($this->subcategory->icon_id)
-                    ->resize(100, 100)
-                    ->folder('subcategories')
-                    ->handle();
+                $iconPath = ImageUploader::make($this->icon)
+                    ->unBucket($this->subcategory->icon_id)
+                    ->size(100, 100)
+                    ->toBucket('subcategories');
             } else {
-                $icon_id = $this->subcategory->icon_id;
+                $iconPath = $this->subcategory->icon_id;
             }
 
             // Upload subcategory image
             if ($this->image) {
-                $image_id = ImageUploader::make($this->image)
-                    ->deleteById($this->subcategory->image_id)
-                    ->resize(800)
-                    ->folder('subcategories')
-                    ->handle();
+                $imagePath = ImageUploader::make($this->image)
+                    ->unBucket($this->subcategory->image_id)
+                    ->size(800)
+                    ->toBucket('subcategories');
             } else {
-                $image_id = $this->subcategory->image_id;
+                $imagePath = $this->subcategory->image_id;
             }
 
             // Update subcategory
             $this->subcategory->name = $this->name;
             $this->subcategory->slug = Str::slug($this->slug);
             $this->subcategory->description = $this->description ? $this->description : null;
-            $this->subcategory->icon_id = $icon_id;
-            $this->subcategory->image_id = $image_id;
+            $this->subcategory->icon_id = $iconPath;
+            $this->subcategory->image_id = $imagePath;
             $this->subcategory->parent_id = $this->parent_id;
             $this->subcategory->save();
 
@@ -128,7 +124,6 @@ class EditComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

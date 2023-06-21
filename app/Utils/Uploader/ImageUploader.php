@@ -121,7 +121,6 @@ class ImageUploader
      * Set default extension
      *
      * @param  string  $extension
-     * @return void
      */
     public function extension($extension)
     {
@@ -136,6 +135,15 @@ class ImageUploader
     public static function deBucket($path)
     {
         Storage::disk('s3')->delete($path);
+    }
+
+    /**
+     * delete image from bucket
+     */
+    public function unBucket($path)
+    {
+        Storage::disk('s3')->delete($path);
+        return $this;
     }
 
     /**
