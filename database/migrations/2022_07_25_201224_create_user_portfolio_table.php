@@ -16,18 +16,15 @@ return new class extends Migration
         Schema::create('user_portfolio', function (Blueprint $table) {
             $table->id();
             $table->string('uid', 20)->unique();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->string('title', 100);
             $table->string('slug', 160)->unique();
             $table->longText('description')->nullable();
-            $table->unsignedBigInteger('thumb_id');
+            $table->string('thumb_id');
             $table->string('project_link', 120)->nullable();
             $table->string('project_video', 120)->nullable();
             $table->enum('status', ['pending', 'active'])->default('pending');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('thumb_id')->references('id')->on('file_manager');
         });
     }
 

@@ -72,7 +72,6 @@ class SeoComponent extends Component
     public function update()
     {
         try {
-
             // Validate form
             SeoValidator::validate($this);
 
@@ -81,12 +80,11 @@ class SeoComponent extends Component
 
             // Upload ogimage
             if ($this->ogimage) {
-                $ogimage_id = ImageUploader::make($this->ogimage)
-                    ->folder('site/ogimage')
-                    ->deleteById($settings->ogimage_id)
-                    ->handle();
+                $ogimagePath = ImageUploader::make($this->ogimage)
+                    ->unBucket($settings->ogimage_id)
+                    ->toBucket('site/ogimage');
             } else {
-                $ogimage_id = $settings->ogimage_id;
+                $ogimagePath = $settings->ogimage_id;
             }
 
             // Update settings
@@ -95,7 +93,7 @@ class SeoComponent extends Component
             $settings->facebook_app_id = $this->facebook_app_id;
             $settings->twitter_username = $this->twitter_username;
             if ($this->ogimage) {
-                $settings->ogimage_id = $ogimage_id;
+                $settings->ogimage_id = $ogimagePath;
             }
             $settings->is_sitemap = $this->is_sitemap;
             $settings->save();
@@ -109,7 +107,6 @@ class SeoComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -170,9 +167,7 @@ class SeoComponent extends Component
                     'description' => __('messages.t_toast_operation_success'),
                     'icon' => 'success',
                 ]);
-
             }
-
         } catch (\Throwable $th) {
 
             // Error
@@ -181,7 +176,6 @@ class SeoComponent extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

@@ -95,8 +95,6 @@ class AppearanceComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             AppearanceValidator::validate($this);
 
             // Get settings
@@ -104,12 +102,11 @@ class AppearanceComponent extends Component
 
             // Check if request has placeholder image
             if ($this->placeholder_img) {
-                $placeholder_img_id = ImageUploader::make($this->placeholder_img)
-                    ->folder('site/placeholder')
-                    ->deleteById($settings->placeholder_img_id)
-                    ->handle();
+                $placeholderPath = ImageUploader::make($this->placeholder_img)
+                    ->unBucket($settings->placeholder_img_id)
+                    ->toBucket('site/placeholder');
             } else {
-                $placeholder_img_id = $settings->placeholder_img_id;
+                $placeholderPath = $settings->placeholder_img_id;
             }
 
             // Set colors
@@ -131,7 +128,7 @@ class AppearanceComponent extends Component
                 'is_best_sellers' => $this->is_best_sellers ? 1 : 0,
                 'font_link' => $this->font_link,
                 'font_family' => $this->font_family,
-                'placeholder_img_id' => $placeholder_img_id,
+                'placeholder_img_id' => $placeholderPath,
                 'default_theme' => $this->default_theme,
                 'custom_code_head_main_layout' => $this->custom_code_head_main_layout,
                 'custom_code_footer_main_layout' => $this->custom_code_footer_main_layout,
@@ -150,7 +147,6 @@ class AppearanceComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -169,7 +165,6 @@ class AppearanceComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

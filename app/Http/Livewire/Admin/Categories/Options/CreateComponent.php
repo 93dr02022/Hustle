@@ -55,16 +55,16 @@ class CreateComponent extends Component
 
             // Upload categorory icon
             if ($this->icon) {
-                $icon_id = ImageUploader::make($this->icon)->resize(100, 100)->folder('categories')->handle();
+                $iconPath = ImageUploader::make($this->icon)->size(100, 100)->toBucket('categories');
             } else {
-                $icon_id = null;
+                $iconPath = null;
             }
 
             // Upload category image
             if ($this->image) {
-                $image_id = ImageUploader::make($this->image)->resize(800)->folder('categories')->handle();
+                $imagePath = ImageUploader::make($this->image)->size(800)->toBucket('categories');
             } else {
-                $image_id = null;
+                $imagePath = null;
             }
 
             // Save category
@@ -73,8 +73,8 @@ class CreateComponent extends Component
             $category->name = $this->name;
             $category->slug = Str::slug($this->slug);
             $category->description = $this->description ? $this->description : null;
-            $category->icon_id = $icon_id;
-            $category->image_id = $image_id;
+            $category->icon_id = $iconPath;
+            $category->image_id = $imagePath;
             $category->is_visible = $this->is_visible ? true : false;
             $category->save();
 
@@ -87,7 +87,6 @@ class CreateComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

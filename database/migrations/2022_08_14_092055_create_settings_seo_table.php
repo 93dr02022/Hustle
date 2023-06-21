@@ -19,10 +19,8 @@ return new class extends Migration
             $table->string('facebook_page_id', 60)->nullable();
             $table->string('facebook_app_id', 60)->nullable();
             $table->string('twitter_username', 60)->nullable();
-            $table->unsignedBigInteger('ogimage_id')->nullable();
+            $table->string('ogimage_id')->nullable();
             $table->boolean('is_sitemap')->default(true);
-
-            $table->foreign('ogimage_id')->references('id')->on('file_manager');
         });
     }
 

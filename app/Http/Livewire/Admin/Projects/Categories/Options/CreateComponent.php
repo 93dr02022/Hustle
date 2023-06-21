@@ -15,7 +15,7 @@ use WireUi\Traits\Actions;
 
 class CreateComponent extends Component
 {
-    use WithFileUploads ,SEOToolsTrait, Actions;
+    use WithFileUploads, SEOToolsTrait, Actions;
 
     public $translations = [];
 
@@ -88,7 +88,6 @@ class CreateComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Add catgeory in this language
@@ -115,7 +114,6 @@ class CreateComponent extends Component
                 'target' => '.select2',
                 'component' => $this->id,
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -171,7 +169,6 @@ class CreateComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } else {
 
             // Not found
@@ -180,7 +177,6 @@ class CreateComponent extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
 
         // Reload select2
@@ -198,28 +194,24 @@ class CreateComponent extends Component
     public function create()
     {
         try {
-
-            // Validate form
             CreateValidator::validate($this);
 
             // Upload thumbnail
             if ($this->thumbnail) {
-                $thumbnail_id = ImageUploader::make($this->thumbnail)
+                $thumbnailPath = ImageUploader::make($this->thumbnail)
                     ->extension('jpg')
-                    ->folder('projects/categories/thumbnails')
-                    ->handle();
+                    ->toBucket('projects/categories/thumbnails');
             } else {
-                $thumbnail_id = null;
+                $thumbnailPath = null;
             }
 
             // Upload ogimage
             if ($this->ogimage) {
-                $ogimage_id = ImageUploader::make($this->ogimage)
+                $ogimagePath = ImageUploader::make($this->ogimage)
                     ->extension('jpg')
-                    ->folder('projects/categories/ogimages')
-                    ->handle();
+                    ->toBucket('projects/categories/ogimages');
             } else {
-                $ogimage_id = null;
+                $ogimagePath = null;
             }
 
             // Create new category
@@ -228,8 +220,8 @@ class CreateComponent extends Component
             $category->name = $this->name;
             $category->slug = strtolower($this->slug);
             $category->seo_description = $this->seo_description;
-            $category->thumbnail_id = $thumbnail_id;
-            $category->ogimage_id = $ogimage_id;
+            $category->thumbnail_id = $thumbnailPath;
+            $category->ogimage_id = $ogimagePath;
             $category->save();
 
             // Check if has translations
@@ -245,10 +237,8 @@ class CreateComponent extends Component
                         $translation->language_code = strtolower($value['language_code']);
                         $translation->language_value = $value['language_value'];
                         $translation->save();
-
                     }
                 }
-
             }
 
             // Reset form
@@ -266,7 +256,6 @@ class CreateComponent extends Component
                 'target' => '.select2',
                 'component' => $this->id,
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

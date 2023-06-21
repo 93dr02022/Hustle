@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('gig_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('gig_id')->constrained();
-            $table->string('img_thumb_id');
-            $table->string('img_medium_id');
-            $table->string('img_large_id');
+            $table->string('img_thumb_id')->nullable();
+            $table->string('img_medium_id')->nullable();
+            $table->string('img_large_id')->nullable();
         });
     }
 

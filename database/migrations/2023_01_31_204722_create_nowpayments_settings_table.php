@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('crypto_currency', 3)->default('btc');
             $table->decimal('exchange_rate')->default(1);
             $table->integer('deposit_fee')->default(0);
-
-            $table->foreign('logo_id')->references('id')->on('file_manager');
         });
     }
 

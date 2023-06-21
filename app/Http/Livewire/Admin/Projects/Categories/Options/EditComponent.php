@@ -68,12 +68,10 @@ class EditComponent extends Component
 
                 // Add data to translations
                 array_push($this->translations, $data);
-
             }
 
             // Refresh values
             array_values($this->translations);
-
         }
 
         // Set category
@@ -135,7 +133,6 @@ class EditComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Add catgeory in this language
@@ -162,7 +159,6 @@ class EditComponent extends Component
                 'target' => '.select2',
                 'component' => $this->id,
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -218,7 +214,6 @@ class EditComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } else {
 
             // Not found
@@ -227,7 +222,6 @@ class EditComponent extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
 
         // Reload select2
@@ -245,41 +239,34 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             EditValidator::validate($this);
-
-            // Disable foreign key check
-            Schema::disableForeignKeyConstraints();
 
             // Upload thumbnail
             if ($this->thumbnail) {
-                $thumbnail_id = ImageUploader::make($this->thumbnail)
+                $thumbnailPath = ImageUploader::make($this->thumbnail)
                     ->extension('jpg')
-                    ->folder('projects/categories/thumbnails')
-                    ->deleteById($this->category->thumbnail_id)
-                    ->handle();
+                    ->unBucket($this->category->thumbnail_id)
+                    ->toBucket('projects/categories/thumbnails');
             } else {
-                $thumbnail_id = $this->category->thumbnail_id;
+                $thumbnailPath = $this->category->thumbnail_id;
             }
 
             // Upload ogimage
             if ($this->ogimage) {
-                $ogimage_id = ImageUploader::make($this->ogimage)
+                $ogimagePath = ImageUploader::make($this->ogimage)
                     ->extension('jpg')
-                    ->folder('projects/categories/ogimages')
-                    ->deleteById($this->category->ogimage_id)
-                    ->handle();
+                    ->unBucket($this->category->ogimage_id)
+                    ->toBucket('projects/categories/ogimages');
             } else {
-                $ogimage_id = $this->category->ogimage_id;
+                $ogimagePath = $this->category->ogimage_id;
             }
 
             // Update category
             $this->category->name = $this->name;
             $this->category->slug = strtolower($this->slug);
             $this->category->seo_description = $this->seo_description;
-            $this->category->thumbnail_id = $thumbnail_id;
-            $this->category->ogimage_id = $ogimage_id;
+            $this->category->thumbnail_id = $thumbnailPath;
+            $this->category->ogimage_id = $ogimagePath;
             $this->category->save();
 
             // Check if category has translations
@@ -300,14 +287,9 @@ class EditComponent extends Component
                         $translation->language_code = strtolower($value['language_code']);
                         $translation->language_value = $value['language_value'];
                         $translation->save();
-
                     }
                 }
-
             }
-
-            // Enable foreign key check
-            Schema::enableForeignKeyConstraints();
 
             // Success
             $this->notification([
@@ -321,7 +303,6 @@ class EditComponent extends Component
                 'target' => '.select2',
                 'component' => $this->id,
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

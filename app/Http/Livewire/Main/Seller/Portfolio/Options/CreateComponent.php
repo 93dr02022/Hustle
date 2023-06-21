@@ -39,7 +39,7 @@ class CreateComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_create_project')." $separator ".settings('general')->title;
+        $title = __('messages.t_create_project') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -53,7 +53,7 @@ class CreateComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -74,18 +74,18 @@ class CreateComponent extends Component
     public function create()
     {
         try {
-
-            // Validate form
             CreateValidator::validate($this);
 
             // Upload categorory icon
-            $thumb_id = ImageUploader::make($this->thumbnail)->resize(1000)->folder('seller/projects/thumbnails')->handle();
+            $path = ImageUploader::make($this->thumbnail)
+                ->size(1000)
+                ->toBucket('seller/projects/thumbnails');
 
             // Generate project id
             $project_id = uid();
 
             // Generate slug
-            $slug = substr(Str::slug($this->title), 0, 138).'-'.$project_id;
+            $slug = substr(Str::slug($this->title), 0, 138) . '-' . $project_id;
 
             // Save project
             $project = new UserPortfolio();
@@ -94,7 +94,7 @@ class CreateComponent extends Component
             $project->title = clean($this->title);
             $project->slug = $slug;
             $project->description = clean($this->description);
-            $project->thumb_id = $thumb_id;
+            $project->thumb_id = $path;
             $project->status = settings('publish')->auto_approve_portfolio ? 'active' : 'pending';
             $project->project_link = $this->link ? clean($this->link) : null;
             $project->project_video = $this->video ? clean($this->video) : null;
@@ -104,24 +104,22 @@ class CreateComponent extends Component
             foreach ($this->images as $img) {
 
                 // Save image locally
-                $image_id = ImageUploader::make($img)->resize(1000)->folder('seller/projects/gallery')->handle();
+                $folioPath = ImageUploader::make($img)->size(1000)->toBucket('seller/projects/gallery');
 
                 // Save image in database
                 $image = new UserPortfolioGallery();
                 $image->project_id = $project->id;
-                $image->image_id = $image_id;
+                $image->image_id = $folioPath;
                 $image->save();
-
             }
 
             // Send notification to admin if project status pending
-            if (! settings('publish')->auto_approve_portfolio) {
+            if (!settings('publish')->auto_approve_portfolio) {
                 Admin::first()->notify((new PendingPortfolio($project))->locale(config('app.locale')));
             }
 
             // Redirect to projects with success
             return redirect('seller/portfolio')->with('success', __('messages.t_ur_project_created_successfully'));
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

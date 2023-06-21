@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('verification_type', ['admin', 'email'])->default('admin');
             $table->integer('verification_expiry_period')->default(60);
             $table->integer('password_reset_expiry_period')->default(60);
+            $table->string('auth_img_id')->nullable();
             $table->boolean('is_facebook_login')->default(true);
             $table->boolean('is_google_login')->default(true);
             $table->boolean('is_twitter_login')->default(true);

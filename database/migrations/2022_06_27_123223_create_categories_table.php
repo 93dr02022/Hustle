@@ -19,13 +19,10 @@ return new class extends Migration
             $table->string('name', 60)->unique();
             $table->string('slug', 60)->unique();
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('icon_id')->nullable();
-            $table->unsignedBigInteger('image_id')->nullable();
+            $table->string('icon_id')->nullable();
+            $table->string('image_id')->nullable();
             $table->boolean('is_visible')->default(true);
             $table->timestamps();
-
-            $table->foreign('icon_id')->references('id')->on('file_manager');
-            $table->foreign('image_id')->references('id')->on('file_manager');
         });
     }
 

@@ -91,15 +91,12 @@ class NowpaymentsComponent extends Component
 
                 // Upload new logo
                 $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('services');
             } else {
 
                 // Use old value
                 $logo_id = $settings->logo_id;
-
             }
 
             // Save settings
@@ -122,13 +119,11 @@ class NowpaymentsComponent extends Component
                 // Set live settings
                 Config::write('nowpayments.live', 1);
                 Config::write('nowpayments.payment_url', 'https://api.nowpayments.io/v1/payment');
-
             } else {
 
                 // Set sandbox settings
                 Config::write('nowpayments.live', 0);
                 Config::write('nowpayments.payment_url', 'https://api-sandbox.nowpayments.io/v1/payment');
-
             }
 
             // Clear config cache
@@ -143,7 +138,6 @@ class NowpaymentsComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -162,7 +156,6 @@ class NowpaymentsComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

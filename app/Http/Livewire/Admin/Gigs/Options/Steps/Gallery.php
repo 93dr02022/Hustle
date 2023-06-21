@@ -83,7 +83,7 @@ class Gallery extends Component
         if (isset($matches[1])) {
 
             // Now we have to check if video really exists or not
-            $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v='.$matches[1]);
+            $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $matches[1]);
 
             if (is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/', $headers[0]) : false) {
 
@@ -96,7 +96,6 @@ class Gallery extends Component
 
                 // Close modal
                 $this->dispatchBrowserEvent('close-modal', 'modal-add-youtube-video-container');
-
             } else {
 
                 // Video not exists, reset form
@@ -110,9 +109,7 @@ class Gallery extends Component
                 ]);
 
                 return;
-
             }
-
         } else {
 
             // Video not valid, reset form
@@ -126,7 +123,6 @@ class Gallery extends Component
             ]);
 
             return;
-
         }
     }
 
@@ -149,8 +145,7 @@ class Gallery extends Component
     public function back()
     {
         // Go back to preview step
-        return redirect(config('global.dashboard_prefix').'/gigs/edit/'.$this->gig->uid.'?step=requirements');
-
+        return redirect(config('global.dashboard_prefix') . '/gigs/edit/' . $this->gig->uid . '?step=requirements');
     }
 
     /**
@@ -161,13 +156,14 @@ class Gallery extends Component
      */
     public function removeImage($id)
     {
-        // Get image
-        $image = GigImage::where('id', $id)->where('gig_id', $this->gig->id)->firstOrFail();
+        $image = GigImage::where('id', $id)
+            ->where('gig_id', $this->gig->id)
+            ->firstOrFail();
 
         // Delete images from local/server sides
-        deleteModelFile($image->small);
-        deleteModelFile($image->medium);
-        deleteModelFile($image->large);
+        ImageUploader::deBucket($image->img_thumb_id);
+        ImageUploader::deBucket($image->img_medium_id);
+        ImageUploader::deBucket($image->img_large_id);
 
         // Now delete image
         $image->delete();
@@ -191,21 +187,12 @@ class Gallery extends Component
      */
     public function removeDocument($id)
     {
-        // Get document
-        $document = GigDocument::where('id', $id)->where('gig_id', $this->gig->id)->firstOrFail();
+        $document = GigDocument::where('id', $id)
+            ->where('gig_id', $this->gig->id)
+            ->firstOrFail();
 
-        // Get file path
-        $path = public_path('storage/gigs/documents/'.$document->uid.'.pdf');
+        ImageUploader::deBucket($document->uid);
 
-        // Check if file exists
-        if (File::exists($path)) {
-
-            // Delete file from local storage
-            File::delete($path);
-
-        }
-
-        // Delete document
         $document->delete();
 
         // Refresh gig
@@ -227,85 +214,64 @@ class Gallery extends Component
     public function save()
     {
         try {
-
-            // Validate form
             GalleryValidator::all($this);
 
             // Check if request has thumbnail image
             if ($this->thumbnail) {
+                $imageThumbPath = ImageUploader::make($this->thumbnail)
+                    ->unBucket($this->gig->image_thumb_id)
+                    ->size(400)
+                    ->toBucket('gigs/previews/small');
 
-                // Upload new files
-                $image_thumb_id = ImageUploader::make($this->thumbnail)
-                    ->deleteById($this->gig->image_thumb_id)
-                    ->resize(400)
-                    ->folder('gigs/previews/small')
-                    ->handle();
-                $image_medium_id = ImageUploader::make($this->thumbnail)
-                    ->deleteById($this->gig->image_medium_id)
-                    ->resize(800)
-                    ->folder('gigs/previews/medium')
-                    ->handle();
-                $image_large_id = ImageUploader::make($this->thumbnail)
-                    ->deleteById($this->gig->image_large_id)
-                    ->resize(1200)
-                    ->folder('gigs/previews/large')
-                    ->handle();
+                $imageMediumPath = ImageUploader::make($this->thumbnail)
+                    ->unBucket($this->gig->image_medium_id)
+                    ->size(800)
+                    ->toBucket('gigs/previews/medium');
 
+                $imageLargePath = ImageUploader::make($this->thumbnail)
+                    ->unBucket($this->gig->image_large_id)
+                    ->size(1200)
+                    ->toBucket('gigs/previews/large');
             } else {
-
-                // Set default values
-                $image_thumb_id = $this->gig->image_thumb_id;
-                $image_medium_id = $this->gig->image_medium_id;
-                $image_large_id = $this->gig->image_large_id;
-
+                $imageThumbPath = $this->gig->image_thumb_id;
+                $imageMediumPath = $this->gig->image_medium_id;
+                $imageLargePath = $this->gig->image_large_id;
             }
 
             // Update gig
             $this->gig->video_id = $this->video_link ? youtubeId($this->video_link) : $this->video_id;
             $this->gig->video_link = $this->video_link;
-            $this->gig->image_thumb_id = $image_thumb_id;
-            $this->gig->image_medium_id = $image_medium_id;
-            $this->gig->image_large_id = $image_large_id;
+            $this->gig->image_thumb_id = $imageThumbPath;
+            $this->gig->image_medium_id = $imageMediumPath;
+            $this->gig->image_large_id = $imageLargePath;
             $this->gig->save();
 
             // Check if request has new gallery images
             if (is_array($this->images) && count($this->images)) {
 
                 // Loop through old images
-                foreach ($this->gig->images as $image) {
-
-                    // Delete files
-                    deleteModelFile($image->small);
-                    deleteModelFile($image->medium);
-                    deleteModelFile($image->large);
-
-                }
+                $this->gig->images->each(function ($image) {
+                    ImageUploader::deBucket($image->img_thumb_id);
+                    ImageUploader::deBucket($image->img_medium_id);
+                    ImageUploader::deBucket($image->img_large_id);
+                });
 
                 // Delete old gallery
                 GigImage::where('gig_id', $this->gig->id)->delete();
 
                 // Upload new images
-                foreach ($this->images as $image) {
+                collect($this->images)->each(function ($image) {
+                    $thumbPath = ImageUploader::make($image)->size(400)->toBucket('gigs/gallery/small');
+                    $mediumPath = ImageUploader::make($image)->size(800)->toBucket('gigs/gallery/medium');
+                    $largePath = ImageUploader::make($image)->size(1200)->toBucket('gigs/gallery/large');
 
-                    // Upload small image
-                    $thumb_id = ImageUploader::make($image)->resize(400)->folder('gigs/gallery/small')->handle();
-
-                    // Upload medium image
-                    $medium_id = ImageUploader::make($image)->resize(800)->folder('gigs/gallery/medium')->handle();
-
-                    // Upload large image
-                    $large_id = ImageUploader::make($image)->resize(1200)->folder('gigs/gallery/large')->handle();
-
-                    // Save images
                     GigImage::create([
                         'gig_id' => $this->gig->id,
-                        'img_thumb_id' => $thumb_id,
-                        'img_medium_id' => $medium_id,
-                        'img_large_id' => $large_id,
+                        'img_thumb_id' => $thumbPath,
+                        'img_medium_id' => $mediumPath,
+                        'img_large_id' => $largePath,
                     ]);
-
-                }
-
+                });
             }
 
             // Check if request has new documents
@@ -313,53 +279,30 @@ class Gallery extends Component
 
                 // Delete old documents
                 foreach ($this->gig->documents as $doc) {
+                    ImageUploader::deBucket($doc->uid);
 
-                    // Get document path
-                    $path = public_path('storage/gigs/documents/'.$doc->uid.'.pdf');
-
-                    // Check if file exists
-                    if (File::exists($path)) {
-
-                        // Delete file from local storage
-                        File::delete($path);
-
-                    }
-
-                    // Delete document
                     $doc->delete();
-
                 }
 
-                // Upload new documents
-                foreach ($this->documents as $d) {
+                collect($this->documents)->each(function ($doc) {
+                    $bucketFileName = uid() . '.pdf';
+                    $uploadFileName = $doc->getClientOriginalName();
+                    $fileSize = $doc->getSize();
 
-                    // Generate document unique id
-                    $doc_uid = uid();
+                    // Move document to s3 bucket
+                    $path = $doc->storeAs('gigs/documents', $bucketFileName, 's3');
 
-                    // Get original name
-                    $name = $d->getClientOriginalName();
-
-                    // Get file size
-                    $size = $d->getSize();
-
-                    // Move document to local storage
-                    $d->storeAs('gigs/documents', $doc_uid.'.pdf', 'custom');
-
-                    // Save document in database
                     GigDocument::create([
-                        'uid' => $doc_uid,
+                        'uid' => $path,
                         'gig_id' => $this->gig->id,
-                        'name' => $name,
-                        'size' => $size,
+                        'name' => $uploadFileName,
+                        'size' => $fileSize,
                     ]);
-
-                }
-
+                });
             }
 
             // Success
-            return redirect(config('global.dashboard_prefix').'/gigs')->with('success', __('messages.t_gig_updated_successfull'));
-
+            return redirect(config('global.dashboard_prefix') . '/gigs')->with('success', __('messages.t_gig_updated_successfull'));
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

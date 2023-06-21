@@ -108,12 +108,11 @@ class FooterComponent extends Component
 
             // Check if request has logo
             if ($this->logo) {
-                $logo_id = ImageUploader::make($this->logo)
-                    ->folder('site/footer/logo')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
+                $logoPath = ImageUploader::make($this->logo)
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('site/footer/logo');
             } else {
-                $logo_id = $settings->logo_id;
+                $logoPath = $settings->logo_id;
             }
 
             // Update settings
@@ -121,7 +120,7 @@ class FooterComponent extends Component
                 'is_language_switcher' => $this->is_language_switcher ? 1 : 0,
                 'page_terms_id' => $this->page_terms ?? null,
                 'page_policy_id' => $this->page_policy ?? null,
-                'logo_id' => $logo_id,
+                'logo_id' => $logoPath,
                 'copyrights' => $this->copyrights,
                 'social_facebook' => $this->social_facebook,
                 'social_twitter' => $this->social_twitter,
@@ -141,7 +140,6 @@ class FooterComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

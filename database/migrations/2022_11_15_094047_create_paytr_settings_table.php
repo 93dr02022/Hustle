@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name', 60)->default('PayTR');
             $table->boolean('is_enabled')->default(false);
-            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->string('logo_id')->nullable();
             $table->string('currency', 20)->default('TL');
             $table->decimal('exchange_rate')->default(1);
             $table->integer('deposit_fee')->default(0);
-
-            $table->foreign('logo_id')->references('id')->on('file_manager');
         });
     }
 
