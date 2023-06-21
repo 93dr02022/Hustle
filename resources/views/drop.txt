@@ -5,47 +5,114 @@ https://ipapi.co/${ip.value}/json
 102.89.46.29
 
 
-<div class="static inline-block text-left">
-            <div>
-                <button data-dropdown-toggle="filter-dropdown" type="button" class="btn-purple" id="menu-button">
-                    Filter
-                </button>
+{{-- @if (settings('appearance')->is_best_sellers && $sellers && $sellers->count()) --}}
+        @if (false)
+            <div class="col-span-12 mt-6 xl:mt-6 mb-16">
+                <span class="font-semibold text-gray-400 dark:text-gray-200 uppercase tracking-wider text-center block">{{ __('messages.t_top_sellers') }}</span>
+                <a href="{{ url('sellers') }}" class="mt-1 text-primary-600 hover:text-primary-700 text-xs font-medium uppercase tracking-widest text-center block">{{ __('messages.t_view_more') }}</a>
+
+                <ul class="flex-wrap justify-center items-center mt-8 -mx-5 hidden" id="top-sellers-slick" wire:ignore>
+                    @foreach ($sellers as $seller)
+                    <li class="col-span-1 flex flex-col text-center bg-white dark:bg-zinc-800 rounded-md shadow divide-y divide-gray-200 dark:divide-zinc-700 mx-5">
+                        <div class="px-4 py-8">
+        
+                            {{-- Avatar --}}
+                            <a href="{{ url('profile', $seller->username) }}" target="_blank" class="inline-block relative">
+                                <img class="h-16 w-16 rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($seller->avatar_id) }}" alt="{{ $seller->username }}">
+                                @if ($seller->isOnline() && !$seller->availability)
+                                    <span class="absolute top-0.5 ltr:right-0.5 rtl:left-0.5 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-zinc-800 bg-green-400"></span>
+                                @elseif ($seller->availability)
+                                    <span class="absolute top-0.5 ltr:right-0.5 rtl:left-0.5 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-zinc-800 bg-gray-400"></span>
+                                @else
+                                    <span class="absolute top-0.5 ltr:right-0.5 rtl:left-0.5 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-zinc-800 bg-red-400"></span>
+                                @endif
+                            </a>
+
+                            {{-- Username --}}
+                            <a href="{{ url('profile', $seller->username) }}" target="_blank" class="mt-4 text-gray-900 dark:text-gray-200 text-sm font-bold tracking-wider flex items-center justify-center">
+                                {{ $seller->username }}
+                                @if ($seller->status === 'verified')
+                                    <img data-tooltip-target="tooltip-account-verified-{{ $seller->id }}" class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5" src="{{ url('img/auth/verified-badge.svg') }}" alt="{{ __('messages.t_account_verified') }}">
+                                    <div id="tooltip-account-verified-{{ $seller->id }}" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-sm shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        {{ __('messages.t_account_verified') }}
+                                    </div>
+                                @endif
+                            </a>
+
+                            <dl class="mt-1 flex-grow flex flex-col justify-between">
+                                <dt class="sr-only">Level</dt>
+                                <dd class="text-[11px] font-medium uppercase tracking-widest" style="color:{{ $seller->level->level_color }}">{{ $seller->level->title }}</dd>
+                                <dt class="sr-only">Skills</dt>
+                                <dd class="mt-5 space-x-1 rtl:space-x-reverse">
+
+                                    {{-- Rating --}}
+                                    <div class="flex items-center justify-center mb-5" wire:ignore>
+
+                                        {{-- Star --}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor"> <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        
+                                        {{-- Rating --}}
+                                        @if ($seller->rating() == 0)
+                                            <div class=" text-[13px] tracking-widest text-amber-500 ltr:ml-1 rtl:mr-1 font-black">{{ __('messages.t_n_a') }}</div>
+                                        @else
+                                            <div class=" text-sm tracking-widest text-amber-500 ltr:ml-1 rtl:mr-1 font-black">{{ $seller->rating() }}</div>
+                                        @endif
+                        
+                                        {{-- Reviews --}}
+                                        <div class="ltr:ml-2 rtl:mr-2 text-[13px] font-normal text-gray-400 dark:text-gray-300">
+                                            ( {{ number_format($seller->reviews()->count()) }} )
+                                        </div>
+                                        
+                                    </div>
+
+                                    {{-- Skills --}}
+                                    @if ($seller->skills()->count())
+                                        <div class="h-16">
+                                            @foreach ($seller->skills()->InRandomOrder()->limit(3)->get() as $skill)
+                                                <span class="inline-flex mb-2 px-3 py-1.5 items-center text-gray-800 text-xs font-medium bg-gray-100 dark:bg-zinc-700 dark:text-zinc-300 rounded-full">
+                                                    {{ $skill->name }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="h-16"></div>
+                                    @endif
+                                    
+                                </dd>
+                            </dl>
+        
+                        </div>
+        
+                        {{-- Actions --}}
+                        <div>
+                            <div class="-mt-px flex divide-x divide-gray-200 rtl:divide-x-reverse bg-gray-100 dark:bg-zinc-700 dark:divide-zinc-700 rounded-b-lg">
+        
+                                @auth
+                                    {{-- Contact me --}}
+                                    <div class="w-0 flex-1 flex">
+                                        <a href="{{ url('messages/new', $seller->username) }}" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-xs text-gray-700 dark:text-zinc-300 dark:hover:text-zinc-100 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
+                                            <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"> <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/> <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/> </svg>
+                                            <span class="ml-2">{{ __('messages.t_contact_me') }}</span>
+                                        </a>
+                                    </div>
+                                @endauth
+
+                                @guest
+                                    {{-- View my profile --}}
+                                    <div class="w-0 flex-1 flex">
+                                        <a href="{{ url('profile', $seller->username) }}" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-xs text-gray-700 dark:text-zinc-300 dark:hover:text-zinc-100 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 dark:text-gray-300" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+                                            <span class="ml-2">{{ __('messages.t_view_profile') }}</span>
+                                        </a>
+                                    </div>
+                                @endguest
+        
+                            </div>
+                        </div>
+        
+                    </li>
+                    @endforeach
+                </ul>
+
             </div>
-            <div id="filter-dropdown" class="absolute right-0 z-40 hidden mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-44 dark:bg-zinc-800 ring-1 ring-black ring-opacity-5 dark:divide-zinc-700 focus:outline-none" role="menu"  aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                <div class="py-1" role="none">
-
-                    {{-- Edit --}}
-                    <a  class="flex items-center px-4 py-2 text-sm text-gray-800 group" role="menuitem" tabindex="-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor"> <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
-                        <span class="text-xs font-medium">{{ __('messages.t_edit_user') }}</span>
-                    </a>
-
-                    {{-- Details --}}
-                    <a class="flex items-center px-4 py-2 text-sm text-gray-800 group" role="menuitem" tabindex="-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor"> <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/> <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
-                        <span class="text-xs font-medium">{{ __('messages.t_user_details') }}</span>
-                    </a>
-
-                </div>
-            </div>
-        </div>
-
-t1
-gigs/previews/small/1465EF358EF648B1C01A9ECD6.webp
-
-t2
-gigs/previews/medium/9BB2FE59ACBCDF5FD342CD436.webp
-
-t3
-gigs/previews/large/71E450DBFFE4ACAE781786718.webp
-
-
-
-t1 
-gigs/gallery/small/4503132F4D9885AD8AFDC2141.webp
-
-t2 
-gigs/gallery/medium/84C6D42A6B9DC0A3BA59D1911.webp
-
-t3 
-gigs/gallery/large/D36FE127E7CB3A3ED8CC5DCD7.webp
+        @endif

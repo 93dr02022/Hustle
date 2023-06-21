@@ -108,7 +108,7 @@ class ProfileComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_edit_profile')." $separator ".settings('general')->title;
+        $title = __('messages.t_edit_profile') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -122,7 +122,7 @@ class ProfileComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -143,20 +143,17 @@ class ProfileComponent extends Component
     public function updatedAvatar()
     {
         try {
-
-            // Validate form
             AvatarValidator::validate($this);
 
-            // Upload avatar
-            $avatar_id = ImageUploader::make($this->avatar)
-                ->deleteById(auth()->user()->avatar_id)
-                ->resize(100)
-                ->folder('avatars')
-                ->handle();
+            $path = ImageUploader::make($this->avatar)
+                ->size(100)
+                ->toBucket('avatars');
+
+            ImageUploader::deBucket(auth()->user()->avatar_id);
 
             // Update user avatar
             auth()->user()->update([
-                'avatar_id' => $avatar_id,
+                'avatar_id' => $path,
             ]);
 
             // Success
@@ -165,7 +162,6 @@ class ProfileComponent extends Component
                 'description' => __('messages.t_avatar_updated_successfully'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -215,7 +211,6 @@ class ProfileComponent extends Component
 
             // Profile updated
             $this->dispatchBrowserEvent('profile-headline-updated');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -268,7 +263,6 @@ class ProfileComponent extends Component
                 'description' => __('messages.t_linked_accounts_has_been_updated'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -318,7 +312,6 @@ class ProfileComponent extends Component
 
                 // Return
                 return;
-
             }
 
             // Add skill
@@ -341,7 +334,6 @@ class ProfileComponent extends Component
                 'description' => __('messages.t_skill_added_to_ur_profile'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -436,7 +428,6 @@ class ProfileComponent extends Component
 
                 // Return
                 return;
-
             }
 
             // Update skill
@@ -462,7 +453,6 @@ class ProfileComponent extends Component
 
             // Close form
             $this->dispatchBrowserEvent('close-edit-skill-form');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -515,7 +505,6 @@ class ProfileComponent extends Component
 
                 // Return
                 return;
-
             }
 
             // Add language
@@ -540,7 +529,6 @@ class ProfileComponent extends Component
 
             // Reload select2
             $this->reloadSelect2();
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -650,7 +638,6 @@ class ProfileComponent extends Component
 
                 // Return
                 return;
-
             }
 
             // Update language
@@ -678,7 +665,6 @@ class ProfileComponent extends Component
 
             // Reload select2
             $this->reloadSelect2();
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -748,7 +734,6 @@ class ProfileComponent extends Component
 
             // Close form
             $this->dispatchBrowserEvent('close-description-edit-form');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -793,7 +778,7 @@ class ProfileComponent extends Component
             $availability_date = Carbon::create($this->availability_date);
 
             // Check if date in future
-            if (! $availability_date->isFuture()) {
+            if (!$availability_date->isFuture()) {
 
                 // Error
                 $this->notification([
@@ -803,7 +788,6 @@ class ProfileComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Delete old availability
@@ -828,7 +812,6 @@ class ProfileComponent extends Component
                 'description' => __('messages.t_ur_availability_settings_updated'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -849,7 +832,6 @@ class ProfileComponent extends Component
             ]);
 
             return;
-
         } catch (\Throwable $th) {
 
             // Error

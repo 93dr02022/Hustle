@@ -78,8 +78,6 @@ class YoucanpayComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             YoucanpayValidator::validate($this);
 
             // Get old settings
@@ -90,15 +88,12 @@ class YoucanpayComponent extends Component
 
                 // Upload new logo
                 $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('services');
             } else {
 
                 // Use old value
                 $logo_id = $settings->logo_id;
-
             }
 
             // Save settings
@@ -127,7 +122,6 @@ class YoucanpayComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

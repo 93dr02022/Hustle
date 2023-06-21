@@ -50,14 +50,10 @@ class CreateComponent extends Component
     public function create()
     {
         try {
-
-            // Validate form
             CreateValidator::validate($this);
 
             // Upload image
-            $image_id = ImageUploader::make($this->image)
-                ->folder('blog')
-                ->handle();
+            $path = ImageUploader::make($this->image)->toBucket('blog');
 
             // Create new article
             $article = new Article();
@@ -65,7 +61,7 @@ class CreateComponent extends Component
             $article->title = $this->title;
             $article->slug = Str::slug($this->slug);
             $article->content = $this->content;
-            $article->image_id = $image_id;
+            $article->image_id = $path;
             $article->reading_time = $this->reading_time;
             $article->save();
 

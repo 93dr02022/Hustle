@@ -87,16 +87,13 @@ class EpointComponent extends Component
             if ($this->logo) {
 
                 // Upload new logo
-                $logo_id = ImageUploader::make($this->logo)
-                    ->folder('services')
-                    ->deleteById($settings->logo_id)
-                    ->handle();
-
+                $logoPath = ImageUploader::make($this->logo)
+                    ->unBucket($settings->logo_id)
+                    ->toBucket('services');
             } else {
 
                 // Use old value
-                $logo_id = $settings->logo_id;
-
+                $logoPath = $settings->logo_id;
             }
 
             // Update settings
@@ -105,8 +102,8 @@ class EpointComponent extends Component
             $settings->currency = $this->currency;
             $settings->exchange_rate = $this->exchange_rate;
             $settings->deposit_fee = $this->deposit_fee;
-            if ($logo_id) {
-                $settings->logo_id = $logo_id;
+            if ($logoPath) {
+                $settings->logo_id = $logoPath;
             }
             $settings->save();
 
@@ -126,7 +123,6 @@ class EpointComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -145,7 +141,6 @@ class EpointComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

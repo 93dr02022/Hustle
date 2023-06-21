@@ -68,38 +68,35 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
             // Validate form
             EditValidator::validate($this);
 
             // Upload categorory icon
             if ($this->icon) {
-                $icon_id = ImageUploader::make($this->icon)
-                    ->deleteById($this->category->icon_id)
-                    ->resize(100, 100)
-                    ->folder('categories')
-                    ->handle();
+                $iconPath = ImageUploader::make($this->icon)
+                    ->unBucket($this->category->icon_id)
+                    ->size(100, 100)
+                    ->toBucket('categories');
             } else {
-                $icon_id = $this->category->icon_id;
+                $iconPath = $this->category->icon_id;
             }
 
             // Upload category image
             if ($this->image) {
-                $image_id = ImageUploader::make($this->image)
-                    ->deleteById($this->category->image_id)
-                    ->resize(800)
-                    ->folder('categories')
-                    ->handle();
+                $imagePath = ImageUploader::make($this->image)
+                    ->unBucket($this->category->image_id)
+                    ->size(800)
+                    ->toBucket('categories');
             } else {
-                $image_id = $this->category->image_id;
+                $imagePath = $this->category->image_id;
             }
 
             // Update category
             $this->category->name = $this->name;
             $this->category->slug = Str::slug($this->slug);
             $this->category->description = $this->description ? $this->description : null;
-            $this->category->icon_id = $icon_id;
-            $this->category->image_id = $image_id;
+            $this->category->icon_id = $iconPath;
+            $this->category->image_id = $imagePath;
             $this->category->is_visible = $this->is_visible ? true : false;
             $this->category->save();
 

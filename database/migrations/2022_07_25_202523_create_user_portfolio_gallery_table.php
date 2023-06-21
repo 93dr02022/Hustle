@@ -15,11 +15,8 @@ return new class extends Migration
     {
         Schema::create('user_portfolio_gallery', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('image_id');
-
-            $table->foreign('project_id')->references('id')->on('user_portfolio');
-            $table->foreign('image_id')->references('id')->on('file_manager');
+            $table->foreignId('project_id')->constrained('user_portfolio');
+            $table->string('image_id')->nullable();
         });
     }
 

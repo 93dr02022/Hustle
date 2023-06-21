@@ -26,12 +26,11 @@ return new class extends Migration
             $table->string('zipcode', 20)->nullable();
             $table->text('address')->nullable();
             $table->string('phone', 60)->nullable();
-            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->string('logo_id')->nullable();
             $table->enum('status', ['pending', 'active', 'hidden'])->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('logo_id')->references('id')->on('file_manager');
         });
     }
 

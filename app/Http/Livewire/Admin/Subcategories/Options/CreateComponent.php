@@ -68,16 +68,16 @@ class CreateComponent extends Component
 
             // Upload categorory icon
             if ($this->icon) {
-                $icon_id = ImageUploader::make($this->icon)->resize(100, 100)->folder('subcategories')->handle();
+                $iconPath = ImageUploader::make($this->icon)->size(100, 100)->toBucket('subcategories');
             } else {
-                $icon_id = null;
+                $iconPath = null;
             }
 
             // Upload subcategory image
             if ($this->image) {
-                $image_id = ImageUploader::make($this->image)->resize(800)->folder('subcategories')->handle();
+                $imagePath = ImageUploader::make($this->image)->size(800)->toBucket('subcategories');
             } else {
-                $image_id = null;
+                $imagePath = null;
             }
 
             // Save subcategory
@@ -86,8 +86,8 @@ class CreateComponent extends Component
             $subcategory->name = $this->name;
             $subcategory->slug = Str::slug($this->slug);
             $subcategory->description = $this->description ? $this->description : null;
-            $subcategory->icon_id = $icon_id;
-            $subcategory->image_id = $image_id;
+            $subcategory->icon_id = $iconPath;
+            $subcategory->image_id = $imagePath;
             $subcategory->parent_id = $this->parent_id;
             $subcategory->save();
 

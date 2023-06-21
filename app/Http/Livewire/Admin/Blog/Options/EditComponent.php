@@ -76,29 +76,24 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             EditValidator::validate($this);
 
             // Check if want to change old image
             if ($this->image) {
 
-                $image_id = ImageUploader::make($this->image)
-                    ->deleteById($this->article->image_id)
-                    ->folder('blog')
-                    ->handle();
-
+                $imagePath = ImageUploader::make($this->image)
+                    ->unBucket($this->article->image_id)
+                    ->toBucket('blog');
             } else {
 
-                $image_id = $this->article->image_id;
-
+                $imagePath = $this->article->image_id;
             }
 
             // Update article
             $this->article->title = $this->title;
             $this->article->slug = Str::slug($this->slug);
             $this->article->content = $this->content;
-            $this->article->image_id = $image_id;
+            $this->article->image_id = $imagePath;
             $this->article->reading_time = $this->reading_time;
             $this->article->save();
 
@@ -113,7 +108,6 @@ class EditComponent extends Component
                         'title' => $this->title,
                         'description' => $this->seo_description,
                     ]);
-
                 } else {
 
                     // Create new seo
@@ -122,9 +116,7 @@ class EditComponent extends Component
                     $seo->title = $this->title;
                     $seo->description = mb_substr(clean($this->content), 0, 150);
                     $seo->save();
-
                 }
-
             }
 
             // Success
@@ -133,7 +125,6 @@ class EditComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

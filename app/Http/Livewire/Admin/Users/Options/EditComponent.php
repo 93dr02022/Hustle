@@ -114,8 +114,6 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
-            // Validate form
             EditValidator::validate($this);
 
             // Get level
@@ -132,18 +130,16 @@ class EditComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Check if request has avatar image
             if ($this->avatar) {
-                $avatar_id = ImageUploader::make($this->avatar)
-                    ->deleteById($this->user->avatar_id)
-                    ->resize(100)
-                    ->folder('avatars')
-                    ->handle();
+                $avatarPath = ImageUploader::make($this->avatar)
+                    ->unBucket($this->user->avatar_id)
+                    ->size(100)
+                    ->toBucket('avatars');
             } else {
-                $avatar_id = $this->user->avatar_id;
+                $avatarPath = $this->user->avatar_id;
             }
 
             // Update user
@@ -158,7 +154,7 @@ class EditComponent extends Component
                 'headline' => $this->headline,
                 'description' => $this->description,
                 'status' => $this->status,
-                'avatar_id' => $avatar_id,
+                'avatar_id' => $avatarPath,
             ]);
 
             // Success
@@ -167,7 +163,6 @@ class EditComponent extends Component
                 'description' => __('messages.t_account_has_been_created'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
