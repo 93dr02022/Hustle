@@ -61,22 +61,22 @@ class Header extends Component
         $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
 
         // Get default language
-        $language = Language::where('language_code', $locale)->first();
+        // $language = Language::where('language_code', $locale)->first();
 
         // Check if language exists
-        if ($language) {
+        // if ($language) {
 
-            // Set default language
-            $this->default_language_name = $language->name;
-            $this->default_language_code = $language->language_code;
-            $this->default_country_code = $language->country_code;
-        } else {
+        //     // Set default language
+        //     $this->default_language_name = $language->name;
+        //     $this->default_language_code = $language->language_code;
+        //     $this->default_country_code = $language->country_code;
+        // } else {
 
-            // Not found, set default
-            $this->default_language_name = 'English';
-            $this->default_language_code = 'en';
-            $this->default_country_code = 'us';
-        }
+        // Not found, set default
+        $this->default_language_name = 'English';
+        $this->default_language_code = 'en';
+        $this->default_country_code = 'us';
+        // }
     }
 
     /**
@@ -174,7 +174,7 @@ class Header extends Component
     public function enter()
     {
         // Check if has a search term
-        if (! $this->q) {
+        if (!$this->q) {
 
             // Error
             $this->notification([
@@ -187,7 +187,7 @@ class Header extends Component
         }
 
         // Redirect to search page
-        return redirect('search?q='.$this->q);
+        return redirect('search?q=' . $this->q);
     }
 
     /**
@@ -250,7 +250,7 @@ class Header extends Component
         $language = Language::where('language_code', $locale)->where('is_active', true)->first();
 
         // Check if language exists
-        if (! $language) {
+        if (!$language) {
 
             // Not found
             $this->notification([
