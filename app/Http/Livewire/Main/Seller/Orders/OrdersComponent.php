@@ -14,6 +14,8 @@ class OrdersComponent extends Component
 {
     use WithPagination, SEOToolsTrait, Actions;
 
+    public $orderStatus = null;
+
     /**
      * Render component
      *
@@ -23,7 +25,7 @@ class OrdersComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_my_orders')." $separator ".settings('general')->title;
+        $title = __('messages.t_my_orders') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -37,7 +39,7 @@ class OrdersComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -53,6 +55,14 @@ class OrdersComponent extends Component
     }
 
     /**
+     * Livewire updated component event.
+     */
+    public function updated()
+    {
+        $this->resetPage();
+    }
+
+    /**
      * Get seller's received orders
      *
      * @return object
@@ -60,7 +70,10 @@ class OrdersComponent extends Component
     public function getOrdersProperty()
     {
         // Get orders by this seller
-        $orders = OrderItem::where('owner_id', auth()->id())->latest()->paginate(42);
+        $orders = OrderItem::where('owner_id', auth()->id())
+            ->when($this->orderStatus)->where('status', $this->orderStatus)
+            ->latest()
+            ->paginate(42);
 
         // Return orders
         return $orders;
@@ -88,7 +101,7 @@ class OrdersComponent extends Component
         // Confirm
         $this->dialog()->confirm([
             'title' => __('messages.t_confirm_cancellation'),
-            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_cancel_order').'</div>',
+            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_cancel_order') . '</div>',
             'icon' => 'error',
             'accept' => [
                 'label' => __('messages.t_confirm'),
@@ -180,12 +193,12 @@ class OrdersComponent extends Component
             }
 
             // Check if requirements sent
-            if (! $item->expected_delivery_date) {
+            if (!$item->expected_delivery_date) {
 
                 // Confirm
                 $this->dialog()->confirm([
                     'title' => __('messages.t_confirm_cancellation'),
-                    'description' => "<div class='leading-relaxed'>".__('messages.t_buyer_didnt_send_requirements_yet_continue').'</div>',
+                    'description' => "<div class='leading-relaxed'>" . __('messages.t_buyer_didnt_send_requirements_yet_continue') . '</div>',
                     'icon' => 'info',
                     'accept' => [
                         'label' => __('messages.t_i_have_all_info_needed'),
@@ -229,7 +242,7 @@ class OrdersComponent extends Component
         }
 
         // Update item
-        if (! $item->expected_delivery_date) {
+        if (!$item->expected_delivery_date) {
             $item->expected_delivery_date = $this->calculateExpectedDeliveryDate($item);
         }
         $item->status = 'proceeded';

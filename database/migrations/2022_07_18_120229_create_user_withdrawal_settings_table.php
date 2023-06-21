@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('bank_name')->nullable()->index();
             $table->string('account_name')->nullable()->index();
             $table->string('bank_code')->nullable()->index();
-            $table->string('transfer_code')->unique();
+            $table->string('transfer_recipient')->index();
             $table->timestamps();
         });
     }

@@ -17,12 +17,6 @@ class UserWithdrawalHistory extends Model
      */
     protected $table = 'user_withdrawal_history';
 
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
-    const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.
@@ -35,8 +29,12 @@ class UserWithdrawalHistory extends Model
         'gateway_provider_name',
         'gateway_provider_id',
         'amount',
+        'transfer_recipient',
         'transfer_code',
-        'status'
+        'status',
+        'paid_at',
+        'failed_at',
+        'reversed_at'
     ];
 
 

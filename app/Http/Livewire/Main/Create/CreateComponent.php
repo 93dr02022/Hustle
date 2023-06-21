@@ -419,10 +419,9 @@ class CreateComponent extends Component
 
                     // Move document to s3 bucket
                     $path = $doc->storeAs('gigs/documents', $bucketFileName, 's3');
-                    $fileUrl = Storage::disk('s3')->url($path);
 
                     GigDocument::create([
-                        'uid' => $fileUrl,
+                        'uid' => $path,
                         'gig_id' => $gig->id,
                         'name' => $uploadFileName,
                         'size' => $fileSize,
