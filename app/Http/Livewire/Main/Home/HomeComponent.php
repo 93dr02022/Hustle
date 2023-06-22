@@ -38,7 +38,7 @@ class HomeComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = settings('general')->title." $separator ".settings('general')->subtitle;
+        $title = settings('general')->title . " $separator " . settings('general')->subtitle;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -52,7 +52,7 @@ class HomeComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -64,9 +64,10 @@ class HomeComponent extends Component
 
         return view('livewire.main.home.home', [
             'categories' => $this->categories,
-            'sellers' => $this->sellers,
-            'gigs' => $this->gigs,
-            'projects' => $this->projects,
+            'randomCategories' => $this->randomGigs
+            // 'sellers' => $this->sellers,
+            // 'gigs' => $this->gigs,
+            // 'projects' => $this->projects,
         ])->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -88,6 +89,29 @@ class HomeComponent extends Component
     public function getCategoriesProperty()
     {
         return Category::where('is_visible', true)->inRandomOrder()->get();
+    }
+
+    /**
+     * Get categories with 10 gigs each
+     */
+    public function getRandomGigsProperty()
+    {
+        $categories = Category::where('is_visible', true)
+            ->inRandomOrder()
+            ->take(10)
+            ->get();
+
+        $categories->each(function ($category) {
+            $category->gigs = $category->gigs()
+                ->whereIn('status', ['active', 'boosted', 'trending', 'featured'])
+                ->whereNull('deleted_at')
+                ->inRandomOrder()
+                ->limit(10)
+                ->with('owner')
+                ->get();
+        });
+
+        return $categories;
     }
 
     /**
@@ -144,12 +168,12 @@ class HomeComponent extends Component
         try {
 
             // Check if newsletter enabled
-            if (! settings('newsletter')->is_enabled) {
+            if (!settings('newsletter')->is_enabled) {
                 return;
             }
 
             // Validate email address
-            if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
 
                 // Error
                 $this->notification([

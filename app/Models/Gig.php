@@ -225,5 +225,4 @@ class Gig extends Model implements Sitemapable
     {
         return $this->hasMany(Review::class, 'gig_id');
     }
-
 }

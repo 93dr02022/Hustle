@@ -52,8 +52,8 @@
         __var_currency_code = "{{ settings('currency')->code }}";
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" /> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script> --}}
 </head>
 
 <body
@@ -78,15 +78,25 @@
             ->get();
     @endphp
     {{-- Hero section --}}
-    @include('livewire.main.includes.hero')
+
 
 
     {{-- Content --}}
-    <main class="flex-grow">
-        <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-16 pb-24 space-y-8 min-h-screen">
-            @yield('content')
-        </div>
-    </main>
+    @if (request()->is('/'))
+        <main class="flex-grow">
+            @include('livewire.main.includes.hero')
+            <div class="min-h-screen">
+                @yield('content')
+            </div>
+        </main>
+    @else
+        <main class="flex-grow">
+            <div class="container min-h-screen px-4 py-12 pt-16 pb-24 mx-auto space-y-8 max-w-7xl sm:px-6 lg:px-8">
+                @yield('content')
+            </div>
+        </main>
+    @endif
+
 
     {{-- Footer --}}
     @livewire('main.includes.footer')
