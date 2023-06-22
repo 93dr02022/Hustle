@@ -1,82 +1,83 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\Gig;
-use App\Models\User;
-use App\Models\Refund;
-use App\Models\Project;
-use App\Models\Language;
-use App\Models\ReportedGig;
-use App\Models\SettingsSeo;
-use App\Models\BlogSettings;
-use App\Models\Notification;
-use App\Models\OrderInvoice;
-use App\Models\ReportedUser;
-use App\Models\SettingsAuth;
-use App\Models\SettingsHero;
 use App\Models\Advertisement;
-use App\Models\PaytrSettings;
-use App\Models\SettingsMedia;
-use App\Models\UserPortfolio;
-use App\Models\VNPaySettings;
+use App\Models\BlogSettings;
+use App\Models\CashfreeSettings;
+use App\Models\DepositTransaction;
 use App\Models\EpointSettings;
+use App\Models\FlutterwaveSettings;
+use App\Models\Gig;
+use App\Models\JazzcashSettings;
+use App\Models\Language;
+use App\Models\MercadopagoSettings;
 use App\Models\MollieSettings;
+use App\Models\NewsletterSettings;
+use App\Models\Notification;
+use App\Models\NowpaymentsSettings;
+use App\Models\OfflinePaymentSettings;
+use App\Models\OrderInvoice;
 use App\Models\PaymobSettings;
 use App\Models\PayPalSettings;
+use App\Models\PaystackSettings;
+use App\Models\PaytabsSettings;
+use App\Models\PaytrSettings;
+use App\Models\Project;
+use App\Models\ProjectBid;
+use App\Models\ProjectBidUpgrade;
+use App\Models\ProjectReportedBid;
+use App\Models\ProjectSettings;
+use App\Models\ProjectSubscription;
+use App\Models\RazorpaySettings;
+use App\Models\Refund;
+use App\Models\ReportedGig;
+use App\Models\ReportedProject;
+use App\Models\ReportedUser;
+use App\Models\SettingsAppearance;
+use App\Models\SettingsAuth;
+use App\Models\SettingsCommission;
+use App\Models\SettingsCurrency;
 use App\Models\SettingsFooter;
+use App\Models\SettingsGeneral;
+use App\Models\SettingsHero;
+use App\Models\SettingsLiveChat;
+use App\Models\SettingsMedia;
+use App\Models\SettingsPublish;
+use App\Models\SettingsSecurity;
+use App\Models\SettingsSeo;
+use App\Models\SettingsWithdrawal;
 use App\Models\StripeSettings;
 use App\Models\SupportMessage;
-use App\Models\XenditSettings;
-use App\Models\PaytabsSettings;
-use App\Models\ProjectSettings;
-use App\Models\ReportedProject;
-use App\Models\SettingsGeneral;
-use App\Models\SettingsPublish;
-use App\Models\CashfreeSettings;
-use App\Models\JazzcashSettings;
-use App\Models\PaystackSettings;
-use App\Models\RazorpaySettings;
-use App\Models\SettingsCurrency;
-use App\Models\SettingsLiveChat;
-use App\Models\SettingsSecurity;
-use App\Models\ProjectBidUpgrade;
-use App\Models\YoucanpaySettings;
-use App\Models\DepositTransaction;
-use App\Models\NewsletterSettings;
-use App\Models\ProjectReportedBid;
-use App\Models\SettingsAppearance;
-use App\Models\SettingsCommission;
-use App\Models\SettingsWithdrawal;
-use App\Models\VerificationCenter;
-use App\Models\FlutterwaveSettings;
-use App\Models\MercadopagoSettings;
-use App\Models\NowpaymentsSettings;
-use App\Models\ProjectSubscription;
-use Illuminate\Support\Facades\File;
+use App\Models\User;
+use App\Models\UserPortfolio;
 use App\Models\UserWithdrawalHistory;
+use App\Models\VerificationCenter;
+use App\Models\VNPaySettings;
+use App\Models\XenditSettings;
+use App\Models\YoucanpaySettings;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
-use App\Models\OfflinePaymentSettings;
-use App\Models\ProjectBid;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 /**
  * Generate unique string
  *
- * @param integer $length
+ * @param  int  $length
  * @return string
  */
 function uid($length = 20)
 {
-    $bytes  = random_bytes($length);
+    $bytes = random_bytes($length);
     $random = bin2hex($bytes);
+
     return strtoupper(substr($random, 0, $length));
 }
 
 /**
  * Format date
  *
- * @param string $timestamp
- * @param string $format
+ * @param  string  $timestamp
+ * @param  string  $format
  * @return string
  */
 function format_date($timestamp, $format = 'ago')
@@ -97,8 +98,8 @@ function format_date($timestamp, $format = 'ago')
 /**
  * Make file size readable
  *
- * @param integer $size
- * @param integer $precision
+ * @param  int  $size
+ * @param  int  $precision
  * @return string
  */
 function format_bytes($size, $precision = 2)
@@ -106,7 +107,7 @@ function format_bytes($size, $precision = 2)
     if ($size > 0) {
         $size = (int) $size;
         $base = log($size) / log(1024);
-        $suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
+        $suffixes = [' bytes', ' KB', ' MB', ' GB', ' TB'];
 
         return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
     } else {
@@ -117,43 +118,41 @@ function format_bytes($size, $precision = 2)
 /**
  * Check if file exists or return default
  *
- * @param object $file
+ * @param  object  $file
  * @return string
  */
 function src($filePath)
 {
-    if(is_string($filePath)) {
+    if (is_string($filePath)) {
         if ($filePath) {
-            if (! Storage::disk('s3')->exists($filePath)) {
+            if (!Storage::disk('s3')->exists($filePath)) {
                 return placeholder_img();
             }
 
             return Storage::disk('s3')->url($filePath);
         }
-    
+
         return placeholder_img();
     }
 
     return placeholder_img();
 }
 
-
 /**
  * Make file name from an extension
- * 
- * @param string    $extension
+ *
+ * @param  string  $extension
  */
 function makeFileName($extension)
 {
     return uid(25) . '.' . $extension;
 }
 
-
 /**
  * Get admin url
  *
- * @param string $to
- * @param string $params
+ * @param  string  $to
+ * @param  string  $params
  * @return string
  */
 function admin_url($to = null, $params = null)
@@ -166,39 +165,9 @@ function admin_url($to = null, $params = null)
 }
 
 /**
- * Delete a file from a relation model
- *
- * @param object $file
- * @return void
- */
-function deleteModelFile($file)
-{
-    try {
-
-        // Check if file set
-        if ($file) {
-
-            // Get file path
-            $path = public_path('storage/' . $file->file_folder . '/' . $file->uid . '.' . $file->file_extension);
-
-            // Check if file exists
-            if (File::exists($path)) {
-                File::delete($path);
-            }
-
-            // Now delete it from database
-            $file->delete();
-        }
-    } catch (\Throwable $th) {
-
-        return;
-    }
-}
-
-/**
  * Get settings from cache
  *
- * @param string $settings
+ * @param  string  $settings
  * @return object
  */
 function settings($settings, $updateCache = false)
@@ -806,16 +775,15 @@ function settings($settings, $updateCache = false)
             break;
 
         default:
-            # code...
+            // code...
             break;
     }
 }
 
-
 /**
  * Get youtube id from url
  *
- * @param string $link
+ * @param  string  $link
  * @return void
  */
 function youtubeId($link)
@@ -838,7 +806,7 @@ function youtubeId($link)
 /**
  * Get delivery time translate
  *
- * @param integer $time
+ * @param  int  $time
  * @return string
  */
 function delivery_time_trans($time)
@@ -877,7 +845,6 @@ function delivery_time_trans($time)
     }
 }
 
-
 /**
  * Get accepted mime types for requirements (files)
  *
@@ -891,14 +858,13 @@ function acceptableRequirementsMimeTypes()
         $allowed_extensions = settings('media')->requirements_file_allowed_extensions;
 
         // Separate extensions by comma
-        $extensions         = explode(',', $allowed_extensions);
+        $extensions = explode(',', $allowed_extensions);
 
         // Set empty mime types array
-        $accepted           = [];
+        $accepted = [];
 
         // Set mime object
-        $mimes              = new \Mimey\MimeTypes;
-
+        $mimes = new \Mimey\MimeTypes;
 
         // Loop through allowed extensions
         foreach ($extensions as $ext) {
@@ -920,7 +886,7 @@ function acceptableRequirementsMimeTypes()
 /**
  * Get first letter of a domain
  *
- * @param string $url
+ * @param  string  $url
  * @return string
  */
 function getWebsiteFirstLetter($domain)
@@ -928,20 +894,20 @@ function getWebsiteFirstLetter($domain)
     try {
 
         // Remove www from domain
-        $withoutWWW    = str_replace("www.", "", $domain);
+        $withoutWWW = str_replace('www.', '', $domain);
 
         // Remove domain
         $withoutDomain = explode('.', $withoutWWW);
 
         // Get first letter
-        $firstLetter   = strtoupper(substr($withoutDomain[0], 0, 1));
+        $firstLetter = strtoupper(substr($withoutDomain[0], 0, 1));
 
         // Return firt letter
         return $firstLetter;
     } catch (\Throwable $th) {
         // Something went wrong
         // Return default letter
-        return "A";
+        return 'A';
     }
 }
 
@@ -949,60 +915,59 @@ function getWebsiteFirstLetter($domain)
  * Encrypt data
  *
  * We don't want to use default laravel encryption
- * @param string $data
+ *
+ * @param  string  $data
  * @return string
  */
 function safeEncrypt($data)
 {
-    $output         = false;
+    $output = false;
 
     $encrypt_method = 'AES-256-CBC';
-    $secret_key     = 'WU9AHAl#Ra--WWre';
-    $secret_iv      = 'M43Sy96JuvJ5N6jY';
+    $secret_key = 'WU9AHAl#Ra--WWre';
+    $secret_iv = 'M43Sy96JuvJ5N6jY';
 
     // hash
-    $key            = hash('sha256', $secret_key);
+    $key = hash('sha256', $secret_key);
 
     // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-    $iv             = substr(hash('sha256', $secret_iv), 0, 16);
+    $iv = substr(hash('sha256', $secret_iv), 0, 16);
 
-    $output         = openssl_encrypt($data, $encrypt_method, $key, 0, $iv);
-    $output         = base64_encode($output);
+    $output = openssl_encrypt($data, $encrypt_method, $key, 0, $iv);
+    $output = base64_encode($output);
 
     return $output;
 }
-
 
 /**
  * decrypted encrypted data
  *
- * @param string $encrypted
+ * @param  string  $encrypted
  * @return string
  */
 function safeDecrypt($encrypted)
 {
-    $output         = false;
+    $output = false;
 
     $encrypt_method = 'AES-256-CBC';
-    $secret_key     = 'WU9AHAl#Ra--WWre';
-    $secret_iv      = 'M43Sy96JuvJ5N6jY';
+    $secret_key = 'WU9AHAl#Ra--WWre';
+    $secret_iv = 'M43Sy96JuvJ5N6jY';
 
     // hash
-    $key            = hash('sha256', $secret_key);
+    $key = hash('sha256', $secret_key);
 
     // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-    $iv             = substr(hash('sha256', $secret_iv), 0, 16);
+    $iv = substr(hash('sha256', $secret_iv), 0, 16);
 
-    $output         = openssl_decrypt(base64_decode($encrypted), $encrypt_method, $key, 0, $iv);
+    $output = openssl_decrypt(base64_decode($encrypted), $encrypt_method, $key, 0, $iv);
 
     return $output;
 }
 
-
 /**
  * Get supported languages
  *
- * @param boolean $clear_cache
+ * @param  bool  $clear_cache
  * @return object
  */
 function supported_languages($clear_cache = false)
@@ -1029,7 +994,7 @@ function supported_languages($clear_cache = false)
 /**
  * Clean text
  *
- * @param string $text
+ * @param  string  $text
  * @return string
  */
 function clean($text)
@@ -1045,28 +1010,28 @@ function clean($text)
 /**
  * Retrieve size
  *
- * @param integer $size
- * @param integer $precision
+ * @param  int  $size
+ * @param  int  $precision
  * @return string
  */
 function human_filesize($size, $precision = 2)
 {
-    $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
-    $step  = 1024;
-    $i     = 0;
+    $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    $step = 1024;
+    $i = 0;
     while (($size / $step) > 0.9) {
         $size = $size / $step;
         $i++;
     }
+
     return round($size, $precision) . ' ' . $units[$i];
 }
-
 
 /**
  * Set seo title
  *
- * @param string $title
- * @param boolean $isDashboard
+ * @param  string  $title
+ * @param  bool  $isDashboard
  * @return string
  */
 function setSeoTitle($title, $isDashboard = false)
@@ -1075,7 +1040,7 @@ function setSeoTitle($title, $isDashboard = false)
     $site_title = settings('general')->title;
 
     // Set title separator
-    $separator  = settings('general')->separator;
+    $separator = settings('general')->separator;
 
     // Check if want title for dashboard
     if ($isDashboard) {
@@ -1088,34 +1053,31 @@ function setSeoTitle($title, $isDashboard = false)
     return $title . " $separator " . $site_title;
 }
 
-
 /**
  * Save notification
  *
- * @param array $data
  * @return object
  */
 function notification(array $data)
 {
     // Save notification
-    $notification          = new Notification();
-    $notification->uid     = uid();
+    $notification = new Notification();
+    $notification->uid = uid();
     $notification->user_id = $data['user_id'];
-    $notification->text    = $data['text'];
-    $notification->action  = $data['action'];
-    $notification->params  = isset($data['params']) ? $data['params'] : null;
+    $notification->text = $data['text'];
+    $notification->action = $data['action'];
+    $notification->params = isset($data['params']) ? $data['params'] : null;
     $notification->save();
 
     // Return notification
     return $notification;
 }
 
-
 /**
  * Get advertisements
  *
- * @param string $name
- * @param boolean $updateCache
+ * @param  string  $name
+ * @param  bool  $updateCache
  * @return void
  */
 function advertisements($name = null, $updateCache = false)
@@ -1145,8 +1107,8 @@ function advertisements($name = null, $updateCache = false)
 /**
  * Convert HEX to HSL
  *
- * @param string $RGB
- * @param integer $ladj
+ * @param  string  $RGB
+ * @param  int  $ladj
  * @return array
  */
 function hex2hsl($RGB, $ladj = 0)
@@ -1160,21 +1122,21 @@ function hex2hsl($RGB, $ladj = 0)
         $R = hexdec($hexstr[0] . $hexstr[1]);
         $G = hexdec($hexstr[2] . $hexstr[3]);
         $B = hexdec($hexstr[4] . $hexstr[5]);
-        $RGB = array($R, $G, $B);
+        $RGB = [$R, $G, $B];
     }
 
     // scale the RGB values to 0 to 1 (percentages)
-    $r   = $RGB[0] / 255;
-    $g   = $RGB[1] / 255;
-    $b   = $RGB[2] / 255;
+    $r = $RGB[0] / 255;
+    $g = $RGB[1] / 255;
+    $b = $RGB[2] / 255;
     $max = max($r, $g, $b);
     $min = min($r, $g, $b);
 
     // lightness calculation. 0 to 1 value, scale to 0 to 100% at end
-    $l   = ($max + $min) / 2;
+    $l = ($max + $min) / 2;
 
     // saturation calculation. Also 0 to 1, scale to percent at end.
-    $d   = $max - $min;
+    $d = $max - $min;
     if ($d == 0) {
 
         // achromatic (grey) so hue and saturation both zero
@@ -1207,17 +1169,16 @@ function hex2hsl($RGB, $ladj = 0)
     }
 
     //put the values in an array and scale the saturation and lightness to be percentages
-    $hsl = array(round($h), round($s * 100), round($l * 100));
+    $hsl = [round($h), round($s * 100), round($l * 100)];
 
     // Return array
     return $hsl;
 }
 
-
 /**
  * Format currency
  *
- * @param string $amount
+ * @param  string  $amount
  * @return string
  */
 function _price($amount)
@@ -1238,7 +1199,7 @@ function _price($amount)
 /**
  * Get country flag image
  *
- * @param string $code
+ * @param  string  $code
  * @return string
  */
 function countryFlag($code)
@@ -1249,15 +1210,15 @@ function countryFlag($code)
 /**
  * Check if you are on localhost
  *
- * @return boolean
+ * @return bool
  */
 function is_localhost()
 {
     try {
 
-        // check 
+        // check
         if (isset($_SERVER['REMOTE_ADDR'])) {
-            return in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1')) ? true : false;
+            return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']) ? true : false;
         }
 
         return true;
@@ -1269,46 +1230,48 @@ function is_localhost()
 /**
  * Compute hash
  *
- * @param sring $secret
- * @param string $payload
+ * @param  sring  $secret
+ * @param  string  $payload
  * @return string
  */
 function compute_hash($secret, $payload)
 {
-    $hexHash    = hash_hmac('sha256', $payload, mb_convert_encoding($secret, 'utf8'));
+    $hexHash = hash_hmac('sha256', $payload, mb_convert_encoding($secret, 'utf8'));
     $base64Hash = base64_encode(hex2bin($hexHash));
+
     return $base64Hash;
 }
 
 /**
  * Verify Hash
  *
- * @param string $secret
- * @param string $payload
- * @param string $verify
- * @return boolean
+ * @param  string  $secret
+ * @param  string  $payload
+ * @param  string  $verify
+ * @return bool
  */
 function hash_is_valid($secret, $payload, $verify)
 {
     $computed_hash = compute_hash($secret, $payload);
+
     return hash_equals($verify, $computed_hash);
 }
 
 /**
  * Generate jazzcash secure hash
  *
- * @param array $payload
+ * @param  array  $payload
  * @return string
  */
 function generate_jazzcash_hash($payload)
 {
     // Get JazzCash env
-    $jazzcash_env  = config('jazzcash.environment');
+    $jazzcash_env = config('jazzcash.environment');
 
     // Get jazzcash salt key
     $jazzcash_salt = config("jazzcash.$jazzcash_env.integerity_salt");
 
-    $sortedResponseArray = array();
+    $sortedResponseArray = [];
 
     if (!empty($payload)) {
         foreach ($payload as $key => $val) {
@@ -1332,8 +1295,8 @@ function generate_jazzcash_hash($payload)
 /**
  * Get category name
  *
- * @param string $type
- * @param object $category
+ * @param  string  $type
+ * @param  object  $category
  * @return string
  */
 function category_title($type, $category)
@@ -1353,7 +1316,7 @@ function category_title($type, $category)
                 $trans = $category->translation;
 
                 // Set empty name value
-                $name  = $category->name;
+                $name = $category->name;
 
                 // Loop through translations
                 foreach ($trans as $t) {
@@ -1385,12 +1348,12 @@ function category_title($type, $category)
 /**
  * Add 3 dot to long paragraph
  *
- * @param string $string
- * @param string $repl
- * @param int $limit
+ * @param  string  $string
+ * @param  string  $repl
+ * @param  int  $limit
  * @return string
  */
-function add_3_dots($string, $limit, $repl = "...")
+function add_3_dots($string, $limit, $repl = '...')
 {
     if (strlen($string) > $limit) {
         return substr($string, 0, $limit) . $repl;
@@ -1402,11 +1365,11 @@ function add_3_dots($string, $limit, $repl = "...")
 /**
  * Render star rating
  *
- * @param mixed $rating
- * @param integer $maxRating
+ * @param  mixed  $rating
+ * @param  int  $maxRating
  * @return string
  */
-function render_star_rating($rating, $width = "1rem", $height = "1rem", $empty_color = "#a6a6a6", $full_color = "#ffb322")
+function render_star_rating($rating, $width = '1rem', $height = '1rem', $empty_color = '#a6a6a6', $full_color = '#ffb322')
 {
 
     // Full star
@@ -1416,19 +1379,20 @@ function render_star_rating($rating, $width = "1rem", $height = "1rem", $empty_c
     $emptyStar = '<li><svg width="' . $width . '" height="' . $height . '" style="color:' . $empty_color . ';" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg></li>';
 
     // Set half star
-    $halfStar  = '<li><svg width="' . $width . '" height="' . $height . '" style="color:' . $full_color . ';" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 536 512" xmlns="http://www.w3.org/2000/svg"><path d="M508.55 171.51L362.18 150.2 296.77 17.81C290.89 5.98 279.42 0 267.95 0c-11.4 0-22.79 5.9-28.69 17.81l-65.43 132.38-146.38 21.29c-26.25 3.8-36.77 36.09-17.74 54.59l105.89 103-25.06 145.48C86.98 495.33 103.57 512 122.15 512c4.93 0 10-1.17 14.87-3.75l130.95-68.68 130.94 68.7c4.86 2.55 9.92 3.71 14.83 3.71 18.6 0 35.22-16.61 31.66-37.4l-25.03-145.49 105.91-102.98c19.04-18.5 8.52-50.8-17.73-54.6zm-121.74 123.2l-18.12 17.62 4.28 24.88 19.52 113.45-102.13-53.59-22.38-11.74.03-317.19 51.03 103.29 11.18 22.63 25.01 3.64 114.23 16.63-82.65 80.38z"></path></svg></li>';
+    $halfStar = '<li><svg width="' . $width . '" height="' . $height . '" style="color:' . $full_color . ';" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 536 512" xmlns="http://www.w3.org/2000/svg"><path d="M508.55 171.51L362.18 150.2 296.77 17.81C290.89 5.98 279.42 0 267.95 0c-11.4 0-22.79 5.9-28.69 17.81l-65.43 132.38-146.38 21.29c-26.25 3.8-36.77 36.09-17.74 54.59l105.89 103-25.06 145.48C86.98 495.33 103.57 512 122.15 512c4.93 0 10-1.17 14.87-3.75l130.95-68.68 130.94 68.7c4.86 2.55 9.92 3.71 14.83 3.71 18.6 0 35.22-16.61 31.66-37.4l-25.03-145.49 105.91-102.98c19.04-18.5 8.52-50.8-17.73-54.6zm-121.74 123.2l-18.12 17.62 4.28 24.88 19.52 113.45-102.13-53.59-22.38-11.74.03-317.19 51.03 103.29 11.18 22.63 25.01 3.64 114.23 16.63-82.65 80.38z"></path></svg></li>';
 
     // Set rating
-    $rating    = $rating <= 5 ? $rating : 5;
+    $rating = $rating <= 5 ? $rating : 5;
 
-    $fullStarCount  = (int)$rating;
-    $halfStarCount  = ceil((float)$rating) - $fullStarCount;
+    $fullStarCount = (int) $rating;
+    $halfStarCount = ceil((float) $rating) - $fullStarCount;
     $emptyStarCount = 5 - $fullStarCount - $halfStarCount;
 
-    $html  = str_repeat($fullStar, $fullStarCount);
+    $html = str_repeat($fullStar, $fullStarCount);
     $html .= str_repeat($halfStar, $halfStarCount);
     $html .= str_repeat($emptyStar, $emptyStarCount);
-    $html  = '<ul class="flex space-x-1 rtl:space-x-reverse justify-center">' . $html . '</ul>';
+    $html = '<ul class="flex space-x-1 rtl:space-x-reverse justify-center">' . $html . '</ul>';
+
     return $html;
 }
 
@@ -1480,8 +1444,9 @@ function livewire_asset_path()
 {
     try {
 
-        $manifest          = json_decode(file_get_contents(base_path('vendor/livewire/livewire/dist/manifest.json')), true);
+        $manifest = json_decode(file_get_contents(base_path('vendor/livewire/livewire/dist/manifest.json')), true);
         $versionedFileName = $manifest['/livewire.js'];
+
         return url("vendor/livewire{$versionedFileName}");
     } catch (\Throwable $th) {
         return null;
@@ -1491,27 +1456,27 @@ function livewire_asset_path()
 /**
  * Convert to number
  *
- * @param mixed $value
+ * @param  mixed  $value
  * @return mixed
  */
 function convertToNumber($value)
 {
     if (is_numeric($value)) {
-        $int   = (int)$value;
-        $float = (float)$value;
+        $int = (int) $value;
+        $float = (float) $value;
 
         $value = ($int == $float) ? $int : $float;
+
         return $value;
     } else {
         return $value;
     }
 }
 
-
 /**
  * Convert long numbers to readable numbers
  *
- * @param mixed $n
+ * @param  mixed  $n
  * @return string
  */
 function readable_number($n)
@@ -1546,7 +1511,6 @@ function readable_number($n)
     }
 }
 
-
 /**
  * Get current theme
  *
@@ -1569,8 +1533,8 @@ function current_theme()
             if ($cookie && $cookie === 'light') {
 
                 // Light mode
-                return "light";
-            } else if ($cookie && $cookie === 'dark') {
+                return 'light';
+            } elseif ($cookie && $cookie === 'dark') {
 
                 // Dark mode
                 return 'dark';
@@ -1595,113 +1559,110 @@ function current_theme()
     }
 }
 
-
 /**
  * Get pending notifications for admin
- *
- * @return array
  */
 function pending_admin_notifications(): array
 {
     try {
 
         // Count pending users
-        $count_pending_users                  = User::where('status', 'pending')->count();
+        $count_pending_users = User::where('status', 'pending')->count();
 
         // Count pending deposit transactions
-        $count_pending_deposit_transactions   = DepositTransaction::where('payment_method', 'offline_payment')->where('status', 'pending')->count();
+        $count_pending_deposit_transactions = DepositTransaction::where('payment_method', 'offline_payment')->where('status', 'pending')->count();
 
         // Count pending gigs
-        $count_pending_gigs                   = Gig::where('status', 'pending')->count();
+        $count_pending_gigs = Gig::where('status', 'pending')->count();
 
         // Count pending projects
-        $count_pending_projects               = Project::where('status', 'pending_approval')->count();
+        $count_pending_projects = Project::where('status', 'pending_approval')->count();
 
         // Count pending bids subscriptions
-        $count_pending_bids_subscriptions     = ProjectBidUpgrade::where('status', 'pending')->count();
+        $count_pending_bids_subscriptions = ProjectBidUpgrade::where('status', 'pending')->count();
 
         // Count reported bids
-        $count_reported_bids                  = ProjectReportedBid::where('is_seen', false)->count();
+        $count_reported_bids = ProjectReportedBid::where('is_seen', false)->count();
 
         // Count pending projects subscriptions
         $count_pending_projects_subscriptions = ProjectSubscription::where('status', 'pending')->count();
 
         // Count pending refunds
-        $count_pending_refunds                = Refund::where('is_seen_by_admin', false)->where('request_admin_intervention', true)->count();
+        $count_pending_refunds = Refund::where('is_seen_by_admin', false)->where('request_admin_intervention', true)->count();
 
         // Count reported gigs
-        $count_reported_gigs                  = ReportedGig::where('status', 'pending')->count();
+        $count_reported_gigs = ReportedGig::where('status', 'pending')->count();
 
         // Count reported projects
-        $count_reported_projects              = ReportedProject::where('is_seen', false)->count();
+        $count_reported_projects = ReportedProject::where('is_seen', false)->count();
 
         // Count reported users
-        $count_reported_users                 = ReportedUser::where('is_seen', false)->count();
+        $count_reported_users = ReportedUser::where('is_seen', false)->count();
 
         // Count new support messages
-        $count_new_support_messages           = SupportMessage::where('is_seen', false)->count();
+        $count_new_support_messages = SupportMessage::where('is_seen', false)->count();
 
         // Count pending withdrawals
-        $count_pending_payouts                = UserWithdrawalHistory::where('status', 'pending')->count();
+        $count_pending_payouts = UserWithdrawalHistory::where('status', 'pending')->count();
 
         // Count pending portfolio projects
-        $count_pending_portfolio_projects     = UserPortfolio::where('status', 'pending')->count();
+        $count_pending_portfolio_projects = UserPortfolio::where('status', 'pending')->count();
 
         // Count pending verifications
-        $count_pending_verifications          = VerificationCenter::where('status', 'pending')->count();
+        $count_pending_verifications = VerificationCenter::where('status', 'pending')->count();
 
         // Count pending checkout payments
-        $count_pending_checkout_payments      = OrderInvoice::where('status', 'pending')->count();
+        $count_pending_checkout_payments = OrderInvoice::where('status', 'pending')->count();
 
         // Count pending bids
-        $count_pending_bids                   = ProjectBid::where('status', 'pending_approval')->count();
+        $count_pending_bids = ProjectBid::where('status', 'pending_approval')->count();
 
         // Count total pending notifications
-        $total                                = convertToNumber($count_pending_users) + convertToNumber($count_pending_deposit_transactions) + convertToNumber($count_pending_gigs) + convertToNumber($count_pending_projects) + convertToNumber($count_pending_bids_subscriptions) + convertToNumber($count_reported_bids) + convertToNumber($count_pending_projects_subscriptions) + convertToNumber($count_pending_refunds) + convertToNumber($count_reported_gigs) + convertToNumber($count_reported_projects) + convertToNumber($count_reported_users) + convertToNumber($count_new_support_messages) + convertToNumber($count_pending_payouts) + convertToNumber($count_pending_portfolio_projects) + convertToNumber($count_pending_verifications) + convertToNumber($count_pending_checkout_payments) + convertToNumber($count_pending_bids);
+        $total = convertToNumber($count_pending_users) + convertToNumber($count_pending_deposit_transactions) + convertToNumber($count_pending_gigs) + convertToNumber($count_pending_projects) + convertToNumber($count_pending_bids_subscriptions) + convertToNumber($count_reported_bids) + convertToNumber($count_pending_projects_subscriptions) + convertToNumber($count_pending_refunds) + convertToNumber($count_reported_gigs) + convertToNumber($count_reported_projects) + convertToNumber($count_reported_users) + convertToNumber($count_new_support_messages) + convertToNumber($count_pending_payouts) + convertToNumber($count_pending_portfolio_projects) + convertToNumber($count_pending_verifications) + convertToNumber($count_pending_checkout_payments) + convertToNumber($count_pending_bids);
 
         // Return data
         return [
-            'count_pending_users'                  => $count_pending_users,
-            'count_pending_deposit_transactions'   => $count_pending_deposit_transactions,
-            'count_pending_gigs'                   => $count_pending_gigs,
-            'count_pending_projects'               => $count_pending_projects,
-            'count_pending_bids_subscriptions'     => $count_pending_bids_subscriptions,
-            'count_reported_bids'                  => $count_reported_bids,
+            'count_pending_users' => $count_pending_users,
+            'count_pending_deposit_transactions' => $count_pending_deposit_transactions,
+            'count_pending_gigs' => $count_pending_gigs,
+            'count_pending_projects' => $count_pending_projects,
+            'count_pending_bids_subscriptions' => $count_pending_bids_subscriptions,
+            'count_reported_bids' => $count_reported_bids,
             'count_pending_projects_subscriptions' => $count_pending_projects_subscriptions,
-            'count_pending_refunds'                => $count_pending_refunds,
-            'count_reported_gigs'                  => $count_reported_gigs,
-            'count_reported_projects'              => $count_reported_projects,
-            'count_reported_users'                 => $count_reported_users,
-            'count_new_support_messages'           => $count_new_support_messages,
-            'count_pending_payouts'                => $count_pending_payouts,
-            'count_pending_portfolio_projects'     => $count_pending_portfolio_projects,
-            'count_pending_verifications'          => $count_pending_verifications,
-            'count_pending_checkout_payments'      => $count_pending_checkout_payments,
-            'count_pending_bids'                   => $count_pending_bids,
-            'total'                                => convertToNumber($total)
+            'count_pending_refunds' => $count_pending_refunds,
+            'count_reported_gigs' => $count_reported_gigs,
+            'count_reported_projects' => $count_reported_projects,
+            'count_reported_users' => $count_reported_users,
+            'count_new_support_messages' => $count_new_support_messages,
+            'count_pending_payouts' => $count_pending_payouts,
+            'count_pending_portfolio_projects' => $count_pending_portfolio_projects,
+            'count_pending_verifications' => $count_pending_verifications,
+            'count_pending_checkout_payments' => $count_pending_checkout_payments,
+            'count_pending_bids' => $count_pending_bids,
+            'total' => convertToNumber($total),
         ];
     } catch (\Throwable $th) {
 
         // Error
         return [
-            'count_pending_users'                  => 0,
-            'count_pending_deposit_transactions'   => 0,
-            'count_pending_gigs'                   => 0,
-            'count_pending_projects'               => 0,
-            'count_pending_bids_subscriptions'     => 0,
-            'count_reported_bids'                  => 0,
+            'count_pending_users' => 0,
+            'count_pending_deposit_transactions' => 0,
+            'count_pending_gigs' => 0,
+            'count_pending_projects' => 0,
+            'count_pending_bids_subscriptions' => 0,
+            'count_reported_bids' => 0,
             'count_pending_projects_subscriptions' => 0,
-            'count_pending_refunds'                => 0,
-            'count_reported_gigs'                  => 0,
-            'count_reported_projects'              => 0,
-            'count_reported_users'                 => 0,
-            'count_new_support_messages'           => 0,
-            'count_pending_payouts'                => 0,
-            'count_pending_portfolio_projects'     => 0,
-            'count_pending_verifications'          => 0,
-            'count_pending_checkout_payments'      => 0,
-            'count_pending_bids'                   => 0,
-            'total'                                => 0
+            'count_pending_refunds' => 0,
+            'count_reported_gigs' => 0,
+            'count_reported_projects' => 0,
+            'count_reported_users' => 0,
+            'count_new_support_messages' => 0,
+            'count_pending_payouts' => 0,
+            'count_pending_portfolio_projects' => 0,
+            'count_pending_verifications' => 0,
+            'count_pending_checkout_payments' => 0,
+            'count_pending_bids' => 0,
+            'total' => 0,
         ];
     }
 }

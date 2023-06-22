@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\UserPortfolio;
 use App\Models\UserWithdrawalHistory;
 use App\Models\UserWithdrawalSettings;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use DB;
 use File;
@@ -71,7 +72,7 @@ class TrashComponent extends Component
         // Confirm restore
         $this->dialog()->confirm([
             'title' => __('messages.t_confirm_restore'),
-            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_restore_this_user').'<br>'.$user->username.'</div>',
+            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_restore_this_user') . '<br>' . $user->username . '</div>',
             'icon' => 'error',
             'accept' => [
                 'label' => __('messages.t_restore'),
@@ -120,7 +121,7 @@ class TrashComponent extends Component
         // Confirm delete
         $this->dialog()->confirm([
             'title' => __('messages.t_confirm_delete'),
-            'description' => "<div class='leading-relaxed'>".__('messages.t_are_u_sure_u_want_to_prmtly_delete_usr').'<br>'.$user->username.'<br>'.__('messages.t_all_records_related_to_user_will_erased').'</div>',
+            'description' => "<div class='leading-relaxed'>" . __('messages.t_are_u_sure_u_want_to_prmtly_delete_usr') . '<br>' . $user->username . '<br>' . __('messages.t_all_records_related_to_user_will_erased') . '</div>',
             'icon' => 'error',
             'accept' => [
                 'label' => __('messages.t_delete'),
@@ -157,7 +158,6 @@ class TrashComponent extends Component
 
                 // Delete conversation
                 $conversation->delete();
-
             }
 
             // Delete deposit transactions made by this user
@@ -185,13 +185,12 @@ class TrashComponent extends Component
                 foreach ($order_items as $item) {
 
                     // Check item status
-                    if (in_array($item->status, ['pending', 'proceeded']) && ! $item->is_finished) {
+                    if (in_array($item->status, ['pending', 'proceeded']) && !$item->is_finished) {
 
                         // Update order in queue
                         if ($item->gig->orders_in_queue > 0) {
                             $item->gig()->decrement('orders_in_queue');
                         }
-
                     }
 
                     // Delete requirements
@@ -217,14 +216,11 @@ class TrashComponent extends Component
 
                         // Delete refund
                         $refund->delete();
-
                     }
-
                 }
 
                 // Delete this order
                 $order->delete();
-
             }
 
             // Get gigs created by this user
@@ -243,16 +239,14 @@ class TrashComponent extends Component
                 foreach ($documents as $doc) {
 
                     // Delete this file from local storage first
-                    if (File::exists(public_path('storage/gigs/documents/'.$doc->name))) {
+                    if (File::exists(public_path('storage/gigs/documents/' . $doc->name))) {
 
                         // File exists, delete it
-                        File::delete(public_path('storage/gigs/documents/'.$doc->name));
-
+                        File::delete(public_path('storage/gigs/documents/' . $doc->name));
                     }
 
                     // Now delete it from database
                     $doc->delete();
-
                 }
 
                 // Get gig images
@@ -260,29 +254,15 @@ class TrashComponent extends Component
 
                 // loop through images
                 foreach ($images as $img) {
-
-                    // Delete large image
-                    deleteModelFile($img->large);
-
-                    // Delete medium image
-                    deleteModelFile($img->medium);
-
-                    // Delete small image
-                    deleteModelFile($img->small);
-
-                    // Delete this record from database
+                    ImageUploader::deBucket($img->img_large_id);
+                    ImageUploader::deBucket($img->img_medium_id);
+                    ImageUploader::deBucket($img->img_thumb_id);
                     $img->delete();
-
                 }
 
-                // Delete thumbnail
-                deleteModelFile($gig->thumbnail);
-
-                // Delete gig medium thumbnail
-                deleteModelFile($gig->imageMedium);
-
-                // Delete gig large thumbnail
-                deleteModelFile($gig->imageLarge);
+                ImageUploader::deBucket($gig->image_thumb_id);
+                ImageUploader::deBucket($gig->image_medium_id);
+                ImageUploader::deBucket($gig->image_large_id);
 
                 // Delete gig seo
                 $gig->seo()->delete();
@@ -304,7 +284,6 @@ class TrashComponent extends Component
 
                     // Delete requirement
                     $req->delete();
-
                 }
 
                 // Delete reviews
@@ -342,14 +321,11 @@ class TrashComponent extends Component
 
                         // Delete refund
                         $refund->delete();
-
                     }
-
                 }
 
                 // Now force deleting this gig
                 $gig->forceDelete();
-
             }
 
             // Delete notifications for this user
@@ -384,12 +360,10 @@ class TrashComponent extends Component
 
                     // Delete this bid
                     $bid->delete();
-
                 }
 
                 // Delete project now
                 $project->delete();
-
             }
 
             // If this user already reported, delete that report
@@ -423,19 +397,17 @@ class TrashComponent extends Component
                 foreach ($gallery as $g) {
 
                     // Delete image
-                    deleteModelFile($g->image);
+                    ImageUploader::deBucket($g->image_id);
 
                     // Delete this record
                     $g->delete();
-
                 }
 
                 // Delete thumbnail
-                deleteModelFile($p->thumbnail);
+                ImageUploader::deBucket($p->thumb_id);
 
                 // Delete work
                 $p->delete();
-
             }
 
             // Delete user skills
@@ -451,7 +423,7 @@ class TrashComponent extends Component
             $user->verification()->delete();
 
             // Delete user avatar
-            deleteModelFile($user->avatar);
+            ImageUploader::deBucket($user->avatar_id);
 
             // Finally force delete for this user
             $user->forceDelete();
@@ -462,7 +434,6 @@ class TrashComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Throwable $th) {
             throw $th;
             // Error
@@ -471,7 +442,6 @@ class TrashComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

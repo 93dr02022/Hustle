@@ -63,3 +63,12 @@
 [data-dropdown-toggle] + * {
     box-shadow: 0 12px 40px 8px rgba(140, 152, 164, 0.19) !important;
 }
+
+.slide-blue {
+    background: linear-gradient(
+        180deg,
+        rgba(29, 70, 245, 0) 30%,
+        rgba(29, 70, 245, 0.6) 70%,
+        rgba(29, 70, 245, 0) 100%
+    );
+}

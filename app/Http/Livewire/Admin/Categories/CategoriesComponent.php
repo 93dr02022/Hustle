@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Categories;
 
 use App\Models\Category;
 use App\Models\Gig;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
@@ -65,27 +66,21 @@ class CategoriesComponent extends Component
             ]);
 
             return;
-
         }
-
-        // Disable foreign key check
-        Schema::disableForeignKeyConstraints();
 
         // Check if category has icon
         if ($category->icon) {
-            deleteModelFile($category->icon);
+            ImageUploader::deBucket($category->icon_id);
         }
 
         // Check if category has image
         if ($category->image) {
-            deleteModelFile($category->image);
+            ImageUploader::deBucket($category->image_id);
         }
 
         // Delete category
         $category->delete();
 
-        // Disable foreign key check
-        Schema::enableForeignKeyConstraints();
 
         // Success
         $this->notification([

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Seller\Portfolio;
 
 use App\Models\UserPortfolio;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -21,7 +22,7 @@ class PortfolioComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_portfolio')." $separator ".settings('general')->title;
+        $title = __('messages.t_portfolio') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -35,7 +36,7 @@ class PortfolioComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -79,15 +80,14 @@ class PortfolioComponent extends Component
         foreach ($project->gallery as $image) {
 
             // Delete image from local storage
-            deleteModelFile($image->image);
+            ImageUploader::deBucket($image->image_id);
 
             // Delete image from database
             $image->delete();
-
         }
 
         // Delete thumbnail
-        deleteModelFile($project->thumbnail);
+        ImageUploader::deBucket($project->thumb_id);
 
         // Delete project
         $project->delete();

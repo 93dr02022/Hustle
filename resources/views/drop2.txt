@@ -213,3 +213,173 @@
                 </div>
             </div>
         @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         {{-- Check if background image enabled --}}
+            @if (settings('hero')->enable_bg_img)
+                
+                {{-- Background image for small devices --}}
+                @if (settings('hero')->background_small)
+                
+                    @media only screen and (max-width: 600px) {
+                        .home-hero-section {
+                            background-image: url('{{ src(settings('hero')->background_small) }}');
+                            height: {{ settings('hero')->bg_small_height }}px;
+                        }
+                    }
+
+                @endif
+
+                {{-- Background image for medium devices --}}
+                @if (settings('hero')->background_medium)
+                
+                    @media only screen and (min-width: 600px) {
+                        .home-hero-section {
+                            background-image: url('{{ src(settings('hero')->background_medium) }}')
+                        }
+                    }
+
+                @endif
+
+                {{-- Background image for large devices --}}
+                @if (settings('hero')->background_large)
+                
+                    @media only screen and (min-width: 768px) {
+                        .home-hero-section {
+                            background-image: url('{{ src(settings('hero')->background_large) }}');
+                        }
+                    }
+
+                @endif
+
+                {{-- Background image for large devices --}}
+                @if (settings('hero')->background_large)
+                
+                    @media only screen and (min-width: 992px) {
+                        .home-hero-section {
+                            background-image: url('{{ src(settings('hero')->background_large) }}');
+                        }
+                    }
+
+                @endif
+
+                {{-- Background image for large devices --}}
+                @if (settings('hero')->background_large)
+                
+                    @media only screen and (min-width: 1200px) {
+                        .home-hero-section {
+                            background-image: url('{{ src(settings('hero')->background_large) }}');
+                        }
+                    }
+
+                @endif
+
+            @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            {{-- Preload hero section image --}}
+    @if (settings('hero')->enable_bg_img)
+
+        {{-- Small background --}}
+        @if (settings('hero')->background_small)
+            <link rel="preload prefetch" as="image" href="{{ src(settings('hero')->background_small) }}"
+                type="image/webp" />
+        @endif
+
+        {{-- Medium background --}}
+        @if (settings('hero')->background_medium)
+            <link rel="preload prefetch" as="image" href="{{ src(settings('hero')->background_medium) }}"
+                type="image/webp" />
+        @endif
+
+        {{-- Large background --}}
+        @if (settings('hero')->background_large)
+            <link rel="preload prefetch" as="image" href="{{ src(settings('hero')->background_large) }}"
+                type="image/webp" />
+        @endif
+
+    @endif
+
+
+
+
+
+     {{-- Ads header code --}}
+    @if (advertisements('header_code'))
+        {!! advertisements('header_code') !!}
+    @endif
+
+    {{-- Custom head code --}}
+    @if (settings('appearance')->custom_code_head_main_layout)
+        {!! settings('appearance')->custom_code_head_main_layout !!}
+    @endif
+
+
+
+     .home-hero-section {
+                background-color: {{ settings('hero')->bg_color }};
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: cover;
+                height: {{ settings('hero')->bg_large_height }}px;
+            }
+            

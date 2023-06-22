@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Blog;
 
 use App\Models\Article;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -48,8 +49,7 @@ class ArticlesComponent extends Component
         // Get article
         $article = Article::where('id', $id)->firstOrFail();
 
-        // Delete article image
-        deleteModelFile($article->image);
+        ImageUploader::deBucket($article->image_id);
 
         // Delete seo
         $article->seo()->delete();
