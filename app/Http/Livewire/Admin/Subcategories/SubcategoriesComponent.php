@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Subcategories;
 
 use App\Models\Gig;
 use App\Models\Subcategory;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -64,17 +65,16 @@ class SubcategoriesComponent extends Component
             ]);
 
             return;
-
         }
 
         // Check if subcategory has icon
-        if ($subcategory->icon) {
-            deleteModelFile($subcategory->icon);
+        if ($subcategory->icon_id) {
+            ImageUploader::deBucket($subcategory->icon_id);
         }
 
         // Check if subcategory has image
-        if ($subcategory->image) {
-            deleteModelFile($subcategory->image);
+        if ($subcategory->image_id) {
+            ImageUploader::deBucket($subcategory->image_id);
         }
 
         // Delete subcategory

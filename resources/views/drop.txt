@@ -4,6 +4,13 @@ https://ipapi.co/${ip.value}/json
 
 102.89.46.29
 
+# DB_CONNECTION=mysql
+# DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
+# DB_PORT=3306
+# DB_DATABASE=riverr
+# DB_USERNAME=admin
+# DB_PASSWORD="Y9D#6!qY7NTro6^"
+
 
 {{-- @if (settings('appearance')->is_best_sellers && $sellers && $sellers->count()) --}}
         @if (false)
