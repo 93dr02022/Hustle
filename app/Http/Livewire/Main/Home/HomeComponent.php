@@ -63,11 +63,11 @@ class HomeComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.home.home', [
-            'categories' => $this->categories,
-            'randomCategories' => $this->randomGigs
-            // 'sellers' => $this->sellers,
-            // 'gigs' => $this->gigs,
-            // 'projects' => $this->projects,
+            'categories' => modelCaches('main_category_cache'),
+            'randomCategories' => modelCaches('random_gigs_cache'),
+            'sellers' => $this->sellers,
+            'gigs' => $this->gigs,
+            'projects' => modelCaches('home_projects_cache'),
         ])->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -78,7 +78,11 @@ class HomeComponent extends Component
      */
     public function getGigsProperty()
     {
-        return Gig::active()->inRandomOrder()->take(4)->get();
+        return Gig::active()
+            ->inRandomOrder()
+            ->take(6)
+            ->with('owner')
+            ->get();
     }
 
     /**
@@ -92,51 +96,19 @@ class HomeComponent extends Component
     }
 
     /**
-     * Get categories with 10 gigs each
-     */
-    public function getRandomGigsProperty()
-    {
-        $categories = Category::where('is_visible', true)
-            ->inRandomOrder()
-            ->take(10)
-            ->get();
-
-        $categories->each(function ($category) {
-            $category->gigs = $category->gigs()
-                ->whereIn('status', ['active', 'boosted', 'trending', 'featured'])
-                ->whereNull('deleted_at')
-                ->inRandomOrder()
-                ->limit(10)
-                ->with('owner')
-                ->get();
-        });
-
-        return $categories;
-    }
-
-    /**
      * Get best sellers
      *
      * @return object
      */
     public function getSellersProperty()
     {
-        // Check if bestsellers section enabled
-        if (settings('appearance')->is_best_sellers) {
-
-            // Get top sellers randomly
-            return User::where('account_type', 'seller')
-                ->whereHas('sales')
-                ->whereIn('status', ['status', 'verified'])
-                ->withCount('sales')
-                ->orderBy('sales_count', 'desc')
-                ->take(12)
-                ->get();
-        } else {
-
-            // No need to make sql query
-            return null;
-        }
+        return User::where('account_type', 'seller')
+            ->whereHas('sales')
+            ->whereIn('status', ['status', 'verified'])
+            ->withCount('sales')
+            ->orderBy('sales_count', 'desc')
+            ->take(12)
+            ->get();
     }
 
     /**
@@ -146,16 +118,7 @@ class HomeComponent extends Component
      */
     public function getProjectsProperty()
     {
-        // Check if projects enabled
-        if (settings('projects')->is_enabled) {
-
-            // Get latest 12 projects
-            return Project::whereIn('status', ['completed', 'active'])->take(12)->get();
-        } else {
-
-            // Not enabled
-            return null;
-        }
+        return Project::whereIn('status', ['completed', 'active'])->take(12)->get();
     }
 
     /**

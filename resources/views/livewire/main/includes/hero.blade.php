@@ -2,7 +2,7 @@
     {{-- Hero section content --}}
     <div class="grid grid-cols-1">
         <div
-            class="bg-slate-200 flex flex-col grow min-h-[300px] sm:min-h-[380px] md:min-h-[480px] h-full w-full relative">
+            class="bg-slate-200 flex flex-col grow min-h-[340px] sm:min-h-[380px] md:min-h-[482px] h-full w-full relative">
             <div class="grid h-full grid-cols-1">
                 <div class="swiper hero-swiper">
                     <div class="swiper-wrapper">
@@ -13,10 +13,12 @@
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Earn Money and Experience
                                             </div>
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 With Top Clients
                                             </div>
                                         </div>
@@ -32,9 +34,14 @@
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">Find best
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                Find
+                                                best
                                                 Freelance </div>
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">services for
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                services for
                                                 your business
                                             </div>
                                         </div>
@@ -50,10 +57,12 @@
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Get your next big project
                                             </div>
-                                            <div class="text-3xl font-extrabold text-white md:text-4xl">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 build with experts
                                             </div>
                                         </div>
@@ -65,10 +74,10 @@
                 </div>
             </div>
 
-            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[62%] right-[0]  px-4">
+            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[62%] right-[0] px-4">
                 <div
-                    class="max-w-2xl mx-auto py-5 px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[30px] rounded-md bg-[rgba(217,217,217,0.05)]">
-                    <form class="flex items-center mb-4" action="{{ url('search') }}" accept="GET">
+                    class="max-w-2xl mx-auto py-5 px-3 xs:px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[30px] rounded-md bg-[rgba(217,217,217,0.05)]">
+                    <form class="flex items-center mb-2 sm:mb-4" action="{{ url('search') }}" accept="GET">
                         <div class="relative w-full">
                             <div
                                 class="absolute inset-y-0 flex items-center pointer-events-none ltr:left-0 rtl:right-0 ltr:pl-3 rtl:pr-3">
@@ -94,7 +103,7 @@
                     <div class="items-center hidden text-sm font-semibold text-white sm:flex whitespace-nowrap">
                         @lang('messages.t_popular_colon')
                         <ul class="flex flex-wrap gap-3 ml-3">
-                            @foreach ($popularTags as $tag)
+                            @foreach (modelCaches('tags_cache') as $tag)
                                 <li class="flex whitespace-nowrap">
                                     <a href="{{ url('categories', $tag->slug) }}"
                                         class="border border-slate-100 rounded-[40px] hover:bg-white hover:text-gray-700 transition-all duration-200 px-3 py-0.5 text-xs">

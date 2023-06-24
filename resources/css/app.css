@@ -84,3 +84,7 @@
         rgba(29, 70, 245, 0) 100%
     );
 }
+
+.card-shadow-1 {
+    box-shadow: 0px 15px 50px -1px rgba(144, 144, 144, 0.25);
+}

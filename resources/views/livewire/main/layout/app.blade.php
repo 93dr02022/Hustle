@@ -51,9 +51,6 @@
         __var_axios_base_url = "{{ url('/') }}/";
         __var_currency_code = "{{ settings('currency')->code }}";
     </script>
-
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" /> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script> --}}
 </head>
 
 <body
@@ -68,18 +65,6 @@
 
     {{-- Header --}}
     @livewire('main.includes.header')
-
-    @php
-        $categories = App\Models\Category::take(9)->get();
-        $popularTags = App\Models\Category::whereHas('gigs')
-            ->withCount('gigs')
-            ->take(4)
-            ->orderBy('gigs_count')
-            ->get();
-    @endphp
-    {{-- Hero section --}}
-
-
 
     {{-- Content --}}
     @if (request()->is('/'))

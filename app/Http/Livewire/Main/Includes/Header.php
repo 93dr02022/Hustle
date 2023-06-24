@@ -58,7 +58,7 @@ class Header extends Component
         }
 
         // Get language from session
-        $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
+        // $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
 
         // Get default language
         // $language = Language::where('language_code', $locale)->first();
@@ -73,9 +73,9 @@ class Header extends Component
         // } else {
 
         // Not found, set default
-        $this->default_language_name = 'English';
-        $this->default_language_code = 'en';
-        $this->default_country_code = 'us';
+        // $this->default_language_name = 'English';
+        // $this->default_language_code = 'en';
+        // $this->default_country_code = 'us';
         // }
     }
 
@@ -87,8 +87,8 @@ class Header extends Component
     public function render()
     {
         return view('livewire.main.includes.header', [
-            'categories' => $this->categories,
-            'languages' => $this->languages,
+            'categories' => modelCaches('navbar_category_cache'),
+            // 'languages' => $this->languages,
         ]);
     }
 
