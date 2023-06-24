@@ -3,9 +3,11 @@
 namespace App\Notifications\User\Buyer;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use Kutia\Larafirebase\Facades\Larafirebase;
+use Kutia\Larafirebase\Messages\FirebaseMessage;
 
 class OrderPlaced extends Notification implements ShouldQueue
 {
@@ -33,7 +35,8 @@ class OrderPlaced extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        //Get the notification channels that the user has allowed to be notified of.
+        return $this->getActiveChannels($notifiable);
     }
 
     /**
@@ -48,12 +51,30 @@ class OrderPlaced extends Notification implements ShouldQueue
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
 
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_buyer_order_placed'))
-                    ->action(__('messages.t_my_orders'), url('account/orders'));
+            ->subject($subject)
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->line(__('messages.t_notification_buyer_order_placed'))
+            ->action(__('messages.t_my_orders'), url('account/orders'));
     }
-
+    /**
+     * Create the push notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \NotificationChannels\OneSignal\OneSignalMessage
+     */
+    public function toFirebase($notifiable)
+    {
+        // Set subject
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
+        $url =  url('account/orders');
+        return  Larafirebase::withTitle($subject)
+            ->withBody(__('messages.t_notification_buyer_order_placed'))
+            ->withClickAction($url)
+            ->withIcon(asset( 'img/default/no-favicon.png'))
+            ->withImage(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendMessage([$notifiable->push_notification_id]);
+    }
     /**
      * Get the array representation of the notification.
      *
@@ -65,5 +86,13 @@ class OrderPlaced extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+    private function getActiveChannels($notifiable)
+    {
+        //Check if user has allowed push notifications for order updates
+        if ($notifiable->push_order_updates) {
+            $this->toFirebase($notifiable);
+        }
+        return ['mail'];
     }
 }

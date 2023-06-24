@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class MessagesController extends Controller
 {
@@ -151,6 +151,13 @@ class MessagesController extends Controller
                 'to_id' => $request['id'],
                 'message' => Chatify::messageCard($messageData, 'default')
             ]);
+
+            $toUser = User::find($request['id']);
+            if ($toUser->push_inbox_messages) {
+                Larafirebase::withTitle("New Message!")
+                ->withBody("You have a new message")
+                ->sendMessage([$toUser->push_notification_id]);
+            }
         }
 
         // send the response
