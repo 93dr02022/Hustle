@@ -112,6 +112,13 @@
       'Clockwork' => 'Clockwork\\Support\\Laravel\\Facade',
     ),
   ),
+  'kutia-software-company/larafirebase' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Kutia\\Larafirebase\\Providers\\LarafirebaseServiceProvider',
+    ),
+  ),
   'laravel/sail' => 
   array (
     'providers' => 

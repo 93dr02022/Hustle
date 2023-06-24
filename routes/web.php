@@ -1,6 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Main\Account\Notifications\NotificationsComponent;
+
+
+//Notifications
+Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
+    Route::patch('/subscribe-to-notifications', 'NotificationsController@subscribe')->name('subscribe-to-notifications');
+    Route::post('/unsubscribe-to-notifications', 'NotificationsController@unsubscribe')->name('unsubscribe-to-notifications');
+});
 
 // Tasks
 Route::prefix('tasks')->group(function () {
@@ -83,7 +91,7 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
         Route::get('verify', VerifyComponent::class);
     });
 
-    // Authentication 
+    // Authentication
     Route::namespace('Auth')->middleware('guest')->prefix('auth')->group(function () {
 
         // Register
@@ -231,6 +239,12 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
     // Account
     Route::namespace('Account')->prefix('account')->middleware('auth')->group(function () {
+        // Settings
+        Route::namespace('Notifications')->group(function () {
+
+            // Index
+            Route::get('notifications', NotificationsComponent::class);
+        });
 
         // Settings
         Route::namespace('Settings')->group(function () {
