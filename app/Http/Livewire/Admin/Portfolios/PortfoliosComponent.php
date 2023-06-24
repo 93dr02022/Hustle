@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Portfolios;
 
 use App\Models\UserPortfolio;
 use App\Notifications\User\Seller\PortfolioPublished;
+use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -52,18 +53,17 @@ class PortfoliosComponent extends Component
 
         // Check if portfolio has thumbnail
         if ($portfolio->thumbnail) {
-            deleteModelFile($portfolio->thumbnail);
+            ImageUploader::deBucket($portfolio->thumb_id);
         }
 
         // Loop through gallery
         foreach ($portfolio->gallery as $img) {
 
             // Delete file first
-            deleteModelFile($img->image);
+            ImageUploader::deBucket($img->image_id);
 
             // Delete this image
             $img->delete();
-
         }
 
         // Delete portfolio

@@ -14,8 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('projects_categories', function (Blueprint $table) {
-            $table->unsignedBigInteger('thumbnail_id')->nullable()->after('seo_description');
-            $table->foreign('thumbnail_id')->references('id')->on('file_manager');
+            $table->string('thumbnail_id')->nullable()->after('seo_description');
         });
     }
 
@@ -27,7 +26,6 @@ return new class extends Migration
     public function down()
     {
         Schema::table('projects_categories', function (Blueprint $table) {
-            $table->dropForeign('projects_categories_thumbnail_id_foreign');
             $table->dropColumn('thumbnail_id');
         });
     }

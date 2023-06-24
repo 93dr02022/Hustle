@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['web', 'auth:admin'])->group(function () {
 
     // Home
-    Route::namespace('Home')->group(function () {
+    Route::namespace('Home')->group(function() {
 
         // Index
         Route::get('/', HomeComponent::class);
+
     });
 
     // Profile
@@ -250,13 +251,13 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
     });
 
     // Categories
-    Route::namespace('Categories')->prefix('categories')->group(function () {
+    Route::namespace('Categories')->prefix('categories')->group(function() {
 
         // All
         Route::get('/', CategoriesComponent::class);
 
         // Options
-        Route::namespace('Options')->group(function () {
+        Route::namespace('Options')->group(function() {
 
             // Create
             Route::get('create', CreateComponent::class);
@@ -488,7 +489,7 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
         // Seo
         Route::get('seo', SeoComponent::class);
 
-        // Smtp 
+        // Smtp
         Route::get('smtp', SmtpComponent::class);
 
         // Withdrawal
@@ -563,5 +564,6 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
 Route::namespace('Auth')->middleware(['web', 'banned.ip', 'guest:admin'])->group(function () {
 
     // Login
-    Route::get('login', LoginComponent::class);
+    Route::get('login', LoginComponent::class)->name('admin.login');
+
 });

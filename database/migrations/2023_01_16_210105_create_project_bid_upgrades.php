@@ -22,11 +22,10 @@ return new class extends Migration
             $table->string('amount', 10);
             $table->enum('status', ['pending', 'rejected', 'paid'])->default('pending');
             $table->text('rejection_reason')->nullable();
-            $table->unsignedBigInteger('receipt_id')->index()->nullable();
+            $table->string('receipt_id')->nullable();
             $table->timestamps();
 
             $table->foreign('bid_id')->references('id')->on('project_bids');
-            $table->foreign('receipt_id')->references('id')->on('file_manager');
         });
     }
 

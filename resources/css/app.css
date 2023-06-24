@@ -54,6 +54,18 @@
     .btn-purple {
         @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500;
     }
+
+    .odd-arrow {
+        @apply [&:nth-child(odd)_.swiper-button-prev]:bg-white [&:nth-child(odd)_.swiper-button-next]:bg-white  [&:nth-child(odd)_.swiper-button-prev]:after:!text-[#112fb4] [&:nth-child(odd)_.swiper-button-next]:after:!text-[#B7C4FC];
+    }
+
+    .even-arrow {
+        @apply [&:nth-child(even)_.swiper-button-prev]:bg-[#1F2937] [&:nth-child(odd)_.swiper-button-next]:bg-[#1F2937]  [&:nth-child(odd)_.swiper-button-prev]:after:!text-[#F1F4FF] [&:nth-child(odd)_.swiper-button-next]:after:!text-[#F1F4FF];
+    }
+
+    .stripe-title {
+        @apply [&:nth-child(odd)_.gig-title]:text-white [&:nth-child(event)_.gig-title]:text-[#1F2937];
+    }
 }
 
 [x-cloak] {
@@ -62,4 +74,17 @@
 
 [data-dropdown-toggle] + * {
     box-shadow: 0 12px 40px 8px rgba(140, 152, 164, 0.19) !important;
+}
+
+.slide-blue {
+    background: linear-gradient(
+        180deg,
+        rgba(29, 70, 245, 0) 30%,
+        rgba(29, 70, 245, 0.6) 70%,
+        rgba(29, 70, 245, 0) 100%
+    );
+}
+
+.card-shadow-1 {
+    box-shadow: 0px 15px 50px -1px rgba(144, 144, 144, 0.25);
 }

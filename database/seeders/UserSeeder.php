@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'email' => 'sunny@surehustle.com',
             'username' => 'sunny',
             'password' => Hash::make('12345678'),
-            'status' => 'active',
+            'status' => 'verified',
             'level_id' => 2,
             'account_type' => 'seller'
         ]);
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
                 'email' => fake()->unique()->email(),
                 'username' => fake()->unique()->userName(),
                 'password' => Hash::make('12345678'),
-                'status' => 'active',
+                'status' => 'verified',
                 'level_id' => 2,
                 'account_type' => 'seller'
             ]);
