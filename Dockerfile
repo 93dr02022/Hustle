@@ -95,7 +95,8 @@ RUN apk add --no-cache \
         libpng-dev \
         libwebp-dev \
         freetype-dev \
-        nodejs 
+        nodejs \
+        npm
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
@@ -138,5 +139,6 @@ RUN php artisan optimize
 
 # Set up volume
 VOLUME /var/www
+
 #RUN php artisan queue:work database
 CMD php artisan serve --host=0.0.0.0 --port 80
