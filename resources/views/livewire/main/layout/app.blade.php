@@ -51,6 +51,67 @@
         __var_axios_base_url = "{{ url('/') }}/";
         __var_currency_code = "{{ settings('currency')->code }}";
     </script>
+
+    {{-- Notification Initialization --}}
+
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4H3R1_H5xi0NvV_n6NXCG73tr_t6GjFg",
+            authDomain: "hustle-7d66f.firebaseapp.com",
+            projectId: "hustle-7d66f",
+            storageBucket: "hustle-7d66f.appspot.com",
+            messagingSenderId: "378681680907",
+            appId: "1:378681680907:web:0488b453643915a367930e",
+            measurementId: "G-B31LGQ7JG1"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+        @if (auth()->check())
+
+            function initFirebaseMessagingRegistration() {
+                messaging.requestPermission().then(function() {
+                    return messaging.getToken()
+                }).then(function(token) {
+                    window.axios.post("{{ route('subscribe-to-notifications') }}", {
+                        _method: "PATCH",
+                        token
+                    }).then(({
+                        data
+                    }) => {
+                        console.log(data)
+                    }).catch(({
+                        response: {
+                            data
+                        }
+                    }) => {
+                        console.error(data)
+                    })
+
+                }).catch(function(err) {
+                    console.log(`Token Error :: ${err}`);
+                });
+            }
+
+            initFirebaseMessagingRegistration();
+
+            messaging.onMessage(function({
+                data: {
+                    body,
+                    title
+                }
+            }) {
+                new Notification(title, {
+                    body
+                });
+            });
+        @endif
+    </script>
 </head>
 
 <body
