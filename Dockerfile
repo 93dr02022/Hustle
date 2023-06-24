@@ -138,5 +138,5 @@ RUN php artisan optimize
 
 # Set up volume
 VOLUME /var/www
-RUN php artisan queue:work database
+#RUN php artisan queue:work database
 CMD php artisan serve --host=0.0.0.0 --port 80
