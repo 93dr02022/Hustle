@@ -42,13 +42,13 @@ ENV REDIS_PASSWORD=null
 ENV REDIS_PORT=6379
 
 ENV MAIL_MAILER=smtp
-ENV MAIL_HOST=mailhog
-ENV MAIL_PORT=1025
-ENV MAIL_USERNAME=null
-ENV MAIL_PASSWORD=null
-ENV MAIL_ENCRYPTION=null
-ENV MAIL_FROM_ADDRESS="hello@example.com"
-ENV MAIL_FROM_NAME="${APP_NAME}"
+ENV MAIL_HOST=mail.privateemail.com   
+ENV MAIL_PORT=465
+ENV MAIL_USERNAME=admin@correcthustle.com
+ENV MAIL_PASSWORD=kkWiP96dEmZujnF
+ENV MAIL_ENCRYPTION=ssl
+ENV MAIL_FROM_ADDRESS=admin@correcthustle.com
+ENV MAIL_FROM_NAME=CorrectHustle
 
 ENV AWS_ACCESS_KEY_ID=AKIA525LDBK2M3KUXK3R
 ENV AWS_SECRET_ACCESS_KEY=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
@@ -101,6 +101,9 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
 RUN docker-php-ext-install gd
 
+RUN apk add autoconf && pecl install -o -f redis \
+&& rm -rf /tmp/pear \
+&& docker-php-ext-enable redis && apk del autoconf
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -122,6 +125,8 @@ RUN chmod -R 777 storage
 RUN chown -R www-data:www-data /var/www/storage
 RUN chmod -R 777 /var/www/storage
 RUN chown -R www-data:www-data docker
+ RUN chmod -R 777 storage bootstrap/cache
+ RUN chmod -R 777 ./
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -132,6 +137,6 @@ RUN composer install --no-scripts
 RUN php artisan optimize
 
 # Set up volume
-VOLUME /var/www/html/storage
-
+VOLUME /var/www
+RUN php artisan queue:work database
 CMD php artisan serve --host=0.0.0.0 --port 80
