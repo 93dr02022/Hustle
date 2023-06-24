@@ -54,7 +54,7 @@ class Project extends Component
             ->whereIn('status', $status)
             ->with(['category' => function ($query) {
                 return $query->with('translation');
-            }, 'skills'])
+            }, 'skills', 'skills.skill'])
             ->withCount('bids')
             ->firstOrFail();
 
@@ -74,7 +74,6 @@ class Project extends Component
         $this->budget_min = money($project->budget_min, settings('currency')->code, true)->format();
         $this->budget_max = money($project->budget_max, settings('currency')->code, true)->format();
         $this->urgent = $project->is_urgent;
-
     }
 
     /**
@@ -118,26 +117,20 @@ class Project extends Component
                         // Set name
                         $name = $t->language_value;
                         break;
-
                     }
-
                 }
 
                 // Return category name
                 return $name;
-
             } else {
 
                 // Has no translations
                 return $category->name;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             return $category->name;
-
         }
     }
 }

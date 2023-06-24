@@ -38,7 +38,7 @@ class HomeComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = settings('general')->title." $separator ".settings('general')->subtitle;
+        $title = settings('general')->title . " $separator " . settings('general')->subtitle;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -52,7 +52,7 @@ class HomeComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -63,10 +63,11 @@ class HomeComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.home.home', [
-            'categories' => $this->categories,
+            'categories' => modelCaches('main_category_cache'),
+            'randomCategories' => modelCaches('random_gigs_cache'),
             'sellers' => $this->sellers,
             'gigs' => $this->gigs,
-            'projects' => $this->projects,
+            'projects' => modelCaches('home_projects_cache'),
         ])->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -77,7 +78,11 @@ class HomeComponent extends Component
      */
     public function getGigsProperty()
     {
-        return Gig::active()->inRandomOrder()->take(4)->get();
+        return Gig::active()
+            ->inRandomOrder()
+            ->take(6)
+            ->with('owner')
+            ->get();
     }
 
     /**
@@ -97,22 +102,13 @@ class HomeComponent extends Component
      */
     public function getSellersProperty()
     {
-        // Check if bestsellers section enabled
-        if (settings('appearance')->is_best_sellers) {
-
-            // Get top sellers randomly
-            return User::where('account_type', 'seller')
-                ->whereHas('sales')
-                ->whereIn('status', ['status', 'verified'])
-                ->withCount('sales')
-                ->orderBy('sales_count', 'desc')
-                ->take(12)
-                ->get();
-        } else {
-
-            // No need to make sql query
-            return null;
-        }
+        return User::where('account_type', 'seller')
+            ->whereHas('sales')
+            ->whereIn('status', ['status', 'verified'])
+            ->withCount('sales')
+            ->orderBy('sales_count', 'desc')
+            ->take(12)
+            ->get();
     }
 
     /**
@@ -122,16 +118,7 @@ class HomeComponent extends Component
      */
     public function getProjectsProperty()
     {
-        // Check if projects enabled
-        if (settings('projects')->is_enabled) {
-
-            // Get latest 12 projects
-            return Project::whereIn('status', ['completed', 'active'])->take(12)->get();
-        } else {
-
-            // Not enabled
-            return null;
-        }
+        return Project::whereIn('status', ['completed', 'active'])->take(12)->get();
     }
 
     /**
@@ -144,12 +131,12 @@ class HomeComponent extends Component
         try {
 
             // Check if newsletter enabled
-            if (! settings('newsletter')->is_enabled) {
+            if (!settings('newsletter')->is_enabled) {
                 return;
             }
 
             // Validate email address
-            if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
 
                 // Error
                 $this->notification([

@@ -14,20 +14,18 @@ class PaystackSettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        
-        \DB::table('paystack_settings')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('paystack_settings')->insert(array(
+            0 =>
+            array(
                 'id'            => 1,
                 'name'          => 'Paystack',
-                'is_enabled'    => 0,
+                'is_enabled'    => 1,
                 'logo_id'       => NULL,
                 'currency'      => 'NGN',
                 'exchange_rate' => '445.00',
-                'deposit_fee'   => 2,
+                'deposit_fee'   => 0,
             ),
         ));
-        
-        
     }
 }

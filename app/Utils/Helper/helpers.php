@@ -3,6 +3,7 @@
 use App\Models\Advertisement;
 use App\Models\BlogSettings;
 use App\Models\CashfreeSettings;
+use App\Models\Category;
 use App\Models\DepositTransaction;
 use App\Models\EpointSettings;
 use App\Models\FlutterwaveSettings;
@@ -54,6 +55,7 @@ use App\Models\VerificationCenter;
 use App\Models\VNPaySettings;
 use App\Models\XenditSettings;
 use App\Models\YoucanpaySettings;
+use App\Utils\Helper\CacheSetter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -125,9 +127,7 @@ function src($filePath)
 {
     if (is_string($filePath)) {
         if ($filePath) {
-            if (!Storage::disk('s3')->exists($filePath)) {
-                return placeholder_img();
-            }
+            // https://hustlebucket.s3.amazonaws.com/
 
             return Storage::disk('s3')->url($filePath);
         }
@@ -781,6 +781,38 @@ function settings($settings, $updateCache = false)
 }
 
 /**
+ * Models global cache store settings
+ */
+function modelCaches($key, $refresh = false)
+{
+    switch ($key) {
+        case 'tags_cache':
+            return CacheSetter::popularTag($refresh);
+            break;
+
+        case 'random_gigs_cache':
+            return CacheSetter::RandomHomeCategory($refresh);
+            break;
+
+        case 'navbar_category_cache':
+            return CacheSetter::navbarCategory($refresh);
+            break;
+
+        case 'main_category_cache':
+            return CacheSetter::mainCategory($refresh);
+            break;
+
+        case 'home_projects_cache':
+            return CacheSetter::homeProjects($refresh);
+            break;
+
+        default:
+            # code...
+            break;
+    }
+}
+
+/**
  * Get youtube id from url
  *
  * @param  string  $link
@@ -1391,7 +1423,7 @@ function render_star_rating($rating, $width = '1rem', $height = '1rem', $empty_c
     $html = str_repeat($fullStar, $fullStarCount);
     $html .= str_repeat($halfStar, $halfStarCount);
     $html .= str_repeat($emptyStar, $emptyStarCount);
-    $html = '<ul class="flex space-x-1 rtl:space-x-reverse justify-center">' . $html . '</ul>';
+    $html = '<ul class="flex justify-center space-x-1 rtl:space-x-reverse">' . $html . '</ul>';
 
     return $html;
 }
