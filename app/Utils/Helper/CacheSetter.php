@@ -64,7 +64,7 @@ final class CacheSetter
             Cache::forget('home_projects_cache');
         } else {
             return Cache::rememberForever('home_projects_cache', function () {
-                return Project::whereIn('status', ['completed', 'active'])->take(12)->get();
+                return Project::whereIn('status', ['completed', 'active'])->take(10)->get();
             });
         }
     }

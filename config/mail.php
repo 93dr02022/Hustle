@@ -35,13 +35,13 @@ return [
 
     'mailers' => [
         'smtp' => [
-            'transport'    => 'smtp',
-            'host'         => '',
-            'port'         => '',
-            'encryption'   => 'tls',
-            'username'     => '',
-            'password'     => '',
-            'timeout'      => null,
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'mail.privateemail.com'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
@@ -92,8 +92,8 @@ return [
     */
 
     'from' => [
-        'address' => 'test@mail.com',
-        'name'    => 'Riverr',
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@correcthustle.com'),
+        'name' => env('MAIL_FROM_NAME', 'Correcthustle'),
     ],
 
     /*
