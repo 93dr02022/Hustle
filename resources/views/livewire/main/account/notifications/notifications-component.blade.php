@@ -64,7 +64,12 @@
                                 <x-forms.checkbox label="{{ __('Inbox Messages') }}" model="push_inbox_messages" />
                             </div>
                         </div>
-
+                        <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">
+                            {{-- Push inbox updates --}}
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.checkbox label="{{ __('Marketing Notifications') }}" model="push_marketing_notifications" />
+                            </div>
+                        </div>
                         {{-- Actions --}}
                         <div class="flex justify-end bg-gray-50 py-4 px-4 dark:bg-zinc-700 sm:px-6">
                             <x-forms.button
