@@ -99,7 +99,7 @@
 
                                     {{-- Client --}}
                                     <a href="{{ admin_url('users/details/' . $project->client->uid) }}" class="h-10 w-10">
-                                        <img class="w-full h-full rounded-md object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($project->client->avatar) }}" alt="{{ $project->client->username }}">
+                                        <img class="w-full h-full rounded-md object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($project->client->avatar_id) }}" alt="{{ $project->client->username }}">
                                     </a>
 
                                     {{-- Project --}}

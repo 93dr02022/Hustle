@@ -128,8 +128,9 @@ function src($filePath)
     if (is_string($filePath)) {
         if ($filePath) {
             // https://hustlebucket.s3.amazonaws.com/
+            // return Storage::disk('s3')->url($filePath);
 
-            return Storage::disk('s3')->url($filePath);
+            return "http://dttc4kal57acd.cloudfront.net/{$filePath}";
         }
 
         return placeholder_img();
