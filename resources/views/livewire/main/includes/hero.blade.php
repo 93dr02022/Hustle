@@ -9,7 +9,7 @@
                         {{-- first slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/slide-3.png')">
+                                style="background-image: url('/img/home/artisan-10.jpg')">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -30,19 +30,17 @@
                         {{-- second slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/slide-1.webp')">
+                                style="background-image: url('/img/home/artisan-3.avif')">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
-                                                Find
-                                                best
-                                                Freelance </div>
+                                                Expert Tailors
+                                            </div>
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
-                                                services for
-                                                your business
+                                                for Impeccable Outfits.
                                             </div>
                                         </div>
                                     </div>
@@ -53,7 +51,7 @@
                         {{-- third slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/slide-2.jpg')">
+                                style="background-image: url('/img/home/artisan-one.jpg')">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -70,6 +68,71 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        {{-- fourth slide --}}
+                        <div class="w-full swiper-slide">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
+                                style="background-image: url('/img/home/artisan-4.jpg')">
+                                <div class="h-full px-4 mb-3 slide-blue">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                        <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                Expert Mechanics for
+                                            </div>
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                Automotive Services.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- fifth slide --}}
+                        <div class="w-full swiper-slide">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
+                                style="background-image: url('/img/home/plumber.jpg')">
+                                <div class="h-full px-4 mb-3 slide-blue">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                        <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                Top-notch Plumbers
+                                            </div>
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                at Your Service.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- sixth slide --}}
+                        <div class="w-full swiper-slide">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
+                                style="background-image: url('/img/home/barber.jpg')">
+                                <div class="h-full px-4 mb-3 slide-blue">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                        <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                verified Pro Barbers
+                                            </div>
+                                            <div
+                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                                for Exceptional Haircuts.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
