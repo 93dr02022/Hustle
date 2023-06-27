@@ -45,7 +45,7 @@ final class CacheSetter
                         ->whereIn('status', ['active', 'boosted', 'trending', 'featured'])
                         ->whereNull('deleted_at')
                         ->inRandomOrder()
-                        ->limit(10)
+                        ->limit(7)
                         ->with('owner')
                         ->get();
                 });
