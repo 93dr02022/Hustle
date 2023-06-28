@@ -18,6 +18,13 @@ class CreateQuoteComponent extends Component
 {
     use Actions;
 
+    public $expiration;
+
+    public function mount()
+    {
+        $this->expiration = now()->addDays(7)->format('Y-m-d');
+    }
+
     public function render()
     {
         return view('livewire.main.seller.quotes.create', [

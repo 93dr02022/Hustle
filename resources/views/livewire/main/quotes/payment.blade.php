@@ -51,8 +51,82 @@
                         </div>
                     </div>
 
+                    {{-- invoice logo heading --}}
+                    <div class="flex justify-between px-4 sm:px-7 py-5">
+                        <div class="flex gap-4 text-sm">
+                            <div class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center">
+                                <h1 class="text-white text-5xl">
+                                    {{ mb_substr($quotation->owner->first_name, 0, 1) }}
+                                </h1>
+                            </div>
+                            <div class="flex flex-col">
+                                <h3 class="capitalize">
+                                    {{ $quotation->owner->first_name }} {{ $quotation->owner->last_name }}
+                                </h3>
+                                <h3 class="capitalize">
+                                    {{ $quotation->owner->email }}
+                                </h3>
+                                <h3 class="capitalize">
+                                    {{ $quotation->owner->country_name }} {{ $quotation->owner->address }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-normal">Invoice NO:</span>
+                                <span class="text-sm font-bold">{{ $quotation->reference }}</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-normal">Issue Date:</span>
+                                <span class="text-sm font-bold">
+                                    {{ now()->parse($quotation->updated_at)->format('d/m/Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex justify-between mb-1 px-4 md:px-7">
+                        <dt class="text-sm font-medium text-gray-500">Customer Info</dt>
+                    </div>
+                    <div class="bg-gray-100 border-y border-gray-200 py-7 px-4 md:px-7 mb-3">
+                        <div class="grid grid-cols-1 gap-y-5 sm:gap-y-8 sm:grid-cols-3 md:grid-cols-4">
+                            <div class="sm:col-span-1">
+                                <dt class="text-sm font-medium text-gray-500">Name</dt>
+                                <dd class="mt-1 text-xs text-gray-500 capitalize">
+                                    {{ $quotation->first_name }} {{ $quotation->last_name }}
+                                </dd>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <dt class="text-sm font-medium text-gray-500">Email</dt>
+                                <dd class="mt-1 text-xs text-gray-500">{{ $quotation?->email }}</dd>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <dt class="text-sm font-medium text-gray-500">Phone</dt>
+                                <dd class="mt-1 text-xs text-gray-500 capitalize">{{ $quotation->phone_number }}</dd>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <dt class="text-sm font-medium text-gray-500">Expires At</dt>
+                                <dd class="mt-1 text-xs text-gray-500">
+                                    {{ now()->parse($quotation->expirese_at)->format('d/m/Y') }}
+                                </dd>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col px-4 md:px-7">
+                        <dt class="text-sm font-medium text-gray-500">Details</dt>
+                        <dd class="mt-1 text-xs text-gray-500 capitalize">
+                            {{ $quotation->notes ?? 'N/A' }}
+                        </dd>
+                    </div>
+
                     {{-- Section content --}}
-                    <div class="py-7">
+                    <div class="pb-7 pt-3">
                         <div class="overflow-x-auto">
                             <table class="w-full mt-4" width="100%">
                                 <thead>
@@ -72,11 +146,14 @@
                                             </td>
                                             <td class="font-normal text-sm dark:text-gray-300">{{ $item->quantity }}
                                             </td>
-                                            <td class="font-normal text-sm dark:text-gray-300">{{ $item->taxed_price }}
+                                            <td class="font-normal text-sm dark:text-gray-300">
+                                                @money($item->price, settings('currency')->code, true)
                                             </td>
-                                            <td class="font-normal text-sm dark:text-gray-300">{{ $item->discount }}
+                                            <td class="font-normal text-sm dark:text-gray-300">
+                                                @money($item->discount, settings('currency')->code, true)
                                             </td>
-                                            <td class="font-normal text-sm dark:text-gray-300">{{ $item->total_price }}
+                                            <td class="font-normal text-sm dark:text-gray-300">
+                                                @money($item->total_price, settings('currency')->code, true)
                                             </td>
                                         </tr>
                                     @endforeach
@@ -150,7 +227,8 @@
                                         <div class="py-4 flex items-center justify-between">
                                             <dt class="text-gray-600 dark:text-gray-300">Payment method</dt>
                                             <dd class="font-medium text-gray-900 dark:text-gray-200">
-                                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-300">
+                                                <div
+                                                    class="flex items-center text-sm text-gray-500 dark:text-gray-300">
                                                     @if (settings($paymentMethod)->logo)
                                                         <img src="{{ placeholder_img() }}"
                                                             data-src="{{ src(settings($paymentMethod)->logo_id) }}"

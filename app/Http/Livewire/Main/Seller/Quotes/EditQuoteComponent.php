@@ -71,7 +71,7 @@ class EditQuoteComponent extends Component
                 ...$quoteAttr,
             ]);
 
-            if($paymentMethod === 'cash') {
+            if ($paymentMethod === 'cash') {
                 $this->quotation->owner()->update([
                     'balance_available' => DB::raw("balance_available - {$commission}")
                 ]);
