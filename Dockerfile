@@ -136,6 +136,7 @@ COPY composer.json .
 RUN composer install --no-scripts
 # RUN php artisan migrate:status
 #RUN php artisan migrate --seed --force 
+#RUN npm run production
 RUN php artisan optimize
 
 # Set up volume
