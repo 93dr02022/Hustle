@@ -38,9 +38,17 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'push_marketing_notifications'=>'boolean'
     ];
 
+    /**
+     * Get user notification settings
+     *
+     * @return object
+     */
+    public function userNotificationSetting()
+    {
+        return $this->hasOne(UserNotificationSettings::class);
+    }
 
     /**
      * Get user verification
