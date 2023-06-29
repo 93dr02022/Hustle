@@ -10,6 +10,7 @@ use App\Models\NewsletterVerification;
 use App\Models\Project;
 use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Mail;
 use WireUi\Traits\Actions;
@@ -20,6 +21,8 @@ class HomeComponent extends Component
 
     public $email;
 
+    public $browsingLocation;
+
     /**
      * Init component
      *
@@ -27,6 +30,12 @@ class HomeComponent extends Component
      */
     public function mount()
     {
+        if (!session()->has('browsingLocation')) {
+            $res = Http::retry(0)->get('https://ipapi.co/json')->collect();
+            session()->put('browsingLocation', $res->toArray() ?? null);
+        }
+
+        $this->browsingLocation = session()->get('browsingLocation');
     }
 
     /**

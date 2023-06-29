@@ -1,3 +1,7 @@
+{{-- @php
+    $response = Http::get('https://ipapi.co/102.89.45.17/json')->object();
+        dd($response);
+@endphp --}}
 <div class="w-full">
     <div class="grid grid-cols-12">
 

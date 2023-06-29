@@ -118,6 +118,7 @@
                         </div>
                     </div>
 
+                    {{-- quotation note details --}}
                     <div class="flex flex-col px-4 md:px-7">
                         <dt class="text-sm font-medium text-gray-500">Details</dt>
                         <dd class="mt-1 text-xs text-gray-500 capitalize">

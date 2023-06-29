@@ -196,7 +196,7 @@
 
                             <div class="col-span-2">
                                 <label class="label-text">Note</label>
-                                <textarea type="number" rows="3" x-model="form.note" class="form-ctr" required></textarea>
+                                <textarea type="number" rows="3" x-model="form.note" class="form-ctr"></textarea>
                             </div>
                         </div>
                     </div>
