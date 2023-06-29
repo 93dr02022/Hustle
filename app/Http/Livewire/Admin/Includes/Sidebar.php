@@ -214,6 +214,7 @@ class Sidebar extends Component
                 'childs' => [
                     ['text' => __('messages.t_browse_all'), 'href' => "$dashboard/newsletter"],
                     ['text' => __('messages.t_settings'), 'href' => "$dashboard/newsletter/settings"],
+                    ['text' => __('Marketing'), 'href' => "$dashboard/newsletter/marketing"],
                 ],
             ],
 

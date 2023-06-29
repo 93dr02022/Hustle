@@ -17,3 +17,11 @@ const messaging = firebase.messaging();
 messaging.setBackgroundMessageHandler(function ({ data: { title, body, icon } }) {
     return self.registration.showNotification(title, { body, icon });
 });
+
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+
+    event.waitUntil(
+        clients.openWindow()
+    );
+});
