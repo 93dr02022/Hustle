@@ -807,6 +807,10 @@ function modelCaches($key, $refresh = false)
             return CacheSetter::homeProjects($refresh);
             break;
 
+        case 'nigerian_states':
+            return CacheSetter::nigerianStates($refresh);
+            break;
+
         default:
             # code...
             break;

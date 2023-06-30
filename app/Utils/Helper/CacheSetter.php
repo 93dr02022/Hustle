@@ -4,6 +4,7 @@ namespace App\Utils\Helper;
 
 use App\Models\Category;
 use App\Models\Project;
+use App\Models\State;
 use Illuminate\Support\Facades\Cache;
 
 final class CacheSetter
@@ -93,6 +94,20 @@ final class CacheSetter
         } else {
             return Cache::rememberForever('main_category_cache', function () {
                 return Category::all();
+            });
+        }
+    }
+
+    /**
+     * Home page random category slide
+     */
+    public static function nigerianStates($purge = null)
+    {
+        if ($purge) {
+            Cache::forget('nigerian_states');
+        } else {
+            return Cache::rememberForever('nigerian_states', function () {
+                return State::where('country_id', 160)->get();
             });
         }
     }

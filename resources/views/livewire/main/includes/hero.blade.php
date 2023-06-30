@@ -1,17 +1,19 @@
 @if (request()->is('/'))
+    @php $states = modelCaches('nigerian_states'); @endphp
+
     {{-- Hero section content --}}
-    <div class="grid grid-cols-1">
+    <div class="grid grid-cols-1" x-data="window.LandingPageHeroSection">
         <div
-            class="bg-slate-200 flex flex-col grow min-h-[340px] sm:min-h-[380px] md:min-h-[482px] h-full w-full relative">
+            class="bg-slate-200 flex flex-col grow min-h-[335px] xs:min-h-[380px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[550px] h-full w-full relative">
             <div class="grid h-full grid-cols-1">
                 <div class="swiper hero-swiper">
                     <div class="swiper-wrapper">
                         {{-- first slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-10.jpg')">
+                                style="background-image: url('/img/home/artisan-10.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -30,9 +32,9 @@
                         {{-- second slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-3.avif')">
+                                style="background-image: url('/img/home/artisan-9.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -51,9 +53,9 @@
                         {{-- third slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-one.jpg')">
+                                style="background-image: url('/img/home/artisan-one.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -73,9 +75,9 @@
                         {{-- fourth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-4.jpg')">
+                                style="background-image: url('/img/home/artisan-4.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -94,9 +96,9 @@
                         {{-- fifth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/plumber.jpg')">
+                                style="background-image: url('/img/home/plumber.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -115,13 +117,13 @@
                         {{-- sixth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/barber.jpg')">
+                                style="background-image: url('/img/home/barber.webp')">
                                 <div class="h-full px-4 mb-3 slide-blue">
-                                    <div class="max-w-2xl mx-auto flex items-end h-[60%]">
+                                    <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
-                                                verified Pro Barbers
+                                                Verified Pro Barbers
                                             </div>
                                             <div
                                                 class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
@@ -137,9 +139,23 @@
                 </div>
             </div>
 
-            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[62%] right-[0] px-4">
+            <div
+                class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[52%] md:top-[62%] right-[0] px-4 lg:bottom-[40px]">
                 <div
-                    class="max-w-2xl mx-auto py-5 px-3 xs:px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[30px] rounded-md bg-[rgba(217,217,217,0.05)]">
+                    class="max-w-2xl mx-auto py-2 sm:py-5 px-3 xs:px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[10px] lg:rounded-[18px] rounded-md bg-[rgba(217,217,217,0.05)]">
+                    <div class="flex items-center justify-center gap-2 flex-wrap mb-3 mt-2">
+                        <div class="text-white font-medium">Find Pros in</div>
+                        <div @click="showStates = true"
+                            class="cursor-pointer py-1 px-2 rounded max-w-[120px] text-white flex gap-x-2 items-center bg-black/70 backdrop-blur-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" width="15" height="15"
+                                fill="#fff" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                            </svg>
+                            <span class="text-xs truncate">All <span class="capitalize" x-text="selectedState"></span>
+                            </span>
+                        </div>
+                    </div>
                     <form class="flex items-center mb-2 sm:mb-4" action="{{ url('search') }}" accept="GET">
                         <div class="relative w-full">
                             <div
@@ -185,6 +201,38 @@
                 class="swiper-pagination !static [&>.swiper-pagination-bullet]:h-3 [&>.swiper-pagination-bullet]:w-3 p-0">
             </div>
         </div>
+
+        {{-- state selection overlay --}}
+        <div x-show="showStates" class="fixed inset-0 bg-black/70 z-[50]" x-cloak>
+            <div class="flex justify-center xs:px-4 sm:px-7">
+                <div
+                    class="bg-[#EBF2F7] xs:mt-[7%] xs:mb-10 pb-5 w-full max-w-3xl rounded-0 xs:rounded-md md:rounded-2xl">
+                    <div class="flex items-center gap-x-2 pt-5 pb-4 px-4">
+                        <span @click="showStates = false"
+                            class="bg-white/50 backdrop-blur-md rounded p-2 grid place-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-neutral-800" width="18"
+                                height="18" fill="none" viewBox="0 0 16 16">
+                                <path stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                    fill-rule="evenodd"
+                                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                            </svg>
+                        </span>
+                        <span class="text-[15] font-medium text-neutral-800">All Nigerian.</span>
+                    </div>
+
+                    <div class="overflow-y-auto px-4 h-full max-h-screen xs:max-h-[400px] ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            @foreach ($states as $state)
+                                <div @click="selectState('{{ $state->name }}')"
+                                    class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3">
+                                    <span class="text-black hover:text-blue-700">{{ $state->name }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endif
 
@@ -194,3 +242,18 @@
         height: 100%;
     }
 </style>
+
+<script>
+    function LandingPageHeroSection() {
+        return {
+            showStates: false,
+            selectedState: "lagos",
+
+            selectState(state) {
+                this.selectedState = state
+                this.showStates = false
+            },
+        }
+    }
+    window.LandingPageHeroSection = LandingPageHeroSection()
+</script>
