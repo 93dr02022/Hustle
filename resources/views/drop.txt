@@ -10,3 +10,5 @@ https://ipapi.co/${ip.value}/json
 # DB_DATABASE=riverr
 # DB_USERNAME=admin
 # DB_PASSWORD="Y9D#6!qY7NTro6^"
+
+$path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\barber.webp'), 'barber.webp');

@@ -206,7 +206,7 @@
                         <div
                             class="flex items-center justify-end px-4 py-3 text-right shadow bg-gray-50 dark:bg-black/50 sm:px-5 sm:rounded-bl-md sm:rounded-br-md">
                             <button type="submit" wire:loading.attr="disabled" wire:target="update"
-                                class="btn-purple">Proceed</button>
+                                :disabled="total < 10000" class="btn-purple">Proceed</button>
                         </div>
                     </form>
                 </div>
