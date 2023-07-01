@@ -362,37 +362,6 @@
 
 @push('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
-    <script>
-        // window.addEventListener("load", function() => {
-        // if (navigator.geolocation) {
-        //     navigator.geolocation.getCurrentPosition((position) => {
-        //         const {
-        //             latitude,
-        //             longitude
-        //         } = position.coords
-
-        //         localStorage.setItem('coords', JSON.stringify({
-        //             latitude,
-        //             longitude
-        //         }));
-
-        //         locationString = localStorage.getItem('location');
-
-        //         if (!locationString) {
-        //             fetch(
-        //                     `http://api.positionstack.com/v1/reverse?access_key=f5ab25ba762db1188d3b1e536ef665d7&query=${latitude},${longitude}`
-        //                 )
-        //                 .then(res => res.json())
-        //                 .then(data => {
-        //                     console.log(data?.data[0])
-        //                     localStorage.setItem('location', JSON.stringify(data?.data[0]));
-        //                 })
-        //         }
-        //     });
-        // }
-        // });
-    </script>
 @endpush
 
 @push('scripts')

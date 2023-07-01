@@ -281,7 +281,7 @@
 
                         if (!locationString) {
                             fetch(
-                                    `http://api.positionstack.com/v1/reverse?access_key=f5ab25ba762db1188d3b1e536ef665d7&query=${latitude},${longitude}`
+                                    `http://api.positionstack.com/v1/reverse?access_key={{ env('POSITION_STACK_KEY') }}&query=${latitude},${longitude}`
                                 )
                                 .then(res => res.json())
                                 .then(data => {
