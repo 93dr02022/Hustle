@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'status' => 'verified',
             'level_id' => 2,
+            'country_id' => 160,
+            'state_id' => fake()->randomElement([2671, 2674]),
             'account_type' => 'seller'
         ]);
 
@@ -36,6 +38,8 @@ class UserSeeder extends Seeder
             'username' => 'joshy',
             'password' => Hash::make('12345678'),
             'status' => 'active',
+            'country_id' => 160,
+            'state_id' => fake()->randomElement([2671, 2674]),
             'level_id' => 1
         ]);
 
@@ -50,6 +54,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'status' => 'verified',
                 'level_id' => 2,
+                'country_id' => 160,
+                'state_id' => fake()->randomElement([2671, 2674]),
                 'account_type' => 'seller'
             ]);
         });

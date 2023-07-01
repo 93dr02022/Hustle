@@ -167,6 +167,7 @@
                                         clip-rule="evenodd"></path>
                                 </svg>
                             </div>
+                            <input type="text" class="hidden" name="location" x-model="selectedState" hidden>
                             <input type="search" name="q"
                                 class="bg-white border-none text-gray-900 text-sm font-medium rounded-md block w-full ltr:pl-10 rtl:pr-10 px-2.5 py-4 focus:outline-none focus:ring-0"
                                 placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" required>
@@ -207,24 +208,26 @@
             <div class="flex justify-center xs:px-4 sm:px-7">
                 <div
                     class="bg-[#EBF2F7] xs:mt-[7%] xs:mb-10 pb-5 w-full max-w-3xl rounded-0 xs:rounded-md md:rounded-2xl">
-                    <div class="flex items-center gap-x-2 pt-5 pb-4 px-4">
+                    <div class="flex items-center justify-between gap-x-2 pt-5 pb-4 px-4">
+                        <span class="text-[15] font-medium text-neutral-800">All Nigerian.</span>
+
                         <span @click="showStates = false"
                             class="bg-white/50 backdrop-blur-md rounded p-2 grid place-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="text-neutral-800" width="18"
-                                height="18" fill="none" viewBox="0 0 16 16">
-                                <path stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                                    fill-rule="evenodd"
-                                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                                height="18" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path stroke-width="1"
+                                    d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
                             </svg>
                         </span>
-                        <span class="text-[15] font-medium text-neutral-800">All Nigerian.</span>
                     </div>
 
                     <div class="overflow-y-auto px-4 h-full max-h-screen xs:max-h-[400px] ">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             @foreach ($states as $state)
-                                <div @click="selectState('{{ $state->name }}')"
-                                    class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3">
+                                <div @click="selectState(@js($state->name))"
+                                    class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3"
+                                    :class="@js($state->name).toLowerCase() == selectedState.toLowerCase() ?
+                                        'bg-[#1D46F5] [&>span]:text-white' : ''">
                                     <span class="text-black hover:text-blue-700">{{ $state->name }}</span>
                                 </div>
                             @endforeach
@@ -247,12 +250,49 @@
     function LandingPageHeroSection() {
         return {
             showStates: false,
-            selectedState: "lagos",
+            selectedState: "nigeria",
 
             selectState(state) {
                 this.selectedState = state
                 this.showStates = false
             },
+
+            init() {
+                let _this = this;
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const {
+                            latitude,
+                            longitude
+                        } = position.coords
+
+                        localStorage.setItem('coords', JSON.stringify({
+                            latitude,
+                            longitude
+                        }));
+
+                        locationString = localStorage.getItem('location');
+
+                        if (locationString) {
+                            let locationInfo = JSON.parse(locationString);
+                            this.selectedState = locationInfo?.region ?? 'lagos';
+                        }
+
+                        if (!locationString) {
+                            fetch(
+                                    `http://api.positionstack.com/v1/reverse?access_key=f5ab25ba762db1188d3b1e536ef665d7&query=${latitude},${longitude}`
+                                )
+                                .then(res => res.json())
+                                .then(data => {
+                                    console.log(data?.data?.[0])
+                                    this.selectedState = data?.data?.[0]?.region
+                                    localStorage.setItem('location', JSON.stringify(data?.data?.[0] ?? {}));
+                                })
+                        }
+                    });
+                }
+            }
         }
     }
     window.LandingPageHeroSection = LandingPageHeroSection()
