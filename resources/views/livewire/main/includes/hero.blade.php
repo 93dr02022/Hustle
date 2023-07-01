@@ -11,7 +11,7 @@
                         {{-- first slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-10.webp')">
+                                style="background-image: url({{ src('home/artisan-10.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -32,7 +32,7 @@
                         {{-- second slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-9.webp')">
+                                style="background-image: url({{ src('home/artisan-9.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -53,7 +53,7 @@
                         {{-- third slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-one.webp')">
+                                style="background-image: url({{ src('home/artisan-one.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -75,7 +75,7 @@
                         {{-- fourth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/artisan-4.webp')">
+                                style="background-image: url({{ src('home/artisan-4.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -96,7 +96,7 @@
                         {{-- fifth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/plumber.webp')">
+                                style="background-image: url({{ src('home/plumber.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
@@ -117,7 +117,7 @@
                         {{-- sixth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url('/img/home/barber.webp')">
+                                style="background-image: url({{ src('home/barber.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
