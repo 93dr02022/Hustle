@@ -10,6 +10,9 @@ use App\Models\NewsletterVerification;
 use App\Models\Project;
 use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Mail;
 use WireUi\Traits\Actions;
@@ -20,6 +23,8 @@ class HomeComponent extends Component
 
     public $email;
 
+    public $browsingLocation;
+
     /**
      * Init component
      *
@@ -27,6 +32,7 @@ class HomeComponent extends Component
      */
     public function mount()
     {
+        //
     }
 
     /**

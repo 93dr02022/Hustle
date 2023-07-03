@@ -15,10 +15,13 @@ return new class extends Migration
     {
         Schema::create('paystack_settlements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_id')->index();
+            $table->foreignId('payment_id')->unique();
             $table->string('status')->index();
             $table->decimal('amount', 16)->index();
             $table->string('reference')->index();
+            $table->timestamp('paid_at')->index();
+            $table->string('currency')->default('NGN')->index();
+            $table->string('gateway_response')->index();
             $table->timestamps();
         });
     }

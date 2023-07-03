@@ -17,8 +17,13 @@
                                     {{ number_format($gig->counter_sales) }}
                                 </div>
                             </div>
-                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path
+                                        d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -26,7 +31,8 @@
 
                 {{-- Total visits --}}
                 <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3">
-                    <div class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
+                    <div
+                        class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
                         <div class="flex flex-wrap gap-3">
                             <div class="ltr:mr-auto rtl:ml-auto">
                                 <div class="text-gray-500 flex items-center leading-3 text-sm font-bold">
@@ -36,8 +42,14 @@
                                     {{ number_format($gig->counter_visits) }}
                                 </div>
                             </div>
-                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clip-rule="evenodd"/></svg>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -45,7 +57,8 @@
 
                 {{-- Total impressions --}}
                 <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3">
-                    <div class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
+                    <div
+                        class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
                         <div class="flex flex-wrap gap-3">
                             <div class="ltr:mr-auto rtl:ml-auto">
                                 <div class="text-gray-500 flex items-center leading-3 text-sm font-bold">
@@ -55,8 +68,15 @@
                                     {{ number_format($gig->counter_impressions) }}
                                 </div>
                             </div>
-                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/> <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    <path fill-rule="evenodd"
+                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -64,7 +84,8 @@
 
                 {{-- Total reviews --}}
                 <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3">
-                    <div class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
+                    <div
+                        class="relative block overflow-hidden border border-gray-100 p-5 md:mt-6 bg-white rounded-lg intro-x">
                         <div class="flex flex-wrap gap-3">
                             <div class="ltr:mr-auto rtl:ml-auto">
                                 <div class="text-gray-500 flex items-center leading-3 text-sm font-bold">
@@ -74,8 +95,13 @@
                                     {{ number_format($gig->counter_reviews) }}
                                 </div>
                             </div>
-                            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"> <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -90,23 +116,21 @@
             {{-- Gig preview --}}
             <div class="bg-white relative block p-8 overflow-hidden border border-gray-100 rounded-lg mb-6">
                 <span
-                    class="absolute inset-x-0 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"
-                ></span>
+                    class="absolute inset-x-0 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
 
                 <div class="justify-between sm:flex">
                     <div>
-                        <a href="{{ url('service', $gig->slug) }}" target="_blank" class="text-lg font-bold text-gray-900 hover:text-purple-700">
+                        <a href="{{ url('service', $gig->slug) }}" target="_blank"
+                            class="text-lg font-bold text-gray-900 hover:text-purple-700">
                             {{ $gig->title }}
                         </a>
-                        <p class="text-[11px] font-[400] text-gray-400 hidden lg:block">{{ url('service', $gig->slug) }}</p>
+                        <p class="text-[11px] font-[400] text-gray-400 hidden lg:block">
+                            {{ url('service', $gig->slug) }}</p>
                     </div>
 
                     <div class="flex-shrink-0 hidden ltr:ml-3 rtl:mr-3 sm:block">
-                        <img
-                            class="object-cover w-16 h-16 rounded-lg shadow-sm lazy"
-                            src="{{ placeholder_img() }}" data-src="{{ src($gig->thumbnail) }}"
-                            alt="{{ $gig->title }}"
-                        />
+                        <img class="object-cover w-16 h-16 rounded-lg shadow-sm lazy" src="{{ placeholder_img() }}"
+                            data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}" />
                     </div>
                 </div>
 
@@ -118,77 +142,81 @@
                     {{-- Date published --}}
                     <div class="flex flex-col-reverse">
                         <dt class="text-sm font-medium text-gray-600">{{ format_date($gig->created_at, 'ago') }}</dt>
-                        <dd class="text-[10px] uppercase tracking-widest text-gray-500">{{ __('messages.t_published') }}</dd>
+                        <dd class="text-[10px] uppercase tracking-widest text-gray-500">
+                            {{ __('messages.t_published') }}</dd>
                     </div>
 
                     {{-- Status --}}
                     <div class="flex flex-col-reverse ltr:ml-3 ltr:sm:ml-6 rtl:mr-3 rtl:sm:mr-6">
                         <dt class="text-sm font-medium text-gray-600">
                             @switch($gig->status)
-
                                 {{-- Pending --}}
                                 @case('pending')
                                     <span class="text-yellow-500">
                                         {{ __('messages.t_pending') }}
                                     </span>
-                                    @break
-                                
+                                @break
+
                                 {{-- Active --}}
                                 @case('active')
                                     <span class="text-green-500">
                                         {{ __('messages.t_active') }}
                                     </span>
-                                    @break
+                                @break
 
                                 {{-- Deleted --}}
                                 @case('deleted')
                                     <span class="text-red-500">
                                         {{ __('messages.t_deleted') }}
                                     </span>
-                                    @break
+                                @break
 
                                 {{-- Featured --}}
                                 @case('featured')
                                     <span class="text-purple-500">
                                         {{ __('messages.t_featured') }}
                                     </span>
-                                    @break
+                                @break
 
                                 {{-- Trending --}}
                                 @case('trending')
                                     <span class="text-blue-500">
                                         {{ __('messages.t_trending') }}
                                     </span>
-                                    @break
+                                @break
 
                                 {{-- Boosted --}}
                                 @case('boosted')
                                     <span class="text-gray-500">
                                         {{ __('messages.t_boosted') }}
                                     </span>
-                                    @break
+                                @break
 
                                 @default
-                                    
                             @endswitch
                         </dt>
-                        <dd class="text-[10px] uppercase tracking-widest text-gray-500">{{ __('messages.t_status') }}</dd>
+                        <dd class="text-[10px] uppercase tracking-widest text-gray-500">{{ __('messages.t_status') }}
+                        </dd>
                     </div>
-                    
+
                 </dl>
 
             </div>
 
             {{-- Devices types --}}
             <div class="w-full">
-                <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
+                <div
+                    class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
 
                     {{-- Section title --}}
                     <div class="bg-slate-50 px-8 py-4 rounded-t-md">
                         <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                             <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                                <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_devices') }}</h3>
-                                <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_devices_chart_subtitle') }}</p>
+                                <h3
+                                    class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                    {{ __('messages.t_devices') }}</h3>
+                                <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                    {{ __('messages.t_devices_chart_subtitle') }}</p>
                             </div>
                         </div>
                     </div>
@@ -208,14 +236,18 @@
 
             {{-- Country map --}}
             <div class="col-span-7">
-                <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
+                <div
+                    class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
 
                     {{-- Section title --}}
                     <div class="bg-slate-50 px-8 py-4 rounded-t-md">
                         <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                             <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                                <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_visitors_map') }}</h3>
-                                <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_visitors_map_subtitle') }}</p>
+                                <h3
+                                    class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                    {{ __('messages.t_visitors_map') }}</h3>
+                                <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                    {{ __('messages.t_visitors_map_subtitle') }}</p>
                             </div>
                         </div>
                     </div>
@@ -232,14 +264,17 @@
 
         {{-- Browsers --}}
         <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-7">
-            <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
+            <div
+                class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
 
                 {{-- Section title --}}
                 <div class="bg-slate-50 px-8 py-4 rounded-t-md">
                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_browsers') }}</h3>
-                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_browsers_chart_subtitle') }}</p>
+                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                {{ __('messages.t_browsers') }}</h3>
+                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                {{ __('messages.t_browsers_chart_subtitle') }}</p>
                         </div>
                     </div>
                 </div>
@@ -254,14 +289,17 @@
 
         {{-- Os --}}
         <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-5">
-            <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
+            <div
+                class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-b-0 border-gray-200 dark:border-zinc-700">
 
                 {{-- Section title --}}
                 <div class="bg-slate-50 px-8 py-4 rounded-t-md">
                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_os') }}</h3>
-                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_os_chart_subtitle') }}</p>
+                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                {{ __('messages.t_os') }}</h3>
+                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                {{ __('messages.t_os_chart_subtitle') }}</p>
                         </div>
                     </div>
                 </div>
@@ -282,8 +320,10 @@
                 <div class="bg-slate-50 px-6 py-4 rounded-md">
                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_recent_orders') }}</h3>
-                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_recent_orders_subtitle') }}</p>
+                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                {{ __('messages.t_recent_orders') }}</h3>
+                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                {{ __('messages.t_recent_orders_subtitle') }}</p>
                         </div>
                     </div>
                 </div>
@@ -294,11 +334,14 @@
                 <div class="intro-x">
                     <div class="bg-white rounded-lg px-5 py-3 mb-3 flex items-center zoom-in">
                         <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                            <img class="lazy"  alt="{{ $order->order->buyer->username }}" src="{{ placeholder_img() }}" data-src="{{ src($order->order->buyer->avatar) }}">
+                            <img class="lazy" alt="{{ $order->order->buyer->username }}"
+                                src="{{ placeholder_img() }}" data-src="{{ src($order->order->buyer->avatar_id) }}">
                         </div>
                         <div class="ltr:ml-4 ltr:mr-auto rtl:mr-4 rtl:ml-auto">
-                            <a href="{{ url('profile', $order->order->buyer->username) }}" class="block font-medium text-[13px] pb-0.5">{{ $order->order->buyer->username }}</a>
-                            <div class="text-slate-500 text-xs mt-0.5 text-[11px]">{{ format_date($order->placed_at, config('carbon-formats.F_j_Y')) }}</div>
+                            <a href="{{ url('profile', $order->order->buyer->username) }}"
+                                class="block font-medium text-[13px] pb-0.5">{{ $order->order->buyer->username }}</a>
+                            <div class="text-slate-500 text-xs mt-0.5 text-[11px]">
+                                {{ format_date($order->placed_at, config('carbon-formats.F_j_Y')) }}</div>
                         </div>
                         <div class="text-green-500 text-xs font-medium">+ @money($order->profit_value, settings('currency')->code, true)</div>
                     </div>
@@ -319,20 +362,24 @@
                 <div class="bg-slate-50 px-6 py-4 rounded-md">
                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_referrers') }}</h3>
-                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_referrers_subtitle') }}</p>
+                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                {{ __('messages.t_referrers') }}</h3>
+                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                {{ __('messages.t_referrers_subtitle') }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             {{-- List of referrers --}}
             @forelse ($referrers as $ref)
-
                 <div class="intro-x">
-                    <div class="flex space-x-3 bg-white rounded-lg px-5 py-3 mb-3 justify-between items-center zoom-in">
-                        <div class="w-10 h-10 flex justify-center items-center rounded-md overflow-hidden" style="background-color: {{ fake()->hexcolor() }}">
-                            <span class="text-base font-black text-white">{{ getWebsiteFirstLetter($ref->visit_from) }}</span>
+                    <div
+                        class="flex space-x-3 bg-white rounded-lg px-5 py-3 mb-3 justify-between items-center zoom-in">
+                        <div class="w-10 h-10 flex justify-center items-center rounded-md overflow-hidden"
+                            style="background-color: {{ fake()->hexcolor() }}">
+                            <span
+                                class="text-base font-black text-white">{{ getWebsiteFirstLetter($ref->visit_from) }}</span>
                         </div>
                         <div class="flex-1 space-y-1 rtl:!mr-4">
                             <div class="flex items-center justify-between">
@@ -341,7 +388,8 @@
                                 @if (parse_url(url('/'))['host'] == $ref->visit_from)
                                     <div class="block font-medium text-[13px] pb-0.5">{{ $ref->visit_from }}</div>
                                 @else
-                                    <a href="{{ url('redirect?to=' . safeEncrypt($ref->referrer)) }}" target="_blank" class="block font-medium text-[13px] pb-0.5">{{ $ref->visit_from }}</a>
+                                    <a href="{{ url('redirect?to=' . safeEncrypt($ref->referrer)) }}" target="_blank"
+                                        class="block font-medium text-[13px] pb-0.5">{{ $ref->visit_from }}</a>
                                 @endif
 
                                 <div class="text-gray-400 text-xs font-medium">{{ $ref->count }}</div>
@@ -350,7 +398,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             @empty
                 <div class="text-center text-sm font-medium text-gray-400 p-5">
                     {{ __('messages.t_no_data_to_show_now') }}
@@ -367,8 +415,10 @@
                 <div class="bg-slate-50 px-6 py-4 rounded-md">
                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">{{ __('messages.t_cities') }}</h3>
-                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">{{ __('messages.t_most_visits_by_cities') }}</p>
+                            <h3 class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-200">
+                                {{ __('messages.t_cities') }}</h3>
+                            <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                                {{ __('messages.t_most_visits_by_cities') }}</p>
                         </div>
                     </div>
                 </div>
@@ -379,7 +429,8 @@
                 <div class="intro-x">
                     <div class="bg-white rounded-lg px-5 py-3 mb-3 flex items-center zoom-in">
                         <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden ring-gray-100 ring-1">
-                            <img class="lazy" alt="{{ $city->country_name }}" src="{{ placeholder_img() }}" data-src="{{ url('img/flags', strtolower("$city->country_code.svg")) }}">
+                            <img class="lazy" alt="{{ $city->country_name }}" src="{{ placeholder_img() }}"
+                                data-src="{{ url('img/flags', strtolower("$city->country_code.svg")) }}">
                         </div>
                         <div class="ltr:ml-4 ltr:mr-auto rtl:mr-4 rtl:ml-auto">
                             <div class="block font-medium text-[13px] pb-0.5">{{ $city->city }}</div>
@@ -400,7 +451,6 @@
 </div>
 
 @push('scripts')
-
     {{-- jVectorMap Plugin --}}
     <script defer src="{{ url('js/plugins/jvectormap/jquery-jvectormap-2.0.5.min.js') }}"></script>
     <script defer src="{{ url('js/plugins/jvectormap/jquery-jvectormap-world-mill.js') }}"></script>
@@ -414,23 +464,28 @@
             return {
                 // Map
                 map() {
-                    $(function(){
+                    $(function() {
 
                         // Get data
-                        const data   = @json($countries);
+                        const data = @json($countries);
 
                         const visits = [];
 
                         data.forEach((element, index) => {
 
-                            const el = { [element.country_code]: element.count };
+                            const el = {
+                                [element.country_code]: element.count
+                            };
 
                             visits.push(el)
                         });
 
                         let result = visits.reduce((a, c) => {
-                            let [[k, v]] = Object.entries(c);
-                            a[k] = v; return a;
+                            let [
+                                [k, v]
+                            ] = Object.entries(c);
+                            a[k] = v;
+                            return a;
                         }, {});
 
                         $('#world-map-visitors').vectorMap({
@@ -451,8 +506,7 @@
                                 selected: {
                                     fill: '#9d9d9d'
                                 },
-                                selectedHover: {
-                                }
+                                selectedHover: {}
                             },
                             series: {
                                 regions: [{
@@ -461,9 +515,10 @@
                                     normalizeFunction: 'polynomial'
                                 }]
                             },
-                            onRegionTipShow: function(e, el, code){
+                            onRegionTipShow: function(e, el, code) {
                                 if (result[code]) {
-                                    el.html(el.html()+' ({{ __("messages.t_visits") }} '+result[code]+')');
+                                    el.html(el.html() + ' ({{ __('messages.t_visits') }} ' + result[
+                                        code] + ')');
                                 }
                             }
                         });
@@ -475,8 +530,8 @@
                 browsers() {
 
                     // Set data
-                    const data       = @json($browsers);
-                    const series     = [];
+                    const data = @json($browsers);
+                    const series = [];
                     const categories = [];
 
                     // Loop through data
@@ -487,10 +542,12 @@
 
                     // Set chart options
                     var options = {
-                        series: [{ data: series }],
+                        series: [{
+                            data: series
+                        }],
                         chart: {
                             height: 350,
-                            type  : 'bar',
+                            type: 'bar',
                         },
                         plotOptions: {
                             bar: {
@@ -498,8 +555,12 @@
                                 distributed: true,
                             }
                         },
-                        dataLabels: { enabled: false },
-                        legend: { show: false },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        legend: {
+                            show: false
+                        },
                         xaxis: {
                             categories: categories,
                             labels: {
@@ -512,8 +573,14 @@
                             show: false,
                         },
                         tooltip: {
-                            custom: function({series, seriesIndex, dataPointIndex, w}) {
-                                return '<div class="bg-black px-4 py-2 opacity-50 text-white border-0 text-xs font-medium"> {{ __("messages.t_visits") }} ' + series[seriesIndex][dataPointIndex] + '</div>'
+                            custom: function({
+                                series,
+                                seriesIndex,
+                                dataPointIndex,
+                                w
+                            }) {
+                                return '<div class="bg-black px-4 py-2 opacity-50 text-white border-0 text-xs font-medium"> {{ __('messages.t_visits') }} ' +
+                                    series[seriesIndex][dataPointIndex] + '</div>'
                             }
                         }
                     };
@@ -527,7 +594,7 @@
                 os() {
 
                     // Set data
-                    const data   = @json($os);
+                    const data = @json($os);
                     const series = [];
                     const labels = [];
 
@@ -543,16 +610,16 @@
                         labels: labels,
                         chart: {
                             width: 380,
-                            type  : 'pie',
+                            type: 'pie',
                         },
                         responsive: [{
                             breakpoint: 480,
                             options: {
                                 chart: {
-                                width: 200
+                                    width: 200
                                 },
                                 legend: {
-                                position: 'bottom'
+                                    position: 'bottom'
                                 }
                             }
                         }],
@@ -570,7 +637,7 @@
                 devices() {
 
                     // Set data
-                    const data   = @json($devices);
+                    const data = @json($devices);
                     const series = [];
                     const labels = [];
 
@@ -586,16 +653,16 @@
                         labels: labels,
                         chart: {
                             width: 380,
-                            type  : 'pie',
+                            type: 'pie',
                         },
                         responsive: [{
                             breakpoint: 480,
                             options: {
                                 chart: {
-                                width: 200
+                                    width: 200
                                 },
                                 legend: {
-                                position: 'bottom'
+                                    position: 'bottom'
                                 }
                             }
                         }],
@@ -629,12 +696,9 @@
         }
         window.YfixJpYNBWtHCUd = YfixJpYNBWtHCUd();
     </script>
-
 @endpush
 
 @push('styles')
-    
     {{-- jVectorMap Plugin --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.css" />
-
 @endpush

@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
+     * 
+     * @todo change paystack marking payable to 6 hrs
      */
     protected function schedule(Schedule $schedule)
     {
@@ -21,6 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sellers:unavailable')->daily();
         $schedule->command('expired:bids')->daily();
         $schedule->command('expired:projects')->daily();
+        $schedule->command('refresh:cache')->everyTenMinutes();
     }
 
     /**

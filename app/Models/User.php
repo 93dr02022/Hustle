@@ -38,6 +38,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'push_marketing_notifications'=>'boolean'
     ];
 
 
@@ -179,7 +180,7 @@ class User extends Authenticatable
     public function rating()
     {
         try {
-            
+
             // Get total rating
             $total_rating  = $this->reviews()->sum('rating');
 

@@ -137,7 +137,7 @@
                                                         <a href="{{ url('profile', $seller->username) }}"
                                                             class="flex items-center">
                                                             <img src="{{ placeholder_img() }}"
-                                                                data-src="{{ src($seller->avatar) }}"
+                                                                data-src="{{ src($seller->avatar_id) }}"
                                                                 alt="{{ $seller->username }}"
                                                                 class="flex-none object-cover w-6 h-6 rounded-full lazy">
                                                             <span
@@ -403,7 +403,7 @@
                         {{-- Avatar --}}
                         @if (auth()->user()->avatar)
                             <img x-on:click="open = !open" src="{{ placeholder_img() }}"
-                                data-src="{{ src(auth()->user()->avatar) }}" alt="{{ auth()->user()->username }}"
+                                data-src="{{ src(auth()->user()->avatar_id) }}" alt="{{ auth()->user()->username }}"
                                 class="inline-block object-cover w-8 h-8 rounded-full cursor-pointer lazy">
                         @else
                             <div x-on:click="open = !open"
@@ -728,7 +728,7 @@
                                         style="border-radius: inherit">
                                         <div class="flex-shrink-0 ltr:mr-2 rtl:ml-2">
                                             <img class="w-7 h-7 lazy" src="{{ placeholder_img() }}"
-                                                data-src="{{ src($sub->icon) }}" alt="{{ $sub->name }}">
+                                                data-src="{{ src($sub->icon_id) }}" alt="{{ $sub->name }}">
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <p

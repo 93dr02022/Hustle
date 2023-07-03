@@ -1,5 +1,6 @@
 <div class="w-full">
-    <div class="max-w-3xl mx-auto grid grid-cols-1 md:gap-x-6 gap-y-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
+    <div
+        class="max-w-3xl mx-auto grid grid-cols-1 md:gap-x-6 gap-y-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
         <div class="space-y-6 lg:col-start-1 lg:col-span-2">
             <section aria-labelledby="applicant-information-title">
                 <div class="bg-white shadow sm:rounded-lg">
@@ -124,7 +125,8 @@
                                 <dd class="mt-1 text-[13px] font-medium text-gray-900">
                                     @if ($user->country)
                                         <div class="flex items-center">
-                                            <img src="{{ placeholder_img() }}" data-src="{{ url('img/flags/' . strtolower($user->country->code) . '.svg') }}"
+                                            <img src="{{ placeholder_img() }}"
+                                                data-src="{{ url('img/flags/' . strtolower($user->country->code) . '.svg') }}"
                                                 alt="{{ $user->country->name }}" class="lazy h-3 ltr:mr-2 rtl:ml-2">
                                             <span>{{ $user->country->name }}</span>
                                         </div>
@@ -262,14 +264,18 @@
         <section class="lg:col-start-3 lg:col-span-1">
             <div class="flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
                 <div class="flex-1 flex flex-col p-8">
-                    <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($user->avatar) }}" alt="{{ $user->username }}">
+                    <img class="w-32 h-32 flex-shrink-0 mx-auto rounded-full object-cover lazy"
+                        src="{{ placeholder_img() }}" data-src="{{ src($user->avatar_id) }}"
+                        alt="{{ $user->username }}">
                     <h3 class="mt-6 text-gray-900 text-sm font-medium">{{ $user->username }}</h3>
                     <dl class="mt-1 flex-grow flex flex-col justify-between">
                         <dd class="mt-3">
                             @if ($user->isOnline())
-                                <span class="px-2 py-1 text-green-800 text-xs font-medium bg-green-100 rounded-full">{{ __('messages.t_online') }}</span>
+                                <span
+                                    class="px-2 py-1 text-green-800 text-xs font-medium bg-green-100 rounded-full">{{ __('messages.t_online') }}</span>
                             @else
-                                <span class="px-2 py-1 text-red-800 text-xs font-medium bg-red-100 rounded-full">{{ __('messages.t_offline') }}</span>
+                                <span
+                                    class="px-2 py-1 text-red-800 text-xs font-medium bg-red-100 rounded-full">{{ __('messages.t_offline') }}</span>
                             @endif
                         </dd>
                     </dl>

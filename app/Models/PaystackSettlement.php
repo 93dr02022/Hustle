@@ -19,5 +19,10 @@ class PaystackSettlement extends Model
         'status',
         'amount',
         'reference',
+        'paid_at',
+        'currency',
+        'paid_at',
+        'currency',
+        'gateway_response',
     ];
 }

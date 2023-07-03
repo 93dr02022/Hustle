@@ -12,7 +12,7 @@
         {!! SEO::generate() !!}
 
         {{-- Favicon --}}
-        <link rel="icon" type="image/png" href="{{ src( settings('general')->favicon ) }}"/>
+        <link rel="icon" type="image/png" href="{{ src( settings('general')->favicon_id ) }}"/>
 
         {{-- Fonts --}}
         <link rel="preconnect" href="https://fonts.googleapis.com">
