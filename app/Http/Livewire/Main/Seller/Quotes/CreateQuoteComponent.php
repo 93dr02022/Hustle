@@ -53,7 +53,7 @@ class CreateQuoteComponent extends Component
             $totalValue = $totals['total'] + $totals['total_tax'];
 
             $order = Order::create([
-                'uid' => uid(20),
+                'uid' => uid(6),
                 'total_value' => $totalValue,
                 'subtotal_value' => $totals['total'],
                 'taxes_value' => $totals['total_tax'],
