@@ -20,6 +20,8 @@ class EditQuoteComponent extends Component
 
     public $canUpdate = true;
 
+    public $expiration;
+
     public function mount($quoteId)
     {
         $this->quotation = Quotation::where('id', $quoteId)
@@ -30,6 +32,8 @@ class EditQuoteComponent extends Component
         if ($this->quotation->paid) {
             $this->canUpdate = false;
         }
+
+        $this->expiration = now()->addDays(7)->format('Y-m-d');
     }
 
     public function render()
@@ -71,7 +75,7 @@ class EditQuoteComponent extends Component
                 ...$quoteAttr,
             ]);
 
-            if($paymentMethod === 'cash') {
+            if ($paymentMethod === 'cash') {
                 $this->quotation->owner()->update([
                     'balance_available' => DB::raw("balance_available - {$commission}")
                 ]);

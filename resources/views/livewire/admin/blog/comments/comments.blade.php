@@ -36,7 +36,7 @@
                         <td class="ltr:pl-4 ltr:pr-10 rtl:pr-4 rtl:pl-10 w-[40%]">
                             <div class="flex items-center">
                                 <div class="w-8 h-8">
-                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($comment->article->image) }}" alt="{{ $comment->article->title }}" />
+                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($comment->article->image_id)) }}" alt="{{ $comment->article->title }}" />
                                 </div>
                                 <div class="ltr:pl-4 rtl:pr-4">
                                     <a href="{{ url('blog', $comment->article->slug) }}" target="_blank" class="font-medium text-xs hover:text-primary-600 truncate pb-1.5 block max-w-xs">{{ $comment->article->title }}</a>

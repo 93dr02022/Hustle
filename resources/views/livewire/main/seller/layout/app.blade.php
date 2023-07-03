@@ -13,7 +13,7 @@
 		{!! settings('appearance')->font_link !!}
 
 		{{-- Favicon --}}
-		<link rel="icon" type="image/png" href="{{ src( settings('general')->favicon ) }}"/>
+		<link rel="icon" type="image/png" href="{{ src( settings('general')->favicon_id ) }}"/>
 
 		{{-- Livewire styles --}}
 		@livewireStyles
@@ -113,11 +113,11 @@
 					{{-- Logo --}}
 					@if (current_theme() === 'dark' && settings('general')->logo_dark)
 						<a href="{{ url('/') }}" class="flex items-center flex-shrink-0 px-5">
-							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_dark) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
+							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_dark_id) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
 						</a>
 					@else
 						<a href="{{ url('/') }}" class="flex items-center flex-shrink-0 px-5">
-							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
+							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_id) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
 						</a>
 					@endif
 
@@ -209,11 +209,11 @@
 					{{-- Logo --}}
 					@if (current_theme() === 'dark' && settings('general')->logo_dark)
 						<a href="{{ url('/') }}" class="flex items-center flex-shrink-0 px-5">
-							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_dark) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
+							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_dark_id) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
 						</a>
 					@else
 						<a href="{{ url('/') }}" class="flex items-center flex-shrink-0 px-5">
-							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
+							<img width="150" height="{{ settings('appearance')->sizes['header_desktop_logo_height'] }}" src="{{ src(settings('general')->logo_id) }}" alt="{{ settings('general')->title }}" style="height: {{ settings('appearance')->sizes['header_desktop_logo_height'] }}px;width:auto">
 						</a>
 					@endif
 
@@ -364,7 +364,7 @@
 										aria-expanded="false" aria-haspopup="true">
 
 										{{-- Avatar --}}
-										<img class="h-8 w-8 rounded-full object-cover object-center" src="{{ src(auth()->user()->avatar) }}" alt="{{ auth()->user()->username }}">
+										<img class="h-8 w-8 rounded-full object-cover object-center" src="{{ src(auth()->user()->avatar_id) }}" alt="{{ auth()->user()->username }}">
 
 										{{-- Username --}}
 										<div class="ltr:ml-3 rtl:mr-3 hidden text-sm font-medium text-gray-700 dark:text-zinc-100 lg:block truncate max-w-[100px]">

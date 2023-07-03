@@ -71,6 +71,13 @@ ENV VITE_PUSHER_PORT="${PUSHER_PORT}"
 ENV VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
 ENV VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
+ENV PAYSTACK_PUBLIC_KEY="pk_test_3bd8da389e690954fcee4c4ced8c3b8b5165d196"
+ENV PAYSTACK_SECRET_KEY="sk_test_02bd57d8af3d34c49ad3e36bee10597a2f1e9761"
+
+ENV PAYSTACK_PAYMENT_URL="https://api.paystack.co"
+ENV PAYSTACK_MERCHANT_EMAIL="afuwapesunday12@gmail.com"
+
+ENV POSITION_STACK_KEY="f5ab25ba762db1188d3b1e536ef665d7"
 
 RUN apk update && apk add \
     build-base \
@@ -96,6 +103,7 @@ RUN apk add --no-cache \
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install bcmath
 
 
 # Install composer

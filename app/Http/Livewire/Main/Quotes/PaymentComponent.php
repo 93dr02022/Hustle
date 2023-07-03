@@ -6,7 +6,7 @@ use App\Models\Order;
 use App\Models\OrderInvoice;
 use App\Models\Quotation;
 use App\Notifications\User\Seller\QuotationPaid;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -34,7 +34,10 @@ class PaymentComponent extends Component
     public function mount($uid)
     {
         $this->quotation = Quotation::where('reference', $uid)
-            ->with('items')
+            ->with(['owner' => function ($query) {
+                return $query->select('users.*', 'countries.name as country_name')
+                    ->leftJoin('countries', 'users.country_id', 'countries.id');
+            }, 'items'])
             ->first();
 
         if ($this->quotation?->expires_at?->isPast()) {

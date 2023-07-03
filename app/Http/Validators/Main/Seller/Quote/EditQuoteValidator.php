@@ -17,7 +17,7 @@ class EditQuoteValidator
         'email' => ['required', 'email', 'max:50'],
         'phone_number' => ['required', 'numeric', 'max_digits:11'],
         'payment_method' => ['required', 'in:paystack,cash'],
-        'note' => ['required', 'string', 'max:1000'],
+        'note' => ['nullable', 'string', 'max:1000'],
         'expires_at' => ['required', 'date'],
         'items.*.description' => ['required', 'string', 'min:3', 'max:255'],
         'items.*.quantity' => ['required', 'numeric', 'min:1', 'max:10000'],

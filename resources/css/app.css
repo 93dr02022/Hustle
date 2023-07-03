@@ -52,7 +52,7 @@
     }
 
     .btn-purple {
-        @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-primary-600 enabled:hover:bg-primary-700 disabled:bg-zinc-200 disabled:text-zinc-500;
+        @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-[#1D46F5] enabled:hover:bg-[#1d21f5] disabled:bg-zinc-200 disabled:text-zinc-500;
     }
 
     .odd-arrow {

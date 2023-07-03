@@ -3,7 +3,12 @@
     <div class="rounded-md bg-red-50 p-4 mb-6">
         <div class="flex">
             <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"> <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/> </svg>
+                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <div class="ltr:ml-3 rtl:mr-3">
                 <h3 class="text-sm font-medium text-red-800">{{ __('messages.t_attention_needed') }}</h3>
@@ -30,15 +35,20 @@
             <thead class="bg-gray-200">
                 <tr tabindex="0"
                     class="focus:outline-none h-16 w-full text-sm leading-none text-gray-800 dark:text-white ">
-                    <th class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider ltr:text-left ltr:pl-4 rtl:text-right rtl:pr-4">
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider ltr:text-left ltr:pl-4 rtl:text-right rtl:pr-4">
                         {{ __('messages.t_user') }}</th>
-                    <th class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider ltr:text-left ltr:pl-4 rtl:text-right rtl:pr-4">
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider ltr:text-left ltr:pl-4 rtl:text-right rtl:pr-4">
                         {{ __('messages.t_for') }}</th>
-                    <th class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
                         {{ __('messages.t_amount') }}</th>
-                    <th class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
                         {{ __('messages.t_status') }}</th>
-                    <th class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
                         {{ __('messages.t_options') }}</th>
                 </tr>
             </thead>
@@ -53,8 +63,8 @@
                             <a href="{{ url('profile', $w->user->username) }}" target="_blank"
                                 class="flex items-center">
                                 <div class="w-8 h-8">
-                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}" data-src="{{ src($w->user->avatar) }}"
-                                        alt="{{ $w->user->username }}" />
+                                    <img class="w-full h-full rounded object-cover lazy" src="{{ placeholder_img() }}"
+                                        data-src="{{ src($w->user->avatar_id) }}" alt="{{ $w->user->username }}" />
                                 </div>
                                 <div class="ltr:pl-4 rtl:pr-4">
                                     <p class="font-medium text-xs">{{ $w->user->username }}</p>
@@ -88,7 +98,9 @@
                                     <span class="font-medium text-sm">{{ $w->gateway_provider_id }}</span>
                                 @elseif ($w->gateway_provider_name === 'offline')
                                     @if (settings('offline_payment')->logo)
-                                        <img class="h-5 ltr:mr-2 rtl:ml-2 lazy" src="{{ placeholder_img() }}" data-src="{{ src(settings('offline_payment')->logo) }}" alt="{{ settings('offline_payment')->name }}">
+                                        <img class="h-5 ltr:mr-2 rtl:ml-2 lazy" src="{{ placeholder_img() }}"
+                                            data-src="{{ src(settings('offline_payment')->logo_id) }}"
+                                            alt="{{ settings('offline_payment')->name }}">
                                     @endif
                                     <span class="font-medium text-sm">{{ $w->gateway_provider_id }}</span>
                                 @endif

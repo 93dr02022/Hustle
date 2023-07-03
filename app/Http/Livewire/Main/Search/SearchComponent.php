@@ -14,7 +14,7 @@ class SearchComponent extends Component
 
     public $q;
 
-    protected $queryString = ['q', 'min_price', 'max_price', 'delivery_time', 'rating', 'sort_by'];
+    protected $queryString = ['q', 'min_price', 'max_price', 'delivery_time', 'rating', 'sort_by', 'location'];
 
     public $delivery_times;
 
@@ -28,6 +28,8 @@ class SearchComponent extends Component
     public $delivery_time;
 
     public $rating;
+
+    public $location;
 
     /**
      * Init component
@@ -60,7 +62,7 @@ class SearchComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_search_results_for_q', ['q' => $this->q])." $separator ".settings('general')->title;
+        $title = __('messages.t_search_results_for_q', ['q' => $this->q]) . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -74,7 +76,7 @@ class SearchComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -86,6 +88,7 @@ class SearchComponent extends Component
 
         return view('livewire.main.search.search', [
             'gigs' => $this->gigs,
+            'states' => modelCaches('nigerian_states')
         ])->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -99,7 +102,8 @@ class SearchComponent extends Component
         $keyword = str_replace(['-', ' ', '_', "'", '"', '/', '`', '+'], ' ', $this->q);
 
         // start a new query
-        $query = Gig::query()->active();
+        $query = Gig::query()
+            ->whereIn('gigs.status', ['active', 'boosted', 'trending', 'featured']);
 
         // Check price
         if ($this->min_price) {
@@ -121,11 +125,16 @@ class SearchComponent extends Component
             $query->whereBetween('rating', [$this->rating, $this->rating + 1]);
         }
 
+        // check location
+        if ($this->location) {
+            $query->where('states.name', $this->location);
+        }
+
         // Check sort by
         if ($this->sort_by) {
             switch ($this->sort_by) {
 
-                // Most popular
+                    // Most popular
                 case 'popular':
                     $query->orderByDesc('counter_visits');
                     break;
@@ -162,13 +171,22 @@ class SearchComponent extends Component
         }
 
         // Set results
-        return $query->where(function ($builder) use ($keyword) {
-            return $builder->where('title', 'LIKE', "%{$keyword}%")
-                ->orWhere('description', 'LIKE', "%{$keyword}%")
-                ->orWhereHas('tagged', function ($query) use ($keyword) {
-                    return $query->where('tag_name', 'LIKE', "%{$keyword}%");
-                });
-        })
+        return $query->addSelect(
+            'gigs.*',
+            'users.username',
+            'users.avatar_id',
+            'users.status as user_status',
+            'states.name as state_name'
+        )
+            ->leftJoin('users', 'gigs.user_id', 'users.id')
+            ->leftJoin('states', 'states.id', 'users.state_id')
+            ->where(function ($builder) use ($keyword) {
+                return $builder->where('gigs.title', 'LIKE', "%{$keyword}%")
+                    ->orWhere('gigs.description', 'LIKE', "%{$keyword}%")
+                    ->orWhereHas('tagged', function ($query) use ($keyword) {
+                        return $query->where('tag_name', 'LIKE', "%{$keyword}%");
+                    });
+            })
             ->paginate(42);
     }
 
@@ -202,11 +220,16 @@ class SearchComponent extends Component
             $queries['delivery_time'] = $this->delivery_time;
         }
 
+        // Check if has location
+        if ($this->location) {
+            $queries['location'] = $this->location;
+        }
+
         // Change this to query string
         $string = Arr::query($queries);
 
         // Generate url
-        $url = url('search?q='.$this->q.'&'.$string);
+        $url = url('search?q=' . $this->q . '&' . $string);
 
         return redirect($url);
     }
@@ -219,6 +242,6 @@ class SearchComponent extends Component
     public function resetFilter()
     {
         // Reset filter
-        return redirect('search?q='.$this->q);
+        return redirect('search?q=' . $this->q);
     }
 }
