@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
+     * 
+     * @todo change paystack marking payable to 6 hrs
      */
     protected function schedule(Schedule $schedule)
     {
