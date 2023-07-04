@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('projects_skills', function (Blueprint $table) {
             $table->id();
             $table->string('uid', 20)->unique();
-            $table->string('name', 30)->unique();
-            $table->string('slug', 100)->unique();
+            $table->string('name', 30)->index();
+            $table->string('slug', 100)->index();
             $table->unsignedBigInteger('category_id')->index();
 
             $table->foreign('category_id')->references('id')->on('projects_categories');
