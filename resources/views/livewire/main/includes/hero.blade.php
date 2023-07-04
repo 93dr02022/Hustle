@@ -3,24 +3,20 @@
 
     {{-- Hero section content --}}
     <div class="grid grid-cols-1" x-data="window.LandingPageHeroSection">
-        <div
-            class="bg-slate-200 flex flex-col grow min-h-[335px] xs:min-h-[380px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[550px] h-full w-full relative">
+        <div class="bg-slate-200 flex flex-col grow min-h-[335px] xs:min-h-[380px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[550px] h-full w-full relative">
             <div class="grid h-full grid-cols-1">
                 <div class="swiper hero-swiper">
                     <div class="swiper-wrapper">
                         {{-- first slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/artisan-10.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/artisan-10.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Earn Money and Experience
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 With Top Clients
                                             </div>
                                         </div>
@@ -31,17 +27,14 @@
 
                         {{-- second slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/artisan-9.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/artisan-9.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Expert Tailors
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 for Impeccable Outfits.
                                             </div>
                                         </div>
@@ -52,17 +45,14 @@
 
                         {{-- third slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/artisan-one.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/artisan-one.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Get your next big project
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 build with experts
                                             </div>
                                         </div>
@@ -74,17 +64,14 @@
 
                         {{-- fourth slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/artisan-4.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/artisan-4.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Expert Mechanics for
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Automotive Services.
                                             </div>
                                         </div>
@@ -95,17 +82,14 @@
 
                         {{-- fifth slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/plumber.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/plumber.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Top-notch Plumbers
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 at Your Service.
                                             </div>
                                         </div>
@@ -116,17 +100,14 @@
 
                         {{-- sixth slide --}}
                         <div class="w-full swiper-slide">
-                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]"
-                                style="background-image: url({{ src('home/barber.webp') }})">
+                            <div class="h-full object-cover bg-cover bg-no-repeat bg-[center_center]" style="background-image: url({{ src('home/barber.webp') }})">
                                 <div class="h-full px-4 mb-3 slide-blue">
                                     <div class="max-w-2xl mx-auto flex items-end h-[50%] md:h-[60%]">
                                         <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4">
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 Verified Pro Barbers
                                             </div>
-                                            <div
-                                                class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
+                                            <div class="text-xl font-bold leading-6 text-white sm:font-extrabold sm:text-3xl md:text-4xl">
                                                 for Exceptional Haircuts.
                                             </div>
                                         </div>
@@ -139,18 +120,14 @@
                 </div>
             </div>
 
-            <div
-                class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[52%] md:top-[62%] right-[0] px-4 lg:bottom-[40px]">
+            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[52%] md:top-[62%] right-[0] px-4 lg:bottom-[40px]">
                 <div
                     class="max-w-2xl mx-auto py-2 sm:py-5 px-3 xs:px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[10px] lg:rounded-[18px] rounded-md bg-[rgba(217,217,217,0.05)]">
                     <div class="flex items-center justify-center gap-2 flex-wrap mb-3 mt-2">
                         <div class="text-white font-medium">Find Pros in</div>
-                        <div @click="showStates = true"
-                            class="cursor-pointer py-1 px-2 rounded max-w-[120px] text-white flex gap-x-2 items-center bg-black/70 backdrop-blur-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" width="15" height="15"
-                                fill="#fff" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                        <div @click="showStates = true" class="cursor-pointer py-1 px-2 rounded max-w-[120px] text-white flex gap-x-2 items-center bg-black/70 backdrop-blur-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0" width="15" height="15" fill="#fff" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
                             </svg>
                             <span class="text-xs truncate">All <span class="capitalize" x-text="selectedState"></span>
                             </span>
@@ -158,13 +135,10 @@
                     </div>
                     <form class="flex items-center mb-2 sm:mb-4" action="{{ url('search') }}" accept="GET">
                         <div class="relative w-full">
-                            <div
-                                class="absolute inset-y-0 flex items-center pointer-events-none ltr:left-0 rtl:right-0 ltr:pl-3 rtl:pr-3">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd"></path>
+                            <div class="absolute inset-y-0 flex items-center pointer-events-none ltr:left-0 rtl:right-0 ltr:pl-3 rtl:pr-3">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd">
+                                    </path>
                                 </svg>
                             </div>
                             <input type="text" class="hidden" name="location" x-model="selectedState" hidden>
@@ -198,23 +172,19 @@
         </div>
 
         <div class="flex justify-center pt-3 -mb-10">
-            <div
-                class="swiper-pagination !static [&>.swiper-pagination-bullet]:h-3 [&>.swiper-pagination-bullet]:w-3 p-0">
+            <div class="swiper-pagination !static [&>.swiper-pagination-bullet]:h-3 [&>.swiper-pagination-bullet]:w-3 p-0">
             </div>
         </div>
 
         {{-- state selection overlay --}}
         <div x-show="showStates" class="fixed inset-0 bg-black/70 z-[50]" x-cloak>
             <div class="flex justify-center xs:px-4 sm:px-7">
-                <div
-                    class="bg-[#EBF2F7] xs:mt-[7%] xs:mb-10 pb-5 w-full max-w-3xl rounded-0 xs:rounded-md md:rounded-2xl">
+                <div class="bg-[#EBF2F7] xs:mt-[7%] xs:mb-10 pb-5 w-full max-w-3xl rounded-0 xs:rounded-md md:rounded-2xl">
                     <div class="flex items-center justify-between gap-x-2 pt-5 pb-4 px-4">
                         <span class="text-[15] font-medium text-neutral-800">All Nigerian.</span>
 
-                        <span @click="showStates = false"
-                            class="bg-white/50 backdrop-blur-md rounded p-2 grid place-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="text-neutral-800" width="18"
-                                height="18" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <span @click="showStates = false" class="bg-white/50 backdrop-blur-md rounded p-2 grid place-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-neutral-800" width="18" height="18" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                 <path stroke-width="1"
                                     d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
                             </svg>
@@ -224,8 +194,7 @@
                     <div class="overflow-y-auto px-4 h-full max-h-screen xs:max-h-[400px] ">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             @foreach ($states as $state)
-                                <div @click="selectState(@js($state->name))"
-                                    class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3"
+                                <div @click="selectState(@js($state->name))" class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3"
                                     :class="@js($state->name).toLowerCase() == selectedState.toLowerCase() ?
                                         'bg-[#1D46F5] [&>span]:text-white' : ''">
                                     <span class="text-black hover:text-blue-700">{{ $state->name }}</span>
@@ -276,7 +245,14 @@
 
                         if (locationString) {
                             let locationInfo = JSON.parse(locationString);
-                            this.selectedState = locationInfo?.region ?? 'lagos';
+
+                            if (locationInfo?.country == 'Nigeria') {
+                                this.selectedState = locationInfo?.region ?? 'lagos';
+                            }
+
+                            if (locationInfo?.country !== 'Nigeria') {
+                                this.selectedState = 'lagos';
+                            }
                         }
 
                         if (!locationString) {
@@ -285,8 +261,16 @@
                                 )
                                 .then(res => res.json())
                                 .then(data => {
-                                    console.log(data?.data?.[0])
-                                    this.selectedState = data?.data?.[0]?.region
+                                    let locationRes = data?.data?.[0] ?? {};
+
+                                    if (locationRes?.country == 'Nigeria') {
+                                        this.selectedState = locationRes?.region ?? 'lagos';
+                                    }
+
+                                    if (locationRes?.country !== 'Nigeria') {
+                                        this.selectedState = 'lagos';
+                                    }
+
                                     localStorage.setItem('location', JSON.stringify(data?.data?.[0] ?? {}));
                                 })
                         }
