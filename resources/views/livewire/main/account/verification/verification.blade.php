@@ -288,23 +288,25 @@
                 init() {
                     let button = this.$refs.stepOneButton
                     let accountInput = document.querySelector('#text-input-component-id-accountNumber');
-                    button.disabled = true;
+                    if (button) {
+                        button.disabled = true;
 
-                    accountInput.addEventListener('input', (e) => {
-                        if (event.target.value.length !== 10 || !this.selectedBank) {
-                            button.disabled = true;
-                        } else {
-                            button.disabled = false;
-                        }
-                    })
+                        accountInput.addEventListener('input', (e) => {
+                            if (event.target.value.length !== 10 || !this.selectedBank) {
+                                button.disabled = true;
+                            } else {
+                                button.disabled = false;
+                            }
+                        })
 
-                    $('#select2-id-bank').on('select2:select', function(e) {
-                        this.selectedBank = e.params.data
+                        $('#select2-id-bank').on('select2:select', function(e) {
+                            this.selectedBank = e.params.data
 
-                        if (e.params.data && accountInput.value.length == 10) {
-                            button.disabled = false;
-                        }
-                    });
+                            if (e.params.data && accountInput.value.length == 10) {
+                                button.disabled = false;
+                            }
+                        });
+                    }
                 },
 
                 setFrontSide(e) {
