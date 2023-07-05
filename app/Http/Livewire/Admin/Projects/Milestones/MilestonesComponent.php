@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Projects\Milestones;
 
 use App\Models\Project;
 use App\Models\ProjectMilestone;
+use App\Models\User;
 use App\Notifications\User\Employer\ProjectCompleted;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Carbon\Carbon;
@@ -58,12 +59,10 @@ class MilestonesComponent extends Component
 
             // Set expected delivery time
             $this->expected_delivery_date = $format_date->addDays($awarded_bid->days);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             $this->expected_delivery_date = null;
-
         }
     }
 
@@ -123,26 +122,25 @@ class MilestonesComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Confirm fund
             $this->dialog()->confirm([
-                'title' => '<h1 class="text-base font-bold tracking-wide">'.__('messages.t_confirm_deposit').'</h1>',
-                'description' => "<div class='leading-relaxed'>".__('messages.t_confirm_deposit_milestone_subtitle_admin')."<br></div>
+                'title' => '<h1 class="text-base font-bold tracking-wide">' . __('messages.t_confirm_deposit') . '</h1>',
+                'description' => "<div class='leading-relaxed'>" . __('messages.t_confirm_deposit_milestone_subtitle_admin') . "<br></div>
                 <div class='rounded border dark:border-secondary-600 my-8'>
                 <dl class='divide-y divide-gray-200 dark:divide-gray-600'>
                     <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>".__('messages.t_requested_amount')."</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>".money($amount, settings('currency')->code, true)."</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_requested_amount') . "</dt>
+                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money($amount, settings('currency')->code, true) . "</dd>
                     </div>  
                     <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>".__('messages.t_milestone_employer_fee_name')."</dt>
-                        <dd class='text-sm font-semibold text-green-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>+ ".money($commission, settings('currency')->code, true)."</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_milestone_employer_fee_name') . "</dt>
+                        <dd class='text-sm font-semibold text-green-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>+ " . money($commission, settings('currency')->code, true) . "</dd>
                     </div>  
                     <div class='grid grid-cols-3 gap-4 py-3 px-4 bg-gray-100/60 dark:bg-secondary-700 rounded-b'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right'>".__('messages.t_total')."</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>".money($total, settings('currency')->code, true).'</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right'>" . __('messages.t_total') . "</dt>
+                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money($total, settings('currency')->code, true) . '</dd>
                     </div>  
                 </dl>
                 </div>
@@ -160,7 +158,6 @@ class MilestonesComponent extends Component
                     'label' => __('messages.t_cancel'),
                 ],
             ]);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -169,7 +166,6 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -215,7 +211,6 @@ class MilestonesComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Update milestone status
@@ -242,7 +237,6 @@ class MilestonesComponent extends Component
                 'description' => __('messages.t_amount_has_been_deposit_milestone_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -251,7 +245,6 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -273,8 +266,8 @@ class MilestonesComponent extends Component
 
             // Confirm fund
             $this->dialog()->confirm([
-                'title' => '<h1 class="text-base font-bold tracking-wide">'.__('messages.t_confirm_release_of_amount').'</h1>',
-                'description' => "<div class='leading-relaxed'>".__('messages.t_confirm_release_milestone_payment').'</div>',
+                'title' => '<h1 class="text-base font-bold tracking-wide">' . __('messages.t_confirm_release_of_amount') . '</h1>',
+                'description' => "<div class='leading-relaxed'>" . __('messages.t_confirm_release_milestone_payment') . '</div>',
                 'icon' => 'credit-card',
                 'iconColor' => 'text-slate-500 dark:text-secondary-400 p-1',
                 'iconBackground' => 'bg-slate-100 rounded-full p-3 dark:bg-secondary-700',
@@ -288,7 +281,6 @@ class MilestonesComponent extends Component
                     'label' => __('messages.t_cancel'),
                 ],
             ]);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -297,7 +289,6 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -319,10 +310,20 @@ class MilestonesComponent extends Component
 
             // Get project employer
             $employer = $this->project->client;
+            $freelancer = $this->project->awarded_bid->user;
+
+            // Set amount to give to freelancer
+            $amount = convertToNumber($payment->amount) - convertToNumber($payment->freelancer_commission);
 
             // Update milestone status
             $payment->status = 'paid';
             $payment->save();
+
+            // Let's give freelancer his money
+            User::where('id', $freelancer->id)
+                ->update([
+                    'balance_available' => convertToNumber($freelancer->balance_available) + convertToNumber($amount),
+                ]);
 
             // Calculate paid amount
             $this->paid_amount = ProjectMilestone::where('project_id', $this->project->id)
@@ -353,7 +354,6 @@ class MilestonesComponent extends Component
                     'action' => url('seller/projects/milestones', $this->project->uid),
                     'user_id' => $this->project->awarded_freelancer_id,
                 ]);
-
             }
 
             // Success
@@ -362,7 +362,6 @@ class MilestonesComponent extends Component
                 'description' => __('messages.t_amount_has_been_released_milestone_success'),
                 'icon' => 'success',
             ]);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -371,7 +370,6 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 }
