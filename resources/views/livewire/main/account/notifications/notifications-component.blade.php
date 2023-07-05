@@ -30,13 +30,13 @@
                         <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">
                             {{-- Push order updates --}}
                             <div class="col-span-12 md:col-span-6">
-                                <x-forms.checkbox label="{{ __('Order Updates') }}" model="push_order_updates" />
+                                <x-forms.checkbox label="{{ __('Order Updates') }}" model="push_order_notifications" />
                             </div>
                         </div>
                         <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">
                             {{-- Push inbox updates --}}
                             <div class="col-span-12 md:col-span-6">
-                                <x-forms.checkbox label="{{ __('Inbox Messages') }}" model="push_inbox_messages" />
+                                <x-forms.checkbox label="{{ __('Inbox Messages') }}" model="push_inbox_notifications" />
                             </div>
                         </div>
                         {{-- Actions --}}
@@ -55,13 +55,13 @@
                         <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">
                             {{-- Push order updates --}}
                             <div class="col-span-12 md:col-span-6">
-                                <x-forms.checkbox label="{{ __('Order Updates') }}" model="push_order_updates" />
+                                <x-forms.checkbox label="{{ __('Order Updates') }}" model="push_order_notifications" />
                             </div>
                         </div>
                         <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">
                             {{-- Push inbox updates --}}
                             <div class="col-span-12 md:col-span-6">
-                                <x-forms.checkbox label="{{ __('Inbox Messages') }}" model="push_inbox_messages" />
+                                <x-forms.checkbox label="{{ __('Inbox Messages') }}" model="push_inbox_notifications" />
                             </div>
                         </div>
                         <div class="mb-6 grid grid-cols-12 gap-y-8 md:gap-x-8">

@@ -73,7 +73,7 @@ class OrderPlaced extends Notification implements ShouldQueue
             ->withIcon(asset( 'img/default/no-favicon.png'))
             ->withImage(asset('img/default/no-favicon.png'))
             ->withPriority('high')
-            ->sendMessage([$notifiable->push_notification_id]);
+            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
     }
     /**
      * Get the array representation of the notification.
@@ -90,7 +90,7 @@ class OrderPlaced extends Notification implements ShouldQueue
     private function getActiveChannels($notifiable)
     {
         //Check if user has allowed push notifications for order updates
-        if ($notifiable->push_order_updates) {
+        if ($notifiable->userNotificationSetting->push_order_notifications) {
             $this->toFirebase($notifiable);
         }
         return ['mail'];

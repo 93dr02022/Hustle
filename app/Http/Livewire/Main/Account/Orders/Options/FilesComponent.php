@@ -187,6 +187,7 @@ class FilesComponent extends Component
 
         // Mark item as completed
         $item->is_finished = true;
+        $item->finished_at = now();
         $item->save();
 
         // Remove item from queue list and success sales

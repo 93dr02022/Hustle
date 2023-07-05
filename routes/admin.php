@@ -339,6 +339,9 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
 
         // Settings
         Route::get('settings', SettingsComponent::class);
+
+        // Settings
+        Route::get('marketing', MarketingComponent::class);
     });
 
     // Languages
