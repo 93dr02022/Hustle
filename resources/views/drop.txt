@@ -12,3 +12,22 @@ https://ipapi.co/${ip.value}/json
 # DB_PASSWORD="Y9D#6!qY7NTro6^"
 
 $path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\barber.webp'), 'barber.webp');
+
+
+
+
+
+
+ // No payment selected
+$this->notification([
+    'title' => __('messages.t_error'),
+    'description' => __('messages.t_select_payment_method'),
+    'icon' => 'error',
+]);
+
+// We couldn't handle your payment
+$this->notification([
+    'title' => __('messages.t_error'),
+    'description' => __('messages.t_we_could_not_handle_ur_payment'),
+    'icon' => 'error',
+]);
