@@ -1,5 +1,4 @@
-<header
-    class="bg-[#F1F4FF] dark:bg-[#0f0f0f] shadow-sm w-full z-40 transition-all duration-200 border-b-[3px] border-[#F18522]">
+<header class="bg-[#F1F4FF] dark:bg-[#0f0f0f] shadow-sm w-full z-40 transition-all duration-200 border-b-[3px] border-[#F18522]">
     <div x-data="window.TTRjRvxLbHzaKxW">
 
         {{-- Admin navbar --}}
@@ -36,12 +35,10 @@
             <div class="inline-flex items-center min-w-fit">
 
                 {{-- Mobile menu button --}}
-                <button type="button"
-                    class="text-gray-500 bg-white rounded-md dark:bg-transparent dark:text-gray-100 dark:hover:text-white ltr:mr-5 rtl:ml-5 md:hidden"
+                <button type="button" class="text-gray-500 bg-white rounded-md dark:bg-transparent dark:text-gray-100 dark:hover:text-white ltr:mr-5 rtl:ml-5 md:hidden"
                     x-on:click="mobile_menu = true">
                     <span class="sr-only">Open menu</span>
-                    <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                        stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                    <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <g>
                             <path fill="none" d="M0 0h24v24H0z"></path>
@@ -62,16 +59,14 @@
                 <div class="relative max-w-md" x-data="{ open: false }">
 
                     {{-- Input --}}
-                    <input wire:model.debounce.500ms="q" wire:keydown.enter="enter" x-ref="search"
-                        x-on:click="open = true" type="search"
+                    <input wire:model.debounce.500ms="q" wire:keydown.enter="enter" x-ref="search" x-on:click="open = true" type="search"
                         class="block p-2.5 w-full z-20 text-sm text-gray-900 dark:text-white bg-white dark:bg-[#181818] rounded border border-gray-300 dark:border-[#181818] focus:ring-0 focus:border-gray-500"
                         placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" required>
 
                     {{-- Search button --}}
                     <button type="button" wire:click="enter"
                         class="absolute top-0 ltr:right-0 rtl:left-0 p-2.5 text-white bg-zinc-700 hover:bg-zinc-800 ltr:rounded-r rtl:rounded-l border border-zinc-700 hover:border-zinc-800">
-                        <svg class="w-5 h-5" stroke="currentColor" fill="currentColor" stroke-width="0"
-                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-5 h-5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z">
                             </path>
@@ -82,15 +77,12 @@
                     {{-- Results --}}
                     @if (count($gigs) || count($sellers) || count($tags) || $q)
                         <div class="absolute top-16 w-full bg-white dark:bg-zinc-800 rounded-lg border border-gray-100 dark:border-zinc-800 shadow-md max-w-full z-[60]"
-                            @keydown.window.escape="opne = false" x-show="open" style="display: none"
-                            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
-                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            @keydown.window.escape="opne = false" x-show="open" style="display: none" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                             x-on:click.away="open = false">
                             {{-- Results --}}
                             @if (count($gigs) || count($sellers) || count($tags))
-                                <ul class="p-4 pb-2 space-y-4 overflow-y-auto max-h-80 scroll-py-10 scroll-pb-2"
-                                    id="options" role="listbox">
+                                <ul class="p-4 pb-2 space-y-4 overflow-y-auto max-h-80 scroll-py-10 scroll-pb-2" id="options" role="listbox">
 
                                     {{-- Gigs --}}
                                     @if ($gigs && count($gigs))
@@ -101,20 +93,14 @@
 
                                                 {{-- List of gigs --}}
                                                 @foreach ($gigs as $gig)
-                                                    <li
-                                                        class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                        <a href="{{ url('service', $gig->slug) }}"
-                                                            class="flex items-center">
-                                                            <svg class="flex-none w-6 h-6 text-gray-400"
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke="currentColor"
+                                                    <li class="flex items-center px-4 py-2 cursor-default select-none group">
+                                                        <a href="{{ url('service', $gig->slug) }}" class="flex items-center">
+                                                            <svg class="flex-none w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                                 aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                     d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                                                             </svg>
-                                                            <span
-                                                                class="flex-auto overflow-hidden ltr:ml-3 rtl:mr-3 ext-ellipsis">{{ $gig->title }}</span>
+                                                            <span class="flex-auto overflow-hidden ltr:ml-3 rtl:mr-3 ext-ellipsis">{{ $gig->title }}</span>
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -132,16 +118,11 @@
                                             {{-- List of sellers --}}
                                             <ul class="mt-2 -mx-4 text-sm text-gray-700 dark:text-gray-400">
                                                 @foreach ($sellers as $seller)
-                                                    <li
-                                                        class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                        <a href="{{ url('profile', $seller->username) }}"
-                                                            class="flex items-center">
-                                                            <img src="{{ placeholder_img() }}"
-                                                                data-src="{{ src($seller->avatar_id) }}"
-                                                                alt="{{ $seller->username }}"
+                                                    <li class="flex items-center px-4 py-2 cursor-default select-none group">
+                                                        <a href="{{ url('profile', $seller->username) }}" class="flex items-center">
+                                                            <img src="{{ placeholder_img() }}" data-src="{{ src($seller->avatar_id) }}" alt="{{ $seller->username }}"
                                                                 class="flex-none object-cover w-6 h-6 rounded-full lazy">
-                                                            <span
-                                                                class="flex-auto truncate ltr:ml-3 rtl:mr-3">{{ $seller->username }}</span>
+                                                            <span class="flex-auto truncate ltr:ml-3 rtl:mr-3">{{ $seller->username }}</span>
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -158,19 +139,13 @@
 
                                                 {{-- List of tags --}}
                                                 @foreach ($tags as $tag)
-                                                    <li
-                                                        class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                        <a href="{{ url('gigs', $tag->slug) }}"
-                                                            class="flex items-center">
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                class="flex-none w-6 h-6 text-gray-400" fill="none"
-                                                                viewBox="0 0 24 24" stroke="currentColor"
+                                                    <li class="flex items-center px-4 py-2 cursor-default select-none group">
+                                                        <a href="{{ url('gigs', $tag->slug) }}" class="flex items-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                                 stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                                                             </svg>
-                                                            <span
-                                                                class="flex-auto ml-3 truncate">{{ $tag->name }}</span>
+                                                            <span class="flex-auto ml-3 truncate">{{ $tag->name }}</span>
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -185,8 +160,7 @@
                             {{-- No results --}}
                             @if (count($gigs) === 0 && count($sellers) === 0 && count($tags) === 0 && $q)
                                 <div class="px-6 text-sm text-center py-14 sm:px-14">
-                                    <svg class="w-6 h-6 mx-auto text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <svg class="w-6 h-6 mx-auto text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
@@ -198,8 +172,7 @@
                             @endif
 
                             {{-- Footer --}}
-                            <div
-                                class="rounded-b-lg flex flex-wrap items-center bg-gray-50 dark:bg-zinc-700 py-2.5 px-4 text-xs text-gray-700 dark:text-gray-400">
+                            <div class="rounded-b-lg flex flex-wrap items-center bg-gray-50 dark:bg-zinc-700 py-2.5 px-4 text-xs text-gray-700 dark:text-gray-400">
                                 {!! __('messages.t_press_enter_to_search_deeply') !!}
                             </div>
                         </div>
@@ -209,36 +182,27 @@
             </div>
 
             {{-- Actions links --}}
-            <div
-                class="flex items-center text-sm font-medium transition-all duration-200 min-w-fit ltr:sm:ml-10 rtl:sm:mr-10">
+            <div class="flex items-center text-sm font-medium transition-all duration-200 min-w-fit ltr:sm:ml-10 rtl:sm:mr-10">
 
                 {{-- Explore --}}
                 <div x-data="{ open: false }" class="relative inline-block">
 
                     {{-- Dropdown button --}}
-                    <div aria-haspopup="true" x-bind:aria-expanded="open" x-on:click="open = true"
-                        aria-expanded="true"
+                    <div aria-haspopup="true" x-bind:aria-expanded="open" x-on:click="open = true" aria-expanded="true"
                         class="hidden px-4 py-2 space-x-2 text-gray-500 transition-colors duration-300 cursor-pointer hover:text-primary-600 focus:outline-none md:flex dark:text-gray-100 dark:hover:text-white rtl:space-x-reverse md:items-center">
                         <span>@lang('messages.t_explore')</span>
-                        <svg class="w-4 h-4" stroke="currentColor" fill="currentColor" stroke-width="0"
-                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
+                        <svg class="w-4 h-4" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd">
+                            </path>
                         </svg>
                     </div>
 
                     {{-- Dropdown menu --}}
-                    <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-150"
-                        x-transition:enter-start="transform opacity-0 scale-75"
-                        x-transition:enter-end="transform opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-100"
-                        x-transition:leave-start="transform opacity-100 scale-100"
-                        x-transition:leave-end="transform opacity-0 scale-75" x-on:click.outside="open = false"
-                        role="menu"
+                    <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="transform opacity-0 scale-75"
+                        x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="transform opacity-100 scale-100"
+                        x-transition:leave-end="transform opacity-0 scale-75" x-on:click.outside="open = false" role="menu"
                         class="absolute z-40 w-48 mt-3 text-sm font-normal text-gray-900 bg-white rounded-lg shadow-md ltr:origin-top-right rtl:origin-top-left top-full ltr:right-0 rtl:left-0 dark:bg-zinc-800 ring-1 ring-gray-900 ring-opacity-5">
-                        <div
-                            class="bg-white divide-y divide-gray-100 rounded dark:bg-zinc-800 ring-1 ring-black ring-opacity-5 dark:divide-zinc-400">
+                        <div class="bg-white divide-y divide-gray-100 rounded dark:bg-zinc-800 ring-1 ring-black ring-opacity-5 dark:divide-zinc-400">
                             <div class="p-2 space-y-1">
 
                                 {{-- Explore gigs --}}
@@ -268,8 +232,7 @@
 
                 {{-- Become a seller --}}
                 @guest
-                    <a href="{{ url('start_selling') }}"
-                        class="hidden px-4 py-2 text-gray-500 transition-colors duration-300 hover:text-primary-600 md:block dark:text-gray-100 dark:hover:text-white">
+                    <a href="{{ url('start_selling') }}" class="hidden px-4 py-2 text-gray-500 transition-colors duration-300 hover:text-primary-600 md:block dark:text-gray-100 dark:hover:text-white">
                         @lang('messages.t_become_a_seller')
                     </a>
                 @endguest
@@ -286,8 +249,7 @@
                         </a>
                     @elseif (auth()->user()->account_type === 'seller' && Illuminate\Support\Str::of(request()->path())->startsWith('seller'))
                         {{-- Switch buying --}}
-                        <a href="{{ url('/') }}"
-                            class="hidden px-4 py-2 transition-colors duration-300 text-primary-600 hover:text-primary-700 lg:block dark:text-gray-100 dark:hover:text-white">
+                        <a href="{{ url('/') }}" class="hidden px-4 py-2 transition-colors duration-300 text-primary-600 hover:text-primary-700 lg:block dark:text-gray-100 dark:hover:text-white">
                             @lang('messages.t_switch_to_buying')
                         </a>
                     @endif
@@ -296,8 +258,7 @@
 
                 {{-- Sign in --}}
                 @guest
-                    <a href="{{ url('auth/login') }}"
-                        class="hidden px-4 py-2 text-gray-500 transition-colors duration-300 hover:text-primary-600 md:block dark:text-gray-100 dark:hover:text-white">
+                    <a href="{{ url('auth/login') }}" class="hidden px-4 py-2 text-gray-500 transition-colors duration-300 hover:text-primary-600 md:block dark:text-gray-100 dark:hover:text-white">
                         @lang('messages.t_sign_in')
                     </a>
                 @endguest
@@ -321,17 +282,15 @@
                     @if (auth()->user()->account_type === 'seller')
                         <a href="{{ url('seller/orders') }}"
                             class="relative hidden py-2 mx-4 text-gray-500 transition-colors duration-300 hover:text-primary-600 dark:text-gray-100 dark:hover:text-white md:block">
-                            <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                                stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M5 22h14c1.103 0 2-.897 2-2V9a1 1 0 0 0-1-1h-3V7c0-2.757-2.243-5-5-5S7 4.243 7 7v1H4a1 1 0 0 0-1 1v11c0 1.103.897 2 2 2zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v1H9V7zm-4 3h2v2h2v-2h6v2h2v-2h2l.002 10H5V10z">
                                 </path>
                             </svg>
                             @if (auth()->user()->sales->where('status', 'pending')->count())
                                 <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                    <span
-                                        class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                    <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                     <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                                 </span>
                             @endif
@@ -343,8 +302,7 @@
                 @auth
                     <button x-on:click="notifications_menu = true" type="button"
                         class="relative hidden py-2 mx-4 text-gray-500 transition-colors duration-300 hover:text-primary-600 dark:text-gray-100 dark:hover:text-white md:block">
-                        <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                            stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                        <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z">
@@ -352,8 +310,7 @@
                         </svg>
                         @if ($notifications && count($notifications))
                             <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                <span
-                                    class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                 <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                             </span>
                         @endif
@@ -364,8 +321,7 @@
                 @auth
                     <a href="{{ url('inbox') }}"
                         class="text-gray-500 hover:text-primary-600 transition-colors duration-300 py-2 relative ltr:ml-4 rtl:mr-4 md:!mx-4 dark:text-gray-100 dark:hover:text-white hidden md:block">
-                        <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                            stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                        <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 0 0 1.228 0L20 9.044 20.002 18H4z">
@@ -373,8 +329,7 @@
                         </svg>
                         @if ($new_messages)
                             <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                <span
-                                    class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                 <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                             </span>
                         @endif
@@ -387,47 +342,37 @@
 
                         {{-- Status --}}
                         @if (auth()->user()->isOnline() && !auth()->user()->availability)
-                            <div
-                                class="absolute top-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
+                            <div class="absolute top-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
                             </div>
                         @elseif (auth()->user()->availability)
-                            <div
-                                class="absolute top-0 w-3 h-3 bg-gray-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
+                            <div class="absolute top-0 w-3 h-3 bg-gray-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
                             </div>
                         @else
-                            <div
-                                class="absolute top-0 w-3 h-3 bg-red-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
+                            <div class="absolute top-0 w-3 h-3 bg-red-400 border-2 border-white rounded-full ltr:right-0 rtl:left-0 dark:border-transparent">
                             </div>
                         @endif
 
                         {{-- Avatar --}}
                         @if (auth()->user()->avatar)
-                            <img x-on:click="open = !open" src="{{ placeholder_img() }}"
-                                data-src="{{ src(auth()->user()->avatar_id) }}" alt="{{ auth()->user()->username }}"
+                            <img x-on:click="open = !open" src="{{ placeholder_img() }}" data-src="{{ src(auth()->user()->avatar_id) }}" alt="{{ auth()->user()->username }}"
                                 class="inline-block object-cover w-8 h-8 rounded-full cursor-pointer lazy">
                         @else
                             <div x-on:click="open = !open"
                                 class="inline-flex items-center justify-center w-8 h-8 text-gray-300 bg-gray-100 rounded-full cursor-pointer dark:bg-zinc-500 dark:text-zinc-400">
-                                <svg class="inline-block w-4 h-4 hi-solid hi-user" fill="currentColor"
-                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                        clip-rule="evenodd"></path>
+                                <svg class="inline-block w-4 h-4 hi-solid hi-user" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                                 </svg>
                             </div>
                         @endif
 
                         {{-- Menu --}}
-                        <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-150"
-                            x-transition:enter-start="transform opacity-0 scale-75"
-                            x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-100"
-                            x-transition:leave-start="transform opacity-100 scale-100"
+                        <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="transform opacity-0 scale-75"
+                            x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-75" x-on:click.outside="open = false"
                             class="absolute z-40 mt-3 text-sm font-normal text-gray-900 bg-white divide-y divide-gray-100 rounded-lg shadow-md top-full ltr:right-0 rtl:left-0 w-60 dark:bg-zinc-800 ring-1 ring-gray-900 ring-opacity-5 dark:divide-zinc-700">
 
                             <p class="py-3 px-3.5 truncate">
-                                <span
-                                    class="block mb-0.5 text-xs text-gray-500 dark:text-gray-300">{{ __('messages.t_logged_in_as_username', ['username' => auth()->user()->username]) }}</span>
+                                <span class="block mb-0.5 text-xs text-gray-500 dark:text-gray-300">{{ __('messages.t_logged_in_as_username', ['username' => auth()->user()->username]) }}</span>
                                 <span class="font-semibold dark:text-white">@money(auth()->user()->balance_available, settings('currency')->code, true)</span>
                             </p>
 
@@ -437,13 +382,10 @@
                                 {{-- Buyer --}}
                                 @if (auth()->user()->account_type === 'buyer')
                                     {{-- Become a seller --}}
-                                    <a href="{{ url('start_selling') }}"
-                                        class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                    <a href="{{ url('start_selling') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                                         </svg>
                                         <span
                                             class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_become_a_seller') }}</span>
@@ -453,11 +395,9 @@
                                 {{-- Freelancer --}}
                                 @if (auth()->user()->account_type === 'seller')
                                     {{-- Seller dashboard --}}
-                                    <a href="{{ url('seller/home') }}"
-                                        class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <a href="{{ url('seller/home') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                                         </svg>
@@ -473,34 +413,25 @@
                                 <div class="py-1.5 px-3.5">
 
                                     {{-- My projects --}}
-                                    <a href="{{ url('account/projects') }}"
-                                        class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <a href="{{ url('account/projects') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
-                                        <span
-                                            class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">
+                                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">
                                             {{ __('messages.t_my_projects') }}
                                         </span>
                                     </a>
 
                                     {{-- Post a project --}}
-                                    @if (settings('projects')->who_can_post === 'both' ||
-                                            settings('projects')->who_can_post === auth()->user()->account_type)
-                                        <a href="{{ url('post/project') }}"
-                                            class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 4v16m8-8H4" />
+                                    @if (settings('projects')->who_can_post === 'both' || settings('projects')->who_can_post === auth()->user()->account_type)
+                                        <a href="{{ url('post/project') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                                             </svg>
-                                            <span
-                                                class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">
+                                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">
                                                 {{ __('messages.t_post_project') }}
                                             </span>
                                         </a>
@@ -513,11 +444,9 @@
                             <div class="py-1.5 px-3.5">
 
                                 {{-- View Profile --}}
-                                <a href="{{ url('profile', auth()->user()->username) }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <a href="{{ url('profile', auth()->user()->username) }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -526,11 +455,9 @@
                                 </a>
 
                                 {{-- Edit profile --}}
-                                <a href="{{ url('account/profile') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <a href="{{ url('account/profile') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
@@ -539,28 +466,22 @@
                                 </a>
 
                                 {{-- Account settings --}}
-                                <a href="{{ url('account/settings') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <a href="{{ url('account/settings') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_account_settings') }}</span>
                                 </a>
 
                                 {{-- Update password --}}
-                                <a href="{{ url('account/password') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                <a href="{{ url('account/password') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_update_password') }}</span>
@@ -572,11 +493,9 @@
                             <div class="py-1.5 px-3.5">
 
                                 {{-- Deposit --}}
-                                <a href="{{ url('account/deposit') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <a href="{{ url('account/deposit') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
@@ -585,37 +504,29 @@
                                 </a>
 
                                 {{-- My orders --}}
-                                <a href="{{ url('account/orders') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                <a href="{{ url('account/orders') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_my_orders') }}</span>
                                 </a>
 
                                 {{-- Messages --}}
-                                <a href="{{ url('inbox') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                <a href="{{ url('inbox') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_messages') }}</span>
                                 </a>
 
                                 {{-- Reviews --}}
-                                <a href="{{ url('account/reviews') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <a href="{{ url('account/reviews') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                                     </svg>
@@ -624,13 +535,10 @@
                                 </a>
 
                                 {{-- Refunds --}}
-                                <a href="{{ url('account/refunds') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
+                                <a href="{{ url('account/refunds') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_refunds') }}</span>
@@ -640,31 +548,11 @@
 
                             {{-- Security --}}
                             <div class="py-1.5 px-3.5">
-
-                                {{-- Verification center --}}
-                                @if (auth()->user()->status !== 'verified')
-                                    <a href="{{ url('account/verification') }}"
-                                        class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                        </svg>
-                                        <span
-                                            class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_verification_center') }}</span>
-                                    </a>
-                                @endif
-
                                 {{-- Logout --}}
-                                <a href="{{ url('auth/logout') }}"
-                                    class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg aria-hidden="true" width="20" height="20" fill="none"
-                                        class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600">
-                                        <path
-                                            d="M10.25 3.75H9A6.25 6.25 0 002.75 10v0A6.25 6.25 0 009 16.25h1.25M10.75 10h6.5M14.75 12.25l2.5-2.25-2.5-2.25"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round" />
+                                <a href="{{ url('auth/logout') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
+                                    <svg aria-hidden="true" width="20" height="20" fill="none" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600">
+                                        <path d="M10.25 3.75H9A6.25 6.25 0 002.75 10v0A6.25 6.25 0 009 16.25h1.25M10.75 10h6.5M14.75 12.25l2.5-2.25-2.5-2.25" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_logout') }}</span>
@@ -691,13 +579,11 @@
             <ul
                 class="relative flex items-center justify-between space-x-5 overflow-y-auto transition-colors duration-300 rtl:space-x-reverse scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-zinc-600 scrollbar-track-gray-50 dark:scrollbar-track-zinc-400">
                 @foreach ($categories as $category)
-                    <li
-                        class="relative flex-shrink-0 inline-block border-b-2 border-transparent hover:border-primary-600 focus:outline-none focus:ring-0">
+                    <li class="relative flex-shrink-0 inline-block border-b-2 border-transparent hover:border-primary-600 focus:outline-none focus:ring-0">
 
                         {{-- Check if category has subcategories --}}
                         @if (count($category->subcategories))
-                            <button data-popover-target="popover-subcategories-{{ $category->uid }}"
-                                data-popover-trigger="hover"
+                            <button data-popover-target="popover-subcategories-{{ $category->uid }}" data-popover-trigger="hover"
                                 class="block text-[13px] font-medium text-gray-700 dark:text-gray-300 dark:group-hover:text-white group-hover:text-primary-600 py-2 focus:outline-none focus:ring-0">
                                 {{ $category->name }}
                             </button>
@@ -715,24 +601,19 @@
             {{-- Subcategories --}}
             @foreach ($categories as $category)
                 @if (count($category->subcategories))
-                    <div data-popover id="popover-subcategories-{{ $category->uid }}" data-popover-placement="bottom"
-                        role="tooltip"
+                    <div data-popover id="popover-subcategories-{{ $category->uid }}" data-popover-placement="bottom" role="tooltip"
                         class="absolute z-10 invisible inline-block w-64 text-sm font-light text-gray-500 transition-opacity duration-300 bg-white rounded-md shadow-xl opacity-0 dark:text-zinc-400 dark:bg-zinc-800">
-                        <ul
-                            class="max-h-96 !overflow-y-auto scrollbar-thin scrollbar-thumb-primary-600 scrollbar-track-white dark:scrollbar-track-zinc-800">
+                        <ul class="max-h-96 !overflow-y-auto scrollbar-thin scrollbar-thumb-primary-600 scrollbar-track-white dark:scrollbar-track-zinc-800">
 
                             @foreach ($category->subcategories as $sub)
                                 <li class="first:rounded-t-md">
-                                    <a href="{{ url('categories/' . $category->slug . '/' . $sub->slug) }}"
-                                        class="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-zinc-700"
+                                    <a href="{{ url('categories/' . $category->slug . '/' . $sub->slug) }}" class="flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-zinc-700"
                                         style="border-radius: inherit">
                                         <div class="flex-shrink-0 ltr:mr-2 rtl:ml-2">
-                                            <img class="w-7 h-7 lazy" src="{{ placeholder_img() }}"
-                                                data-src="{{ src($sub->icon_id) }}" alt="{{ $sub->name }}">
+                                            <img class="w-7 h-7 lazy" src="{{ placeholder_img() }}" data-src="{{ src($sub->icon_id) }}" alt="{{ $sub->name }}">
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p
-                                                class="text-[13px] font-semibold text-gray-700 truncate dark:text-zinc-200 group-hover:text-primary-600">
+                                            <p class="text-[13px] font-semibold text-gray-700 truncate dark:text-zinc-200 group-hover:text-primary-600">
                                                 {{ $sub->name }}
                                             </p>
                                         </div>
@@ -754,26 +635,18 @@
         </div>
 
         {{-- Mobile menu --}}
-        <div x-show="mobile_menu" style="display: none" class="fixed inset-0 z-40 flex lg:hidden"
-            x-ref="mobile_menu">
+        <div x-show="mobile_menu" style="display: none" class="fixed inset-0 z-40 flex lg:hidden" x-ref="mobile_menu">
 
             {{-- Backdrop --}}
-            <div x-show="mobile_menu" style="display: none" x-transition:enter="ease-in-out duration-500"
-                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="mobile_menu = false"
-                aria-hidden="true">
+            <div x-show="mobile_menu" style="display: none" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="mobile_menu = false" aria-hidden="true">
             </div>
 
             {{-- Menu --}}
-            <div x-show="mobile_menu" style="display: none"
-                x-transition:enter="transition ease-in-out duration-300 transform"
-                x-transition:enter-start="ltr:-translate-x-full rtl:translate-x-full"
-                x-transition:enter-end="ltr:translate-x-0 rtl:translate-x-0"
-                x-transition:leave="transition ease-in-out duration-300 transform"
-                x-transition:leave-start="ltr:translate-x-0 rtl:translate-x-0"
-                x-transition:leave-end="ltr:-translate-x-full rtl:translate-x-full"
+            <div x-show="mobile_menu" style="display: none" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="ltr:-translate-x-full rtl:translate-x-full"
+                x-transition:enter-end="ltr:translate-x-0 rtl:translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform"
+                x-transition:leave-start="ltr:translate-x-0 rtl:translate-x-0" x-transition:leave-end="ltr:-translate-x-full rtl:translate-x-full"
                 class="relative max-w-[275px] w-full bg-white dark:bg-zinc-700 shadow-xl flex flex-col overflow-y-auto">
 
                 {{-- Join us --}}
@@ -796,18 +669,15 @@
                             @if (auth()->user()->account_type === 'seller')
                                 <a href="{{ url('seller/orders') }}"
                                     class="relative py-2 mx-4 text-gray-500 transition-colors duration-300 hover:text-primary-600 dark:text-gray-100 dark:hover:text-white md:hidden">
-                                    <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                                        stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M5 22h14c1.103 0 2-.897 2-2V9a1 1 0 0 0-1-1h-3V7c0-2.757-2.243-5-5-5S7 4.243 7 7v1H4a1 1 0 0 0-1 1v11c0 1.103.897 2 2 2zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v1H9V7zm-4 3h2v2h2v-2h6v2h2v-2h2l.002 10H5V10z">
                                         </path>
                                     </svg>
                                     @if (auth()->user()->sales->where('status', 'pending')->count())
-                                        <span
-                                            class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                            <span
-                                                class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                        <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
+                                            <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                             <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                                         </span>
                                     @endif
@@ -819,18 +689,15 @@
                         @auth
                             <button x-on:click="notifications_menu = true" type="button"
                                 class="relative py-2 mx-4 text-gray-500 transition-colors duration-300 hover:text-primary-600 dark:text-gray-100 dark:hover:text-white md:hidden">
-                                <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                                    stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z">
                                     </path>
                                 </svg>
                                 @if ($notifications && count($notifications))
-                                    <span
-                                        class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                        <span
-                                            class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                    <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
+                                        <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                         <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                                     </span>
                                 @endif
@@ -841,18 +708,15 @@
                         @auth
                             <a href="{{ url('inbox') }}"
                                 class="relative py-2 mx-4 text-gray-500 transition-colors duration-300 hover:text-primary-600 dark:text-gray-100 dark:hover:text-white md:hidden">
-                                <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                                    stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-6 h-6 text-gray-400 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white" stroke="currentColor" fill="currentColor" stroke-width="0"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 0 0 1.228 0L20 9.044 20.002 18H4z">
                                     </path>
                                 </svg>
                                 @if ($new_messages)
-                                    <span
-                                        class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
-                                        <span
-                                            class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
+                                    <span class="absolute top-0 flex w-2 h-2 mt-0 ltr:right-0 rtl:left-0 ltr:-mr-1 rtl:-ml-1">
+                                        <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-primary-400"></span>
                                         <span class="relative inline-flex w-2 h-2 rounded-full bg-primary-500"></span>
                                     </span>
                                 @endif
@@ -868,23 +732,20 @@
 
                     {{-- Sign in --}}
                     @guest
-                        <a href="{{ url('auth/login') }}"
-                            class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                        <a href="{{ url('auth/login') }}" class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
                             @lang('messages.t_sign_in')
                         </a>
                     @endguest
 
                     {{-- Become seller --}}
                     @if (auth()->guest() || (auth()->check() && auth()->user()->account_type !== 'seller'))
-                        <a href="{{ url('start_selling') }}"
-                            class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                        <a href="{{ url('start_selling') }}" class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
                             @lang('messages.t_become_a_seller')
                         </a>
                     @endif
 
                     {{-- Explore gigs --}}
-                    <a href="{{ url('search') }}"
-                        class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    <a href="{{ url('search') }}" class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
                         @lang('messages.t_explore_gigs')
                     </a>
 
@@ -892,55 +753,41 @@
                     <div x-data="{ open: false }" class="space-y-1">
 
                         {{-- Browse link --}}
-                        <a href="javascript:void(0)"
-                            class="relative flex items-center px-5 py-2 space-x-3 text-sm font-semibold text-gray-500 dark:text-gray-200 rtl:space-x-reverse z-1"
+                        <a href="javascript:void(0)" class="relative flex items-center px-5 py-2 space-x-3 text-sm font-semibold text-gray-500 dark:text-gray-200 rtl:space-x-reverse z-1"
                             x-on:click="open = !open">
                             <span class="grow">
                                 @lang('messages.t_browse_categories')
                             </span>
-                            <span x-bind:class="{ 'rotate-90': !open, 'rotate-0': open }"
-                                class="transition duration-150 ease-out transform rotate-0 opacity-75">
-                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                                    class="inline-block w-4 h-4 hi-solid hi-chevron-down">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            <span x-bind:class="{ 'rotate-90': !open, 'rotate-0': open }" class="transition duration-150 ease-out transform rotate-0 opacity-75">
+                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 hi-solid hi-chevron-down">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                         clip-rule="evenodd"></path>
                                 </svg>
                             </span>
                         </a>
 
                         {{-- List of categories --}}
-                        <div x-show="open" style="display: none"
-                            x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform -translate-y-6 opacity-0"
-                            x-transition:enter-end="transform translate-y-0 opacity-100"
-                            x-transition:leave="transition ease-in duration-100 bg-transparent"
-                            x-transition:leave-start="transform translate-y-0 opacity-100"
-                            x-transition:leave-end="transform -translate-y-6 opacity-0" class="relative z-0">
+                        <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform -translate-y-6 opacity-0"
+                            x-transition:enter-end="transform translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-100 bg-transparent"
+                            x-transition:leave-start="transform translate-y-0 opacity-100" x-transition:leave-end="transform -translate-y-6 opacity-0" class="relative z-0">
 
                             @foreach ($categories as $category)
-                                <details class="group ltr:ml-4 rtl:mr-4"
-                                    wire:key="header-categories-{{ $category->uid }}">
+                                <details class="group ltr:ml-4 rtl:mr-4" wire:key="header-categories-{{ $category->uid }}">
 
                                     {{-- Parent category --}}
                                     <summary class="flex items-center px-5 py-2 text-gray-500 dark:text-gray-300">
 
                                         {{-- Category icon --}}
-                                        <img src="{{ placeholder_img() }}" data-src="{{ src($category->icon) }}"
-                                            alt="{{ $category->name }}"
-                                            class="object-contain w-6 h-6 rounded-full lazy">
+                                        <img src="{{ placeholder_img() }}" data-src="{{ src($category->icon) }}" alt="{{ $category->name }}" class="object-contain w-6 h-6 rounded-full lazy">
 
                                         {{-- Category name --}}
                                         <span class="ltr:ml-3 rtl:mr-3 text-[13px] font-medium"> {{ $category->name }}
                                         </span>
 
                                         {{-- Arrow --}}
-                                        <span
-                                            class="transition duration-300 ltr:ml-auto rtl:mr-auto shrink-0 group-open:-rotate-180">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        <span class="transition duration-300 ltr:ml-auto rtl:mr-auto shrink-0 group-open:-rotate-180">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </span>
@@ -979,11 +826,8 @@
                     <div class="w-full h-px my-3 bg-gray-100 dark:bg-zinc-600"></div>
 
                     {{-- Home --}}
-                    <a href="{{ url('/') }}"
-                        class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
-                        <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor"
-                            fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
+                    <a href="{{ url('/') }}" class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                        <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M5 22h14a2 2 0 0 0 2-2v-9a1 1 0 0 0-.29-.71l-8-8a1 1 0 0 0-1.41 0l-8 8A1 1 0 0 0 3 11v9a2 2 0 0 0 2 2zm5-2v-5h4v5zm-5-8.59 7-7 7 7V20h-3v-5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5H5z">
                             </path>
@@ -995,12 +839,10 @@
                     <div x-data="{ open: false }" class="space-y-1">
 
                         {{-- Change link --}}
-                        <a href="javascript:void(0)"
-                            class="relative flex items-center px-5 py-2 space-x-3 text-sm font-semibold text-gray-500 dark:text-gray-200 rtl:space-x-reverse z-1"
+                        <a href="javascript:void(0)" class="relative flex items-center px-5 py-2 space-x-3 text-sm font-semibold text-gray-500 dark:text-gray-200 rtl:space-x-reverse z-1"
                             x-on:click="open = !open">
                             <span class="flex items-center grow">
-                                <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor"
-                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm7.931 9h-2.764a14.67 14.67 0 0 0-1.792-6.243A8.013 8.013 0 0 1 19.931 11zM12.53 4.027c1.035 1.364 2.427 3.78 2.627 6.973H9.03c.139-2.596.994-5.028 2.451-6.974.172-.01.344-.026.519-.026.179 0 .354.016.53.027zm-3.842.7C7.704 6.618 7.136 8.762 7.03 11H4.069a8.013 8.013 0 0 1 4.619-6.273zM4.069 13h2.974c.136 2.379.665 4.478 1.556 6.23A8.01 8.01 0 0 1 4.069 13zm7.381 6.973C10.049 18.275 9.222 15.896 9.041 13h6.113c-.208 2.773-1.117 5.196-2.603 6.972-.182.012-.364.028-.551.028-.186 0-.367-.016-.55-.027zm4.011-.772c.955-1.794 1.538-3.901 1.691-6.201h2.778a8.005 8.005 0 0 1-4.469 6.201z">
@@ -1008,12 +850,9 @@
                                 </svg>
                                 {{ $default_language_name }}
                             </span>
-                            <span x-bind:class="{ 'rotate-90': !open, 'rotate-0': open }"
-                                class="transition duration-150 ease-out transform rotate-0 opacity-75">
-                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                                    class="inline-block w-4 h-4 hi-solid hi-chevron-down">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            <span x-bind:class="{ 'rotate-90': !open, 'rotate-0': open }" class="transition duration-150 ease-out transform rotate-0 opacity-75">
+                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 hi-solid hi-chevron-down">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                         clip-rule="evenodd"></path>
                                 </svg>
                             </span>
@@ -1068,16 +907,12 @@
                     </div>
 
                     {{-- Contact us --}}
-                    <a href="{{ url('help/contact') }}"
-                        class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
-                        <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor"
-                            fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
+                    <a href="{{ url('help/contact') }}" class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                        <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M12 6a3.939 3.939 0 0 0-3.934 3.934h2C10.066 8.867 10.934 8 12 8s1.934.867 1.934 1.934c0 .598-.481 1.032-1.216 1.626a9.208 9.208 0 0 0-.691.599c-.998.997-1.027 2.056-1.027 2.174V15h2l-.001-.633c.001-.016.033-.386.441-.793.15-.15.339-.3.535-.458.779-.631 1.958-1.584 1.958-3.182A3.937 3.937 0 0 0 12 6zm-1 10h2v2h-2z">
                             </path>
-                            <path
-                                d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z">
+                            <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z">
                             </path>
                         </svg>
                         @lang('messages.t_contact_us')
@@ -1092,42 +927,30 @@
 
         {{-- Notifications menu --}}
         @auth
-            <div x-show="notifications_menu" style="display: none" class="fixed inset-0 z-40 flex"
-                x-ref="notifications_menu">
+            <div x-show="notifications_menu" style="display: none" class="fixed inset-0 z-40 flex" x-ref="notifications_menu">
 
                 {{-- Backdrop --}}
-                <div x-show="notifications_menu" style="display: none" x-transition:enter="ease-in-out duration-500"
-                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                    x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-                    @click="notifications_menu = false" aria-hidden="true">
+                <div x-show="notifications_menu" style="display: none" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                    class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="notifications_menu = false" aria-hidden="true">
                 </div>
 
                 {{-- Menu --}}
-                <div x-show="notifications_menu" style="display: none"
-                    x-transition:enter="transition ease-in-out duration-300 transform"
-                    x-transition:enter-start="ltr:translate-x-full rtl:-translate-x-full"
-                    x-transition:enter-end="ltr:translate-x-0 rtl:-translate-x-0"
-                    x-transition:leave="transition ease-in-out duration-300 transform"
-                    x-transition:leave-start="ltr:-translate-x-0 rtl:translate-x-0"
-                    x-transition:leave-end="ltr:translate-x-full rtl:-translate-x-full"
-                    class="fixed flex flex-col w-full h-full max-w-sm bg-white shadow-xl ltr:right-0 rtl:left-0 dark:bg-zinc-700">
+                <div x-show="notifications_menu" style="display: none" x-transition:enter="transition ease-in-out duration-300 transform"
+                    x-transition:enter-start="ltr:translate-x-full rtl:-translate-x-full" x-transition:enter-end="ltr:translate-x-0 rtl:-translate-x-0"
+                    x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="ltr:-translate-x-0 rtl:translate-x-0"
+                    x-transition:leave-end="ltr:translate-x-full rtl:-translate-x-full" class="fixed flex flex-col w-full h-full max-w-sm bg-white shadow-xl ltr:right-0 rtl:left-0 dark:bg-zinc-700">
 
                     {{-- Close button --}}
-                    <div x-show="notifications_menu" x-transition:enter="ease-in-out duration-300"
-                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                        x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0" class="top-0 block pt-2 ltr:right-0 rtl:left-0 sm:hidden">
-                        <button type="button"
-                            class="flex items-center justify-center w-10 h-10 rounded-full ltr:ml-1 rtl:mr-1 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    <div x-show="notifications_menu" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                        class="top-0 block pt-2 ltr:right-0 rtl:left-0 sm:hidden">
+                        <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full ltr:ml-1 rtl:mr-1 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                             @click="notifications_menu = false">
                             <span class="sr-only">Close sidebar</span>
-                            <svg class="w-6 h-6 text-white" x-description="Heroicon name: outline/x"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
+                            <svg class="w-6 h-6 text-white" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
                     </div>
@@ -1142,17 +965,14 @@
                     </div>
 
                     {{-- List of notifications --}}
-                    <div
-                        class="w-full h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-zinc-900 dark:scrollbar-track-zinc-600">
+                    <div class="w-full h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-zinc-900 dark:scrollbar-track-zinc-600">
                         <div class="py-6 space-y-2">
                             @foreach ($notifications as $n)
                                 <div class="px-6 pt-2 pb-1" wire:key="header-notifications-{{ $n->uid }}">
                                     <div class="flex items-center px-4 py-2 rounded bg-slate-100 dark:bg-zinc-600">
                                         <div class="flex-shrink-0">
-                                            <span
-                                                class="flex items-center justify-center w-10 h-10 border rounded-md dark:text-zinc-400 dark:border-zinc-500 border-slate-300 text-slate-400">
-                                                <svg class="w-5 h-5" stroke="currentColor" fill="currentColor"
-                                                    stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em"
+                                            <span class="flex items-center justify-center w-10 h-10 border rounded-md dark:text-zinc-400 dark:border-zinc-500 border-slate-300 text-slate-400">
+                                                <svg class="w-5 h-5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z">
@@ -1161,8 +981,7 @@
                                             </span>
                                         </div>
                                         <div class="flex-1 w-0 ltr:ml-3 rtl:mr-3">
-                                            <p
-                                                class="dark:text-white text-[13px] font-normal text-slate-500 leading-relaxed">
+                                            <p class="dark:text-white text-[13px] font-normal text-slate-500 leading-relaxed">
                                                 @if ($n->params)
                                                     {!! __('messages.' . $n->text, $n->params) !!}
                                                 @else
@@ -1178,17 +997,11 @@
                                                 </a>
 
                                                 {{-- Mark as read --}}
-                                                <button wire:click="readNotification('{{ $n->uid }}')"
-                                                    wire:loading.attr="disabled"
-                                                    wire:target="read('{{ $n->uid }}')" type="button"
+                                                <button wire:click="readNotification('{{ $n->uid }}')" wire:loading.attr="disabled" wire:target="read('{{ $n->uid }}')" type="button"
                                                     class="text-xs tracking-wide text-gray-700 bg-transparent rounded-md hover:text-gray-500 focus:outline-none dark:text-zinc-200 dark:hover:text-white">
                                                     {{-- Loading indicator --}}
-                                                    <div wire:loading
-                                                        wire:target="readNotification('{{ $n->uid }}')">
-                                                        <svg role="status"
-                                                            class="inline w-4 h-4 text-gray-700 animate-spin"
-                                                            viewBox="0 0 100 101" fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg">
+                                                    <div wire:loading wire:target="readNotification('{{ $n->uid }}')">
+                                                        <svg role="status" class="inline w-4 h-4 text-gray-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path
                                                                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                                                 fill="#E5E7EB" />
@@ -1199,8 +1012,7 @@
                                                     </div>
 
                                                     {{-- Button text --}}
-                                                    <div wire:loading.remove
-                                                        wire:target="readNotification('{{ $n->uid }}')">
+                                                    <div wire:loading.remove wire:target="readNotification('{{ $n->uid }}')">
                                                         {{ __('messages.t_mark_as_read') }}
                                                     </div>
                                                 </button>

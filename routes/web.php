@@ -267,13 +267,6 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
             Route::get('profile', ProfileComponent::class);
         });
 
-        // Verification center
-        Route::namespace('Verification')->group(function () {
-
-            // Index
-            Route::get('verification', VerificationComponent::class);
-        });
-
         // Orders
         Route::namespace('Orders')->prefix('orders')->group(function () {
 
@@ -450,6 +443,11 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
             Route::get('/', QuotesComponent::class);
             Route::get('create', CreateQuoteComponent::class);
             Route::get('/{quoteId}/edit', EditQuoteComponent::class);
+        });
+
+        // Verification Center
+        Route::namespace('Verification')->prefix('verification')->group(function () {
+            Route::get('/', VerificationComponent::class);
         });
 
         // Portfolio

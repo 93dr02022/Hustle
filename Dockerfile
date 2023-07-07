@@ -77,6 +77,8 @@ ENV PAYSTACK_SECRET_KEY="sk_test_02bd57d8af3d34c49ad3e36bee10597a2f1e9761"
 ENV PAYSTACK_PAYMENT_URL="https://api.paystack.co"
 ENV PAYSTACK_MERCHANT_EMAIL="afuwapesunday12@gmail.com"
 
+ENV FIREBASE_SERVER_KEY=
+
 ENV POSITION_STACK_KEY="f5ab25ba762db1188d3b1e536ef665d7"
 
 RUN apk update && apk add \
