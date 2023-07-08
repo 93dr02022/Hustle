@@ -1,33 +1,70 @@
-version: "3.8"
-services:
+# version: "3.8"
+# services:
 
-  # PHP Service
-  php:
+#   # PHP Service
+#   php:
+#     build:
+#       context: .
+#       target: php
+#       args:
+#         - APP_ENV=${APP_ENV}
+#     environment:
+#       - APP_ENV=${APP_ENV}
+#       - CONTAINER_ROLE=app
+#       - DB_HOST=host.docker.internal
+#       - DB_PORT=${DB_PORT}
+#       - DB_DATABASE=${DB_DATABASE}
+#       - DB_USERNAME=${DB_USERNAME}
+#       - DB_PASSWORD=${DB_PASSWORD}
+#     working_dir: /var/www
+#     volumes:
+#       - ./:/var/www
+#     ports:
+#       - 8000:8000
+
+#   # Node Server
+#   node:
+#     build:
+#       context: .
+#       target: node
+#     volumes:
+#       - .:/usr/src
+#       - ./node_modules:/usr/src/node_modules
+#     tty: true
+
+version: "3.9"
+
+services:
+  phpweb:
     build:
-      context: .
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=app
-      - DB_HOST=host.docker.internal
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-    working_dir: /var/www
+      context: ./
+      dockerfile: Dockerfile
+    #restart: unless-stopped
+    working_dir: /var/www/
+    networks:
+      - travellist
+    command: php artisan serve --host=0.0.0.0 --port 80
     volumes:
       - ./:/var/www
     ports:
-      - 8000:8000
+      - 80:80
+    # depends_on:
+    #   - phpservice
+  # phpservice:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - internal
+  #   command: php artisan queue:work database
+  #   volumes:
+  #     - ./:/var/www
 
-  # Node Server
-  node:
-    build:
-      context: .
-      target: node
-    volumes:
-      - .:/usr/src
-      - ./node_modules:/usr/src/node_modules
-    tty: true
+
+volumes:
+  phpweb:
+  #phpservice:
+
+networks:
+  travellist:
+    driver: bridge

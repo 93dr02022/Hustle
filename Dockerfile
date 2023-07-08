@@ -103,6 +103,7 @@ RUN apk add --no-cache \
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install bcmath
 
 RUN apk add autoconf && pecl install -o -f redis \
 && rm -rf /tmp/pear \
@@ -128,13 +129,14 @@ RUN chmod -R 777 storage
 RUN chown -R www-data:www-data /var/www/storage
 RUN chmod -R 777 /var/www/storage
 RUN chown -R www-data:www-data docker
- RUN chmod -R 777 storage bootstrap/cache
- RUN chmod -R 777 ./
+RUN chmod -R 777 storage bootstrap/cache
+RUN chmod -R 777 ./
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY composer.json .
-RUN composer install --no-scripts
+RUN composer install --optimize-autoloader
+RUN composer update
 # RUN php artisan migrate:status
 RUN php artisan migrate --force 
 #RUN npm run production
@@ -143,6 +145,7 @@ RUN php artisan optimize
 
 # Set up volume
 VOLUME /var/www
+
 
 #RUN php artisan queue:work database
 CMD php artisan serve --host=0.0.0.0 --port 80
