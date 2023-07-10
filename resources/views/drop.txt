@@ -11,4 +11,32 @@ https://ipapi.co/${ip.value}/json
 # DB_USERNAME=admin
 # DB_PASSWORD="Y9D#6!qY7NTro6^"
 
+# MAIL_MAILER=smtp
+# MAIL_HOST=mail.privateemail.com   
+# MAIL_PORT=465
+# MAIL_USERNAME=admin@correcthustle.com
+# MAIL_PASSWORD="!DF-#4TWkibcCBr"
+# MAIL_ENCRYPTION=ssl
+# MAIL_FROM_ADDRESS=admin@correcthustle.com
+# MAIL_FROM_NAME=CorrectHustle
+
+# DB_CONNECTION=mysql
+# DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
+# DB_PORT=3306
+# DB_DATABASE=riverr
+# DB_USERNAME=admin
+# DB_PASSWORD="Y9D#6!qY7NTro6^"
+
 $path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\barber.webp'), 'barber.webp');
+
+
+private function shouldExcludeFolder($file, $excludedFolderNames)
+    {
+        foreach ($excludedFolderNames as $excludedFolderName) {
+            if (strpos($file->getPathname(), $excludedFolderName) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }

@@ -6,6 +6,7 @@ use App\Jobs\Main\Post\Project\SendAlertToFreelancers;
 use App\Models\ProjectPlan;
 use App\Models\ProjectSubscription;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use WireUi\Traits\Actions;
@@ -48,7 +49,7 @@ class CheckoutComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_promote_project')." $separator ".settings('general')->title;
+        $title = __('messages.t_promote_project') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -62,7 +63,7 @@ class CheckoutComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -84,98 +85,27 @@ class CheckoutComponent extends Component
     public function checkout($data = null)
     {
         try {
-
-            // Check payment method
             switch ($this->selected_payment_method) {
-
-                // PayPal
-                case 'paypal':
-
-                    // Get payment gateway exchange rate
-                    $gateway_currency_exchange = (float) settings('paypal')->exchange_rate;
-
-                    // Get total amount
-                    $total_amount = $this->calculateExchangeAmount($gateway_currency_exchange);
-
-                    // Set paypal provider and config
-                    $client = new PayPalClient();
-
-                    // Get paypal access token
-                    $client->getAccessToken();
-
-                    // Capture this order
-                    $order = $client->capturePaymentOrder($data);
-
-                    // Let's see if payment suuceeded
-                    if (is_array($order) && isset($order['status']) && $order['status'] === 'COMPLETED') {
-
-                        // Get paid amount
-                        $amount = $order['purchase_units'][0]['payments']['captures'][0]['amount']['value'];
-
-                        // Get currency
-                        $currency = $order['purchase_units'][0]['payments']['captures'][0]['amount']['currency_code'];
-
-                        // Check currency
-                        if (strtolower($currency) != strtolower(config('paypal.currency'))) {
-
-                            // Error
-                            $this->notification([
-                                'title' => __('messages.t_error'),
-                                'description' => __('messages.t_checkout_currency_invalid'),
-                                'icon' => 'error',
-                            ]);
-
-                            return;
-
-                        }
-
-                        // This amount must equals amount in order
-                        if ($amount != $total_amount) {
-
-                            // Error
-                            $this->notification([
-                                'title' => __('messages.t_error'),
-                                'description' => __('messages.t_amount_in_cart_not_equals_received'),
-                                'icon' => 'error',
-                            ]);
-
-                            return;
-
-                        }
-
-                        // Successfull payment
-                        $this->success('paypal', $order['id']);
-
-                        // Go to projects page
-                        return redirect('account/projects')->with('success', __('messages.t_ur_payment_has_succeeded'));
-
-                    } else {
-
-                        // We couldn't handle your payment
-                        $this->notification([
-                            'title' => __('messages.t_error'),
-                            'description' => __('messages.t_we_could_not_handle_ur_payment'),
-                            'icon' => 'error',
-                        ]);
-
-                        return;
-
-                    }
-
+                case 'paystack':
+                    $response = $this->paystack($data);
                     break;
-
+                case 'wallet':
+                    $response = [];
+                    break;
                 default:
-
-                    // No payment selected
-                    $this->notification([
-                        'title' => __('messages.t_error'),
-                        'description' => __('messages.t_select_payment_method'),
-                        'icon' => 'error',
-                    ]);
-
                     break;
             }
 
+            // Check if response succeeded
+            if (isset($response['success']) && $response['success'] === true) {
+                $this->success('paystack', $response['transaction']['payment_id']);
+
+                // Go to projects page
+                return redirect('account/projects')
+                    ->with('success', __('messages.t_ur_payment_has_succeeded'));
+            } else {
+                return back()->with('error', $response['message']);
+            }
         } catch (\Throwable $th) {
 
             // Error
@@ -184,7 +114,6 @@ class CheckoutComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -212,16 +141,92 @@ class CheckoutComponent extends Component
 
                 // No need to calculate amount
                 return $amount;
-
             } else {
 
                 // Return new amount
                 return (float) number_format($amount * $gateway_exchange_rate / $default_exchange_rate, 2, '.', '');
-
             }
-
         } catch (\Throwable $th) {
             return $amount;
+        }
+    }
+
+    /**
+     * Handles paystack payment.
+     */
+    protected function paystack($reference_id)
+    {
+        try {
+            $total_amount = $this->calculateExchangeAmount();
+
+            $payment = Http::acceptJson()
+                ->withToken(config('paystack.secretKey'))
+                ->get("https://api.paystack.co/transaction/verify/$reference_id")
+                ->json();
+
+
+            // Let's see if payment suuceeded
+            if (is_array($payment) && isset($payment['status']) && $payment['status'] === true && isset($payment['data'])) {
+
+                // Get paid amount
+                $amount = $payment['data']['amount'] / 100;
+
+                // Get currency
+                $currency = $payment['data']['currency'];
+
+                // Check currency
+                if (strtolower($currency) != strtolower(settings('paystack')->currency)) {
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_checkout_currency_invalid'),
+                    ];
+
+                    return $response;
+                }
+
+                // This amount must equals amount in order
+                if ($amount != $total_amount) {
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_amount_in_cart_not_equals_received'),
+                    ];
+
+                    return $response;
+                }
+
+                // Payment succeeded
+                $response = [
+                    'success' => true,
+                    'transaction' => [
+                        'payment_id' => $payment['data']['id'],
+                        'payment_method' => 'paystack',
+                        'payment_status' => 'paid',
+                        'amount_paid' => $amount
+                    ],
+                ];
+
+                // Return response
+                return $response;
+            } else {
+                // We couldn't handle your payment
+                $response = [
+                    'success' => false,
+                    'message' => __('messages.t_we_could_not_handle_ur_payment'),
+                ];
+
+                // Return response
+                return $response;
+            }
+        } catch (\Throwable $th) {
+
+            // Something went wrong
+            $response = [
+                'success' => false,
+                'message' => $th->getMessage(),
+            ];
+
+            // Return response
+            return $response;
         }
     }
 
@@ -234,8 +239,6 @@ class CheckoutComponent extends Component
      */
     private function success($payment_method, $payment_id)
     {
-
-        // Get project
         $project = $this->subscription->project;
 
         // Get projects settings
@@ -252,12 +255,10 @@ class CheckoutComponent extends Component
 
             // Get featured plan
             $featured_plan = ProjectPlan::whereType('featured')->first();
-
         } else {
 
             // No plan selected
             $featured_plan = null;
-
         }
 
         // Check if project has urgent plan
@@ -265,12 +266,10 @@ class CheckoutComponent extends Component
 
             // Get urgent plan
             $urgent_plan = ProjectPlan::whereType('urgent')->first();
-
         } else {
 
             // No plan selected
             $urgent_plan = null;
-
         }
 
         // Check if project has alert plan
@@ -278,12 +277,10 @@ class CheckoutComponent extends Component
 
             // Get alert plan
             $alert_plan = ProjectPlan::whereType('alert')->first();
-
         } else {
 
             // No plan selected
             $alert_plan = null;
-
         }
 
         // Check if project has highlighted plan
@@ -291,12 +288,10 @@ class CheckoutComponent extends Component
 
             // Get highlighted plan
             $highlighted_plan = ProjectPlan::whereType('highlight')->first();
-
         } else {
 
             // No plan selected
             $highlighted_plan = null;
-
         }
 
         // We need to send notifications to freelancer if alert plans was selected for this project
@@ -304,7 +299,6 @@ class CheckoutComponent extends Component
 
             // Run a job for this in background
             SendAlertToFreelancers::dispatch($project);
-
         }
 
         // Update project
@@ -313,6 +307,5 @@ class CheckoutComponent extends Component
         $project->expiry_date_urgent = $urgent_plan ? now()->addDays($urgent_plan->days) : null;
         $project->expiry_date_highlight = $highlighted_plan ? now()->addDays($highlighted_plan->days) : null;
         $project->save();
-
     }
 }

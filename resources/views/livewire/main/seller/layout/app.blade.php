@@ -19,8 +19,14 @@
 		@livewireStyles
 
 		{{-- Styles --}}
-		<link rel="preload" href="{{ mix('css/app.css') }}" as="style" />
-		<link rel="stylesheet" href="{{ mix('css/app.css') }}" />
+        @if (App::environment('local'))
+            <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
+            <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        @else
+            <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css" as="style">
+            <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css">
+        @endif
+        
 
 		{{-- Preload Livewire --}}
 		<link rel="preload" href="{{ livewire_asset_path() }}" as="script">
@@ -295,6 +301,16 @@
 								
 								<span>@lang('messages.t_payouts')</span>
 							</a>
+
+                            {{-- Verification --}}
+							<a href="{{ url('seller/verification') }}" class="group flex items-center ltr:pl-3 ltr:pr-2 rtl:pr-3 rtl:pl-2 py-2 text-sm font-semibold tracking-wide ltr:rounded-l-full rtl:rounded-r-full {{ \Illuminate\Support\Str::of(request()->path())->startsWith('seller/withdrawals') ? 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:hover:text-zinc-100' }}">
+
+								<svg xmlns="http://www.w3.org/2000/svg" class="text-slate-500 dark:text-zinc-300 flex-shrink-0 h-6 w-6 ltr:mr-3.5 rtl:ml-3.5 -mt-[3px] group-hover:text-slate-700 dark:group-hover:text-zinc-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+								
+								<span>@lang('Verification')</span>
+							</a>
 						
 						</nav>
 					</div>
@@ -550,11 +566,15 @@
 		<wireui:scripts />
 
 		{{-- Core --}}
-		<script defer src="{{ mix('js/app.js') }}"></script>
-
-		{{-- Helpers --}}
-		<script defer src="{{ url('js/utils.js') }}"></script>
-        <script src="{{ url('js/components.js?v=1.3.2') }}"></script>
+        @if (App::environment('local'))
+            <script defer src="{{ mix('js/app.js') }}"></script>
+            <script defer src="{{ url('js/utils.js?v=1.3.1') }}"></script>
+            <script src="{{ url('js/components.js?v=1.3.1') }}"></script>
+        @else
+            <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/app.js"></script>
+            <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/utils.js"></script>
+            <script src="https://hustlebucket.s3.amazonaws.com/public/js/components.js"></script>
+        @endif
 
 		{{-- Custom JS codes --}}
 		<script defer>

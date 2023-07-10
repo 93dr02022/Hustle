@@ -27,7 +27,9 @@ class ProjectCategory extends Model implements Sitemapable
         'uid',
         'name',
         'slug',
-        'seo_description'
+        'seo_description',
+        'ogimage_id',
+        'thumbnail_id'
     ];
 
     /**

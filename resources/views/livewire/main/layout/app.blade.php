@@ -11,8 +11,7 @@
     {!! SEO::generate() !!}
     {!! JsonLd::generate() !!}
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap">
     <link rel="icon" type="image/png" href="http://localhost:3030/img/default/default-placeholder.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +20,14 @@
     @livewireStyles
 
     {{-- Styles --}}
-    <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @if (App::environment('local'))
+        <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @else
+        <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css" as="style">
+        <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css">
+    @endif
+
     <link rel="preload" href="{{ livewire_asset_path() }}" as="script">
 
     {{-- Custom css --}}
@@ -130,7 +135,7 @@
     {{-- Content --}}
     @if (request()->is('/'))
         <main class="flex-grow">
-            @include('livewire.main.includes.hero')
+            @include('livewire.main.includes.herox')
             <div class="min-h-screen">
                 @yield('content')
             </div>
@@ -154,9 +159,15 @@
     <wireui:scripts />
 
     {{-- Core --}}
-    <script defer src="{{ mix('js/app.js') }}"></script>
-    <script defer src="{{ url('js/utils.js?v=1.3.1') }}"></script>
-    <script src="{{ url('js/components.js?v=1.3.1') }}"></script>
+    @if (App::environment('local'))
+        <script defer src="{{ mix('js/app.js') }}"></script>
+        <script defer src="{{ url('js/utils.js?v=1.3.1') }}"></script>
+        <script src="{{ url('js/components.js?v=1.3.1') }}"></script>
+    @else
+        <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/app.js"></script>
+        <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/utils.js"></script>
+        <script src="https://hustlebucket.s3.amazonaws.com/public/js/components.js"></script>
+    @endif
 
     {{-- Custom JS codes --}}
     <script defer>

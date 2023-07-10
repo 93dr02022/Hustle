@@ -10,7 +10,8 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 ENV APP_NAME=Laravel
 ENV APP_KEY=base64:8t9ohNUmhh7JGVCbewZBXV2sVC1Vsv+M9JyO6/hv4+s=
-ENV APP_DEBUG=true
+ENV APP_DEBUG=false
+ENV APP_ENV=production
 ENV APP_URL=http://localhost
 
 ENV LOG_CHANNEL=stack
@@ -75,7 +76,9 @@ ENV PAYSTACK_PUBLIC_KEY="pk_test_ac11e590ba2a641bff759f0dce17ee04a3f59cd1"
 ENV PAYSTACK_SECRET_KEY="sk_test_b950524a98be8c4269643f7dcd36f28f4c6f0719"
 ENV PAYSTACK_PAYMENT_URL="https://api.paystack.co"
 ENV PAYSTACK_MERCHANT_EMAIL="afuwapesunday12@gmail.com"
+
 ENV FIREBASE_SERVER_KEY="AAAAWCsv5As:APA91bEjwrBcIEf1lvHYHEfA--66sZOOCrauHTDTSPcosj7pfKLw5gh4vLDaOQb32w2nDyhxEclIc-U77YOePpYGu_794YzVBZ5Kz8-cDMTU9I2dGsHbn3fEhrJ_Lc61Cx5BfKkU57jf"
+
 ENV POSITION_STACK_KEY="f5ab25ba762db1188d3b1e536ef665d7"
 
 RUN apk update && apk add \
