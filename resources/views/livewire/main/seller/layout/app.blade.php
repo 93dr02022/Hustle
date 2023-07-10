@@ -19,8 +19,14 @@
 		@livewireStyles
 
 		{{-- Styles --}}
-		<link rel="preload" href="{{ mix('css/app.css') }}" as="style" />
-		<link rel="stylesheet" href="{{ mix('css/app.css') }}" />
+        @if (App::environment('local'))
+            <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
+            <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        @else
+            <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css" as="style">
+            <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css">
+        @endif
+        
 
 		{{-- Preload Livewire --}}
 		<link rel="preload" href="{{ livewire_asset_path() }}" as="script">
@@ -560,11 +566,15 @@
 		<wireui:scripts />
 
 		{{-- Core --}}
-		<script defer src="{{ mix('js/app.js') }}"></script>
-
-		{{-- Helpers --}}
-		<script defer src="{{ url('js/utils.js') }}"></script>
-        <script src="{{ url('js/components.js?v=1.3.2') }}"></script>
+        @if (App::environment('local'))
+            <script defer src="{{ mix('js/app.js') }}"></script>
+            <script defer src="{{ url('js/utils.js?v=1.3.1') }}"></script>
+            <script src="{{ url('js/components.js?v=1.3.1') }}"></script>
+        @else
+            <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/app.js"></script>
+            <script defer src="https://hustlebucket.s3.amazonaws.com/public/js/utils.js"></script>
+            <script src="https://hustlebucket.s3.amazonaws.com/public/js/components.js"></script>
+        @endif
 
 		{{-- Custom JS codes --}}
 		<script defer>

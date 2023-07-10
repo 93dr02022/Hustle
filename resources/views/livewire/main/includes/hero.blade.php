@@ -196,7 +196,7 @@
                             @foreach ($states as $state)
                                 <div @click="selectState(@js($state->name))" class="bg-white rounded border text-sm truncate cursor-pointer border-slate-50 py-3 px-3"
                                     :class="@js($state->name).toLowerCase() == selectedState.toLowerCase() ?
-                                        'bg-[#1D46F5] [&>span]:text-white' : ''">
+                                        '@bg-[#1D46F5] [&>span]:!text-white [&>span]:hover:!text-slate-50' : ''">
                                     <span class="text-black hover:text-blue-700">{{ $state->name }}</span>
                                 </div>
                             @endforeach

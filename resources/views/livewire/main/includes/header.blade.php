@@ -64,8 +64,7 @@
                         placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" required>
 
                     {{-- Search button --}}
-                    <button type="button" wire:click="enter"
-                        class="absolute top-0 ltr:right-0 rtl:left-0 p-2.5 text-white bg-zinc-700 hover:bg-zinc-800 ltr:rounded-r rtl:rounded-l border border-zinc-700 hover:border-zinc-800">
+                    <button type="button" wire:click="enter" class="absolute top-0 ltr:right-0 rtl:left-0 p-2.5 text-white bg-[#1D46F5] ltr:rounded-r rtl:rounded-l border border-[#1D46F5]">
                         <svg class="w-5 h-5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z">

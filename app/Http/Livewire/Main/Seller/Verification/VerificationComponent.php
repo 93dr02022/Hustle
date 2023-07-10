@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Main\Seller\Verification;
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
 use App\Models\UserWithdrawalSettings;
 use App\Models\VerificationCenter;
+use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -279,6 +280,11 @@ class VerificationComponent extends Component
                     'account_name'
                 ]
             );
+
+            User::where('id', auth()->id())
+                ->update([
+                    'status' => $this->bvn ? 'verified' : 'active'
+                ]);
 
             // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');

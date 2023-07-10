@@ -10,7 +10,8 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 ENV APP_NAME=Laravel
 ENV APP_KEY=base64:8t9ohNUmhh7JGVCbewZBXV2sVC1Vsv+M9JyO6/hv4+s=
-ENV APP_DEBUG=true
+ENV APP_DEBUG=false
+ENV APP_ENV=production
 ENV APP_URL=http://localhost
 
 ENV LOG_CHANNEL=stack

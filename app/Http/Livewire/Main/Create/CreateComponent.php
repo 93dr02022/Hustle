@@ -284,7 +284,8 @@ class CreateComponent extends Component
             $subcategory_id = $this->subcategory;
 
             // Get gig status
-            $status = settings('publish')->auto_approve_gigs ? 'active' : 'pending';
+            // $status = settings('publish')->auto_approve_gigs ? 'active' : 'pending';
+            $status = auth()->user()->status == 'verified' ? 'active' : 'pending';
 
             // Check if gig has upgrades
             $has_upgrades = is_array($this->upgrades) && count($this->upgrades) ? true : false;
