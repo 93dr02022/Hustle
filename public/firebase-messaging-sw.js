@@ -11,9 +11,28 @@ const firebaseConfig = {
     measurementId: "G-B31LGQ7JG1"
 };
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBM5wCW5G9aXhbzCTjGuTqwhfS5W13fhUw",
+//     authDomain: "gigxnow-c4335.firebaseapp.com",
+//     projectId: "gigxnow-c4335",
+//     storageBucket: "gigxnow-c4335.appspot.com",
+//     messagingSenderId: "296351545552",
+//     appId: "1:296351545552:web:1a3b1abc7a400a108586d5",
+//     measurementId: "G-BVCSMWF93K"
+//   };
+
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 messaging.setBackgroundMessageHandler(function ({ data: { title, body, icon } }) {
     return self.registration.showNotification(title, { body, icon });
+});
+
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+
+    event.waitUntil(
+        clients.openWindow()
+    );
 });

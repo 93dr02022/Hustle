@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Notifications\User\Buyer;
+namespace App\Notifications\User;
 
+use App\Models\MarketingNotification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Kutia\Larafirebase\Facades\Larafirebase;
 
-class OrderItemInProgress extends Notification implements ShouldQueue
+class Marketing extends Notification
 {
     use Queueable;
-
-    public $item;
+    public $marketingNotification;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($item)
+    public function __construct(MarketingNotification $marketingNotification)
     {
-        $this->item = $item;
+        $this->marketingNotification = $marketingNotification;
     }
 
     /**
@@ -44,27 +43,11 @@ class OrderItemInProgress extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_in_progress');
-
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_buyer_item_in_progress'))
-                    ->action(__('messages.t_my_orders'), url('account/orders'));
-    }
-    public function toFirebase($notifiable)
-    {
-        // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_in_progress');
-        $url =  url('account/orders');
-        return  Larafirebase::withTitle($subject)
-            ->withBody(__('messages.t_notification_buyer_item_in_progress'))
-            ->withClickAction($url)
-            ->withIcon(asset('img/default/no-favicon.png'))
-            ->withImage(asset('img/default/no-favicon.png'))
-            ->withPriority('high')
-            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+            ->subject($this->marketingNotification->title)
+            ->line($this->marketingNotification->message)
+            ->action('Read More', $this->marketingNotification->url)
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -79,6 +62,17 @@ class OrderItemInProgress extends Notification implements ShouldQueue
             //
         ];
     }
+    public function toFirebase($notifiable)
+    {
+
+        return  Larafirebase::withTitle($this->marketingNotification->title)
+            ->withBody($this->marketingNotification->message)
+            ->withClickAction($this->marketingNotification->url)
+            ->withIcon(asset('img/default/no-favicon.png'))
+            ->withImage(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+    }
 
     private function getActiveChannels($notifiable)
     {
@@ -86,6 +80,6 @@ class OrderItemInProgress extends Notification implements ShouldQueue
         if ($notifiable->userNotificationSetting->push_order_notifications) {
             $this->toFirebase($notifiable);
         }
-        return ['mail'];
+        return [];
     }
 }
