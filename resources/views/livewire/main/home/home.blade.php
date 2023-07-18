@@ -3,10 +3,10 @@
 
         {{-- Fatured categories --}}
         @if ($categories->count())
-            <div class="bg-[#F1F4FF] col-span-12 pt-20 pb-16">
+            <div class="bg-[#F1F4FF] col-span-12 pt-14 pb-16">
                 <div class="grid grid-cols-1">
                     <div class="w-full max-w-2xl col-start-1 row-start-1 mx-auto overflow-x-visible bg-white rounded pt-7 shadow-[0px_15px_50px_-1px_rgba(144,144,144,0.25)]">
-                        <h3 class="text-lg sm:text-xl md:text-2xl uppercase font-black text-center text-[#021773]">
+                        <h3 class="text-lg sm:text-xl md:text-2xl uppercase font-extrabold text-center text-[#1D46F5]">
                             Featured Categories
                         </h3>
                     </div>
@@ -340,11 +340,11 @@
         });
 
         new Swiper('.hero-swiper', {
-            autoplay: {
-                delay: 10000,
-                disableOnInteraction: false,
-            },
-            speed: 3000,
+            // autoplay: {
+            //     delay: 10000,
+            //     disableOnInteraction: false,
+            // },
+            // speed: 3000,
 
             pagination: {
                 el: '.swiper-pagination',

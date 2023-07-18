@@ -29,6 +29,13 @@ https://ipapi.co/${ip.value}/json
 
 $path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\barber.webp'), 'barber.webp');
 
+ini_set('max_execution_time', 3600);
+
+        $path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\xampp-windows-x64-8.1.17-0-VS16-installer.exe'), 'xampp.exe');
+
+        dd($path);
+
+min-h-[335px] xs:min-h-[380px] sm:min-h-[400px] md:max-h-[470px] h-full
 
 private function shouldExcludeFolder($file, $excludedFolderNames)
     {
@@ -40,3 +47,36 @@ private function shouldExcludeFolder($file, $excludedFolderNames)
 
         return false;
     }
+
+
+
+
+
+
+
+{{-- <div class="w-full swiper-slide">
+    <div class="h-full grid grid-cols-1">
+        <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+        <div class="col-start-1 row-start-1 h-full px-4 mb-3">
+            <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                <div class="col-span-6">
+                    <div class="h-[calc(100%_-_5rem)]">
+                        <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-16">
+                            <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
+                                Expert Tailors
+                            </div>
+                            <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
+                                for Impeccable Outfits.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-5">
+                    <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-10">
+                        <img src="{{ src('home/artisan-9.webp') }}" class="h-full w-full object-cover" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}

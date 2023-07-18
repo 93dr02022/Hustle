@@ -33,10 +33,10 @@
     {{-- Custom css --}}
     <style>
         :root {
-            --color-primary: {{ settings('appearance')->colors['primary'] }};
-            --color-primary-h: {{ hex2hsl(settings('appearance')->colors['primary'])[0] }};
-            --color-primary-s: {{ hex2hsl(settings('appearance')->colors['primary'])[1] }}%;
-            --color-primary-l: {{ hex2hsl(settings('appearance')->colors['primary'])[2] }}%;
+            --color-primary: "#1d46f5";
+            --color-primary-h: {{ hex2hsl('#1d46f5')[0] }};
+            --color-primary-s: {{ hex2hsl('#1d46f5')[1] }}%;
+            --color-primary-l: {{ hex2hsl('#1d46f5')[2] }}%;
         }
 
         html {

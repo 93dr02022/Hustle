@@ -56,27 +56,6 @@ class Header extends Component
             // Get notifications
             $this->notifications = Notification::where('user_id', auth()->id())->where('is_seen', false)->latest()->get();
         }
-
-        // Get language from session
-        // $locale = session()->has('locale') ? session()->get('locale') : settings('general')->default_language;
-
-        // Get default language
-        // $language = Language::where('language_code', $locale)->first();
-
-        // Check if language exists
-        // if ($language) {
-
-        //     // Set default language
-        //     $this->default_language_name = $language->name;
-        //     $this->default_language_code = $language->language_code;
-        //     $this->default_country_code = $language->country_code;
-        // } else {
-
-        // Not found, set default
-        // $this->default_language_name = 'English';
-        // $this->default_language_code = 'en';
-        // $this->default_country_code = 'us';
-        // }
     }
 
     /**

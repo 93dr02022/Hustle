@@ -3,19 +3,21 @@
 
     {{-- Hero section content --}}
     <div class="grid grid-cols-1" x-data="window.LandingPageHeroSection">
-        <div class="bg-white flex flex-col grow min-h-[335px] xs:min-h-[380px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[550px] h-full w-full relative">
+        <div class="bg-white flex flex-col grow min-h-[335px] xs:min-h-[380px] sm:min-h-[385px] md:max-h-[385px] h-full w-full relative">
             <div class="grid h-full grid-cols-1">
                 <div class="swiper hero-swiper">
                     <div class="swiper-wrapper">
                         {{-- first slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_3rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Earn Money and Experience
                                                     </div>
@@ -26,7 +28,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/artisan-10.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -38,12 +40,14 @@
                         {{-- second slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_4rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Expert Tailors
                                                     </div>
@@ -54,7 +58,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/artisan-9.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -66,12 +70,14 @@
                         {{-- third slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_4rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Get your next big project
                                                     </div>
@@ -82,7 +88,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/artisan-one.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -95,12 +101,14 @@
                         {{-- fourth slide  --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_4rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Expert Mechanics for
                                                     </div>
@@ -111,7 +119,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/artisan-4.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -123,12 +131,14 @@
                         {{-- fifth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_4rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Top-notch Plumbers
                                                     </div>
@@ -139,7 +149,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/plumber.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -148,15 +158,18 @@
                             </div>
                         </div>
 
+
                         {{-- sixth slide --}}
                         <div class="w-full swiper-slide">
                             <div class="h-full grid grid-cols-1">
-                                <img src="/img/home/bg.svg" class="col-start-1 row-start-1 h-full w-full object-fill" alt="">
+                                <div class="col-start-1 row-start-1 ">
+                                    <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
+                                </div>
                                 <div class="col-start-1 row-start-1 h-full px-4 mb-3">
-                                    <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-11 md:h-[95%] md:gap-x-14">
+                                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-11 md:h-full md:gap-x-14">
                                         <div class="col-span-6">
-                                            <div class="h-[calc(100%_-_5rem)]">
-                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-24">
+                                            <div class="h-[calc(100%_-_4rem)]">
+                                                <div class="flex flex-col border-l-[5px] border-[#F18522] pl-4 mt-10 md:mt-14">
                                                     <div class="text-xl font-bold leading-6 text-[#1D46F5] sm:font-extrabold sm:text-3xl md:text-4xl">
                                                         Verified Pro Barbers
                                                     </div>
@@ -167,7 +180,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="md:h-[calc(100%_-_4rem)] overflow-hidden rounded-[40px] mt-5 md:mt-16">
+                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
                                                 <img src="{{ src('home/barber.webp') }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
@@ -180,7 +193,7 @@
                 </div>
             </div>
 
-            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] top-[60%] md:top-[62%] right-[0] px-4 lg:bottom-[40px]">
+            <div class="flex-shrink-0 absolute z-20 bottom-0 left-[0] md:top-[44%] right-[0] px-4 lg:bottom-[40px]">
                 <div
                     class="max-w-2xl mx-auto py-2 sm:py-5 px-3 xs:px-4 md:px-7 lg:px-10 mb-12 z-10 backdrop-blur-[9px] border-[0.5px] border-[#1D46F5] sm:rounded-[10px] lg:rounded-[18px] rounded-md bg-[rgba(217,217,217,0.05)]">
                     <div class="flex items-center justify-center gap-2 flex-wrap mb-3 mt-2">
@@ -302,7 +315,7 @@
                     if (locationInfo?.country !== 'Nigeria') {
                         this.selectedState = 'lagos';
                     }
-                } else(navigator.geolocation) {
+                } else if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((position) => {
                         const {
                             latitude,

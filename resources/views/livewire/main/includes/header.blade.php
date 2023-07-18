@@ -422,20 +422,6 @@
                                             {{ __('messages.t_my_projects') }}
                                         </span>
                                     </a>
-
-                                    {{-- Post a project --}}
-                                    @if (settings('projects')->who_can_post === 'both' || settings('projects')->who_can_post === auth()->user()->account_type)
-                                        <a href="{{ url('post/project') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                                            </svg>
-                                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">
-                                                {{ __('messages.t_post_project') }}
-                                            </span>
-                                        </a>
-                                    @endif
-
                                 </div>
                             @endif
 
@@ -449,19 +435,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_view_profile') }}</span>
-                                </a>
-
-                                {{-- Edit profile --}}
-                                <a href="{{ url('account/profile') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_edit_profile') }}</span>
+                                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('Public Profile') }}</span>
                                 </a>
 
                                 {{-- Account settings --}}
@@ -475,75 +449,8 @@
                                     <span
                                         class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_account_settings') }}</span>
                                 </a>
-
-                                {{-- Update password --}}
-                                <a href="{{ url('account/password') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_update_password') }}</span>
-                                </a>
-
                             </div>
 
-                            {{-- Content --}}
-                            <div class="py-1.5 px-3.5">
-
-                                {{-- Deposit --}}
-                                <a href="{{ url('account/deposit') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_deposit') }}</span>
-                                </a>
-
-                                {{-- My orders --}}
-                                <a href="{{ url('account/orders') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_my_orders') }}</span>
-                                </a>
-
-                                {{-- Messages --}}
-                                <a href="{{ url('inbox') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_messages') }}</span>
-                                </a>
-
-                                {{-- Reviews --}}
-                                <a href="{{ url('account/reviews') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_reviews') }}</span>
-                                </a>
-
-                                {{-- Refunds --}}
-                                <a href="{{ url('account/refunds') }}" class="group flex items-center py-1.5 group-hover:text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-5 h-5 text-gray-400 ltr:mr-3 rtl:ml-3 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z" />
-                                    </svg>
-                                    <span
-                                        class="text-xs font-semibold text-gray-700 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-500">{{ __('messages.t_refunds') }}</span>
-                                </a>
-
-                            </div>
 
                             {{-- Security --}}
                             <div class="py-1.5 px-3.5">
@@ -834,76 +741,8 @@
                         @lang('messages.t_home')
                     </a>
 
-                    {{-- Change language --}}
-                    <div x-data="{ open: false }" class="space-y-1">
+                    {{-- Change language mobile --}}
 
-                        {{-- Change link --}}
-                        <a href="javascript:void(0)" class="relative flex items-center px-5 py-2 space-x-3 text-sm font-semibold text-gray-500 dark:text-gray-200 rtl:space-x-reverse z-1"
-                            x-on:click="open = !open">
-                            <span class="flex items-center grow">
-                                <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm7.931 9h-2.764a14.67 14.67 0 0 0-1.792-6.243A8.013 8.013 0 0 1 19.931 11zM12.53 4.027c1.035 1.364 2.427 3.78 2.627 6.973H9.03c.139-2.596.994-5.028 2.451-6.974.172-.01.344-.026.519-.026.179 0 .354.016.53.027zm-3.842.7C7.704 6.618 7.136 8.762 7.03 11H4.069a8.013 8.013 0 0 1 4.619-6.273zM4.069 13h2.974c.136 2.379.665 4.478 1.556 6.23A8.01 8.01 0 0 1 4.069 13zm7.381 6.973C10.049 18.275 9.222 15.896 9.041 13h6.113c-.208 2.773-1.117 5.196-2.603 6.972-.182.012-.364.028-.551.028-.186 0-.367-.016-.55-.027zm4.011-.772c.955-1.794 1.538-3.901 1.691-6.201h2.778a8.005 8.005 0 0 1-4.469 6.201z">
-                                    </path>
-                                </svg>
-                                {{ $default_language_name }}
-                            </span>
-                            <span x-bind:class="{ 'rotate-90': !open, 'rotate-0': open }" class="transition duration-150 ease-out transform rotate-0 opacity-75">
-                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 hi-solid hi-chevron-down">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            </span>
-                        </a>
-
-                        {{-- List of languages --}}
-                        {{-- <div x-show="open" style="display: none"
-                            x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform -translate-y-6 opacity-0"
-                            x-transition:enter-end="transform translate-y-0 opacity-100"
-                            x-transition:leave="transition ease-in duration-100 bg-transparent"
-                            x-transition:leave-start="transform translate-y-0 opacity-100"
-                            x-transition:leave-end="transform -translate-y-6 opacity-0" class="relative z-0">
-
-                            @foreach (supported_languages() as $lang)
-                                <div @if ($default_language_code !== $lang->language_code) wire:click="setLocale('{{ $lang->language_code }}')" @endif
-                                    class="py-2 px-5 rounded-sm inline-flex items-center cursor-pointer justify-between {{ $default_language_code === $lang->language_code ? 'bg-primary-100/25 text-primary-600' : 'hover:bg-gray-50 dark:hover:bg-zinc-600' }} focus:outline-none w-full">
-                                    <div class="inline-flex items-center">
-                                        <img src="{{ placeholder_img() }}"
-                                            data-src="{{ countryFlag($lang->country_code) }}"
-                                            alt="{{ $lang->name }}" class="w-5 lazy ltr:mr-3 rtl:ml-3">
-                                        <span
-                                            class="text-xs font-normal dark:text-gray-300">{{ $lang->name }}</span>
-                                    </div>
-                                    @if ($default_language_code === $lang->language_code)
-                                        <div class="block">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                    @else
-                                        <div wire:loading wire:target="setLocale('{{ $lang->language_code }}')">
-                                            <svg role="status" class="block w-4 h-4 text-gray-700 animate-spin"
-                                                viewBox="0 0 100 101" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                                    fill="#E5E7EB" />
-                                                <path
-                                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-
-                        </div> --}}
-
-                    </div>
 
                     {{-- Contact us --}}
                     <a href="{{ url('help/contact') }}" class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">

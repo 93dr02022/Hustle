@@ -39,7 +39,6 @@
 
                   <!-- Form container -->
                   <div class="relative rounded-md shadow-sm">
-
                      <!-- Input -->
                      <input type="text" v-model="v$.form.title.$model"
                         :class="hasError('title') || v$.form.title.$errors.length ? 'focus:!ring-red-600 focus:!border-red-600 border-red-500' : 'focus:!ring-primary-600 focus:!border-primary-600 border-gray-300'"
@@ -58,7 +57,6 @@
                            <path d="M21 15v4h-8l4 -4z"></path>
                         </svg>
                      </div>
-
                   </div>
 
                   <!-- Error -->
@@ -345,11 +343,52 @@
          </div>
 
          <!-- Total -->
-         <div class="flex items-center space-x-3 rtl:space-x-reverse bg-gray-100 hover:bg-gray-200 hover:bg-opacity-50 p-4 rounded-xl mb-8 dark:bg-black" v-if="settings.is_premium">
-            <div class="grow">
-               <p class="text-sm text-gray-600 font-medium dark:text-zinc-400" v-text="__('t_total')"></p>
+         <!-- minimum hours hireable -->
+         <div class="col-span-12">
+            <div class="bg-yellow-100 text-yellow-600 rounded py-4 px-4 mb-5">
+               <small class="">
+                  Please note the minimum budget will be deducted from your wallet
+                  balance in other to create this project in which any excess
+                  will be refund to you at the end of project
+               </small>
             </div>
-            <div class="flex-none ltr:text-right rtl:text-left text-zinc-900 font-black text-base dark:text-white" v-text="$money(total, currency)"></div>
+         </div>
+
+         <div class="bg-gray-100 hover:bg-gray-200 hover:bg-opacity-50 p-4 rounded-xl mb-8 dark:bg-black">
+            <div class="flex items-center space-x-3">
+               <div class="grow">
+                  <p class="text-sm text-gray-600 font-medium dark:text-zinc-400">Budget</p>
+               </div>
+               <div class="flex-none text-zinc-900 font-medium text-base dark:text-white">
+                  <template v-if="form.salary_type == 'fixed'">
+                     {{ $money(form.price_min, currency) }}
+                  </template>
+                  <template v-if="form.salary_type == 'hourly'">
+                     {{ $money(form.price_min * 4, currency) }}
+                  </template>
+               </div>
+            </div>
+            <div class="flex items-center space-x-3">
+               <div class="grow">
+                  <p class="text-sm text-gray-600 font-medium dark:text-zinc-400">Promotion</p>
+               </div>
+               <div class="flex-none text-zinc-900 font-medium text-base dark:text-white">
+                  {{ $money(promotion, currency) }}
+               </div>
+            </div>
+            <div class="flex items-center space-x-3">
+               <div class="grow">
+                  <p class="text-sm text-gray-600 font-medium dark:text-zinc-400">Total</p>
+               </div>
+               <div class="flex-none text-zinc-900 font-black text-base dark:text-white">
+                  <template v-if="form.salary_type == 'fixed'">
+                     {{ $money(Number(form.price_min) + Number(promotion), currency) }}
+                  </template>
+                  <template v-if="form.salary_type == 'hourly'">
+                     {{ $money(Number(form.price_min) * 4 + Number(promotion), currency) }}
+                  </template>
+               </div>
+            </div>
          </div>
 
          <!-- reCaptcha -->
@@ -381,9 +420,7 @@
 
                </span>
             </button>
-
          </div>
-
       </div>
 
    </div>
@@ -420,6 +457,7 @@ export default {
             recaptcha_token: null
          },
          total: 0,
+         promotion: 0,
          currency: __var_currency_code,
          loading: {
             skills: false,
@@ -455,11 +493,11 @@ export default {
             }
 
             // Set total price
-            this.total = total;
+            this.promotion = total;
 
          },
          deep: true
-      }
+      },
    },
 
    validations() {
@@ -935,6 +973,11 @@ export default {
 
     .application .select2-search {
       padding: 8px 8px;
+    }
+
+    .select2-results__option:hover {
+      background-color: blue !important;
+      color: white
     }
 
     .application .select2-form-wrapper .select2-container .select2-selection {

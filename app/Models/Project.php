@@ -34,6 +34,7 @@ class Project extends Model implements Sitemapable
         'budget_min',
         'budget_max',
         'budget_type',
+        'budget_allocation',
         'duration',
         'status',
         'rejection_reason',

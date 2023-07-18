@@ -1,5 +1,4 @@
-<footer
-    class="bg-white border-t-[10px] border-[#F18522] dark:bg-zinc-800 px-4 sm:px-6 lg:px-44 pt-20 pb-10 lg:pb-20 relative z-10">
+<footer class="bg-white border-t-[10px] border-[#F18522] dark:bg-zinc-800 px-4 sm:px-6 lg:px-44 pt-20 pb-10 lg:pb-20 relative z-10">
     <div class="container mx-auto px-4">
 
         {{-- Grid (PAGES) --}}
@@ -11,29 +10,25 @@
 
                 <ul>
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             About Us
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Careers
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Partnerships
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Press & News
                         </a>
                     </li>
@@ -48,29 +43,25 @@
 
                 <ul>
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Intellectual Property Claims
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Investor Relations
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Privacy Policy
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Terms of service
                         </a>
                     </li>
@@ -85,29 +76,25 @@
 
                 <ul>
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Get Inspired
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Get CorrectHustle
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Learn
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Hustle Workspace
                         </a>
                     </li>
@@ -116,21 +103,19 @@
 
             {{-- Column 4 --}}
             <div class="col-span-3">
-                <div class="font-bold text-sm text-gray-700 mb-4 uppercase dark:text-white tracking-widest">
+                <div class="font-bold text-sm text-[#1D46F5] mb-4 uppercase dark:text-white tracking-widest">
                     {{ __('messages.t_footer_column_4') }}
                 </div>
 
                 <ul>
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Contact CorrectHustle
                         </a>
                     </li>
 
                     <li>
-                        <a href="" target="_blank"
-                            class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             Trust & Safety
                         </a>
                     </li>
@@ -180,8 +165,7 @@
 
         </div>
 
-        <div
-            class="grid md:flex justify-center md:justify-between items-center border-t-2 border-gray-50 dark:border-zinc-700 pt-4">
+        <div class="grid md:flex justify-center md:justify-between items-center border-t-2 border-gray-50 dark:border-zinc-700 pt-4">
 
             {{-- Logo --}}
             <div class="flex items-center justify-center md:justify-items-start mb-4 md:mb-0">
@@ -206,8 +190,7 @@
                     </div>
 
                     {{-- Twitter --}}
-                    <a href="" target="_blank" data-tooltip-target="tooltip-follow-us-twitter"
-                        class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-zinc-600 rounded-md group">
+                    <a href="" target="_blank" data-tooltip-target="tooltip-follow-us-twitter" class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-zinc-600 rounded-md group">
                         <x-icons.twitter></x-icons.twitter>
                     </a>
                     <div id="tooltip-follow-us-twitter" role="tooltip"
@@ -226,8 +209,7 @@
                     </div>
 
                     {{-- Linkedin --}}
-                    <a href="" target="_blank" data-tooltip-target="tooltip-follow-us-linkedin"
-                        class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-zinc-600 rounded-md group">
+                    <a href="" target="_blank" data-tooltip-target="tooltip-follow-us-linkedin" class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-zinc-600 rounded-md group">
                         <x-icons.linkedin-icon></x-icons.linkedin-icon>
                     </a>
                     <div id="tooltip-follow-us-linkedin" role="tooltip"
@@ -250,26 +232,22 @@
             {{-- Quick links --}}
             <div class="flex space-x-4 justify-center rtl:space-x-reverse">
                 {{-- Contact --}}
-                <a href="{{ url('help/contact') }}"
-                    class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
+                <a href="{{ url('help/contact') }}" class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
                     {{ __('messages.t_contact_us') }}
                 </a>
 
                 {{-- Privacy policy --}}
-                <a href="{{ url('/') }}"
-                    class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
+                <a href="{{ url('/') }}" class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
                     {{ __('messages.t_privacy_policy') }}
                 </a>
 
                 {{-- Terms --}}
-                <a href="{{ url('/') }}"
-                    class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
+                <a href="{{ url('/') }}" class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
                     {{ __('messages.t_terms_of_service') }}
                 </a>
 
                 {{-- Blog --}}
-                <a href="{{ url('blog') }}"
-                    class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
+                <a href="{{ url('blog') }}" class="text-xs font-medium uppercase text-gray-600 dark:text-gray-400 dark:hover:text-gray-100 hover:underline">
                     {{ __('messages.t_blog') }}
                 </a>
 

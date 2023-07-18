@@ -43,7 +43,20 @@ class BillingComponent extends Component
     public function mount()
     {
         // Get or create new billing info
-        $billing = UserBilling::firstOrCreate(['user_id' => auth()->id()]);
+        $user = auth()->user();
+
+        $billing = UserBilling::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'user_id' => $user->id,
+                'firstname' => $user->first_name,
+                'lastname' => $user->last_name,
+                'city' => $user->city,
+                'zip' => $user->post_code,
+                'country_id' => $user->country_id,
+                'address' => $user->address,
+            ]
+        );
 
         // Fill form
         $this->fill([
@@ -67,7 +80,7 @@ class BillingComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_billing_information')." $separator ".settings('general')->title;
+        $title = __('messages.t_billing_information') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -81,7 +94,7 @@ class BillingComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -150,7 +163,6 @@ class BillingComponent extends Component
                 'target' => '.select2',
                 'component' => $this->id,
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

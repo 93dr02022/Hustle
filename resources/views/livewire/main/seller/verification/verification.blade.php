@@ -64,7 +64,7 @@
     </div>
 
     {{-- Content --}}
-    <div class="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-12">
+    <div class="px-4 sm:px-6 md:px-12">
         <main class="rounded-lg bg-white dark:bg-zinc-800 shadow-sm border border-gray-200 dark:border-zinc-800">
             {{-- Form --}}
             <div class="py-6 px-4 sm:p-6 lg:pb-8 h-[calc(100%-80px)]">
@@ -80,12 +80,12 @@
                     {{-- Verification status --}}
                     <div class="flex items-center justify-between py-2">
                         <dt class="text-sm font-medium text-gray-500">{{ __('Verification info') }}</dt>
-                        <button class="btn-purple text-[13px] font-normal px-3">Update banking</button>
+                        <button class="btn-purple text-[13px] font-normal px-3">Store Badge</button>
                     </div>
-                    <div class="bg-gray-100 border border-gray-200 rounded-md py-5 px-3">
-                        <dl class="grid grid-cols-1 gap-y-8 sm:grid-cols-2">
+                    <div class="bg-gray-100 border border-gray-200 rounded-md py-8 px-3">
+                        <dl class="grid grid-cols-1 gap-y-8 sm:grid-cols-3">
                             <div class="sm:col-span-1">
-                                <dt class="text-sm font-medium text-gray-500">{{ __('messages.t_verification_status') }}</dt>
+                                <dt class="text-sm font-medium text-gray-500">{{ __('User Verification') }}</dt>
                                 @if ($verification->status === 'pending')
                                     <dd class="mt-1 text-xs font-semibold text-amber-600">{{ __('messages.t_verification_pending') }}</dd>
                                 @elseif ($verification->status === 'verified')
@@ -95,7 +95,6 @@
                                 @endif
                             </div>
                             <div class="sm:col-span-1">
-
                                 {{-- Verified --}}
                                 @if ($verification->status === 'verified')
                                     <dt class="text-sm font-medium text-gray-500">{{ __('messages.t_verified_at') }}</dt>
@@ -113,7 +112,20 @@
                                     <dt class="text-sm font-medium text-gray-500">{{ __('messages.t_declined_at') }}</dt>
                                     <dd class="mt-1 text-xs text-gray-500">{{ format_date($verification->declined_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</dd>
                                 @endif
+                            </div>
 
+                            <div class="sm:col-span-1">
+
+                                <dt class="text-sm font-medium text-gray-500">{{ __('Store Verification') }}</dt>
+                                @if (auth()->user()->status === 'active')
+                                    <dd class="mt-1 text-xs font-semibold text-blue-600">{{ __('Active') }}</dd>
+                                @elseif (auth()->user()->status === 'pending')
+                                    <dd class="mt-1 text-xs font-semibold text-amber-400">{{ __('Pending') }}</dd>
+                                @elseif (auth()->user()->status === 'verified')
+                                    <dd class="mt-1 text-xs font-semibold text-green-400">{{ __('Verified') }}</dd>
+                                @elseif (auth()->user()->status === 'banned')
+                                    <dd class="mt-1 text-xs font-semibold text-red-400">{{ __('Banned') }}</dd>
+                                @endif
                             </div>
                         </dl>
                     </div>
