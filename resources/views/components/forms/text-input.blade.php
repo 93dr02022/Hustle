@@ -1,22 +1,19 @@
-@props(['label', 'placeholder' => null, 'model', 'type' => 'text', 'icon' => null, 'svg_icon' => null, 'suffix' => false, 'hint' => null])
+@props(['label', 'placeholder' => null, 'model' => null, 'type' => 'text', 'icon' => null, 'svg_icon' => null, 'suffix' => false, 'hint' => null, 'hintclass' => null])
 
 <div>
 
     {{-- Label --}}
-    <label for="text-input-component-id-{{ $model }}" class="block text-[0.8125rem] font-medium tracking-wide {{ $errors->first($model) ? 'text-red-600 dark:text-red-500' : 'text-gray-700 dark:text-white' }}">{{ htmlspecialchars_decode($label) }}</label>
-    
+    <label for="text-input-component-id-{{ $model }}"
+        class="block text-[0.8125rem] font-medium tracking-wide {{ $errors->first($model) ? 'text-red-600 dark:text-red-500' : 'text-gray-700 dark:text-white' }}">{{ htmlspecialchars_decode($label) }}</label>
+
     {{-- Form --}}
     <div class="mt-2 relative">
 
         {{-- Input --}}
-        <input 
-            type="{{ $type }}" 
-            @if ($placeholder) placeholder="{{ htmlspecialchars_decode($placeholder) }}" @endif
-            wire:model.defer="{{ $model }}" 
-            id="text-input-component-id-{{ $model }}" 
-            {{ $type === 'password' ? 'readonly' : '' }} 
-            onfocus="{{ $type === 'password' ? "this.removeAttribute('readonly');" : "" }}" 
-            class="read-only:bg-gray-100 disabled:cursor-not-allowed focus:!ring-0 focus:outline-none block w-full ltr:pr-10 ltr:pl-4 rtl:pl-10 rtl:!pr-4 py-3.5 placeholder:font-normal placeholder:text-[13px] dark:placeholder-zinc-300 text-sm font-medium text-zinc-800 dark:text-white rounded-md dark:bg-transparent {{ $errors->first($model) ? 'focus:!ring-red-600 focus:!border-red-600 border-red-500' : 'focus:!ring-primary-600 focus:!border-primary-600 border-gray-300 dark:border-zinc-500' }}" 
+        <input type="{{ $type }}" @if ($placeholder) placeholder="{{ htmlspecialchars_decode($placeholder) }}" @endif
+            @if ($model) wire:model.defer="{{ $model }}" @endif id="text-input-component-id-{{ $model }}" {{ $type === 'password' ? 'readonly' : '' }}
+            onfocus="{{ $type === 'password' ? "this.removeAttribute('readonly');" : '' }}"
+            class="read-only:bg-gray-100 disabled:cursor-not-allowed focus:!ring-0 focus:outline-none block w-full ltr:pr-10 ltr:pl-4 rtl:pl-10 rtl:!pr-4 py-3.5 placeholder:font-normal placeholder:text-[13px] dark:placeholder-zinc-300 text-sm font-medium text-zinc-800 dark:text-white rounded-md dark:bg-transparent {{ $errors->first($model) ? 'focus:!ring-red-600 focus:!border-red-600 border-red-500' : 'focus:!ring-primary-600 focus:!border-primary-600 border-gray-300 dark:border-zinc-500' }}"
             {{ $attributes }} />
 
         @if ($suffix)
@@ -40,7 +37,7 @@
 
     {{-- Hint --}}
     @if ($hint)
-        <p class="mt-1 text-xs text-gray-400 dark:text-gray-200">{!! $hint !!}</p>
+        <p class="mt-1 text-xs text-gray-400 dark:text-gray-200 @if ($hintclass) {{ $hintclass }} @endif">{!! $hint !!}</p>
     @endif
 
     {{-- Error --}}

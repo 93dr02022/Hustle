@@ -17,11 +17,17 @@ return new class extends Migration
             $table->id();
             $table->string('uid', 20)->unique();
             $table->foreignId('user_id')->unique()->constrained();
-            $table->enum('document_type', ['bvn', 'id', 'driver_license', 'passport']);
-            $table->mediumText('file_front_side')->nullable();
-            $table->mediumText('file_back_side')->nullable();
-            $table->mediumText('file_selfie');
-            $table->enum('status', ['pending', 'verified', 'declined'])->default('pending');
+            $table->string('business_name')->nullable();
+            $table->string('business_email')->nullable();
+            $table->string('business_phone')->nullable();
+            $table->string('registration_number')->nullable();
+
+            $table->boolean('has_personal')->default(false);
+            $table->boolean('has_business')->default(false);
+            $table->mediumText('file_selfie')->nullable();
+            $table->string('registration_file')->nullable();
+            $table->enum('business_verify_status', ['pending', 'awaiting', 'verified', 'declined'])->default('pending');
+            $table->enum('photo_status', ['pending', 'awaiting', 'verified', 'declined'])->default('pending');
             $table->timestamp('verified_at')->nullable();
             $table->timestamp('declined_at')->nullable();
 

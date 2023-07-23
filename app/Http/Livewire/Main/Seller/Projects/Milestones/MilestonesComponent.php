@@ -3,18 +3,21 @@
 namespace App\Http\Livewire\Main\Seller\Projects\Milestones;
 
 use App\Http\Validators\Main\Seller\Projects\Milestones\RequestValidator;
+use App\Models\MilestoneFile;
 use App\Models\Project;
 use App\Models\ProjectMilestone;
 use App\Notifications\User\Employer\FreelancerRequestedMilestone;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
 
 class MilestonesComponent extends Component
 {
-    use WithPagination, SEOToolsTrait, Actions;
+    use WithFileUploads, WithPagination, SEOToolsTrait, Actions;
 
     public $project;
 
@@ -29,6 +32,9 @@ class MilestonesComponent extends Component
 
     public $description;
 
+    // milestone attachment
+    public $attachment;
+
     /**
      * Initialize component
      *
@@ -40,11 +46,10 @@ class MilestonesComponent extends Component
         $settings = settings('projects');
 
         // Check if this section enabled
-        if (! $settings->is_enabled) {
+        if (!$settings->is_enabled) {
 
             // Redirect to home page
             return redirect('/');
-
         }
 
         // Get project
@@ -78,12 +83,10 @@ class MilestonesComponent extends Component
 
             // Set expected delivery time
             $this->expected_delivery_date = $format_date->addDays($awarded_bid->days);
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             $this->expected_delivery_date = null;
-
         }
     }
 
@@ -96,7 +99,7 @@ class MilestonesComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_milestone_payments')." $separator ".settings('general')->title;
+        $title = __('messages.t_milestone_payments') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -110,7 +113,7 @@ class MilestonesComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -133,6 +136,7 @@ class MilestonesComponent extends Component
     public function getPaymentsProperty()
     {
         return ProjectMilestone::where('project_id', $this->project->id)
+            ->with('attachments')
             ->latest()
             ->paginate(42);
     }
@@ -147,7 +151,7 @@ class MilestonesComponent extends Component
         try {
 
             // Project must be active or under development
-            if (! in_array($this->project->status, ['active', 'under_development'])) {
+            if (!in_array($this->project->status, ['active', 'under_development'])) {
                 return;
             }
 
@@ -171,7 +175,6 @@ class MilestonesComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Get projects settings
@@ -182,12 +185,10 @@ class MilestonesComponent extends Component
 
                 // Set freelancer commission
                 $freelancer_commission = convertToNumber($settings->commission_from_freelancer);
-
             } else {
 
                 // Calculate commission
                 $freelancer_commission = (convertToNumber($settings->commission_from_freelancer) / 100) * convertToNumber($this->amount);
-
             }
 
             // Close dialog
@@ -195,21 +196,21 @@ class MilestonesComponent extends Component
 
             // Show a confirmation dialog to the freelancer
             $this->dialog()->confirm([
-                'title' => '<h1 class="text-base font-bold tracking-wide">'.__('messages.t_confirm_milestone_payment').'</h1>',
-                'description' => "<div class='leading-relaxed'>".__('messages.t_pls_review_ur_milestone_payment_details')."<br></div>
+                'title' => '<h1 class="text-base font-bold tracking-wide">' . __('messages.t_confirm_milestone_payment') . '</h1>',
+                'description' => "<div class='leading-relaxed'>" . __('messages.t_pls_review_ur_milestone_payment_details') . "<br></div>
                 <div class='rounded border dark:border-secondary-600 my-8'>
                 <dl class='divide-y divide-gray-200 dark:divide-gray-600'>
                     <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>".__('messages.t_requested_amount')."</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>".money(convertToNumber($this->amount), settings('currency')->code, true)."</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_requested_amount') . "</dt>
+                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount), settings('currency')->code, true) . "</dd>
                     </div>  
                     <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>".__('messages.t_milestone_freelancer_fee_name')."</dt>
-                        <dd class='text-sm font-semibold text-red-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>- ".money(convertToNumber($freelancer_commission), settings('currency')->code, true)."</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_milestone_freelancer_fee_name') . "</dt>
+                        <dd class='text-sm font-semibold text-red-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>- " . money(convertToNumber($freelancer_commission), settings('currency')->code, true) . "</dd>
                     </div>  
                     <div class='grid grid-cols-3 gap-4 py-3 px-4 bg-gray-100/60 dark:bg-secondary-700 rounded-b'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right'>".__('messages.t_u_will_get')."</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>".money(convertToNumber($this->amount) - convertToNumber($freelancer_commission), settings('currency')->code, true).'</dd>
+                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right'>" . __('messages.t_u_will_get') . "</dt>
+                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount) - convertToNumber($freelancer_commission), settings('currency')->code, true) . '</dd>
                     </div>  
                 </dl>
                 </div>
@@ -227,7 +228,6 @@ class MilestonesComponent extends Component
                     'method' => 'cancel',
                 ],
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -246,7 +246,6 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -260,7 +259,7 @@ class MilestonesComponent extends Component
         try {
 
             // Project must be active or under development
-            if (! in_array($this->project->status, ['active', 'under_development'])) {
+            if (!in_array($this->project->status, ['active', 'under_development'])) {
                 return;
             }
 
@@ -284,7 +283,6 @@ class MilestonesComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Get projects settings
@@ -298,7 +296,6 @@ class MilestonesComponent extends Component
 
                 // Set employer commission
                 $employer_commission = convertToNumber($settings->commission_from_publisher);
-
             } else {
 
                 // Calculate commission
@@ -306,7 +303,6 @@ class MilestonesComponent extends Component
 
                 // Set employer commission
                 $employer_commission = (convertToNumber($settings->commission_from_publisher) / 100) * convertToNumber($this->amount);
-
             }
 
             // Create a milestone request
@@ -335,7 +331,6 @@ class MilestonesComponent extends Component
 
                 // Refresh project
                 $this->project->refresh();
-
             }
 
             // Send a notification to the employer
@@ -349,8 +344,7 @@ class MilestonesComponent extends Component
             ]);
 
             // Refresh the page
-            return redirect('seller/projects/milestones/'.$this->project->uid);
-
+            return redirect('seller/projects/milestones/' . $this->project->uid);
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error
@@ -369,7 +363,47 @@ class MilestonesComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
+        }
+    }
 
+    /**
+     * Send milestone attachments
+     * 
+     */
+    public function sendFiles($file, $milestoneId, $tempName)
+    {
+        try {
+            $file = str_replace('data:', '', $file);
+            list($encodeRemains, $fileContent) = explode(',', str_replace(';base64', '', $file));
+
+            $extension = explode('/', $encodeRemains)[1];
+            $filename =  uid(6) . "-{$tempName}";
+            $filePath = 'projects/' . $filename;
+
+            Storage::disk('s3')->put($filePath, base64_decode($fileContent));
+
+            MilestoneFile::create([
+                'user_id' => auth()->id(),
+                'project_milestone_id' => $milestoneId,
+                'file' => $filePath,
+                'file_name' => $filename,
+                'sent_by' => 'freelancer',
+            ]);
+
+            $this->dispatchBrowserEvent('close-right-modal');
+
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => 'Files send to employer successfully',
+                'icon' => 'success',
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => 'sorry error occured while trying to send files',
+                'icon' => 'error',
+            ]);
         }
     }
 

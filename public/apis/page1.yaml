@@ -1,0 +1,222 @@
+openapi: '3.0.0'
+info:
+  description: Hustle apis
+  version: 1.0.0
+  title: Hustle
+
+servers:
+  - url: /api
+    description: api baseUrl
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+tags:
+  - name: Authentication
+    description: Authentication
+  - name: User
+    description: user apis
+  - name: Location
+    description: user apis
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: login users
+      description: "login user"
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 'sunny@surehustle.com'
+                password:
+                  type: string
+                  example: '12345678'
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register seller
+      description: Register seller
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: 'jenkins'
+                email:
+                  type: string
+                  example: 'bob@surehustle.com'
+                first_name:
+                  type: string
+                  example: 'jenkins'
+                last_name:
+                  type: string
+                  example: 'brown'
+                password:
+                  type: string
+                  example: '12345678'
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /logout:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Authentication
+      summary: logout user
+      description: logout currently authenticated user
+      operationId: logout
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /countries:
+    get:
+      tags:
+        - Location
+      summary: get all countries
+      description: get all countries
+      operationId: getAllCountries
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'benin'
+          required: false
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+  
+  /countries/{country}/states:
+    get:
+      tags:
+        - Location
+      summary: country states with optional search
+      description: country states with optional search
+      operationId: countryDivision
+      parameters:
+        - in: path
+          name: country
+          schema:
+            type: number
+            example: 160
+          required: true
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'lagos'
+          required: false
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /auth-user:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Authenticated user
+      description: Get authenticated user
+      operationId: getAuthenticatedUser
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /auth-user/update:
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Update auth user account
+      description: Update auth user account
+      operationId: updateAuthUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: 'jenkins'
+                last_name:
+                  type: string
+                  example: 'brown'
+                state_id:
+                  type: number
+                  example: 2715
+                country_id:
+                  type: number
+                  example: 160
+                city:
+                  type: string
+                  example: alimosho
+                local_government_zone:
+                  type: string
+                  example: alimosho
+                post_code:
+                  typ: string
+                  example: 23FD45
+                address:
+                  example: olorun esan avenue
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object

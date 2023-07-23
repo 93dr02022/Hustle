@@ -2,34 +2,27 @@
     <div class="overflow-hidden bg-white rounded-md shadow-sm dark:bg-zinc-800 ring-1 ring-white dark:ring-zinc-800">
 
         {{-- Preview --}}
-        <a href="{{ url('service', $gig->slug) }}"
+        <a href="{{ url('service', $gig->slug) }}" @click="clickMiddleware($event)"
             class="flex items-center justify-center overflow-hidden w-full {{ request()->is('/') ? 'h-44' : 'h-52' }} bg-gray-100 dark:bg-zinc-700">
-            <img class="object-contain w-auto max-h-52 lazy h-52" width="200" src="{{ placeholder_img() }}"
-                data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
+            <img class="object-contain w-auto max-h-52 lazy h-52" width="200" src="{{ placeholder_img() }}" data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
         </a>
 
         {{-- Gig content --}}
         <div class="px-4 pb-2 mt-2.5">
-
             {{-- User --}}
             @if ($profile_visible)
                 <div class="flex items-center justify-between w-full mb-4">
-                    <a href="{{ url('profile', $gig->owner->username) }}" target="_blank"
-                        class="flex-shrink-0 block group">
+                    <a href="{{ url('profile', $gig->owner->username) }}" target="_blank" class="flex-shrink-0 block group">
                         <div class="flex items-center">
                             <span class="relative inline-block">
-                                <img class="object-cover w-6 h-6 rounded-full lazy" src="{{ placeholder_img() }}"
-                                    data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
+                                <img class="object-cover w-6 h-6 rounded-full lazy" src="{{ placeholder_img() }}" data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
                             </span>
                             <div class="ltr:ml-3 rtl:mr-3">
-                                <div
-                                    class="text-gray-500 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-300 flex items-center mb-0.5 font-extrabold tracking-wide text-[13px]">
+                                <div class="text-gray-500 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-300 flex items-center mb-0.5 font-extrabold tracking-wide text-[13px]">
                                     {{ $gig->owner->username }}
                                     @if ($gig->owner->status === 'verified')
-                                        <img data-tooltip-target="tooltip-account-verified-{{ $gig->uid }}"
-                                            class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5"
-                                            src="{{ url('img/auth/verified-badge.svg') }}"
-                                            alt="{{ __('messages.t_account_verified') }}">
+                                        <img data-tooltip-target="tooltip-account-verified-{{ $gig->uid }}" class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5"
+                                            src="{{ url('img/auth/verified-badge.svg') }}" alt="{{ __('messages.t_account_verified') }}">
                                         <div id="tooltip-account-verified-{{ $gig->uid }}" role="tooltip"
                                             class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-sm shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                             {{ __('messages.t_account_verified') }}
@@ -43,7 +36,7 @@
             @endif
 
             {{-- Title --}}
-            <a href="{{ url('service', $gig->slug) }}"
+            <a href="{{ url('service', $gig->slug) }}" @click="clickMiddleware($event)"
                 class="gig-card-title font-medium text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-white mb-2.5 !overflow-hidden leading-[130%]">
                 {{ htmlspecialchars_decode($gig->title) }}
             </a>
@@ -52,8 +45,7 @@
             <div class="flex items-center" wire:ignore>
 
                 {{-- Star --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" viewBox="0 0 20 20"
-                    fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
                     <path
                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
@@ -77,25 +69,21 @@
         </div>
 
         {{-- Gig footer --}}
-        <div
-            class="px-3 py-3 bg-[#fdfdfd] dark:bg-zinc-800 border-t border-gray-50 dark:border-zinc-700 text-right sm:px-4 rounded-b-md flex justify-between">
+        <div class="px-3 py-3 bg-[#fdfdfd] dark:bg-zinc-800 border-t border-gray-50 dark:border-zinc-700 text-right sm:px-4 rounded-b-md flex justify-between">
 
             <div class="flex items-center">
 
                 {{-- Add to favorite --}}
                 <button
                     @auth @if ($favorite) wire:click="removeFromFavorite('{{ $gig->uid }}')" wire:target="removeFromFavorite('{{ $gig->uid }}')" @else wire:click="addToFavorite('{{ $gig->uid }}')" wire:target="addToFavorite('{{ $gig->uid }}')" @endif wire:loading.attr="disabled" @endauth
-                    @guest x-on:click="loginToAddToFavorite" @endguest
-                    data-tooltip-target="tooltip-add-to-favorites-{{ $gig->uid }}"
+                    @guest x-on:click="loginToAddToFavorite" @endguest data-tooltip-target="tooltip-add-to-favorites-{{ $gig->uid }}"
                     class="flex items-center justify-center w-8 h-8 -ml-1 rounded-full focus:outline-none visited:outline-none">
 
                     {{-- Authenticated users --}}
                     @auth
                         {{-- Loading indicator --}}
-                        <div wire:loading
-                            @if ($favorite) wire:target="removeFromFavorite('{{ $gig->uid }}')" @else wire:target="addToFavorite('{{ $gig->uid }}')" @endif>
-                            <svg role="status" class="inline w-4 h-4 text-gray-700 animate-spin" viewBox="0 0 100 101"
-                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div wire:loading @if ($favorite) wire:target="removeFromFavorite('{{ $gig->uid }}')" @else wire:target="addToFavorite('{{ $gig->uid }}')" @endif>
+                            <svg role="status" class="inline w-4 h-4 text-gray-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                     fill="#E5E7EB" />
@@ -108,23 +96,17 @@
                         {{-- Button icon --}}
                         <div wire:loading.remove
                             @if ($favorite) wire:target="removeFromFavorite('{{ $gig->uid }}')" @else wire:target="addToFavorite('{{ $gig->uid }}')" @endif>
-                            <svg class="w-5 h-5 {{ $favorite ? 'text-red-500 hover:text-red-600' : 'text-gray-400 hover:text-gray-500' }}"
-                                stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                    clip-rule="evenodd"></path>
+                            <svg class="w-5 h-5 {{ $favorite ? 'text-red-500 hover:text-red-600' : 'text-gray-400 hover:text-gray-500' }}" stroke="currentColor" fill="currentColor" stroke-width="0"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
                             </svg>
                         </div>
                     @endauth
 
                     {{-- Guests --}}
                     @guest
-                        <svg class="w-5 h-5 text-gray-400 hover:text-gray-500" stroke="currentColor" fill="currentColor"
-                            stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                clip-rule="evenodd"></path>
+                        <svg class="w-5 h-5 text-gray-400 hover:text-gray-500" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
                         </svg>
                     @endguest
 
@@ -157,14 +139,24 @@
     <script>
         function _{{ $gig->uid }}() {
             return {
-
-                // Login to add to favorite
+                authed: @js(auth()->check()),
                 loginToAddToFavorite() {
                     window.$wireui.notify({
                         title: "{{ __('messages.t_info') }}",
                         description: "{{ __('messages.t_pls_login_or_register_to_add_to_favovorite') }}",
                         icon: 'info'
                     });
+
+                    this.$dispatch('popLogin')
+                },
+
+                clickMiddleware(event) {
+                    if (!this.authed) {
+                        event.preventDefault();
+
+                        this.$dispatch('popLogin')
+                    }
+
                 }
 
             }

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 
 class MakeValidator
 {
-    
+
     /**
      * Validate form
      *
@@ -19,7 +19,8 @@ class MakeValidator
 
             // Set rules
             $rules    = [
-                'amount'  => 'required|max:20|regex:/^\d+(\.\d{1,2})?$/'
+                'amount'  => 'required|max:20|regex:/^\d+(\.\d{1,2})?$/',
+                'accountType' => ['required', 'in:personal,business']
             ];
 
             // Set errors messages
@@ -31,7 +32,8 @@ class MakeValidator
 
             // Set data to validate
             $data     = [
-                'amount' => $request->amount
+                'amount' => $request->amount,
+                'accountType' => $request->accountType
             ];
 
             // Validate data
@@ -39,10 +41,8 @@ class MakeValidator
 
             // Reset validation
             $request->resetValidation();
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }

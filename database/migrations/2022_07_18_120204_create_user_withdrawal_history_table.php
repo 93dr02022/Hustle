@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('uid', 50)->unique();
             $table->foreignId('user_id')->constrained();
-            $table->string('gateway_provider_name', 20)->default('offline');
-            $table->string('gateway_provider_id', 10);
+            $table->enum('account_type', ['personal', 'business']);
+            $table->string('account_number', 10);
             $table->string('amount', 20);
             $table->string('transfer_recipient')->index();
             $table->string('transfer_code')->nullable()->index();

@@ -1,43 +1,5 @@
 <div class="w-full">
     <div class="grid grid-cols-12">
-
-        {{-- Fatured categories --}}
-        @if ($categories->count())
-            <div class="bg-[#F1F4FF] col-span-12 pt-14 pb-16">
-                <div class="grid grid-cols-1">
-                    <div class="w-full max-w-2xl col-start-1 row-start-1 mx-auto overflow-x-visible bg-white rounded pt-7 shadow-[0px_15px_50px_-1px_rgba(144,144,144,0.25)]">
-                        <h3 class="text-lg sm:text-xl md:text-2xl uppercase font-extrabold text-center text-[#1D46F5]">
-                            Featured Categories
-                        </h3>
-                    </div>
-
-                    <div class="z-20 col-start-1 row-start-1 mt-20 mb-12 swiper featured-category-swiper">
-                        <div class="swiper-wrapper">
-                            @foreach ($categories as $category)
-                                <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
-                                    <a href="{{ url('categories', $category->slug) }}" class="relative !h-72 rounded-lg !p-6 !flex !flex-col overflow-hidden group mx-3">
-                                        <span aria-hidden="true" class="absolute inset-0">
-                                            <img src="{{ placeholder_img() }}" data-src="{{ src($category->image_id) }}" alt="{{ $category->name }}"
-                                                class="object-cover object-center w-full h-full lazy opacity-70 group-hover:opacity-100">
-                                        </span>
-                                        <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#eb9605] opacity-90"></span>
-                                        <span class="relative mt-auto text-base font-semibold text-center text-white md:text-lg">
-                                            {{ $category->name }}
-                                        </span>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="!h-8 !top-[35%] px-4 bg-[#F18522] rounded-full shadow-lg after:!text-sm after:!text-white swiper-button-prev feature-prev">
-                        </div>
-                        <div class="!h-8 !top-[35%] px-4 bg-[#F18522] rounded-full shadow-lg after:!text-sm after:!text-white swiper-button-next feature-next">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         {{-- Top sellers --}}
         @auth
             @if (count($sellers))
@@ -190,18 +152,18 @@
 
         {{-- selected gigs for you --}}
         <div class="col-span-12">
-            <div class="odd:bg-[#F59E0B] w-full py-16">
+            <div class="odd:bg-[#F2F2F2] w-full py-16">
                 <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {{-- Section title --}}
                     <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
                         <div>
-                            <span class="block pb-1 text-xl font-medium tracking-wider uppercase text-white gig-title">
+                            <span class="block pb-1 text-xl font-extrabold tracking-wider uppercase text-[#1F2937] gig-title">
                                 @lang('messages.t_selected_gigs_for_u')
                             </span>
                         </div>
 
                         <div>
-                            <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                            <a href="{{ url('search') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
                                 {{ __('messages.t_view_more') }}
 
                                 {{-- LTR arrow --}}
@@ -317,41 +279,8 @@
     </div>
 </div>
 
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-@endpush
-
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-
     <script>
-        const featureSwiper = new Swiper('.featured-category-swiper', {
-            autoplay: {
-                delay: 3500,
-                disableOnInteraction: false,
-            },
-
-            slidesPerView: "auto",
-
-            navigation: {
-                nextEl: '.feature-next',
-                prevEl: '.feature-prev',
-            },
-        });
-
-        new Swiper('.hero-swiper', {
-            // autoplay: {
-            //     delay: 10000,
-            //     disableOnInteraction: false,
-            // },
-            // speed: 3000,
-
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-        });
-
         new Swiper('.sellers-swiper', {
             slidesPerView: "auto",
             spaceBetween: "15",

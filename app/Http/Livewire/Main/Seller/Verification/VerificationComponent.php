@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use WireUi\Traits\Actions;
@@ -24,14 +25,6 @@ class VerificationComponent extends Component
     public $document_type = 'bvn';
 
     public $selfie;
-
-    public $currentStep = 1;
-
-    public $doc_id = [];
-
-    public $doc_driver_license = [];
-
-    public $doc_passport = [];
 
     public $first_name;
 
@@ -55,10 +48,13 @@ class VerificationComponent extends Component
     public function mount()
     {
         // Get user verification
-        $verification = auth()->user()->verification;
+        $verification = VerificationCenter::firstOrCreate(
+            ['user_id' => auth()->id()],
+            ['uid' => uid()]
+        );
 
         // Set verification
-        $this->verification = $verification ? $verification : false;
+        $this->verification = $verification;
 
         $this->first_name = auth()->user()->first_name;
         $this->last_name = auth()->user()->last_name;
@@ -146,18 +142,18 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastError('Sorry error occured unable to validate your information.');
+            $this->toastMessage('Sorry error occured unable to validate your information.');
 
             return false;
         }
 
         if (!$response->data->first_name || !$response->data->last_name) {
-            $this->toastError('Sorry we are unable to validate your names');
+            $this->toastMessage('Sorry we are unable to validate your names');
 
             return false;
         }
 
-        return true;
+        return $response->data;
     }
 
     /**
@@ -171,7 +167,7 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastError('Sorry error occured unable to validate your information.');
+            $this->toastMessage('Sorry error occured unable to validate your information.');
 
             return false;
         }
@@ -182,7 +178,7 @@ class VerificationComponent extends Component
         ], true);
 
         if (!$containsAll) {
-            $this->toastError('Sorry we are unable to validate your names');
+            $this->toastMessage('Sorry we are unable to validate your names');
 
             return false;
         }
@@ -206,7 +202,7 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastError('Sorry error occured unable to validate your information.');
+            $this->toastMessage('Sorry error occured unable to validate your information.');
 
             return false;
         }
@@ -215,49 +211,95 @@ class VerificationComponent extends Component
     }
 
     /**
-     * Very the seller supplied account information
+     * Personal verification
      */
-    public function verify()
+    public function personalVerify()
     {
-        if ($this->bvn && !$this->bvnMatch()) {
-            return;
+        try {
+            $bvnInfo = $this->bvnMatch();
+
+            $accountName = $this->accountMatch();
+            $transferCode = $this->paystackRecipient();
+
+            if (!$bvnInfo || !$accountName || !$transferCode) {
+                $this->toastMessage('We are unable to verify your personal information.');
+                return;
+            }
+
+            VerificationCenter::where('user_id', auth()->id())
+                ->update([
+                    'has_personal' => true,
+                ]);
+
+            UserWithdrawalSettings::upsert(
+                [
+                    [
+                        'user_id' => auth()->id(),
+                        'gateway_provider_name' => 'offline',
+                        'account_type' => 'personal',
+                        'gateway_provider_id' => $this->accountNumber,
+                        'bank_name' => $this->getBankName(),
+                        'bank_code' => $this->bank,
+                        'transfer_recipient' => $transferCode,
+                        'account_name' => $accountName,
+                    ],
+                ],
+                ['user_id'],
+                [
+                    'gateway_provider_id',
+                    'bank_name',
+                    'bank_code',
+                    'transfer_recipient',
+                    'account_name'
+                ]
+            );
+
+            User::where('id', auth()->id())
+                ->update(['status' => 'verified']);
+
+            $this->toastMessage('Your personal information has been verified successfully.', 'success');
+
+            $this->dispatchBrowserEvent('refresh');
+        } catch (\Throwable $th) {
+            //throw $th;
         }
+    }
 
-        $accountName = $this->accountMatch();
-        $transferCode = $this->paystackRecipient();
+    /**
+     * Personal verification
+     */
+    public function photoVerify($file)
+    {
+        try {
+            $filename = 'verifications/' . uid() . '.jpeg';
+            $image = Image::make($file);
 
-        if (!$accountName || !$transferCode) {
-            return;
+            Storage::disk('s3')->put($filename, $image->encode());
+
+            $this->verification->file_selfie = $filename;
+            $this->verification->photo_status = 'awaiting';
+            $this->verification->save();
+
+            $this->toastMessage('Your verification photo successfully uploaded.', 'success');
+
+            $this->dispatchBrowserEvent('refresh');
+        } catch (\Throwable $th) {
+            $this->toastMessage('Error occured while trying to upload the verification photo.');
         }
-
-        $this->accountName = $accountName;
-        $this->transferCode = $transferCode;
-
-        $this->currentStep = 2;
     }
 
     /**
      * Complete Verification forma and submits the form
      */
-    public function finish()
+    public function businessVerify()
     {
         try {
-            SelfieValidator::validate($this);
-
-            $extension = $this->selfie->getClientOriginalExtension();
-            $fileName = makeFileName($extension);
-
-            $path = $this->selfie->storeAs('verifications', $fileName, 's3');
-
-            VerificationCenter::upsert([
-                [
-                    'uid' => uid(),
-                    'user_id' => auth()->id(),
-                    'document_type' => $this->document_type,
-                    'status' => $this->bvn ? 'verified' : 'pending',
-                    'file_selfie' => $path,
-                ],
-            ], ['user_id'], ['document_type', 'file_selfie']);
+            VerificationCenter::where('user_id', auth()->id())
+                ->update([
+                    'has_business' => true,
+                    'registration_file' => '',
+                    'business_verify_status' => 'pending'
+                ]);
 
             UserWithdrawalSettings::upsert(
                 [
@@ -283,14 +325,14 @@ class VerificationComponent extends Component
 
             User::where('id', auth()->id())
                 ->update([
-                    'status' => $this->bvn ? 'verified' : 'active'
+                    'status' => 'verified'
                 ]);
 
             // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
         } catch (ValidationException $e) {
 
-            $this->toastError(__('messages.t_toast_form_validation_error'));
+            $this->toastMessage(__('messages.t_toast_form_validation_error'));
             throw $e;
         } catch (\Throwable $th) {
             throw $th;
@@ -298,46 +340,14 @@ class VerificationComponent extends Component
     }
 
     /**
-     * Go back
-     *
-     * @return void
-     */
-    public function back()
-    {
-        // Check if not first step
-        if ($this->currentStep !== 1) {
-            $this->currentStep -= 1;
-        }
-
-        if ($this->currentStep == 2 && $this->document_type == 'bvn') {
-            $this->dispatchBrowserEvent('pharaonic.select2.load', [
-                'component' => $this->id,
-                'target' => '#select2-id-bank',
-            ]);
-        }
-    }
-
-    /**
-     * Start verification again and resend files
-     */
-    public function sendFilesAgain()
-    {
-        if ($this->verification && $this->verification->status === 'declined') {
-
-            $this->verification->delete();
-            $this->dispatchBrowserEvent('refresh');
-        }
-    }
-
-    /**
      * Wire UI Error toast notification
      */
-    public function toastError($message)
+    public function toastMessage($message, $type = 'error')
     {
         $this->notification([
-            'title' => __('messages.t_error'),
+            'title' => $type == 'error' ? __('messages.t_error') : __('messages.t_success'),
             'description' => $message,
-            'icon' => 'error',
+            'icon' =>  $type,
         ]);
     }
 }

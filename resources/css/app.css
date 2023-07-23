@@ -55,6 +55,10 @@
         @apply px-6 py-3 text-sm font-medium tracking-wide text-white rounded-md bg-[#1D46F5] enabled:hover:bg-[#1d21f5] disabled:bg-zinc-200 disabled:text-zinc-500;
     }
 
+    .btn-bordered {
+        @apply border font-semibold focus:outline-none text-sm rounded border-gray-300 bg-white text-gray-600 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-transparent dark:text-zinc-200 dark:hover:bg-zinc-600 px-3 py-2;
+    }
+
     .odd-arrow {
         @apply [&:nth-child(odd)_.swiper-button-prev]:bg-white [&:nth-child(odd)_.swiper-button-next]:bg-white  [&:nth-child(odd)_.swiper-button-prev]:after:!text-[#112fb4] [&:nth-child(odd)_.swiper-button-next]:after:!text-[#B7C4FC];
     }

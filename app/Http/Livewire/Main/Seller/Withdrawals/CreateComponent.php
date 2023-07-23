@@ -10,7 +10,7 @@ use App\Models\UserWithdrawalSettings;
 use App\Notifications\Admin\PendingWithdrawal as AdminPendingWithdrawal;
 use App\Notifications\User\Seller\PendingWithdrawal as SellerPendingWithdrawal;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -31,6 +31,8 @@ class CreateComponent extends Component
 
     public $withdrawalSettings;
 
+    public $accountType;
+
     /**
      * Init component
      *
@@ -39,7 +41,8 @@ class CreateComponent extends Component
     public function mount()
     {
         $withdrawSettings = UserWithdrawalSettings::where('user_id', auth()->id())
-            ->whereNotNull('gateway_provider_id')
+            ->whereNotNull('personal_acct_number')
+            ->orWhereNotNull('business_acct_number')
             ->first();
 
         // Check if user has withdrawal settings or not
@@ -136,7 +139,8 @@ class CreateComponent extends Component
             MakeValidator::validate($this);
 
             $userWithdrawSettings = UserWithdrawalSettings::where('user_id', auth()->id())
-                ->whereNotNull('gateway_provider_id')
+                ->when($this->accountType == 'personal')->whereNotNull('personal_acct_number')
+                ->when($this->accountType == 'business')->whereNotNull('business_acct_number')
                 ->first();
 
             // Check if user has withdrawal email or not
@@ -185,10 +189,10 @@ class CreateComponent extends Component
             $withdrawal = UserWithdrawalHistory::create([
                 'uid' => strtolower(uid(25)),
                 'user_id' => auth()->id(),
-                'gateway_provider_id' => $userWithdrawSettings->gateway_provider_id,
-                'gateway_provider_name' => $userWithdrawSettings->gateway_provider_name,
+                'account_type' => $this->accountType,
+                'account_number' => $this->accountType == 'personal' ? $userWithdrawSettings->personal_acct_number : $userWithdrawSettings->business_acct_number,
                 'amount' => convertToNumber($this->amount),
-                'transfer_recipient' => $userWithdrawSettings->transfer_recipient,
+                'transfer_recipient' => $this->accountType == 'personal' ? $userWithdrawSettings->personal_transfer_recipient :  $userWithdrawSettings->business_transfer_recipient,
                 'fee' => null,
             ]);
 
@@ -257,10 +261,6 @@ class CreateComponent extends Component
 
         return $message;
     }
-
-    /**
-     * Send 
-     */
 
     /**
      * Toast error message to user.

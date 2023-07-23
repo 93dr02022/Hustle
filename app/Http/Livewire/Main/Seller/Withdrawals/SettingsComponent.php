@@ -15,13 +15,23 @@ class SettingsComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
-    public $offline_info;
+    public $personalBank;
 
-    public $bank;
+    public $personalAccountName;
 
-    public $accountName;
+    public $personalAccountNumber;
 
-    public $accountNumber;
+    public $personalTransferCode;
+
+    public $businessBank;
+
+    public $businessAccountName;
+
+    public $businessAccountNumber;
+
+    public $businessTransferCode;
+
+    public $selectedType;
 
     public $transferCode;
 
@@ -32,13 +42,15 @@ class SettingsComponent extends Component
      */
     public function mount()
     {
-        $withdrawInfo = UserWithdrawalSettings::where('user_id', auth()->id())->first();
+        $withdrawInfo = UserWithdrawalSettings::firstOrCreate(['user_id' => auth()->id()]);
 
-        if ($withdrawInfo) {
-            $this->bank = $withdrawInfo->bank_code;
-            $this->accountName = $withdrawInfo->account_name;
-            $this->accountNumber = $withdrawInfo->gateway_provider_id;
-        }
+        $this->personalBank = $withdrawInfo->personal_bank_code;
+        $this->personalAccountName = $withdrawInfo->personal_account_name;
+        $this->personalAccountNumber = $withdrawInfo->personal_acct_number;
+
+        $this->businessBank = $withdrawInfo->business_bank_code;
+        $this->businessAccountName = $withdrawInfo->business_account_name;
+        $this->businessAccountNumber = $withdrawInfo->business_acct_number;
     }
 
     /**
@@ -98,7 +110,7 @@ class SettingsComponent extends Component
     public function getBankName()
     {
         $bank = collect($this->banks)->first(function ($bank) {
-            return $bank['code'] === $this->bank;
+            return $bank['code'] === $this->personalBank;
         });
 
         return $bank['name'];
@@ -113,8 +125,8 @@ class SettingsComponent extends Component
             ->post("https://api.paystack.co/transferrecipient", [
                 'type' => 'nuban',
                 'name' => auth()->user()->first_name . " " . auth()->user()->first_name,
-                'account_number' => $this->accountNumber,
-                'bank_code' =>  $this->bank,
+                'account_number' => $this->personalAccountNumber,
+                'bank_code' =>  $this->personalBank,
                 'currency' => 'NGN',
             ])
             ->object();
@@ -138,18 +150,18 @@ class SettingsComponent extends Component
             return false;
         }
 
-        $this->accountName = $accountName;
-        $this->transferCode = $transferCode;
+        $this->personalAccountName = $accountName;
+        $this->personalTransferCode = $transferCode;
 
         return true;
     }
 
     /**
-     * Update withdrawal settings
+     * Update personal account withdrawal settings
      *
      * @return void
      */
-    public function update()
+    public function updatePersonal()
     {
         try {
             if (!$this->verify()) {
@@ -157,27 +169,42 @@ class SettingsComponent extends Component
                 return false;
             }
 
-            UserWithdrawalSettings::upsert(
-                [
-                    [
-                        'user_id' => auth()->id(),
-                        'gateway_provider_name' => 'offline',
-                        'gateway_provider_id' => $this->accountNumber,
-                        'bank_name' => $this->getBankName(),
-                        'bank_code' => $this->bank,
-                        'transfer_recipient' => $this->transferCode,
-                        'account_name' => $this->accountName,
-                    ],
-                ],
-                ['user_id'],
-                [
-                    'gateway_provider_id',
-                    'bank_name',
-                    'bank_code',
-                    'transfer_recipient',
-                    'account_name'
-                ]
-            );
+            UserWithdrawalSettings::where('user_id', auth()->id())
+                ->update([
+                    'personal_acct_number' => $this->personalAccountNumber,
+                    'personal_bank_name' => $this->getBankName(),
+                    'personal_bank_code' => $this->personalBank,
+                    'personal_transfer_recipient' => $this->personalTransferCode,
+                    'personal_account_name' => $this->personalAccountName,
+                ]);
+
+            $this->toastSuccess(__('messages.t_toast_operation_success'));
+        } catch (\Throwable $th) {
+            $this->toastError($th->getMessage());
+        }
+    }
+
+    /**
+     * Update personal account withdrawal settings
+     *
+     * @return void
+     */
+    public function updateBusiness()
+    {
+        try {
+            if (!$this->verify()) {
+                $this->toastError(__('We are unable to verify your bank information please retry.'));
+                return false;
+            }
+
+            UserWithdrawalSettings::where('user_id', auth()->id())
+                ->update([
+                    'business_acct_number' => $this->businessAccountNumber,
+                    'business_bank_name' => $this->getBankName(),
+                    'business_bank_code' => $this->businessBank,
+                    'business_transfer_recipient' => $this->businessTransferCode,
+                    'business_account_name' => $this->businessAccountName,
+                ]);
 
             $this->toastSuccess(__('messages.t_toast_operation_success'));
         } catch (\Throwable $th) {
@@ -192,7 +219,7 @@ class SettingsComponent extends Component
     public function accountMatch()
     {
         $response = Http::withToken(config('paystack.secretKey'))
-            ->get("https://api.paystack.co/bank/resolve?account_number={$this->accountNumber}&bank_code={$this->bank}")
+            ->get("https://api.paystack.co/bank/resolve?account_number={$this->personalAccountNumber}&bank_code={$this->personalBank}")
             ->object();
 
         if (!$response->status) {

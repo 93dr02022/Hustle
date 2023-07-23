@@ -31,13 +31,29 @@ class VerificationCenter extends Model
     protected $fillable = [
         'uid',
         'user_id',
-        'document_type',
-        'file_front_side',
-        'file_back_side',
+        'business_name',
+        'business_email',
+        'business_phone',
+        'registration_number',
+
+        'has_personal',
+        'has_business',
         'file_selfie',
-        'status',
+        'registration_file',
+        'business_verify_status',
+        'photo_status',
         'verified_at',
-        'declined_at'
+        'declined_at',
+    ];
+
+    /**
+     * The attributes that should be casts
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'has_personal' => 'boolean',
+        'has_business' => 'boolean',
     ];
 
     /**

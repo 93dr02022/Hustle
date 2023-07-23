@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full" x-data="window.AccountSingleMilestone">
 
     {{-- Loading --}}
     <x-forms.loading />
@@ -90,7 +90,16 @@
 
                 {{-- Project details --}}
                 <div class="flex justify-end mb-4">
-                    <button class="btn-purple text[13px] rounded font-medium px-3 py-2" id="modal-topup-budget-button-{{ $project->uid }}">Topup budget funds</button>
+                    <div class="static">
+                        <a class="btn-purple cursor-pointer text[13px] rounded font-medium px-3 py-2" data-offset="10" data-lc-toggle="dropdown" data-popper-placement="bottom-end">
+                            Budget Funds
+                        </a>
+                        <div class="z-10 hidden w-48 px-3 py-4 bg-white border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                            <a id="modal-topup-budget-button-{{ $project->uid }}" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                Topup Allocation</a>
+                            <a id="modal-increase-budget-button-{{ $project->uid }}" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">Increase Budget</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="w-full mb-6">
@@ -344,7 +353,7 @@
                             </thead>
                             <thead>
                                 @forelse ($payments as $p)
-                                    <tr class="intro-x shadow-sm bg-white dark:bg-zinc-800 rounded-md h-16" wire:key="employer-dashboard-project-milestones-{{ $p->uid }}">
+                                    <tr class="shadow-sm bg-white dark:bg-zinc-800 rounded-md h-16" wire:key="employer-dashboard-project-milestones-{{ $p->uid }}">
 
                                         {{-- Date --}}
                                         <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md rtl:text-right">
@@ -379,6 +388,14 @@
                                                     </span>
                                                 @break
 
+                                                {{-- declined --}}
+                                                @case('declined')
+                                                    <span
+                                                        class="inline-flex items-center px-4 py-2 rounded-3xl text-xs tracking-wide font-medium bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400">
+                                                        {{ __('declined') }}
+                                                    </span>
+                                                @break
+
                                                 {{-- Funded --}}
                                                 @case('funded')
                                                     <span
@@ -406,53 +423,44 @@
                                         </td>
 
                                         {{-- Options --}}
-                                        <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md text-center">
-                                            <div class="flex items-center justify-center space-x-2 rtl:space-x-reverse">
+                                        <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                            <div class="static">
+                                                <a class="btn-bordered" data-offset="8" data-lc-toggle="dropdown" data-popper-placement="bottom-end">
+                                                    Actions
+                                                </a>
+                                                <div class="z-10 hidden w-48 px-3 py-4 bg-white border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                                                    {{-- Details --}}
+                                                    <a wire:click="details('{{ $p->uid }}')" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                                        {{ __('Milestone details') }}
+                                                    </a>
 
-                                                {{-- Details --}}
-                                                <button wire:click="details('{{ $p->uid }}')" type="button"
-                                                    class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 text-sm rounded border-gray-300 bg-white text-gray-600 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-transparent dark:text-zinc-200 dark:hover:bg-zinc-600"
-                                                    data-tooltip-target="tooltip-actions-details-{{ $p->uid }}">
-                                                    <svg class="h-4.5 w-4.5 mt-px" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M20 2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3v3.767L13.277 18H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-7.277L9 18.233V16H4V4h16v12z">
-                                                        </path>
-                                                        <path d="M7 7h10v2H7zm0 4h7v2H7z"></path>
-                                                    </svg>
-                                                </button>
-                                                <x-forms.tooltip id="tooltip-actions-details-{{ $p->uid }}" :text="__('messages.t_details')" />
+                                                    {{-- milestone files --}}
+                                                    <a @click="selectMilestone(@js($p))" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                                        {{ __('Milestone files') }}
+                                                    </a>
 
-                                                {{-- Pay --}}
-                                                @if ($p->status === 'request')
-                                                    <button wire:click="confirmPay('{{ $p->uid }}')" type="button"
-                                                        class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 text-sm rounded border-gray-300 bg-white text-gray-600 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-transparent dark:text-zinc-200 dark:hover:bg-zinc-600"
-                                                        data-tooltip-target="tooltip-actions-pay-{{ $p->uid }}">
-                                                        <svg class="h-4.5 w-4.5 mt-px" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M12 15c-1.84 0-2-.86-2-1H8c0 .92.66 2.55 3 2.92V18h2v-1.08c2-.34 3-1.63 3-2.92 0-1.12-.52-3-4-3-2 0-2-.63-2-1s.7-1 2-1 1.39.64 1.4 1h2A3 3 0 0 0 13 7.12V6h-2v1.09C9 7.42 8 8.71 8 10c0 1.12.52 3 4 3 2 0 2 .68 2 1s-.62 1-2 1z">
-                                                            </path>
-                                                            <path d="M5 2H2v2h2v17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4h2V2H5zm13 18H6V4h12z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <x-forms.tooltip id="tooltip-actions-pay-{{ $p->uid }}" :text="__('messages.t_deposit_funds')" />
-                                                @endif
+                                                    {{-- Pay --}}
+                                                    @if ($p->status === 'request')
+                                                        <a wire:click="confirmPay('{{ $p->uid }}')" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                                            {{ __('messages.t_deposit_funds') }}
+                                                        </a>
+                                                    @endif
 
-                                                {{-- Release --}}
-                                                @if ($p->status === 'funded')
-                                                    <button wire:click="confirmRelease('{{ $p->uid }}')" type="button"
-                                                        class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 text-sm rounded border-gray-300 bg-white text-gray-600 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none"
-                                                        data-tooltip-target="tooltip-actions-release-{{ $p->uid }}">
-                                                        <svg class="h-5 w-5" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <x-forms.tooltip id="tooltip-actions-release-{{ $p->uid }}" :text="__('messages.t_release')" />
-                                                @endif
+                                                    {{-- Cancel --}}
+                                                    @if ($p->status === 'request')
+                                                        <a @click="selectedMilestonePay = '{{ $p->uid }}'" id="modal-decline-milestone-button-{{ $project->uid }}"
+                                                            class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                                            {{ __('Cancel Request') }}
+                                                        </a>
+                                                    @endif
 
+                                                    {{-- Release --}}
+                                                    @if ($p->status === 'funded')
+                                                        <a wire:click="confirmRelease('{{ $p->uid }}')" class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
+                                                            {{ __('Release funds') }}
+                                                        </a>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </td>
 
@@ -496,6 +504,10 @@
             </div>
 
         </div>
+
+
+
+        {{-- ================================================ modals ================================================= --}}
 
         {{-- Awarded bid modal --}}
         <x-forms.modal id="modal-awarded-bid-container-{{ $project->uid }}" target="modal-awarded-bid-button-{{ $project->uid }}" uid="modal_awarded_bid_{{ $project->uid }}"
@@ -622,6 +634,80 @@
         </x-forms.modal>
 
 
+        {{-- cancel milestone dialog --}}
+        <x-forms.modal id="modal-decline-milestone-container-{{ $project->uid }}" target="modal-decline-milestone-button-{{ $project->uid }}" uid="modal_decline_milestone_funds_{{ $project->uid }}"
+            placement="center-center" size="max-w-md">
+
+            {{-- Modal heading --}}
+            <x-slot name="title">{{ __('Decline milestone request') }}</x-slot>
+
+            {{-- Modal content --}}
+            <x-slot name="content">
+                <div class="grid grid-cols-1">
+                    <div class="mb-4 sm:space-x-4 rtl:space-x-reverse sm:flex items-start sm:items-center">
+                        <div class="mx-auto flex items-center self-start justify-center shrink-0 sm:items-start sm:mx-0">
+                            <div class="bg-warning-100 rounded-full p-3 dark:bg-warning-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    class="w-10 h-10 text-yellow-500 dark:text-yellow-400 p-1 sm:w-6 sm:h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 w-full sm:mt-0">
+                            <h3 class="text-lg leading-6 font-medium text-secondary-900 dark:text-secondary-400 text-center sm:text-left sm:rtl:text-right">
+                                <h1 class="text-base font-bold tracking-wide">Decline Milestone</h1>
+                            </h3>
+
+                            <p class="mt-2 text-sm text-secondary-500 text-center sm:text-left sm:rtl:text-right">
+                                You are about to decline a milestone request doing this might result in freelancer not doing your work.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </x-slot>
+
+            {{-- Footer --}}
+            <x-slot name="footer">
+                <div class="flex justify-end items-center gap-x-3">
+
+                    {{-- Cancel --}}
+                    <button x-on:click="close" type="button"
+                        class="inline-flex justify-center items-center space-x-2 rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none">
+                        @lang('messages.t_cancel')
+                    </button>
+
+                    {{-- Create --}}
+                    <button type="button" @click="$wire.declineMilestone(selectedMilestonePay)" wire:loading.attr="disabled"
+                        class="inline-flex justify-center items-center rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-transparent bg-yellow-400 text-white hover:bg-yellow-500 focus:ring focus:ring-primary-500 focus:ring-opacity-25 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed">
+
+                        {{-- Loading indicator --}}
+                        <div wire:loading wire:target="declineMilestone">
+                            <svg role="status" class="inline w-4 h-4 text-gray-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+
+                        {{-- Button text --}}
+                        <div wire:loading.remove wire:target="declineMilestone">
+                            @lang('Decline')
+                        </div>
+
+                    </button>
+
+                </div>
+            </x-slot>
+
+        </x-forms.modal>
+
+
         {{-- topup budget funds modal --}}
         <x-forms.modal id="modal-topup-budget-container-{{ $project->uid }}" target="modal-topup-budget-button-{{ $project->uid }}" uid="modal_topup_budget_funds_{{ $project->uid }}"
             placement="center-center" size="max-w-md">
@@ -634,8 +720,9 @@
                 <div class="grid grid-cols-1 gap-y-6">
                     {{-- Amount --}}
                     <div>
-                        <x-forms.text-input :label="__('messages.t_amount')" placeholder="0.00" model="topupAmount" :suffix="settings('currency')->code"
-                            hint="{{ __('messages.t_available_balance') }} {{ money(convertToNumber($project->budget_allocation), settings('currency')->code, true) }}" />
+                        <x-forms.text-input :label="__('messages.t_amount')" placeholder="100" model="topupAmount" :suffix="settings('currency')->code"
+                            hint="{{ __('messages.t_available_balance') }} {{ money(convertToNumber(auth()->user()->balance_available), settings('currency')->code, true) }}" x-model="topupAmount"
+                            hintclass="!text-orange-500" />
                     </div>
                 </div>
             </x-slot>
@@ -651,7 +738,7 @@
                     </button>
 
                     {{-- Create --}}
-                    <button type="button" wire:click="topupBudgetFunds" wire:loading.attr="disabled"
+                    <button type="button" wire:click="topupBudgetFunds" wire:loading.attr="disabled" :disabled="topupAmount <= 99"
                         class="inline-flex justify-center items-center rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:ring focus:ring-primary-500 focus:ring-opacity-25 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed">
 
                         {{-- Loading indicator --}}
@@ -679,6 +766,65 @@
         </x-forms.modal>
 
 
+        {{-- increase project budget modal --}}
+        <x-forms.modal id="modal-increase-budget-container-{{ $project->uid }}" target="modal-increase-budget-button-{{ $project->uid }}" uid="modal_increase_budget_funds_{{ $project->uid }}"
+            placement="center-center" size="max-w-md">
+
+            {{-- Modal heading --}}
+            <x-slot name="title">{{ __('Increase budget funds') }}</x-slot>
+
+            {{-- Modal content --}}
+            <x-slot name="content">
+                <div class="grid grid-cols-1 gap-y-6">
+                    {{-- Amount --}}
+                    <div>
+                        <x-forms.text-input :label="__('messages.t_amount')" placeholder="100" model="increaseAmount" :suffix="settings('currency')->code" type="number"
+                            hint="{{ __('messages.t_available_balance') }} {{ money(convertToNumber(auth()->user()->balance_available), settings('currency')->code, true) }}" x-model="increaseAmount"
+                            hintclass="!text-orange-500" />
+                    </div>
+                </div>
+            </x-slot>
+
+            {{-- Footer --}}
+            <x-slot name="footer">
+                <div class="flex justify-between items-center w-full">
+
+                    {{-- Cancel --}}
+                    <button x-on:click="close" type="button"
+                        class="inline-flex justify-center items-center space-x-2 rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none">
+                        @lang('messages.t_cancel')
+                    </button>
+
+                    {{-- Create --}}
+                    <button type="button" wire:click="increaseBudgetFunds" wire:loading.attr="disabled" :disabled="increaseAmount <= 99"
+                        class="inline-flex justify-center items-center rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-transparent bg-primary-500 text-white hover:bg-primary-600 focus:ring focus:ring-primary-500 focus:ring-opacity-25 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed">
+
+                        {{-- Loading indicator --}}
+                        <div wire:loading wire:target="increaseBudgetFunds">
+                            <svg role="status" class="inline w-4 h-4 text-gray-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+
+                        {{-- Button text --}}
+                        <div wire:loading.remove wire:target="increaseBudgetFunds">
+                            @lang('deposit')
+                        </div>
+
+                    </button>
+
+                </div>
+            </x-slot>
+
+        </x-forms.modal>
+
+
+
         {{-- Create milestone --}}
         @if (in_array($project->status, ['active', 'under_development', 'pending_final_review']))
             <x-forms.modal id="modal-create-milestone-container-{{ $project->uid }}" target="modal-create-milestone-button-{{ $project->uid }}" uid="modal_create_milestone_{{ $project->uid }}"
@@ -694,7 +840,8 @@
                         {{-- Amount --}}
                         <div>
                             <x-forms.text-input :label="__('messages.t_amount')" placeholder="0.00" model="milestone_amount" :suffix="settings('currency')->code"
-                                hint="{{ __('messages.t_available_balance') }} {{ money(convertToNumber($project->budget_allocation), settings('currency')->code, true) }}" />
+                                hint="{{ __('messages.t_available_balance') }} {{ money(convertToNumber($project->budget_allocation), settings('currency')->code, true) }}"
+                                hintclass="!text-orange-500" />
                         </div>
 
                         {{-- Description --}}
@@ -745,4 +892,144 @@
             </x-forms.modal>
         @endif
 
+
+        {{-- milestone attachment right modal --}}
+        <x-forms.right-modal x-cloak>
+            <x-slot name="title">
+                <div class="capitalize dark:text-slate-400">Milestone</div>
+                <x-forms.close-button action="closeModal"></x-forms.close-button>
+            </x-slot>
+
+            <div class="">
+                <div class="border rounded overflow-hidden mt-2 mb-5">
+                    <div class="grid grid-cols-3 items-center text-sm font-normal text-white bg-slate-700 py-3 px-3">
+                        <h6>Status</h6>
+                        <h6>Amount</h6>
+                        <h6>To Pay</h6>
+                    </div>
+                    <div class="grid grid-cols-3 items-center text-sm font-normal py-4 px-3">
+                        <h6>
+                            <span class="px-2 py-1 rounded" :class="statusClass[`${milestone?.status}`]" x-text="milestone?.status"></span>
+                        </h6>
+                        <h6 x-text="milestone?.amount"></h6>
+                        <h6 x-text="(Number(milestone?.amount ?? 0) + Number(milestone?.freelancer_commission ?? 0)).toFixed(2)"></h6>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-sm font-semibold">Files</div>
+                    <button class="btn-purple rounded px-3 py-2" @click="showUploader = !showUploader">Send File</button>
+                </div>
+
+                {{-- attachment upload --}}
+                <div x-show="showUploader" class="border-2 border-dashed rounded-md p-3 mb-4">
+                    <form wire:submit.prevent>
+                        <input type="file"
+                            class="block w-full text-[13px] text-gray-900 bg-transparent border dark:text-gray-300 rounded-md cursor-pointer focus:outline-none dark:dark:border-zinc-500 border-gray-300 file:!bg-slate-100 file:!text-slate-500 file:hover:!bg-slate-200 dark:border-zinc-600 dark:bg-transparent dark:file:!bg-zinc-700 dark:file:!text-zinc-200"
+                            accept="image/jpg,image/jpeg,image/png, .pdf, .docx" @change="attachment = $event.target.files[0]" required>
+
+                        <button type="submit" wire:loading.attr="disabled" wire:target="sendFiles" @click="upload()" class="btn-purple rounded px-3 py-2 mt-4">Upload file</button>
+                    </form>
+                </div>
+
+                {{-- list of attachments --}}
+                <template x-if="milestone?.attachments?.length > 0">
+                    <ul class="text-sm font-medium overflow-hidden text-gray-900 bg-white border border-gray-200 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <template x-for="(file, key) in milestone?.attachments ?? []">
+                            <li class="border-b last:border-b-0 border-gray-200 w-full px-3 py-3 dark:border-gray-600">
+                                <div class="flex items-center gap-x-3">
+                                    <img class="h-7 w-7 flex-shrink-0" src="/img/general/docs.svg" alt="">
+                                    <div class="flex flex-col grow">
+                                        <div class="text-sm font-medium dark:text-slate-400" x-text="file?.file_name"></div>
+                                        <div class="text-xs text-gray-500 font-medium dark:text-slate-500 capitalize" x-text="`${file?.sent_by} - ${file?.updated_at}`"></div>
+                                    </div>
+                                    <a :href="`https://hustlebucket.s3.amazonaws.com/${file?.file}`" class="grid place-items-center border rounded shadown-md p-2" download="demo.pdf">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="current-color" class="text-black pointer-events-none" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793L6.354 8.146a.5.5 0 1 0-.708.708l2 2z" />
+                                            <path
+                                                d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template x-if="milestone?.attachments?.length <= 0">
+                    <div class="py-14 px-6 text-center text-sm sm:px-14">
+                        <svg class="mx-auto h-12 w-12" stroke="currentColor" fill="currentColor" stroke-width="0" version="1" viewBox="0 0 48 48" enable-background="new 0 0 48 48"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z">
+                            </path>
+                            <path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z">
+                            </path>
+                        </svg>
+                        <p class="mt-3 font-semibold text-gray-900 dark:text-zinc-300 text-[15px]">
+                            Files is empty</p>
+                        <p class="mt-2 text-gray-500 dark:text-zinc-400 max-w-md mx-auto">
+                            click the button above to send files to freelancer</p>
+                    </div>
+                </template>
+
+            </div>
+        </x-forms.right-modal>
+
     </div>
+
+
+    @push('scripts')
+        <script>
+            function AccountSingleMilestone() {
+                return {
+                    selectedMilestonePay: "",
+                    topupAmount: '',
+                    increaseAmount: '',
+
+                    hidden: false,
+                    milestone: {},
+                    statusClass: {
+                        "request": "bg-yellow-50 text-yellow-800 dark:bg-transparent dark:text-amber-400",
+                        "decline": "bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400",
+                        "paid": "bg-green-50 text-green-800 dark:bg-transparent dark:text-green-400",
+                        "funded": "bg-purple-50 text-purple-800 dark:bg-transparent dark:text-purple-400"
+                    },
+                    attachment: "",
+                    attachmentName: "",
+                    showUploader: false,
+
+                    selectMilestone(milestone) {
+                        this.hidden = true;
+                        this.milestone = milestone
+                    },
+
+                    closeRightModal(event) {
+                        if (event.target.classList.contains('modal-backdrop')) {
+                            this.hidden = false
+                        }
+                    },
+
+                    closeModal() {
+                        this.hidden = false
+                    },
+
+                    upload() {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(this.attachment);
+
+                        reader.onload = () => {
+                            console.log(reader?.result)
+                            @this.sendFiles(reader.result, this.milestone.id, this.attachment.name)
+                        };
+                    },
+                }
+            }
+            window.AccountSingleMilestone = AccountSingleMilestone()
+
+            window.addEventListener('close-right-modal', event => {
+                window.AccountSingleMilestone.hidden = false
+            })
+        </script>
+        <script src="{{ mix('js/dropdown.js') }}"></script>
+    @endpush

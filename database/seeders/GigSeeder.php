@@ -42,9 +42,9 @@ class GigSeeder extends Seeder
                     'delivery_time' => fake()->randomElement([5, 2, 4, 1, 6, 7]),
                     'category_id' => $category->id,
                     'subcategory_id' => $subCategory->id,
-                    'image_thumb_id' => 'gigs/previews/small/1465EF358EF648B1C01A9ECD6.webp',
-                    'image_medium_id' => 'gigs/previews/medium/9BB2FE59ACBCDF5FD342CD436.webp',
-                    'image_large_id' => 'gigs/previews/large/71E450DBFFE4ACAE781786718.webp',
+                    'image_thumb_id' => 'gigs/previews/small/1A1E2F63C929EC21971786D1C.webp',
+                    'image_medium_id' => 'gigs/previews/medium/F837E039FFE2E3CFCE6632861.webp',
+                    'image_large_id' => 'gigs/previews/large/D28104C6BFB06984BBFD3333D.webp',
                     'status' => 'active',
                     'has_upgrades' => false,
                     'has_faqs' => false,
@@ -71,9 +71,9 @@ class GigSeeder extends Seeder
                 collect()->times(5)->each(function ($t) use ($gig) {
                     GigImage::create([
                         'gig_id' => $gig->id,
-                        'img_thumb_id' => 'gigs/gallery/small/4503132F4D9885AD8AFDC2141.webp',
-                        'img_medium_id' => 'gigs/gallery/medium/84C6D42A6B9DC0A3BA59D1911.webp',
-                        'img_large_id' => 'gigs/gallery/large/D36FE127E7CB3A3ED8CC5DCD7.webp',
+                        'img_thumb_id' => 'gigs/gallery/small/D6518DA151B50566C5C222F5F.webp',
+                        'img_medium_id' => 'gigs/gallery/medium/E2E4EB371D9B32019BFA27A6C.webp',
+                        'img_large_id' => 'gigs/gallery/large/497E962227EA78E4A6C4B465D.webp',
                     ]);
                 });
 

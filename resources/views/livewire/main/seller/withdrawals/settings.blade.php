@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full" x-data="SellerWithdrawalSettings">
 
     {{-- Loading --}}
     <x-forms.loading />
@@ -96,40 +96,62 @@
     {{-- Content --}}
     <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-12">
         <main class="px-4 xs:px-6 py-8 bg-white border border-gray-200 rounded-lg shadow dark:bg-zinc-800 dark:border-zinc-800 sm:py-12 sm:px-10">
-            {{-- Message --}}
-            <div class="bg-blue-50 ltr:border-l-4 rtl:border-r-4 border-blue-400 py-7 px-4 mb-10">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ltr:ml-3 rtl:mr-3">
-                        <p class="text-sm text-blue-700">
-                            You can only use bank account with account name that matches your profile names.
-                        </p>
-                    </div>
-                </div>
+            {{-- Account type selection --}}
+            <div class="flex mb-7">
+                <ul class="list-none flex flex-nowrap items-center bg-[#F8FAFD] p-1 rounded">
+                    <li class="flex items-center">
+                        <button @click="accountType = 'personal'" :class="{ 'active': accountType == 'personal' }"
+                            class="rounded text-sm px-4 py-2.5 [&.active]:bg-[#3B5EF7] bg-transparent [&.active]:shadow-md [&.active]:text-white">
+                            Personal
+                        </button>
+                    </li>
+                    <li class="flex items-center">
+                        <button @click="accountType = 'business'" :class="{ 'active': accountType == 'business' }"
+                            class="rounded text-sm px-4 py-2.5 [&.active]:bg-[#3B5EF7] bg-transparent [&.active]:shadow-md [&.active]:text-white">
+                            Business
+                        </button>
+                    </li>
+                </ul>
             </div>
 
-
-            {{-- Offline payout --}}
-            <form wire:submit.prevent="update" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 gap-y-5">
+            {{-- personal account --}}
+            <form x-show="accountType == 'personal'" x-cloak wire:submit.prevent="updatePersonal" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 gap-y-5">
 
                 {{-- Bank name --}}
-                <x-forms.text-input :label="__('Account Number')" placeholder="" model="accountNumber" required
+                <x-forms.text-input :label="__('Account Number')" placeholder="" model="personalAccountNumber" required
                     svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M894 462c30.9 0 43.8-39.7 18.7-58L530.8 126.2a31.81 31.81 0 0 0-37.6 0L111.3 404c-25.1 18.2-12.2 58 18.8 58H192v374h-72c-4.4 0-8 3.6-8 8v52c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-52c0-4.4-3.6-8-8-8h-72V462h62zM381 836H264V462h117v374zm189 0H453V462h117v374zm190 0H642V462h118v374z"></path></svg>' />
 
                 {{-- Bank account Number --}}
                 <div class="w-full" wire:ignore>
-                    <x-forms.select2 :label="__('Select Your bank')" :placeholder="__('Select Bank')" model="bank" :options="$banks" :isDefer="true" :isAssociative="false" :componentId="$this->id" value="code" :selected="$bank"
+                    <x-forms.select2 :label="__('Select Your bank')" :placeholder="__('Select Bank')" model="personalBank" :options="$banks" :isDefer="true" :isAssociative="false" :componentId="$this->id" value="code" :selected="$personalBank"
                         text="name" />
                 </div>
 
                 {{-- account name --}}
-                <x-forms.text-input :label="__('Account Name')" placeholder="" model="accountName" readonly
+                <x-forms.text-input :label="__('Account Name')" placeholder="" model="personalAccountName" readonly
+                    svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M894 462c30.9 0 43.8-39.7 18.7-58L530.8 126.2a31.81 31.81 0 0 0-37.6 0L111.3 404c-25.1 18.2-12.2 58 18.8 58H192v374h-72c-4.4 0-8 3.6-8 8v52c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-52c0-4.4-3.6-8-8-8h-72V462h62zM381 836H264V462h117v374zm189 0H453V462h117v374zm190 0H642V462h118v374z"></path></svg>' />
+
+                {{-- submit button --}}
+                <div class="col-span-2">
+                    <x-forms.button action="updatePersonal" :text="__('Update Account')" :block="true" type="submit" />
+                </div>
+            </form>
+
+            {{-- business account --}}
+            <form x-show="accountType == 'business'" x-cloak wire:submit.prevent="update" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 gap-y-5">
+
+                {{-- Bank name --}}
+                <x-forms.text-input :label="__('Account Number')" placeholder="" model="businessAccountNumber" required
+                    svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M894 462c30.9 0 43.8-39.7 18.7-58L530.8 126.2a31.81 31.81 0 0 0-37.6 0L111.3 404c-25.1 18.2-12.2 58 18.8 58H192v374h-72c-4.4 0-8 3.6-8 8v52c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-52c0-4.4-3.6-8-8-8h-72V462h62zM381 836H264V462h117v374zm189 0H453V462h117v374zm190 0H642V462h118v374z"></path></svg>' />
+
+                {{-- Bank account Number --}}
+                <div class="w-full" wire:ignore>
+                    <x-forms.select2 :label="__('Select Your bank')" :placeholder="__('Select Bank')" model="businessBank" :options="$banks" :isDefer="true" :isAssociative="false" :componentId="$this->id" value="code"
+                        :selected="$businessBank" text="name" />
+                </div>
+
+                {{-- account name --}}
+                <x-forms.text-input :label="__('Account Name')" placeholder="" model="businessAccountName" readonly
                     svg_icon='<svg class="w-5 h-5 text-gray-400 dark:text-gray-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M894 462c30.9 0 43.8-39.7 18.7-58L530.8 126.2a31.81 31.81 0 0 0-37.6 0L111.3 404c-25.1 18.2-12.2 58 18.8 58H192v374h-72c-4.4 0-8 3.6-8 8v52c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-52c0-4.4-3.6-8-8-8h-72V462h62zM381 836H264V462h117v374zm189 0H453V462h117v374zm190 0H642V462h118v374z"></path></svg>' />
 
                 {{-- submit button --}}
@@ -141,3 +163,20 @@
     </div>
 
 </div>
+
+@push('scripts')
+    {{-- AlpineJS --}}
+    <script>
+        function SellerWithdrawalSettings() {
+            return {
+                accountType: 'personal',
+
+                submitBusiness() {
+
+                }
+            }
+        }
+
+        window.SellerWithdrawalSettings = SellerWithdrawalSettings()
+    </script>
+@endpush

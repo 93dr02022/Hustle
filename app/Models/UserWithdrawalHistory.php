@@ -26,8 +26,8 @@ class UserWithdrawalHistory extends Model
     protected $fillable = [
         'uid',
         'user_id',
-        'gateway_provider_name',
-        'gateway_provider_id',
+        'account_type',
+        'account_number',
         'amount',
         'transfer_recipient',
         'transfer_code',

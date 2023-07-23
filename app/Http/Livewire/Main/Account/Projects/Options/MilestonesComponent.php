@@ -3,14 +3,19 @@
 namespace App\Http\Livewire\Main\Account\Projects\Options;
 
 use App\Http\Validators\Main\Account\Projects\Employer\MilestoneValidator;
+use App\Jobs\Main\Project\Reversal;
+use App\Models\MilestoneFile;
 use App\Models\Project;
+use App\Models\ProjectBid;
 use App\Models\ProjectMilestone;
 use App\Models\User;
+use App\Notifications\User\Freelancer\EmployerDeclineMilestone;
 use App\Notifications\User\Freelancer\EmployerFundedMilestone;
 use App\Notifications\User\Freelancer\EmployerReleasedMilestone;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
@@ -33,6 +38,12 @@ class MilestonesComponent extends Component
 
     // deposit from wallet form
     public $topupAmount;
+
+    // Increase milestone amount
+    public $increaseAmount;
+
+    // selected milestone
+    public $selectedMilestone;
 
     /**
      * Init component
@@ -124,6 +135,7 @@ class MilestonesComponent extends Component
     public function getPaymentsProperty()
     {
         return ProjectMilestone::where('project_id', $this->project->id)
+            ->with('attachments')
             ->latest()
             ->paginate(42);
     }
@@ -219,6 +231,66 @@ class MilestonesComponent extends Component
             ]);
 
             $this->dispatchBrowserEvent('close-modal', 'modal-topup-budget-container-' . $this->project->uid);
+        } catch (\Throwable $th) {
+
+            // Something went wrong
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => $th->getMessage(),
+                'icon' => 'error',
+            ]);
+        }
+    }
+
+    /**
+     * Topup budget funds from wallet balance
+     */
+    public function increaseBudgetFunds()
+    {
+        try {
+            // Check if user has the amount to paid
+            if (convertToNumber($this->increaseAmount) > convertToNumber(auth()->user()->balance_available)) {
+
+                // Employer does not have money to create a milestone
+                $this->dialog()->confirm([
+                    'title' => '<h1 class="text-base font-bold tracking-wide -mt-1 mb-2">' . __('messages.t_insufficient_funds_in_your_account') . '</h1>',
+                    'description' => __('Your wallet balance is insufficient to increase this budget consider toping up your wallet balance by clicking the button below.'),
+                    'icon' => 'exclamation',
+                    'iconColor' => 'text-red-600 dark:text-secondary-400 p-1',
+                    'iconBackground' => 'bg-red-50 rounded-full p-3 dark:bg-secondary-700',
+                    'accept' => [
+                        'label' => __('messages.t_deposit'),
+                        'method' => 'deposit',
+                        'color' => 'negative',
+                    ],
+                    'reject' => [
+                        'label' => __('messages.t_cancel'),
+                    ],
+                ]);
+
+                return;
+            }
+
+            // Let's update project budget allocation and debit employer wallet 
+            ProjectBid::where('project_id', $this->project->id)
+                ->update(['amount' => DB::raw("amount + {$this->increaseAmount}")]);
+
+            User::where('id', auth()->id())
+                ->update([
+                    'balance_available' => DB::raw("balance_available - $this->increaseAmount")
+                ]);
+
+            // Refresh project awarded bid
+            $this->project->awarded_bid->refresh();
+
+            // Success
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => __('budget successfully increased remember to topup budget allocation'),
+                'icon' => 'success',
+            ]);
+
+            $this->dispatchBrowserEvent('close-modal', 'modal-increase-budget-container-' . $this->project->uid);
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -383,8 +455,31 @@ class MilestonesComponent extends Component
                 return;
             }
 
+            // Set amount to paid to freelancer
+            $milestone_amount = convertToNumber($this->milestone_amount);
+
+            // Get projects settings
+            $settings = settings('projects');
+
+            // Check commission type
+            if ($settings->commission_type === 'fixed') {
+
+                // Set employer commission
+                $employer_commission = convertToNumber($settings->commission_from_publisher);
+
+                // Set freelancer commission
+                $freelancer_commission = convertToNumber($settings->commission_from_freelancer);
+            } else {
+
+                // Calculate commission
+                $employer_commission = (convertToNumber($settings->commission_from_publisher) / 100) * $milestone_amount;
+
+                // Set freelancer commission
+                $freelancer_commission = (convertToNumber($settings->commission_from_freelancer) / 100) * $milestone_amount;
+            }
+
             // Check if employer has this money
-            if (convertToNumber($this->milestone_amount) > convertToNumber($this->project->budget_allocation)) {
+            if (convertToNumber($this->milestone_amount) > convertToNumber($this->project->budget_allocation) + convertToNumber($employer_commission)) {
 
                 // Employer does not have money to create a milestone
                 $this->dialog()->confirm([
@@ -412,29 +507,6 @@ class MilestonesComponent extends Component
                 return;
             }
 
-            // Set amount to paid to freelancer
-            $milestone_amount = convertToNumber($this->milestone_amount);
-
-            // Get projects settings
-            $settings = settings('projects');
-
-            // Check commission type
-            if ($settings->commission_type === 'fixed') {
-
-                // Set employer commission
-                $employer_commission = convertToNumber($settings->commission_from_publisher);
-
-                // Set freelancer commission
-                $freelancer_commission = convertToNumber($settings->commission_from_freelancer);
-            } else {
-
-                // Calculate commission
-                $employer_commission = (convertToNumber($settings->commission_from_publisher) / 100) * $milestone_amount;
-
-                // Set freelancer commission
-                $freelancer_commission = (convertToNumber($settings->commission_from_freelancer) / 100) * $milestone_amount;
-            }
-
             // Set total amount to be taken from the employer
             $total_amount_from_employer = convertToNumber($this->milestone_amount) + convertToNumber($employer_commission);
 
@@ -451,10 +523,8 @@ class MilestonesComponent extends Component
             $milestone->status = 'funded';
             $milestone->save();
 
-            // Let's update user available balance
-            User::where('id', auth()->id())->update([
-                'balance_available' => convertToNumber(auth()->user()->balance_available) - $total_amount_from_employer,
-            ]);
+            // Let's update budget allocation balance
+            $this->project->budget_allocation = $this->project->budget_allocation - $total_amount_from_employer;
 
             // Send a notification to the freelancer
             $this->project->awarded_bid->user->notify(new EmployerFundedMilestone($milestone));
@@ -465,11 +535,11 @@ class MilestonesComponent extends Component
 
             // Mark project as pending final reviews
             if ($this->payments_in_progress >= convertToNumber($this->project->awarded_bid->amount)) {
-
-                // Update project
                 $this->project->status = 'pending_final_review';
-                $this->project->save();
             }
+
+            // Update project
+            $this->project->save();
 
             // Reset form
             $this->reset(['milestone_amount', 'milestone_description']);
@@ -752,9 +822,12 @@ class MilestonesComponent extends Component
             // Mark project as completed if employer paid everything
             if ($this->paid_amount >= $milestone->project->awarded_bid->amount) {
 
-                // Update project
+                // Update project status
                 $this->project->status = 'completed';
                 $this->project->save();
+
+                // return any amount back to employer
+                Reversal::dispatch($this->project);
             }
 
             // Send notification to freelancer via email
@@ -792,6 +865,101 @@ class MilestonesComponent extends Component
     }
 
     /**
+     * Decline milestone payment
+     * 
+     */
+    public function declineMilestone($uid)
+    {
+        try {
+            // Project must be active
+            $payment = ProjectMilestone::where('project_id', $this->project->id)
+                ->where('uid', $uid)
+                ->firstOrFail();
+
+            if ($payment->status !== 'request') {
+                $this->notification([
+                    'title' => __('messages.t_error'),
+                    'description' => __('you can only cancel milestone with request status.'),
+                    'icon' => 'error',
+                ]);
+
+                return;
+            }
+
+            // update milestone status to delicne and notify user
+            $freelancer = $this->project->awarded_bid->user;
+            $payment->status = 'declined';
+            $payment->save();
+
+            $freelancer->notify(new EmployerDeclineMilestone($payment));
+
+            notification([
+                'text' => 'Employer has decline your milestone request.',
+                'action' => url('seller/projects/milestones/', $this->project->uid),
+                'user_id' => $freelancer->id,
+                'params' => ['app_name' => config('app.name')],
+            ]);
+
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => __('Milestone successfully declined.'),
+                'icon' => 'success',
+            ]);
+
+            // Close modal
+            $this->dispatchBrowserEvent('close-modal', 'modal-decline-milestone-container-' . $this->project->uid);
+        } catch (\Throwable $th) {
+
+            // Error
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => $th->getMessage(),
+                'icon' => 'error',
+            ]);
+        }
+    }
+
+    /**
+     * Send milestone attachments
+     * 
+     */
+    public function sendFiles($file, $milestoneId, $tempName)
+    {
+        try {
+            $file = str_replace('data:', '', $file);
+            list($encodeRemains, $fileContent) = explode(',', str_replace(';base64', '', $file));
+
+            $filename =  uid(6) . "-{$tempName}";
+            $filePath = 'projects/' . $filename;
+
+            Storage::disk('s3')->put($filePath, base64_decode($fileContent));
+
+            MilestoneFile::create([
+                'user_id' => auth()->id(),
+                'project_milestone_id' => $milestoneId,
+                'file' => $filePath,
+                'file_name' => $filename,
+                'sent_by' => 'employer',
+            ]);
+
+            $this->dispatchBrowserEvent('close-right-modal');
+
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => 'Files send to employer successfully',
+                'icon' => 'success',
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => 'sorry error occured while trying to send files',
+                'icon' => 'error',
+            ]);
+        }
+    }
+
+    /**
      * Go to deposit page
      *
      * @return void
@@ -799,6 +967,7 @@ class MilestonesComponent extends Component
     public function deposit()
     {
         // Go to deposit page
+        session()->put('return', "account/projects/milestones/{$this->project->uid}");
         return redirect('account/deposit');
     }
 

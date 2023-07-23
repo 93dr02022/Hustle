@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Main\Account\Notifications\NotificationsComponent;
 
+// api doecs
+Route::get('/docs', function () {
+    return view('api');
+});
 
 //Notifications
 Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {

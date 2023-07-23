@@ -75,7 +75,7 @@ class DepositComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_deposit')." $separator ".settings('general')->title;
+        $title = __('messages.t_deposit') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -89,7 +89,7 @@ class DepositComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -117,19 +117,15 @@ class DepositComponent extends Component
 
                 // Calculate fee
                 $this->calculateFee();
-
             } else {
 
                 // Invalid number
                 $this->amount = null;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             $this->amount = null;
-
         }
     }
 
@@ -146,7 +142,7 @@ class DepositComponent extends Component
             // Check selected payment gateway
             switch ($this->selected) {
 
-                // PayPal
+                    // PayPal
                 case 'paypal':
                     $fee_rate = settings('paypal')->deposit_fee;
                     break;
@@ -246,19 +242,15 @@ class DepositComponent extends Component
 
                 // Calculate fee
                 return $amount * $fee_rate / 100;
-
             } else {
 
                 // Calculate fee
                 $this->fee = $this->amount * $fee_rate / 100;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             $this->fee = 0;
-
         }
     }
 
@@ -277,7 +269,7 @@ class DepositComponent extends Component
                 // Check selected payment method
                 switch ($this->selected) {
 
-                    // PayPal
+                        // PayPal
                     case 'paypal':
 
                         // Go to next step
@@ -382,7 +374,7 @@ class DepositComponent extends Component
                     case 'paymob':
 
                         // Check form is valid
-                        if (! $this->paymob_firstname || ! $this->paymob_firstname || ! $this->paymob_lastname) {
+                        if (!$this->paymob_firstname || !$this->paymob_firstname || !$this->paymob_lastname) {
 
                             // Error
                             $this->notification([
@@ -393,7 +385,6 @@ class DepositComponent extends Component
 
                             // Return
                             return;
-
                         }
 
                         // Get paymob payment key
@@ -407,7 +398,6 @@ class DepositComponent extends Component
 
                             // Go to next step
                             $this->is_third_step = true;
-
                         } else {
 
                             // Something went wrong
@@ -416,7 +406,6 @@ class DepositComponent extends Component
                                 'description' => $paymob['message'],
                                 'icon' => 'error',
                             ]);
-
                         }
 
                         break;
@@ -545,7 +534,7 @@ class DepositComponent extends Component
 
                             // Set payment parameters
                             $params = [
-                                'external_id' => 'DEPOSIT'.uid(),
+                                'external_id' => 'DEPOSIT' . uid(),
                                 'amount' => $this->amount,
                                 'description' => __('messages.t_add_funds'),
                                 'invoice_duration' => 86400,
@@ -571,7 +560,6 @@ class DepositComponent extends Component
 
                                 // Go to payment url
                                 return redirect($payment_url);
-
                             } else {
 
                                 // Something went wrong
@@ -580,9 +568,7 @@ class DepositComponent extends Component
                                     'description' => __('messages.t_toast_something_went_wrong'),
                                     'icon' => 'error',
                                 ]);
-
                             }
-
                         } catch (\Throwable $th) {
 
                             // Something went wrong
@@ -591,7 +577,6 @@ class DepositComponent extends Component
                                 'description' => $th->getMessage(),
                                 'icon' => 'error',
                             ]);
-
                         }
 
                         break;
@@ -630,16 +615,16 @@ class DepositComponent extends Component
                                 'currency' => settings('epoint')->currency,
                                 'language' => 'az',
                                 'order_id' => $transaction_id,
-                                'description' => 'Deposit Order ID: '.$transaction_id,
-                                'success_redirect_url' => url('account/deposit/callback/epoint/success?order_id='.$transaction_id),
-                                'error_redirect_url' => url('account/deposit/callback/epoint/failed?order_id='.$transaction_id),
+                                'description' => 'Deposit Order ID: ' . $transaction_id,
+                                'success_redirect_url' => url('account/deposit/callback/epoint/success?order_id=' . $transaction_id),
+                                'error_redirect_url' => url('account/deposit/callback/epoint/failed?order_id=' . $transaction_id),
                             ];
 
                             // Encode values
                             $data = base64_encode(json_encode($values));
 
                             // Generate signature
-                            $signature = base64_encode(sha1($private_key.$data.$private_key, 1));
+                            $signature = base64_encode(sha1($private_key . $data . $private_key, 1));
 
                             // Set post fields
                             $fields = http_build_query(['data' => $data, 'signature' => $signature]);
@@ -659,7 +644,6 @@ class DepositComponent extends Component
 
                                 // Redirect
                                 return redirect($results['redirect_url']);
-
                             } else {
 
                                 // Error
@@ -668,9 +652,7 @@ class DepositComponent extends Component
                                     'description' => __('messages.t_toast_something_went_wrong'),
                                     'icon' => 'error',
                                 ]);
-
                             }
-
                         } catch (\Throwable $th) {
 
                             // Error
@@ -679,7 +661,6 @@ class DepositComponent extends Component
                                 'description' => $th->getMessage(),
                                 'icon' => 'error',
                             ]);
-
                         }
 
                         break;
@@ -719,7 +700,6 @@ class DepositComponent extends Component
 
                                 // Go to next step
                                 $this->is_third_step = true;
-
                             } else {
 
                                 // Something went wrong
@@ -728,9 +708,7 @@ class DepositComponent extends Component
                                     'description' => __('messages.t_toast_something_went_wrong'),
                                     'icon' => 'error',
                                 ]);
-
                             }
-
                         } catch (RequestException $e) {
 
                             // Get response
@@ -751,7 +729,6 @@ class DepositComponent extends Component
                                     'description' => $to_json['message'],
                                     'icon' => 'error',
                                 ]);
-
                             } else {
 
                                 // Something else wrong
@@ -760,9 +737,7 @@ class DepositComponent extends Component
                                     'description' => $body,
                                     'icon' => 'error',
                                 ]);
-
                             }
-
                         } catch (\Throwable $th) {
 
                             // Error
@@ -771,7 +746,6 @@ class DepositComponent extends Component
                                 'description' => $th->getMessage(),
                                 'icon' => 'error',
                             ]);
-
                         }
 
                         break;
@@ -780,7 +754,6 @@ class DepositComponent extends Component
                         $fee_rate = 0;
                         break;
                 }
-
             } else {
 
                 // You have to select a correct amount
@@ -791,9 +764,7 @@ class DepositComponent extends Component
                 ]);
 
                 return;
-
             }
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -822,7 +793,7 @@ class DepositComponent extends Component
             // Check selected payment method
             switch ($this->selected) {
 
-                // PayPal
+                    // PayPal
                 case 'paypal':
 
                     // Handle paypal payment
@@ -943,21 +914,21 @@ class DepositComponent extends Component
 
                     foreach ($inputData as $key => $value) {
                         if ($i == 1) {
-                            $hashdata .= '&'.urlencode($key).'='.urlencode($value);
+                            $hashdata .= '&' . urlencode($key) . '=' . urlencode($value);
                         } else {
-                            $hashdata .= urlencode($key).'='.urlencode($value);
+                            $hashdata .= urlencode($key) . '=' . urlencode($value);
                             $i = 1;
                         }
-                        $query .= urlencode($key).'='.urlencode($value).'&';
+                        $query .= urlencode($key) . '=' . urlencode($value) . '&';
                     }
 
                     // Set payment url
-                    $vnp_Url = $vnp_Url.'?'.$query;
+                    $vnp_Url = $vnp_Url . '?' . $query;
 
                     // Generate secure hash
                     if (isset($vnp_HashSecret)) {
                         $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
-                        $vnp_Url .= 'vnp_SecureHash='.$vnpSecureHash;
+                        $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                     }
 
                     // Go to payment url
@@ -990,12 +961,20 @@ class DepositComponent extends Component
                     'icon' => 'success',
                 ]);
 
-                // Scroll up
-                $this->dispatchBrowserEvent('scrollTo', 'scroll-to-deposit-container');
+                // after successful payment redirect if available
+                $redirectTo = session()->get('return');
+
+                if ($redirectTo) {
+                    session()->forget('return');
+                    return redirect($redirectTo);
+                }
+
+                if (!$redirectTo) {
+                    $this->dispatchBrowserEvent('scrollTo', 'scroll-to-deposit-container');
+                }
 
                 // Return
                 return;
-
             } else {
 
                 // Something went wrong
@@ -1007,9 +986,7 @@ class DepositComponent extends Component
 
                 // Return
                 return;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1018,7 +995,6 @@ class DepositComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -1091,7 +1067,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1103,9 +1078,7 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1117,7 +1090,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1162,7 +1134,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1174,7 +1145,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1205,7 +1175,7 @@ class DepositComponent extends Component
 
             // Send request
             $client = Http::withHeaders([
-                'Authorization' => 'Bearer '.$paystack_secret_key,
+                'Authorization' => 'Bearer ' . $paystack_secret_key,
                 'Accept' => 'application/json',
             ])->get("https://api.paystack.co/transaction/verify/$reference_id");
 
@@ -1250,7 +1220,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1262,9 +1231,7 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1276,7 +1243,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1352,7 +1318,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1364,9 +1329,7 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1378,7 +1341,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1445,20 +1407,19 @@ class DepositComponent extends Component
             // Loop trough params
             foreach ($params as $key => $value) {
                 if ($i == 1) {
-                    $hashdata .= '&'.urlencode($key).'='.urlencode($value);
+                    $hashdata .= '&' . urlencode($key) . '=' . urlencode($value);
                 } else {
-                    $hashdata .= urlencode($key).'='.urlencode($value);
+                    $hashdata .= urlencode($key) . '=' . urlencode($value);
                     $i = 1;
                 }
-                $query .= urlencode($key).'='.urlencode($value).'&';
+                $query .= urlencode($key) . '=' . urlencode($value) . '&';
             }
 
             // Generate url to redirect
-            $redirect = $api_url.'?'.$query.'&vnp_SecureHash='.hash('sha256', $hash_secret);
+            $redirect = $api_url . '?' . $query . '&vnp_SecureHash=' . hash('sha256', $hash_secret);
 
             // Redirect
             return redirect($redirect);
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -1516,12 +1477,10 @@ class DepositComponent extends Component
                     'amount' => $this->amount * 100,
                     'currency' => settings('razorpay')->currency,
                 ]);
-
             } elseif ($fetch_payment->status === 'captured') {
 
                 // Set payment
                 $payment = $fetch_payment;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1533,7 +1492,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
 
             // Let's see if payment suuceeded
@@ -1574,7 +1532,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1586,9 +1543,7 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1600,7 +1555,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1627,7 +1581,7 @@ class DepositComponent extends Component
                 'x-api-key' => config('nowpayments.api_key'),
                 'Content-Type' => 'application/json',
             ];
-            $request = new Request('GET', config('nowpayments.payment_url').'/'.$this->nowpayments_payment_id, $headers);
+            $request = new Request('GET', config('nowpayments.payment_url') . '/' . $this->nowpayments_payment_id, $headers);
             $res = $client->sendAsync($request)->wait();
             $data = json_decode($res->getBody(), true);
 
@@ -1672,7 +1626,6 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             } else {
 
                 // We couldn't handle your payment
@@ -1684,9 +1637,7 @@ class DepositComponent extends Component
 
                 // Return response
                 return $response;
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
@@ -1698,7 +1649,6 @@ class DepositComponent extends Component
 
             // Return response
             return $response;
-
         }
     }
 
@@ -1756,7 +1706,6 @@ class DepositComponent extends Component
             return [
                 'success' => true,
             ];
-
         } catch (\Throwable $th) {
 
             // Error
@@ -1764,7 +1713,6 @@ class DepositComponent extends Component
                 'success' => false,
                 'message' => $th->getMessage(),
             ];
-
         }
     }
 
@@ -1784,7 +1732,6 @@ class DepositComponent extends Component
             // Add funds
             $user->balance_available = $user->balance_available + $amount;
             $user->save();
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -1840,7 +1787,6 @@ class DepositComponent extends Component
             $webhook->amount = $amount;
             $webhook->user_id = $user_id;
             $webhook->save();
-
         } catch (\Throwable $th) {
             throw $th;
         }

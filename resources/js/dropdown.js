@@ -120,8 +120,8 @@ function LogicDropdown() {
             hide(e.target.nextElementSibling);
         } else {
             if (
-                e.target.dataset.lcToggle == "dropdown" ||
-                e.target.parentElement.dataset.lcToggle == "dropdown"
+                e.target?.dataset?.lcToggle == "dropdown" ||
+                e.target?.parentElement?.dataset?.lcToggle == "dropdown"
             ) {
                 _this.popper = makePopper(
                     e.target,

@@ -38,6 +38,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active_status' => 'boolean'
     ];
 
     /**
@@ -166,8 +167,9 @@ class User extends Authenticatable
      *
      * @return boolean
      */
-    public function isOnline(){
-        return Cache::has('user-is-online-'. $this->id);
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
     }
 
     /**
@@ -199,12 +201,11 @@ class User extends Authenticatable
             $rating_value = $total_reviews === 0 ? 0 : $total_rating / $total_reviews;
 
             // Check if decimal
-            if (is_numeric( $rating_value ) && floor( $rating_value ) != $rating_value) {
+            if (is_numeric($rating_value) && floor($rating_value) != $rating_value) {
                 return number_format($rating_value, 1);
             } else {
                 return $rating_value;
             }
-
         } catch (\Throwable $th) {
             return 0;
         }

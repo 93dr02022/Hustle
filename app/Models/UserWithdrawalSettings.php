@@ -23,11 +23,16 @@ class UserWithdrawalSettings extends Model
      */
     protected $fillable = [
         'user_id',
-        'gateway_provider_name',
-        'gateway_provider_id',
-        'bank_name',
-        'bank_code',
-        'transfer_recipient',
-        'account_name',
+        'personal_acct_number',
+        'personal_bank_name',
+        'personal_account_name',
+        'personal_bank_code',
+        'personal_transfer_recipient',
+
+        'business_acct_number',
+        'business_bank_name',
+        'business_account_name',
+        'business_bank_code',
+        'business_transfer_recipient',
     ];
 }

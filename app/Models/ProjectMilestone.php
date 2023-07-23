@@ -43,6 +43,14 @@ class ProjectMilestone extends Model
     }
 
     /**
+     * milestone attachhments
+     */
+    public function attachments()
+    {
+        return $this->hasMany(MilestoneFile::class);
+    }
+
+    /**
      * Get freelancer
      *
      * @return object

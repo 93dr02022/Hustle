@@ -58,9 +58,14 @@
     </script>
 
     {{-- Notification Initialization --}}
+    @if (request()->is('/'))
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    @endif
 
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
 
     <script>
         // Your web app's Firebase configuration
@@ -132,10 +137,13 @@
     {{-- Header --}}
     @livewire('main.includes.header')
 
+    {{-- global login handler --}}
+    @livewire('main.auth.pop-login-component')
+
     {{-- Content --}}
     @if (request()->is('/'))
         <main class="flex-grow">
-            @include('livewire.main.includes.herox')
+            @livewire('main.includes.hero')
             <div class="min-h-screen">
                 @yield('content')
             </div>

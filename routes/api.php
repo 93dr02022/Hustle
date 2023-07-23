@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Main\LocationController;
+use App\Http\Controllers\Api\Main\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [LoginController::class, 'login']);
+Route::post('register', [RegisterController::class, 'create']);
+Route::get('countries', [LocationController::class, 'countries']);
+Route::get('countries/{country}/states', [LocationController::class, 'states']);
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('logout', [LoginController::class, 'logout']);
+
+    Route::get('auth-user', [UserController::class, 'authUser']);
+    Route::patch('auth-user/update', [UserController::class, 'updateAccount']);
 });
