@@ -3,11 +3,11 @@
 to build docker:
 
 ```
-docker build --tag php-docker .
+docker build --tag web-app .
 ```
 
 to run docker
 
 ```
-docker run --publish 80:80 php-docker
+docker run --publish 80:80 web-app
 ```

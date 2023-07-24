@@ -8,78 +8,6 @@ WORKDIR /var/www
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-ENV APP_NAME=Laravel
-ENV APP_KEY=base64:8t9ohNUmhh7JGVCbewZBXV2sVC1Vsv+M9JyO6/hv4+s=
-ENV APP_DEBUG=false
-ENV APP_ENV=production
-ENV APP_URL=http://localhost
-
-ENV LOG_CHANNEL=stack
-ENV LOG_DEPRECATIONS_CHANNEL=null
-ENV LOG_LEVEL=debug
-
-ENV DB_CONNECTION=mysql
-ENV DB_HOST=correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
-ENV DB_PORT=3306
-ENV DB_DATABASE=riverr
-ENV DB_USERNAME=admin
-ENV DB_PASSWORD=Y9D#6!qY7NTro6^
-
-# host: correcthustle-instance-1.cr8hsmkceq6e.us-east-1.rds.amazonaws.com
-# username: admin
-# password: Y9D#6!qY7NTro6^
-
-ENV BROADCAST_DRIVER=log
-ENV CACHE_DRIVER=file
-ENV FILESYSTEM_DISK=local
-ENV QUEUE_CONNECTION=sync
-ENV SESSION_DRIVER=file
-ENV SESSION_LIFETIME=120
-
-ENV MEMCACHED_HOST=127.0.0.1
-
-ENV REDIS_HOST=127.0.0.1
-ENV REDIS_PASSWORD=null
-ENV REDIS_PORT=6379
-
-ENV MAIL_MAILER=smtp
-ENV MAIL_HOST=mail.privateemail.com   
-ENV MAIL_PORT=465
-ENV MAIL_USERNAME=admin@correcthustle.com
-ENV MAIL_PASSWORD=!DF-#4TWkibcCBr
-ENV MAIL_ENCRYPTION=ssl
-ENV MAIL_FROM_ADDRESS=admin@correcthustle.com
-ENV MAIL_FROM_NAME=CorrectHustle
-
-ENV AWS_ACCESS_KEY_ID=AKIA525LDBK2M3KUXK3R
-ENV AWS_SECRET_ACCESS_KEY=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
-ENV AWS_DEFAULT_REGION=us-east-1
-ENV AWS_BUCKET=hustlebucket
-ENV AWS_USE_PATH_STYLE_ENDPOINT=false
-
-
-ENV PUSHER_APP_ID="1614884"
-ENV PUSHER_APP_KEY="fd8e341790316fac7d06"
-ENV PUSHER_APP_SECRET="25470c458b9e0544d804"
-ENV PUSHER_HOST=
-ENV PUSHER_PORT=443
-ENV PUSHER_SCHEME=https
-ENV PUSHER_APP_CLUSTER="us2"
-
-ENV VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-ENV VITE_PUSHER_HOST="${PUSHER_HOST}"
-ENV VITE_PUSHER_PORT="${PUSHER_PORT}"
-ENV VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
-ENV VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-ENV PAYSTACK_PUBLIC_KEY="pk_test_ac11e590ba2a641bff759f0dce17ee04a3f59cd1"
-ENV PAYSTACK_SECRET_KEY="sk_test_b950524a98be8c4269643f7dcd36f28f4c6f0719"
-ENV PAYSTACK_PAYMENT_URL="https://api.paystack.co"
-ENV PAYSTACK_MERCHANT_EMAIL="afuwapesunday12@gmail.com"
-
-ENV FIREBASE_SERVER_KEY="AAAAWCsv5As:APA91bEjwrBcIEf1lvHYHEfA--66sZOOCrauHTDTSPcosj7pfKLw5gh4vLDaOQb32w2nDyhxEclIc-U77YOePpYGu_794YzVBZ5Kz8-cDMTU9I2dGsHbn3fEhrJ_Lc61Cx5BfKkU57jf"
-
-ENV POSITION_STACK_KEY="f5ab25ba762db1188d3b1e536ef665d7"
 
 RUN apk update && apk add \
     build-base \
@@ -141,7 +69,7 @@ COPY composer.json .
 RUN composer install --optimize-autoloader
 RUN composer update
 # RUN php artisan migrate:status
-RUN php artisan migrate --force 
+#RUN php artisan migrate --force 
 #RUN npm run production
 
 RUN php artisan optimize
@@ -149,6 +77,6 @@ RUN php artisan optimize
 # Set up volume
 VOLUME /var/www
 
+# RUN php artisan queue:work database
 
-#RUN php artisan queue:work database
 CMD php artisan serve --host=0.0.0.0 --port 80
