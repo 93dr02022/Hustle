@@ -150,32 +150,32 @@ class Hero extends Component
             [
                 'title' => 'Earn Money and Experience',
                 'subTitle' => 'With Top Clients',
-                'image' => 'home/artisan-10.webp'
+                'image' => '/img/home/person-1.webp'
             ],
             [
                 'title' => 'Expert Tailors',
                 'subTitle' => 'for Impeccable Outfits.',
-                'image' => 'home/artisan-9.webp'
+                'image' => 'https://dttc4kal57acd.cloudfront.net/home/artisan-9.webp'
             ],
             [
                 'title' => 'Get your next big project',
                 'subTitle' => 'build with experts',
-                'image' => 'home/artisan-one.webp'
+                'image' => 'https://dttc4kal57acd.cloudfront.net/home/artisan-one.webp'
             ],
             [
                 'title' => 'Expert Mechanics for',
                 'subTitle' => 'Automotive Services.',
-                'image' => 'home/artisan-4.webp'
+                'image' => 'https://dttc4kal57acd.cloudfront.net/home/artisan-4.webp'
             ],
             [
                 'title' => 'Top-notch Plumbers',
                 'subTitle' => 'at Your Service.',
-                'image' => 'home/plumber.webp'
+                'image' => 'https://dttc4kal57acd.cloudfront.net/home/plumber.webp'
             ],
             [
                 'title' => 'Verified Pro Barbers',
                 'subTitle' => 'for Exceptional Haircuts.',
-                'image' => 'home/barber.webp'
+                'image' => 'https://dttc4kal57acd.cloudfront.net/home/barber.webp'
             ]
         ];
     }

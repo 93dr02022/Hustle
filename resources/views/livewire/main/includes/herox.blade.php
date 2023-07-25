@@ -25,7 +25,7 @@
                                         </div>
                                         <div class="col-span-5">
                                             <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
-                                                <img src="{{ src($slide['image']) }}" class="h-full w-full object-cover" alt="">
+                                                <img src="{{ $slide['image'] }}" class="h-full w-full object-cover" alt="">
                                             </div>
                                         </div>
                                     </div>
