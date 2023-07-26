@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [develop]
+    branches: [staging]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
             cd /var/www/hustle
             git stash
             git stash clear
-            git pull origin develop
+            git pull origin staging
             chmod 755 -R storage bootstrap/cache
             composer i
             php artisan config:clear

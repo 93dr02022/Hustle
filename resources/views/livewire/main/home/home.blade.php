@@ -222,20 +222,32 @@
 
                         {{-- List of gigs --}}
                         <div class="relative col-span-12">
-                            <div class="swiper gigs-swiper">
+                            <div class="swiper w-full h-full gigs-swiper {{ $category->slug }}-swiper">
                                 <div class="swiper-wrapper">
                                     @foreach ($category->gigs as $gig)
                                         <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
-                                            @livewire('main.cards.gig', ['gig' => $gig], key('gig-item-' . $category->id . '-' . $gig->uid))
+                                            @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $loop->index }}">
+                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $category->slug }}">
                             </div>
-                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $loop->index }}">
+                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $category->slug }}">
                             </div>
                         </div>
+
+                        <script>
+                            new Swiper(".{{ $category->slug }}-swiper", {
+                                slidesPerView: "auto",
+                                spaceBetween: "18",
+
+                                navigation: {
+                                    nextEl: ".category-next-{{ $category->slug }}",
+                                    prevEl: ".category-prev-{{ $category->slug }}",
+                                },
+                            });
+                        </script>
                     </div>
                 </div>
             @endforeach
@@ -281,15 +293,17 @@
 
 @push('scripts')
     <script>
-        new Swiper('.sellers-swiper', {
-            slidesPerView: "auto",
-            spaceBetween: "15",
+        if (document.querySelector('.sellers-swiper')) {
+            new Swiper('.sellers-swiper', {
+                slidesPerView: "auto",
+                spaceBetween: "15",
 
-            navigation: {
-                nextEl: '.for-you-next',
-                prevEl: '.for-you-prev',
-            },
-        });
+                navigation: {
+                    nextEl: '.for-you-next',
+                    prevEl: '.for-you-prev',
+                },
+            });
+        }
 
         new Swiper('.selected-gigs-swiper', {
             slidesPerView: "auto",
@@ -301,22 +315,22 @@
             },
         });
 
-        const myCustomSlider = document.querySelectorAll('.gigs-swiper');
+        // const myCustomSlider = document.querySelectorAll('.gigs-swiper');
 
-        for (i = 0; i < myCustomSlider.length; i++) {
+        // for (i = 0; i < myCustomSlider.length; i++) {
 
-            myCustomSlider[i].classList.add(`gigs-swiper-${i}`);
+        //     myCustomSlider[i].classList.add(`gigs-swiper-${i}`);
 
-            var slider = new Swiper(`.gigs-swiper-${i}`, {
-                slidesPerView: "auto",
-                spaceBetween: "18",
+        //     var slider = new Swiper(`.gigs-swiper-${i}`, {
+        //         slidesPerView: "auto",
+        //         spaceBetween: "18",
 
-                navigation: {
-                    nextEl: `.category-next-${i}`,
-                    prevEl: `.category-prev-${i}`,
-                },
-            });
+        //         navigation: {
+        //             nextEl: `.category-next-${i}`,
+        //             prevEl: `.category-prev-${i}`,
+        //         },
+        //     });
 
-        }
+        // }
     </script>
 @endpush

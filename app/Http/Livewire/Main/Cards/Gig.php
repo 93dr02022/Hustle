@@ -32,12 +32,10 @@ class Gig extends Component
         if (auth()->check()) {
 
             $this->favorite = Favorite::where('user_id', auth()->id())->where('gig_id', $gig->id)->first() ? true : false;
-
         }
 
         // Set profile visibility
         $this->profile_visible = $profile_visible;
-
     }
 
     /**
@@ -47,7 +45,15 @@ class Gig extends Component
      */
     public function render()
     {
-        return view('livewire.main.cards.gig');
+        return view('livewire.main.cards.gig', ['jsuid' => $this->jsuid]);
+    }
+
+    /**
+     * Get alpine property
+     */
+    public function getJsuidProperty()
+    {
+        return uid(40);
     }
 
     /**
@@ -81,9 +87,7 @@ class Gig extends Component
                     'description' => __('messages.t_gig_removed_from_ur_favorite_list'),
                     'icon' => 'success',
                 ]);
-
             }
-
         } catch (\Throwable $th) {
 
             // Error
@@ -92,7 +96,6 @@ class Gig extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -117,7 +120,6 @@ class Gig extends Component
                 ]);
 
                 return;
-
             }
 
             // Get gig
@@ -137,7 +139,6 @@ class Gig extends Component
                 ]);
 
                 return;
-
             }
 
             // Add to list
@@ -155,7 +156,6 @@ class Gig extends Component
                 'description' => __('messages.t_gig_has_been_added_to_favorite_list'),
                 'icon' => 'success',
             ]);
-
         } catch (\Throwable $th) {
 
             // Error
@@ -164,7 +164,6 @@ class Gig extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
     }
 }
