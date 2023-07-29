@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class UserNotificationSettings extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable
+     * 
+     * @var array<string, string>
+     */
     protected $fillable = [
         'notification_token',
         'user_id',
@@ -15,7 +21,13 @@ class UserNotificationSettings extends Model
         'push_order_notifications',
         'push_marketing_notifications'
     ];
-    protected $casting = [
+
+    /**
+     * The attributes that should be cast
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
         'push_inbox_notifications' => 'boolean',
         'push_order_notifications' => 'boolean',
         'push_marketing_notifications' => 'boolean'

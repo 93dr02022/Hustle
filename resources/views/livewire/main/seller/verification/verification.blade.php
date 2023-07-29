@@ -109,7 +109,8 @@
                 </div>
 
                 {{-- business verification --}}
-                <div @click="startVerify('business')" class="py-4 lg:py-5 rounded cursor-pointer border card-shadow px-3 sm:px-4 flex items-start sm:items-center gap-x-3 mb-5">
+                <div @if ($verification->business_verify_status == 'pending' || $verification->business_verify_status == 'declined') @click="startVerify('business')" @endif
+                    class="py-4 lg:py-5 rounded cursor-pointer border card-shadow px-3 sm:px-4 flex items-start sm:items-center gap-x-3 mb-5">
                     <div class="bg-white grid place-items-center flex-shrink-0 shadow rounded p-2">
                         <svg width="18" height="18" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -236,29 +237,43 @@
                     <div x-show="selectedVerification == 'business'">
                         <form @submit.prevent="submitBusiness">
                             <div class="grid md:grid-cols-2 gap-4 mb-6">
-                                <x-forms.text-input label="{{ __('Business Name') }}" placeholder="{{ __('shola store') }}" x-model="bizForm.business_name" type="text" icon="at"
-                                    required />
-
-                                <x-forms.text-input label="{{ __('Business email') }}" placeholder="{{ __('sholastore@gmail.com') }}" x-model="bizForm.business_email" type="email"
-                                    icon="at" required />
-
-                                <x-forms.text-input label="{{ __('Business phone') }}" placeholder="{{ __('1234567890') }}" x-model="bizForm.business_phone" type="tel" icon="at"
-                                    required />
-
-                                <x-forms.text-input label="{{ __('RC Number') }}" placeholder="{{ __('5252584425') }}" x-model="bizForm.registration_number" type="text" icon="at"
-                                    required />
-
-                                <div class="col-span-2 border-2 border-dashed rounded-md px-3 py-4 mb-4 mt-5">
-                                    <label for="bizfile" class="block text-[0.8125rem] mb-2 font-medium tracking-wide text-gray-700 dark:text-white">CAC/BN
-                                        Certificate</label>
-                                    <input type="file" id="bizfile"
-                                        class="block w-full text-[13px] text-gray-900 bg-transparent border dark:text-gray-300 rounded-md cursor-pointer focus:outline-none dark:dark:border-zinc-500 border-gray-300 file:!bg-slate-100 file:!text-slate-500 file:hover:!bg-slate-200 dark:border-zinc-600 dark:bg-transparent dark:file:!bg-zinc-700 dark:file:!text-zinc-200"
-                                        accept="image/jpg,image/jpeg,image/png" @change="bizForm.registration_file = $event.target.files[0]" required>
+                                <div class="">
+                                    <x-forms.text-input label="{{ __('Business Name') }}" placeholder="{{ __('shola store') }}" x-model="bizForm.business_name" type="text" icon="at"
+                                        required />
+                                    <p x-show="bizFormErrors?.business_name" class="mt-1 text-xs text-red-600 dark:text-red-500" x-text="bizFormErrors?.business_name?.[0]"></p>
                                 </div>
 
+                                <div class="">
+                                    <x-forms.text-input label="{{ __('Business email') }}" placeholder="{{ __('sholastore@gmail.com') }}" x-model="bizForm.business_email" type="email"
+                                        icon="at" required />
+                                    <p x-show="bizFormErrors?.business_email" class="mt-1 text-xs text-red-600 dark:text-red-500" x-text="bizFormErrors?.business_email?.[0]"></p>
+                                </div>
+
+                                <div class="">
+                                    <x-forms.text-input label="{{ __('Business phone') }}" placeholder="{{ __('0814525555') }}" maxlength="11" minlength="11" x-model="bizForm.business_phone"
+                                        type="tel" icon="at" required />
+                                    <p x-show="bizFormErrors?.business_phone" class="mt-1 text-xs text-red-600 dark:text-red-500" x-text="bizFormErrors?.business_phone?.[0]"></p>
+                                </div>
+
+                                <div class="">
+                                    <x-forms.text-input label="{{ __('RC Number') }}" placeholder="{{ __('5252584425') }}" x-model="bizForm.registration_number" type="text" icon="at"
+                                        required />
+                                    <p x-show="bizFormErrors?.registration_number" class="mt-1 text-xs text-red-600 dark:text-red-500" x-text="bizFormErrors?.registration_number?.[0]"></p>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <div class="col-span-2 border-2 border-dashed rounded-md px-3 py-4 mb-4 mt-5">
+                                        <label for="bizfile" class="block text-[0.8125rem] mb-2 font-medium tracking-wide text-gray-700 dark:text-white">CAC/BN
+                                            Certificate</label>
+                                        <input type="file" id="bizfile"
+                                            class="block w-full text-[13px] text-gray-900 bg-transparent border dark:text-gray-300 rounded-md cursor-pointer focus:outline-none dark:dark:border-zinc-500 border-gray-300 file:!bg-slate-100 file:!text-slate-500 file:hover:!bg-slate-200 dark:border-zinc-600 dark:bg-transparent dark:file:!bg-zinc-700 dark:file:!text-zinc-200"
+                                            accept="image/jpg,image/jpeg,image/png" @change="handleRegFile($event)" required>
+                                        <p x-show="bizFormErrors?.registration_file" class="mt-1 text-xs text-red-600 dark:text-red-500" x-text="bizFormErrors?.registration_file?.[0]"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="border-t my-3 pt-3 flex justify-end">
-                                <button type="submit" wire:loading.attr="disabled" wire:target="businessVerify" class="btn-purple">Submit</button>
+                                <button type="submit" wire:loading.attr="disabled" wire:target="businessVerify" :disabled="bizForm.registration_file == null" class="btn-purple">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -356,12 +371,13 @@
                 selectedBank: null,
                 selectedVerification: 'personal',
                 selfie: "",
+                bizFormErrors: {},
 
                 bizForm: {
                     business_name: "",
                     business_email: "",
                     business_phone: "",
-                    registration_file: "",
+                    registration_file: null,
                     registration_number: ""
                 },
 
@@ -371,27 +387,9 @@
                 },
 
                 init() {
-                    // let button = this.$refs.stepOneButton
-                    // let accountInput = document.querySelector('#text-input-component-id-accountNumber');
-                    // if (button) {
-                    //     button.disabled = true;
-
-                    //     accountInput.addEventListener('input', (e) => {
-                    //         if (event.target.value.length !== 10 || !this.selectedBank) {
-                    //             button.disabled = true;
-                    //         } else {
-                    //             button.disabled = false;
-                    //         }
-                    //     })
-
-                    //     $('#select2-id-bank').on('select2:select', function(e) {
-                    //         this.selectedBank = e.params.data
-
-                    //         if (e.params.data && accountInput.value.length == 10) {
-                    //             button.disabled = false;
-                    //         }
-                    //     });
-                    // }
+                    window.addEventListener('business-errors', event => {
+                        this.bizFormErrors = event.detail
+                    })
                 },
 
                 startVerify(type) {
@@ -416,16 +414,6 @@
 
                 closeModal() {
                     this.hidden = false
-                },
-
-                setFrontSide(e) {
-                    const source = e.target.files[0];
-                    this.preview.front = source.name
-                },
-
-                setBackSide(e) {
-                    const source = e.target.files[0];
-                    this.preview.back = source.name
                 },
 
                 dataURLtoFile(dataurl, filename) {
@@ -470,7 +458,19 @@
                     @this.photoVerify(this.selfie)
                 },
 
+                handleRegFile(event) {
+                    this.bizForm.registration_file = null
+
+                    const reader = new FileReader();
+                    reader.readAsDataURL(event.target.files[0]);
+
+                    reader.onload = () => {
+                        this.bizForm.registration_file = reader?.result
+                    };
+                },
+
                 submitBusiness() {
+                    this.bizFormErrors = {}
                     @this.businessVerify(this.bizForm)
                 }
 

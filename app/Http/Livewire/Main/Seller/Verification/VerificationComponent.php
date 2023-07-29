@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Main\Seller\Verification;
 
 use App\Http\Validators\Main\Account\Verification\SelfieValidator;
+use App\Http\Validators\Main\Seller\Verification\BusinessValidator;
 use App\Models\UserWithdrawalSettings;
 use App\Models\VerificationCenter;
 use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Intervention\Image\Facades\Image;
@@ -291,51 +293,35 @@ class VerificationComponent extends Component
     /**
      * Complete Verification forma and submits the form
      */
-    public function businessVerify()
+    public function businessVerify($payload)
     {
+        $validator = BusinessValidator::validate($payload);
+
+        if ($validator->fails()) {
+            $this->dispatchBrowserEvent('business-errors', $validator->errors());
+            $this->toastMessage(__('messages.t_toast_form_validation_error'));
+            return;
+        }
+
         try {
+            $filename = 'verifications/' . uid() . '.jpeg';
+            $image = Image::make($payload['registration_file']);
+
+            Storage::disk('s3')->put($filename, $image->encode());
+
             VerificationCenter::where('user_id', auth()->id())
                 ->update([
                     'has_business' => true,
-                    'registration_file' => '',
-                    'business_verify_status' => 'pending'
+                    'registration_file' => $filename,
+                    'business_verify_status' => 'awaiting',
+                    ...$validator->safe()->except('registration_file')
                 ]);
 
-            UserWithdrawalSettings::upsert(
-                [
-                    [
-                        'user_id' => auth()->id(),
-                        'gateway_provider_name' => 'offline',
-                        'gateway_provider_id' => $this->accountNumber,
-                        'bank_name' => $this->getBankName(),
-                        'bank_code' => $this->bank,
-                        'transfer_recipient' => $this->transferCode,
-                        'account_name' => $this->accountName,
-                    ],
-                ],
-                ['user_id'],
-                [
-                    'gateway_provider_id',
-                    'bank_name',
-                    'bank_code',
-                    'transfer_recipient',
-                    'account_name'
-                ]
-            );
-
-            User::where('id', auth()->id())
-                ->update([
-                    'status' => 'verified'
-                ]);
-
-            // Success, now refresh page
             $this->dispatchBrowserEvent('refresh');
-        } catch (ValidationException $e) {
-
-            $this->toastMessage(__('messages.t_toast_form_validation_error'));
-            throw $e;
+            $this->toastMessage(__('business verification information submitted successfully'), 'success');
         } catch (\Throwable $th) {
             throw $th;
+            $this->toastMessage(__('Sorry occured while trying to submit your business verification information.'));
         }
     }
 

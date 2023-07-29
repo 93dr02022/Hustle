@@ -73,12 +73,12 @@ class DatabaseSeeder extends Seeder
             ProjectCategoryAndSkillSeeder::class
         ]);
 
-        if (App::environment('local')) {
-            $this->call([
-                UserSeeder::class,
-                StatesTableSeeder::class,
-                GigSeeder::class
-            ]);
-        }
+        // if (App::environment('local')) {
+        $this->call([
+            UserSeeder::class,
+            StatesTableSeeder::class,
+            GigSeeder::class
+        ]);
+        // }
     }
 }

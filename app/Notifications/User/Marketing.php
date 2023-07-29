@@ -77,9 +77,10 @@ class Marketing extends Notification
     private function getActiveChannels($notifiable)
     {
         //Check if user has allowed push notifications for order updates
-        if ($notifiable->userNotificationSetting->push_order_notifications) {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
             $this->toFirebase($notifiable);
         }
+
         return [];
     }
 }
