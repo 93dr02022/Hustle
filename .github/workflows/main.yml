@@ -25,6 +25,10 @@ jobs:
             git stash
             git stash clear
             git pull origin staging
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm install
+            npm run prod
             chmod 755 -R storage bootstrap/cache
             composer i
             php artisan config:clear
