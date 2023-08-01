@@ -368,6 +368,10 @@
                                 <th
                                     class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                     @lang('messages.t_status')</th>
+                                    <th
+                                    class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                    @lang('messages.t_options')
+                                    </th>
                             </tr>
                         </thead>
                         <thead>
@@ -504,6 +508,25 @@
                                         @endif
                                     </td>
 
+                                    {{-- Action --}}
+                                    <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-40 text-center">
+                                        <div class="flex items-center justify-center space-x-2 rtl:space-x-reverse">
+                                            {{-- Order details --}}
+                                            <a href="{{ url('seller/orders/details', $order->uid) }}"
+                                                data-tooltip-target="tooltip-actions-order-details-{{ $order->uid }}"
+                                                class="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold leading-5 text-gray-800 bg-white border border-gray-300 rounded shadow-sm focus:outline-none hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                                wire:key="tooltip-actions-order-details-{{ $order->uid }}">
+                                                <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
+                                                    stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                            <x-forms.tooltip id="tooltip-actions-order-details-{{ $order->uid }}"
+                                                :text="__('messages.t_order_details')" />
+                                        </div>
+                                    </td>
                                 </tr>
                                 @empty
                                 @endforelse

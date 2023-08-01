@@ -281,57 +281,59 @@
 
                     {{-- photo verification form --}}
                     @if ($verification->photo_status == 'pending' || $verification->photo_status == 'declined')
-                        {{-- Message --}}
-                        <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd" />
+                        <div class="" x-show="selectedVerification == 'photo'">
+                            {{-- Message --}}
+                            <div class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ltr:ml-3 rtl:mr-3">
+                                        <p class="text-sm text-yellow-700">{{ __('messages.t_verification_selfie_page_msg') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Container/Results --}}
+                            <div class="grid grid-cols-2 gap-4" wire:ignore>
+
+                                {{-- Camera container --}}
+                                <div class="">
+                                    <div class="flex justify-center border-dashed border-2 border-gray-200 dark:border-zinc-700 mt-8 mb-4">
+                                        <div id="webcamjs-container"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Image taken --}}
+                                <div class="flex items-center justify-center border-dashed border-2 border-gray-200 dark:border-zinc-700 mt-8 mb-4">
+                                    <div id="webcamjs-results"></div>
+                                </div>
+
+                            </div>
+
+                            {{-- Take Snapshot --}}
+                            <div>
+                                <button type="button"
+                                    class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-5 py-2.5 text-center inline-flex items-center ltr:mr-2 rtl:ml-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                    x-on:click="snapshot">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ltr:mr-2 rtl:ml-2 ltr:-ml-1 rtl:-mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-                                </div>
-                                <div class="ltr:ml-3 rtl:mr-3">
-                                    <p class="text-sm text-yellow-700">{{ __('messages.t_verification_selfie_page_msg') }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Container/Results --}}
-                        <div class="grid grid-cols-2 gap-4" wire:ignore>
-
-                            {{-- Camera container --}}
-                            <div class="">
-                                <div class="flex justify-center border-dashed border-2 border-gray-200 dark:border-zinc-700 mt-8 mb-4">
-                                    <div id="webcamjs-container"></div>
-                                </div>
+                                    <span class="text-xs font-semibold">{{ __('messages.t_take_a_snapshot') }}</span>
+                                </button>
                             </div>
 
-                            {{-- Image taken --}}
-                            <div class="flex items-center justify-center border-dashed border-2 border-gray-200 dark:border-zinc-700 mt-8 mb-4">
-                                <div id="webcamjs-results"></div>
+                            {{-- upload photo --}}
+                            <div class="border-t my-3 pt-3 flex justify-end">
+                                <button @click="upload()" :disabled="selfie.length <= 0" wire:loading.attr="disabled" wire:target="photoVerify" class="btn-purple">Submit</button>
                             </div>
-
-                        </div>
-
-                        {{-- Take Snapshot --}}
-                        <div>
-                            <button type="button"
-                                class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-5 py-2.5 text-center inline-flex items-center ltr:mr-2 rtl:ml-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                x-on:click="snapshot">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ltr:mr-2 rtl:ml-2 ltr:-ml-1 rtl:-mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span class="text-xs font-semibold">{{ __('messages.t_take_a_snapshot') }}</span>
-                            </button>
-                        </div>
-
-                        {{-- upload photo --}}
-                        <div class="border-t my-3 pt-3 flex justify-end">
-                            <button @click="upload()" :disabled="selfie.length <= 0" wire:loading.attr="disabled" wire:target="photoVerify" class="btn-purple">Submit</button>
                         </div>
                     @endif
                 </div>

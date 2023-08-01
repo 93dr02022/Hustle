@@ -28,4 +28,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('auth-user', [UserController::class, 'authUser']);
     Route::patch('auth-user/update', [UserController::class, 'updateAccount']);
+    Route::patch('user/update-fcm', [UserController::class, 'upateFcmToken']);
 });

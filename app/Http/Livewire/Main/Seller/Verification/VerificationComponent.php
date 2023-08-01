@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Main\Seller\Verification;
 
-use App\Http\Validators\Main\Account\Verification\SelfieValidator;
 use App\Http\Validators\Main\Seller\Verification\BusinessValidator;
 use App\Models\UserWithdrawalSettings;
 use App\Models\VerificationCenter;
@@ -12,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Intervention\Image\Facades\Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;

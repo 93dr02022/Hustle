@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('push_marketing_notifications')->default(true);
+        Schema::table('gigs', function (Blueprint $table) {
+            $table->unsignedInteger('number_of_review')->default(1);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('push_marketing_notifications');
+        Schema::table('gigs', function (Blueprint $table) {
+            $table->dropColumn('number_of_review');
         });
     }
 };

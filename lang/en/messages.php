@@ -2,6 +2,10 @@
 
 return [
     "t_create_account"                                         => "Create account",
+    "t_number_of_review"                                       => "Number of Reviews",
+    "t_reviews"                                                => "Reviews",
+    "t_choose_number_of_review"                                => "Choose number of reviews",
+    "t_request_review"                                         => "Request review",
     "t_sign_in"                                                => "Sign in",
     "t_email_address"                                          => "E-mail address",
     "t_enter_email_address"                                    => "Enter e-mail address",

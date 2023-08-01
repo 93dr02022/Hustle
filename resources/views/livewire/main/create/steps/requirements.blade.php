@@ -13,7 +13,7 @@
                 <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0 mt-4">
                     <button id="modal-add-service-requirement-button" class="inline-flex items-center py-2 ltr:md:pl-3 rtl:md:pr-3 border border-transparent rounded-full bg-transparent hover:bg-transparent focus:outline-none focus:ring-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-600 hover:text-primary-700 ltr:mr-2 rtl:ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                        <span class="text-xs font-medium text-primary-600 hover:text-primary-700"> 
+                        <span class="text-xs font-medium text-primary-600 hover:text-primary-700">
                             {{ __('messages.t_add_requirement') }}
                         </span>
                     </button>
@@ -49,7 +49,7 @@
                                     <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                                         <div>
                                             <p class="text-sm font-medium text-gray-600 dark:text-gray-200">
-                                                {{ $req['question'] }} 
+                                                {{ $req['question'] }}
                                             </p>
 
                                             <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
@@ -86,7 +86,7 @@
                             </div>
                         </li>
                     @endforeach
-                    
+
                 </ul>
             </div>
         @else
@@ -102,7 +102,7 @@
                             </p>
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
         @endif
 
@@ -133,7 +133,7 @@
                                 <svg class="w-5 h-5 {{ $errors->first('add_requirement.question') ? 'text-red-400' : 'text-gray-400' }}" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
                             </div>
                         </div>
-                    
+
                         {{-- Error --}}
                         @error('add_requirement.question')
                             <p class="mt-1 text-xs text-red-600 dark:text-red-500">{{ $errors->first('add_requirement.question') }}</p>
@@ -144,26 +144,25 @@
                 {{-- Type --}}
                 <div class="col-span-12">
                     <div class="relative default-select2 {{ $errors->first('add_requirement.type') ? 'select2-custom-has-error' : '' }}">
-                    
+
                         <select data-pharaonic="select2" data-component-id="{{ $this->id }}" wire:model="add_requirement.type" id="select2-id-add_requirement.type" data-placeholder="{{ __('messages.t_get_it_from') }}" data-search-off class="select2_requirements">
                             <option value=""></option>
                             <option value="text">{{ __('messages.t_free_text') }}</option>
                             <option value="choice">{{ __('messages.t_multiple_choice') }}</option>
-                            <option value="file">{{ __('messages.t_attachment') }}</option>
                         </select>
                         @error('add_requirement.type')
                             <p class="mt-1 text-xs text-red-600 dark:text-red-500">{{ $errors->first('add_requirement.type') }}</p>
                         @enderror
-                    
+
                     </div>
                 </div>
 
                 {{-- Multiple choice --}}
                 @if (isset($add_requirement['type']) && $add_requirement['type'] === 'choice')
-                    
+
                     {{-- Multiple choices --}}
                     <div class="col-span-12">
-                        <x-forms.checkbox 
+                        <x-forms.checkbox
                             label="{{ __('messages.t_multiple_choices') }} "
                             model="add_requirement.is_multiple" />
                     </div>
@@ -227,7 +226,7 @@
 
 
 @push('scripts')
-    
+
     {{-- AlpineJS --}}
     <script>
         function lMgwOjCpqGgzsVV() {

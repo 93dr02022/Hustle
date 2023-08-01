@@ -166,6 +166,7 @@ class DeliverComponent extends Component
 
             // Update order item
             $this->order->status = 'delivered';
+            $this->order->deliver_work_opened = false;
             $this->order->delivered_at = now();
             $this->order->save();
 
@@ -247,6 +248,12 @@ class DeliverComponent extends Component
 
             // Delete this files and reset
             $work->delete();
+
+            // update to dissable resubmit button
+            $this->order->deliver_work_opened = false;
+            $this->order->save();
+            // update count reviews of resubmit work until number is equal to total_reviews
+            $this->order->increment('count_review');
 
             // Refresh model
             $this->order->refresh();

@@ -229,7 +229,10 @@
                                 <button
                                     x-on:click="confirm('{{ __('messages.t_are_u_sure_u_want_to_resubmit_work_again') }}') ? $wire.resubmit() : ''"
                                     type="button"
-                                    class="text-white w-full bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-4 text-center inline-flex items-center justify-center"
+                                    @if (!$order->deliver_work_opened)
+                                    disabled="true"
+                                    @endif
+                                    class="text-white w-full disabled:cursor-not-allowed bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-4 text-center inline-flex items-center justify-center"
                                     wire:loading.attr="disabled" wire:target="resubmit">
 
                                     {{-- Loading indicator --}}

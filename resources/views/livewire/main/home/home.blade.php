@@ -231,23 +231,11 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $category->slug }}">
+                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $loop->index }}">
                             </div>
-                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $category->slug }}">
+                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $loop->index }}">
                             </div>
                         </div>
-
-                        <script>
-                            new Swiper(".{{ $category->slug }}-swiper", {
-                                slidesPerView: "auto",
-                                spaceBetween: "18",
-
-                                navigation: {
-                                    nextEl: ".category-next-{{ $category->slug }}",
-                                    prevEl: ".category-prev-{{ $category->slug }}",
-                                },
-                            });
-                        </script>
                     </div>
                 </div>
             @endforeach
@@ -315,22 +303,24 @@
             },
         });
 
-        // const myCustomSlider = document.querySelectorAll('.gigs-swiper');
+        document.addEventListener('DOMContentLoaded', function() {
+            const gigSwiper = document.querySelectorAll('.gigs-swiper');
 
-        // for (i = 0; i < myCustomSlider.length; i++) {
+            for (i = 0; i < gigSwiper.length; i++) {
 
-        //     myCustomSlider[i].classList.add(`gigs-swiper-${i}`);
+                gigSwiper[i].classList.add(`gigs-swiper-${i}`);
 
-        //     var slider = new Swiper(`.gigs-swiper-${i}`, {
-        //         slidesPerView: "auto",
-        //         spaceBetween: "18",
+                var slider = new Swiper(`.gigs-swiper-${i}`, {
+                    slidesPerView: "auto",
+                    spaceBetween: "18",
 
-        //         navigation: {
-        //             nextEl: `.category-next-${i}`,
-        //             prevEl: `.category-prev-${i}`,
-        //         },
-        //     });
+                    navigation: {
+                        nextEl: `.category-next-${i}`,
+                        prevEl: `.category-prev-${i}`,
+                    },
+                });
 
-        // }
+            }
+        });
     </script>
 @endpush

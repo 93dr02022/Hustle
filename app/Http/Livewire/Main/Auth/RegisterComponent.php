@@ -85,7 +85,7 @@ class RegisterComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_signup')." $separator ".settings('general')->title;
+        $title = __('messages.t_signup') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -99,7 +99,7 @@ class RegisterComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -121,7 +121,7 @@ class RegisterComponent extends Component
     public function register($form)
     {
         try {
-            if (! is_array($form) || ! isset($form['email']) || ! isset($form['password']) || ! isset($form['firstname']) || ! isset($form['lastname']) || ! isset($form['username'])) {
+            if (!is_array($form) || !isset($form['email']) || !isset($form['password']) || !isset($form['firstname']) || !isset($form['lastname']) || !isset($form['username'])) {
                 return;
             }
 
@@ -186,6 +186,12 @@ class RegisterComponent extends Component
 
             auth()->login($user, true);
 
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => __('Registration successful you can proceed to marketplace.'),
+                'icon' => 'success',
+            ]);
+
             return redirect('/');
         } catch (\Throwable $th) {
             $this->toastError($th->getMessage());
@@ -204,12 +210,12 @@ class RegisterComponent extends Component
                 $recaptcha_secret = config('recaptcha.secret_key');
 
                 // post request to server
-                $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($recaptcha_secret).'&response='.urlencode($this->recaptcha_token);
+                $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) . '&response=' . urlencode($this->recaptcha_token);
 
                 $recaptcha_response = file_get_contents($verify_recaptcha_url);
                 $recaptcha_decoded_response = json_decode($recaptcha_response, true);
 
-                if (! isset($recaptcha_decoded_response['success'])) {
+                if (!isset($recaptcha_decoded_response['success'])) {
                     throw new \Exception(__('messages.t_recaptcha_error_message'));
                 }
             } catch (\Throwable $th) {

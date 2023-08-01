@@ -549,6 +549,19 @@ class CategorySeeder extends Seeder
                 "Resume Writers And Editors personal",
                 "Translation personal",
             ],
+
+            "Errands" => [
+                "Grocery Shopping Errands",
+                "Personal Errands",
+                "Household Tasks Errands",
+                "Administrative Errands",
+                "Pet-related Errands",
+                "Vehicle-related Errands",
+                "Financial Errands",
+                "Gift Shopping Errands",
+                "Healthcare Errands",
+                "Technology Errands"
+            ]
         ]);
 
         $records->each(function ($subs, $key) {

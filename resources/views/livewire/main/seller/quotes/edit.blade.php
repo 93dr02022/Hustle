@@ -267,7 +267,7 @@
                 },
 
                 removeItem(index) {
-                    this.forms.items.splice(index, 1)
+                    this.form.items.splice(index, 1)
                 },
 
                 async update() {

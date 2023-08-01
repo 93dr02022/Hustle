@@ -64,10 +64,9 @@ class LoginComponent extends Component
         $this->social_grid = $social_grid_counter;
 
         // Redirect to previous url
-        if (! session()->has('url.intended')) {
+        if (!session()->has('url.intended')) {
             session(['url.intended' => url()->previous()]);
         }
-
     }
 
     /**
@@ -79,7 +78,7 @@ class LoginComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_login')." $separator ".settings('general')->title;
+        $title = __('messages.t_login') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -93,7 +92,7 @@ class LoginComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -116,7 +115,7 @@ class LoginComponent extends Component
         try {
 
             // Verify form first
-            if (! is_array($form) || ! isset($form['email']) || ! isset($form['password'])) {
+            if (!is_array($form) || !isset($form['email']) || !isset($form['password'])) {
                 return;
             }
 
@@ -133,7 +132,7 @@ class LoginComponent extends Component
                     $recaptcha_secret = config('recaptcha.secret_key');
 
                     // post request to server
-                    $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($recaptcha_secret).'&response='.urlencode($this->recaptcha_token);
+                    $verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptcha_secret) . '&response=' . urlencode($this->recaptcha_token);
 
                     // Get recaptcha response
                     $recaptcha_response = file_get_contents($verify_recaptcha_url);
@@ -142,7 +141,7 @@ class LoginComponent extends Component
                     $recaptcha_decoded_response = json_decode($recaptcha_response, true);
 
                     // should return JSON with success as true
-                    if (! isset($recaptcha_decoded_response['success'])) {
+                    if (!isset($recaptcha_decoded_response['success'])) {
 
                         // Spam detected
                         $this->notification([
@@ -152,9 +151,7 @@ class LoginComponent extends Component
                         ]);
 
                         return;
-
                     }
-
                 } catch (\Throwable $th) {
 
                     // Spam detected
@@ -165,7 +162,6 @@ class LoginComponent extends Component
                     ]);
 
                     return;
-
                 }
             }
 
@@ -181,9 +177,14 @@ class LoginComponent extends Component
                 // Check if user active
                 if (in_array(auth()->user()->status, ['active', 'verified'])) {
 
+                    $this->notification([
+                        'title' => __('messages.t_success'),
+                        'description' => __('Login successful you can proceed to marketplace.'),
+                        'icon' => 'success',
+                    ]);
+
                     // Go to home
                     return redirect()->intended('/');
-
                 } else {
 
                     // Logout
@@ -201,9 +202,7 @@ class LoginComponent extends Component
                     ]);
 
                     return;
-
                 }
-
             }
 
             // Failed
@@ -212,7 +211,6 @@ class LoginComponent extends Component
                 'description' => __('messages.t_invalid_login_credentials_pls_try_again'),
                 'icon' => 'error',
             ]);
-
         } catch (\Throwable $th) {
 
             // Error
@@ -221,7 +219,6 @@ class LoginComponent extends Component
                 'description' => __('messages.t_toast_something_went_wrong'),
                 'icon' => 'error',
             ]);
-
         }
     }
 }

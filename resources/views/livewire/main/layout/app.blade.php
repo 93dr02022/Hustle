@@ -19,13 +19,18 @@
     {{-- Livewire styles --}}
     @livewireStyles
 
+
+
     {{-- Styles --}}
     @if (App::environment('local'))
         <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @else
-        <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css" as="style">
-        <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css">
+        @php
+            $cssVersion = \Illuminate\Support\Facades\Cache::rememberForever('cssVersion', fn() => uid());
+        @endphp
+        <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css?v={{ $cssVersion }}" as="style">
+        <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css?v={{ $cssVersion }}">
     @endif
 
     <link rel="preload" href="{{ livewire_asset_path() }}" as="script">

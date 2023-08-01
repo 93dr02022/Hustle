@@ -132,9 +132,9 @@
 
     {{-- Content --}}
     <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
-        <div class="flex">
+        <div class="grid grid-cols-12 gap-4">
             <dl
-                class="mb-8 flex-1 rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+                class="mb-8 col-span-12 md:col-span-8 rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
 
                 {{-- Placed at --}}
                 <div class="rounded-t-lg bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -317,7 +317,7 @@
                 @endif
 
             </dl>
-            <div class="w-48 pl-3">
+            <div class="col-span-12 md:col-span-4 p-4 rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <h1 class="font-bold">Order Timeline</h1>
 
                 <ol class="relative border-l border-gray-200 dark:border-gray-700">

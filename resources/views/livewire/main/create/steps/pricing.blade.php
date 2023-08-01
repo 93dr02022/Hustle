@@ -13,7 +13,7 @@
                 <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0 mt-4">
                     <button wire:key="add-upgrade-btn" id="modal-add-service-upgrade-button" class="inline-flex items-center py-2 ltr:md:pl-3 rtl:md:pr-3 border border-transparent rounded-full bg-transparent hover:bg-transparent focus:outline-none focus:ring-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-600 hover:text-primary-700 ltr:mr-2 rtl:ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                        <span class="text-xs font-medium text-primary-600 hover:text-primary-700"> 
+                        <span class="text-xs font-medium text-primary-600 hover:text-primary-700">
                             {{ __('messages.t_add_service_upgrade') }}
                         </span>
                     </button>
@@ -26,9 +26,9 @@
 
             {{-- Service price --}}
             <div class="col-span-12 md:col-span-6">
-                <x-forms.text-input 
-                    label="{{ __('messages.t_price') }}" 
-                    placeholder="{{ __('messages.t_price_placeholder_0_00') }}" 
+                <x-forms.text-input
+                    label="{{ __('messages.t_price') }}"
+                    placeholder="{{ __('messages.t_price_placeholder_0_00') }}"
                     model="price"
                     suffix="{{ $currency_symbol }}" />
             </div>
@@ -48,6 +48,19 @@
                     class="select2_pricing" />
             </div>
 
+            <div class="col-span-12 md:col-span-6">
+                <x-forms.select2
+                    :label="__('messages.t_number_of_review')"
+                    :placeholder="__('messages.t_choose_number_of_review')"
+                    model="number_of_review"
+                    :options="$reviews"
+                    :isDefer="true"
+                    :isAssociative="false"
+                    :componentId="$this->id"
+                    value="value"
+                    text="text"
+                    class="select2_pricing" />
+            </div>
         </div>
 
     </div>
@@ -66,7 +79,7 @@
                     <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0 mt-4">
                         <button wire:click="removeUpgrade({{ $key }})" class="inline-flex items-center py-2 ltr:md:pl-3 rtl:md:pr-3 border border-transparent rounded-full bg-transparent hover:bg-transparent focus:outline-none focus:ring-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 hover:text-red-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            <span class="text-xs font-medium text-red-500 hover:text-red-600"> 
+                            <span class="text-xs font-medium text-red-500 hover:text-red-600">
                                 {{ __('messages.t_remove_upgrade') }}
                             </span>
                         </button>
@@ -79,18 +92,18 @@
 
                 {{-- Upgrade title --}}
                 <div class="col-span-12" wire:key="{{ uid() }}">
-                    <x-forms.text-input 
-                        label="{{ __('messages.t_upgrade_title') }}" 
-                        placeholder="{{ __('messages.t_enter_upgrade_title') }}" 
+                    <x-forms.text-input
+                        label="{{ __('messages.t_upgrade_title') }}"
+                        placeholder="{{ __('messages.t_enter_upgrade_title') }}"
                         model="upgrades.{{ $key }}.title"
                         icon="format-title" />
                 </div>
-        
+
                 {{-- Upgrade price --}}
                 <div class="col-span-12 md:col-span-6" wire:key="{{ uid() }}">
-                    <x-forms.text-input 
-                        label="{{ __('messages.t_price') }}" 
-                        placeholder="{{ __('messages.t_price_placeholder_0_00') }}" 
+                    <x-forms.text-input
+                        label="{{ __('messages.t_price') }}"
+                        placeholder="{{ __('messages.t_price_placeholder_0_00') }}"
                         model="upgrades.{{ $key }}.price"
                         suffix="{{ $currency_symbol }}" />
                 </div>
@@ -108,19 +121,19 @@
                         @error('upgrades.' . $key . '.extra_days')
                             <p class="mt-1 text-xs text-red-600 dark:text-red-500">{{ $errors->first('upgrades.' . $key . '.extra_days') }}</p>
                         @enderror
-                    
+
                     </div>
                 </div>
             </div>
 
         </div>
     @endforeach
-        
+
     {{-- Actions --}}
     <div class="flex justify-between">
         <x-forms.button action="back" text="{{ __('messages.t_back') }}" active="bg-white dark:bg-zinc-700 dark:hover:zinc-800 shadow-sm hover:bg-gray-300 text-gray-900 dark:text-gray-300"  />
         <x-forms.button action="save" text="{{ __('messages.t_save_and_continue') }}" />
-    </div> 
+    </div>
 
     {{-- ** Modal ** --}}
     <x-forms.modal id="modal-add-service-upgrade-container" target="modal-add-service-upgrade-button" uid="modal_{{ uid() }}" placement="center-center" size="max-w-md">
@@ -168,7 +181,7 @@
                 {{-- Upgrade extra days --}}
                 <div class="col-span-12" wire:key="{{ uid() }}">
                     <div class="relative default-select2 {{ $errors->first('add_upgrade.extra_days') ? 'select2-custom-has-error' : '' }}">
-                    
+
                         <select data-pharaonic="select2" data-component-id="{{ $this->id }}" wire:model.defer="add_upgrade.extra_days" id="select2-id-add_upgrade.extra_days" data-placeholder="{{ __('messages.t_and_an_additional_days') }}" data-search-off class="select2_pricing" data-dir="{{ config()->get('direction') }}">
                             <option value=""></option>
                             @foreach ($available_deliveries as $key => $option)
@@ -178,7 +191,7 @@
                         @error('add_upgrade.extra_days')
                             <p class="mt-1 text-xs text-red-600 dark:text-red-500">{{ $errors->first('add_upgrade.extra_days') }}</p>
                         @enderror
-                    
+
                     </div>
                 </div>
 
@@ -196,7 +209,7 @@
 
 
 @push('scripts')
-    
+
     {{-- AlpineJS --}}
     <script>
         function krLSMcHnnEKMpVx() {

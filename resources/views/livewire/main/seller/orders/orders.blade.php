@@ -156,7 +156,10 @@
                         <th
                             class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                             @lang('messages.t_expected_delivery_date')</th>
-
+                        {{-- Reviews --}}
+                        <th
+                            class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                            @lang('messages.t_reviews')</th>
                         {{-- Options --}}
                         <th
                             class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
@@ -323,7 +326,11 @@
                                     <span class="text-2xl font-medium text-gray-500 dark:text-gray-400">-</span>
                                 @endif
                             </td>
-
+                            {{-- Reviews --}}
+                            <td
+                                class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                {{ $order->total_reviews }}
+                            </td>
                             {{-- Options --}}
                             <td
                                 class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">

@@ -88,7 +88,7 @@
                                 <li wire:key="gallery-image-item-{{ $img->id }}"
                                     class="!col-span-12 sm:!col-span-6 md:!col-span-4 lg:!col-span-3 !w-full h-24 !m-auto fileuploader-item file-type-image file-ext-png file-has-popup rounded-[6px]">
                                     <div class="fileuploader-item-inner">
-                                        {{-- <div class="type-holder">{{ $img->small->file_extension }}</div> --}}
+                                        <div class="type-holder">{{ $img->small->file_extension }}</div>
                                         <div class="actions-holder">
                                             <button type="button" x-on:click="confirm('{{ __('messages.t_are_u_sure_delete_this_image') }}') ? $wire.removeImage('{{ $img->id }}') : ''"
                                                 wire:loading.attr="disabled" wire:target="removeImage('{{ $img->id }}')" class="fileuploader-action fileuploader-action-remove"
@@ -103,7 +103,7 @@
                                             <span class="fileuploader-action-popup"></span>
                                         </div>
                                         <div class="content-holder">
-                                            {{-- <span>{{ human_filesize($img->large->file_size) }}</span> --}}
+                                            <span>{{ human_filesize($img->large->file_size) }}</span>
                                         </div>
                                         <div class="progress-holder"></div>
                                     </div>

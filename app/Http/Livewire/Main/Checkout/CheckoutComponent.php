@@ -889,6 +889,7 @@ class CheckoutComponent extends Component
                         $order_item->uid = uid();
                         $order_item->order_id = $order->id;
                         $order_item->gig_id = $gig->id;
+                        $order_item->total_reviews = $gig->number_of_review;
                         $order_item->owner_id = $gig->user_id;
                         $order_item->quantity = (int) $item['quantity'];
                         $order_item->has_upgrades = is_array($item['upgrades']) && count($item['upgrades']) ? true : false;

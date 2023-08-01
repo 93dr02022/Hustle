@@ -1,10 +1,10 @@
 <div class="grid grid-cols-1" x-data="window.LandingPageHeroSection">
-    <div class="bg-white flex flex-col grow min-h-[370px] xs:min-h-[380px] sm:min-h-[385px] md:max-h-[430px] h-full w-full relative">
+    <div class="bg-white flex flex-col grow max-h-[380px] min-h-[370px] xs:min-h-[380px] sm:min-h-[385px] md:max-h-[430px] h-full w-full relative">
         <div class="grid h-full grid-cols-1">
             <div class="swiper hero-swiper w-full h-full" wire:ignore>
                 <div class="swiper-wrapper">
                     @foreach ($slides as $slide)
-                        <div class="w-full swiper-slide">
+                        <div class="w-full swiper-slide [&.swiper-slide:not(.swiper-slide-active)_.slide-img]:opacity-0">
                             <div class="h-full grid grid-cols-1">
                                 <div class="col-start-1 row-start-1 ">
                                     <img src="/img/home/bg.svg" class="h-full w-full object-fill" alt="">
@@ -24,8 +24,8 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="overflow-hidden rounded-[40px] mt-5 md:mt-10">
-                                                <img src="{{ $slide['image'] }}" class="h-full w-full object-cover" alt="">
+                                            <div class="flex justify-center overflow-hidden rounded-[40px] mt-5 md:mt-10">
+                                                <img src="{{ $slide['image'] }}" class="object-contain slide-img transition-opacity duration-500" alt="">
                                             </div>
                                         </div>
                                     </div>

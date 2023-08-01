@@ -24,6 +24,8 @@ class RequirementsComponent extends Component
     public $order;
 
     public $item;
+    public $requirement_file;
+
 
     public $requirements = [];
 
@@ -50,7 +52,6 @@ class RequirementsComponent extends Component
 
             // Error
             return redirect('account/orders')->with('message', __('messages.t_we_are_waiting_for_payment_first'));
-
         }
 
         // Set order
@@ -64,7 +65,6 @@ class RequirementsComponent extends Component
 
             // Set item
             $this->item = $item;
-
         } else {
             return redirect('account/orders')->with('message', __('messages.t_u_cant_submit_requirements_for_item'));
         }
@@ -79,7 +79,7 @@ class RequirementsComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_submit_required_info')." $separator ".settings('general')->title;
+        $title = __('messages.t_submit_required_info') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -93,7 +93,7 @@ class RequirementsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -126,7 +126,6 @@ class RequirementsComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Get requirements from database for this item
@@ -142,66 +141,58 @@ class RequirementsComponent extends Component
                 $value = $this->isExists($requirement);
 
                 // Check if user set the item
-                if (! is_bool($value)) {
+                if (!is_bool($value)) {
                     // Check type of this requirement
                     if ($requirement->type === 'text') {
-
                         // Save requirement
-                        OrderItemRequirement::create([
+                        $orderItemsRequirement = OrderItemRequirement::create([
                             'item_id' => $this->item->id,
                             'question' => $requirement->question,
                             'form_type' => $requirement->type,
                             'form_value' => $value,
                         ]);
-
                     } elseif ($requirement->type === 'choice') {
-
                         // Save requirement
-                        OrderItemRequirement::create([
+                        $orderItemsRequirement = OrderItemRequirement::create([
                             'item_id' => $this->item->id,
                             'question' => $requirement->question,
                             'form_type' => $requirement->type,
                             'form_value' => $value,
                         ]);
-
-                    } elseif ($requirement->type === 'file') {
-
-                        // Generate file id
-                        $id = uid(45);
-
-                        // Get file extension
-                        $extension = $value->extension();
-
-                        // Get file mime type
-                        $mime = $value->getMimeType();
-
-                        // Get file size
-                        $size = $value->getSize();
-
-                        // Move this file to local storage
-                        $value->storeAs('orders/requirements', "$id.$extension", $disk = 'custom');
-
-                        // Set file data
-                        $file = [
-                            'id' => $id,
-                            'extension' => $extension,
-                            'mime' => $mime,
-                            'size' => $size,
-                        ];
-
-                        // Save requirement in database
-                        OrderItemRequirement::create([
-                            'item_id' => $this->item->id,
-                            'question' => $requirement->question,
-                            'form_type' => $requirement->type,
-                            'form_value' => $file,
-                        ]);
-
                     }
                 }
-
             }
+            if ($this->requirement_file) {
 
+                // Generate file id
+                $id = uid(45);
+
+                // Get file extension
+                $extension = $this->requirement_file->extension();
+
+                // Get file mime type
+                $mime = $this->requirement_file->getMimeType();
+
+                // Get file size
+                $size = $this->requirement_file->getSize();
+
+                // Move this file to local storage
+                $path = $this->requirement_file->storeAs('orders/requirements', "$id.$extension", $disk = 'custom');
+
+                // Set file data
+                $file = [
+                    'id' => $id,
+                    'path' => $path,
+                    'extension' => $extension,
+                    'mime' => $mime,
+                    'size' => $size,
+                ];
+
+                // Save requirement in database
+                $orderItemsRequirement->update([
+                    'file_value' => $file,
+                ]);
+            }
             // Let' update item information
             $this->item->is_requirements_sent = true;
             $this->item->expected_delivery_date = $this->calculateExpectedDeliveryDate();
@@ -221,15 +212,13 @@ class RequirementsComponent extends Component
                     'description' => __('messages.t_required_info_submitted_success'),
                     'icon' => 'success',
                 ]);
-
             }
-
         } catch (Exception $e) {
 
             // Check exeption message
             switch ($e->getMessage()) {
 
-                // Input not exists in request
+                    // Input not exists in request
                 case 'REQUIRED_INPUT_NOT_EXISTS_IN_REQUEST':
 
                     // Show error
@@ -293,7 +282,6 @@ class RequirementsComponent extends Component
                     throw $e;
                     break;
             }
-
         }
     }
 
@@ -313,22 +301,21 @@ class RequirementsComponent extends Component
                 foreach ($this->item->requirements as $requirement) {
 
                     // Check if type file
-                    if ($requirement->form_type === 'file') {
+                    if ($requirement->requirement?->file_value) {
 
                         // Get file path
-                        $file = public_path('storage/orders/requirements/'.$requirement->form_value['id'].'.'.$requirement->form_value['extension']);
+                        $file = public_path('storage/orders/requirements/' . $requirement->file_value['id'] . '.' . $requirement->file_value['extension']);
 
                         // We have to delete file from local storage
                         if (File::exists($file)) {
                             File::delete($file);
                         }
-
                     }
 
                     // Delete requirement
                     $requirement->delete();
-
                 }
+
 
                 // We have to reset expected delivery date
                 $this->item->expected_delivery_date = null;
@@ -344,7 +331,6 @@ class RequirementsComponent extends Component
                     'description' => __('messages.t_resubmit_requirements_success_msg'),
                     'icon' => 'success',
                 ]);
-
             } else {
 
                 // Not yet
@@ -355,9 +341,7 @@ class RequirementsComponent extends Component
                 ]);
 
                 return;
-
             }
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -404,7 +388,6 @@ class RequirementsComponent extends Component
                             // Throw error
                             throw new Exception('REQUIRED_INPUT_TEXT_LENGTH_VALIDATION_FAILED');
                         }
-
                     } elseif ($requirement->type === 'choice') {
 
                         // Check choice type
@@ -414,26 +397,23 @@ class RequirementsComponent extends Component
                             $value_exist_in_db = $requirement->options->whereIn('option', $isExists)->first();
 
                             // Must be exists
-                            if (! $value_exist_in_db) {
+                            if (!$value_exist_in_db) {
 
                                 // Throw error
                                 throw new Exception('REQUIRED_CHOICE_MULTIPLE_VALUES_NOT_EXISTS');
                             }
-
                         } else {
 
                             // Only one value and must be exists in database
                             $is_value_exists_in_db = $requirement->options->where('option', $isExists)->first();
 
                             // Must be exists
-                            if (! $is_value_exists_in_db) {
+                            if (!$is_value_exists_in_db) {
 
                                 // Throw error
                                 throw new Exception('REQUIRED_CHOICE_VALUE_NOT_EXISTS');
                             }
-
                         }
-
                     } elseif ($requirement->type === 'file') {
 
                         // Let's validate file
@@ -447,20 +427,16 @@ class RequirementsComponent extends Component
                             // Throw error
                             throw new Exception('REQUIRED_FILE_VALIDATION_FAILED');
                         }
-
                     } else {
 
                         // Something not right
                         return false;
-
                     }
-
                 } else {
 
                     // Throw error
                     throw new Exception('REQUIRED_INPUT_NOT_EXISTS_IN_REQUEST');
                 }
-
             } else {
 
                 // Requirement input not required, but if exists in request, we have to validate it
@@ -481,7 +457,6 @@ class RequirementsComponent extends Component
                             // Throw error
                             throw new Exception('REQUIRED_INPUT_TEXT_LENGTH_VALIDATION_FAILED');
                         }
-
                     } elseif ($requirement->type === 'choice') {
 
                         // Check choice type
@@ -491,26 +466,23 @@ class RequirementsComponent extends Component
                             $value_exist_in_db = $requirement->options->whereIn('option', $isExists)->first();
 
                             // Must be exists
-                            if (! $value_exist_in_db) {
+                            if (!$value_exist_in_db) {
 
                                 // Throw error
                                 throw new Exception('REQUIRED_CHOICE_MULTIPLE_VALUES_NOT_EXISTS');
                             }
-
                         } else {
 
                             // Only one value and must be exists in database
                             $is_value_exists_in_db = $requirement->options->where('option', $isExists)->first();
 
                             // Must be exists
-                            if (! $is_value_exists_in_db) {
+                            if (!$is_value_exists_in_db) {
 
                                 // Throw error
                                 throw new Exception('REQUIRED_CHOICE_VALUE_NOT_EXISTS');
                             }
-
                         }
-
                     } elseif ($requirement->type === 'file') {
 
                         // Let's validate file
@@ -524,18 +496,13 @@ class RequirementsComponent extends Component
                             // Throw error
                             throw new Exception('REQUIRED_FILE_VALIDATION_FAILED');
                         }
-
                     } else {
 
                         // Something not right
                         return false;
-
                     }
-
                 }
-
             }
-
         }
     }
 
@@ -552,7 +519,6 @@ class RequirementsComponent extends Component
 
             // Return the value
             return $this->requirements[$requirement->id]['value'];
-
         }
 
         // Not found
