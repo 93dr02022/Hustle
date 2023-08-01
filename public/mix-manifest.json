@@ -1,8 +1,8 @@
 {
-    "/js/app.js": "/js/app.js?id=89f87f8510f2d8ba6577a7ff611be19b",
-    "/js/dropdown.js": "/js/dropdown.js?id=cb8636033afe4eb5707bc387290ed64f",
-    "/js/select2.js": "/js/select2.js?id=188199187c5408d174429e5fa78b3d5f",
-    "/css/mdi.css": "/css/mdi.css?id=ac7d4fe73b874327de5778136b4d09be",
-    "/css/app.css": "/css/app.css?id=30b8ae186ac881c5a6bbce088661f5b1",
-    "/css/select2.css": "/css/select2.css?id=bd9a1895a7cf91d1743514ed54cc279c"
+    "/js/app.js": "/js/app.js",
+    "/js/dropdown.js": "/js/dropdown.js",
+    "/js/select2.js": "/js/select2.js",
+    "/css/mdi.css": "/css/mdi.css",
+    "/css/app.css": "/css/app.css",
+    "/css/select2.css": "/css/select2.css"
 }

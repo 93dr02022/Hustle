@@ -50,7 +50,7 @@ class UserController extends Controller
         try {
             UserNotificationSettings::updateOrCreate(
                 ['user_id' => request()->user()->id],
-                ['notification_token' => request('token')]
+                ['app_token' => $request->token]
             );
 
             return Utils::successResp();
