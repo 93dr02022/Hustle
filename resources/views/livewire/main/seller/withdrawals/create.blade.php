@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full" x-data="window.SellerWithdrawAlpine">
 
     {{-- Loading --}}
     <x-forms.loading />
@@ -84,35 +84,9 @@
     {{-- Content --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <main class="rounded-lg bg-white dark:bg-zinc-800 shadow border border-gray-200 dark:border-zinc-800 py-12 px-[14px] sm:px-6 md:px-10">
-            <div class="bg-gray-100 border border-gray-200 rounded-md py-7 px-3 mb-7">
-                <div class="grid grid-cols-1 gap-y-5 sm:gap-y-8 sm:grid-cols-3 md:grid-cols-4">
-                    <div class="sm:col-span-1">
-                        <dt class="text-sm font-medium text-gray-500">Wallet Balance</dt>
-                        <dd class="mt-1 text-xs text-gray-500 capitalize">
-                            {{ money(auth()->user()->balance_available, settings('currency')->code, true) }}
-                        </dd>
-                    </div>
-
-                    <div class="sm:col-span-1">
-                        <dt class="text-sm font-medium text-gray-500">Account Number</dt>
-                        <dd class="mt-1 text-xs text-gray-500">{{ $withdrawalSettings?->gateway_provider_id }}</dd>
-                    </div>
-
-                    <div class="sm:col-span-1">
-                        <dt class="text-sm font-medium text-gray-500">Account Name</dt>
-                        <dd class="mt-1 text-xs text-gray-500 capitalize">{{ strtolower($withdrawalSettings?->account_name) }}</dd>
-                    </div>
-
-                    <div class="sm:col-span-1">
-                        <dt class="text-sm font-medium text-gray-500">Bank Name</dt>
-                        <dd class="mt-1 text-xs text-gray-500">{{ $withdrawalSettings?->bank_name }}</dd>
-                    </div>
-                </div>
-            </div>
-
             {{-- Check if he can make withdrawals --}}
             @if ($can_withdraw)
-                <form wire:submit.prevent="withdraw" class="grid grid-cols-2 md:gap-x-6 gap-y-6">
+                <form wire:submit.prevent="withdraw(true)" class="grid grid-cols-2 md:gap-x-6 gap-y-6">
                     <div class="">
                         <x-forms.select-option :label="__('Account type')" model="accountType" required>
                             <option value="">-- select --</option>
@@ -156,7 +130,47 @@
                 </div>
             @endif
 
+            {{-- Password confirmation button --}}
+            <button class="hidden" id="otpmodalbutton" x-ref="modalButton"></button>
+            <x-forms.modal placement="top" size="max-w-md" id="confirmModal" target="otpmodalbutton" uid="OtpConfirmation">
+                <x-slot:title>
+                    <div>Enter Otp to continue</div>
+                    </x-slot>
+
+                    <form @submit.prevent="sendForm">
+                        <x-slot:content>
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input label="{{ __('OTP') }}" placeholder="{{ __('Enter Otp') }}" model="otp" type="tel" required icon="key" />
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" @click="sendForm" wire:target="withdraw" wire:loading.attr="disabled" class="btn-purple">Proceed</button>
+                            </div>
+                            </x-slot>
+                    </form>
+            </x-forms.modal>
+
         </main>
     </div>
-
 </div>
+
+@push('scripts')
+    <script>
+        function SellerWithdrawAlpine() {
+            return {
+                init() {
+                    window.addEventListener('show-otp', (event) => {
+                        this.$refs.modalButton.click()
+                    })
+                },
+
+                async sendForm() {
+                    // window.SellerWithdrawAlpine.close()
+                    await @this.withdraw(false)
+                }
+            }
+        }
+
+        window.SellerWithdrawAlpine = SellerWithdrawAlpine()
+    </script>
+@endpush
