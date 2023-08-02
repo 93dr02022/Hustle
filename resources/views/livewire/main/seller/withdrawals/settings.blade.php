@@ -138,7 +138,7 @@
             </form>
 
             {{-- business account --}}
-            <form x-show="accountType == 'business'" x-cloak wire:submit.prevent="update" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 gap-y-5">
+            <form x-show="accountType == 'business'" x-cloak wire:submit.prevent="updateBusiness" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 gap-y-5">
 
                 {{-- Bank name --}}
                 <x-forms.text-input :label="__('Account Number')" placeholder="" model="businessAccountNumber" required
@@ -156,7 +156,7 @@
 
                 {{-- submit button --}}
                 <div class="col-span-2">
-                    <x-forms.button action="update" :text="__('Update Account')" :block="true" type="submit" />
+                    <x-forms.button action="updateBusiness" :text="__('Update Account')" :block="true" type="submit" />
                 </div>
             </form>
         </main>

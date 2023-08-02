@@ -1,7 +1,7 @@
 <?php
- 
+
 namespace App\Http\Controllers\Uploads\Requirements;
- 
+
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use App\Models\OrderItemRequirement;
@@ -10,7 +10,7 @@ use App\Models\Order;
 
 class RequirementsController extends Controller
 {
-   
+
     /**
      * Download required file
      *
@@ -23,7 +23,6 @@ class RequirementsController extends Controller
     public function download($orderId, $itemId, $reqId, $fileId)
     {
         try {
-            
             // Get user id
             $user_id = auth()->id();
 
@@ -40,36 +39,32 @@ class RequirementsController extends Controller
                 $requirement = OrderItemRequirement::where('item_id', $item->id)->where('id', $reqId)->firstOrFail();
 
                 // Type must be file
-                if ($requirement->form_type !== 'file') {
+                if (!$requirement->file_value) {
                     abort(404);
                 }
 
                 // File id must match the requested file id
-                if ($fileId !== $requirement->form_value['id']) {
+                if ($fileId !== $requirement->file_value['id']) {
                     abort(404);
                 }
 
                 // Get file path
-                $path = public_path('storage/orders/requirements/' . $fileId . '.' . $requirement->form_value['extension']);
+                $path = public_path('storage/orders/requirements/' . $fileId . '.' . $requirement->file_value['extension']);
 
                 // Check if file exists
                 if (File::exists($path)) {
-                    return response()->download($path, $fileId . '.' . $requirement->form_value['extension'], []);
+                    return response()->download($path, $fileId . '.' . $requirement->file_value['extension'], []);
                 }
-    
+
                 // Not found
                 abort(404);
-
             } else {
 
                 // No one other can access this file :)
                 abort(404);
-
             }
-
         } catch (\Throwable $th) {
             abort(404);
         }
     }
-
 }

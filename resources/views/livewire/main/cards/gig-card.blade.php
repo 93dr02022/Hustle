@@ -6,7 +6,8 @@
             class="flex items-center justify-center overflow-hidden relative w-full {{ request()->is('/') ? 'h-44' : 'h-52' }} bg-gray-100 dark:bg-zinc-700">
             <span class="absolute z-[1] top-0 left-0 text-xs font-normal bg-black/70 backdrop-blur-lg py-[3px] px-2.5 truncate max-w-[80px] m-1.5 text-white rounded">
                 {{ $gig->state_name }}</span>
-            <img class="object-fill w-full max-h-52 lazy h-52" width="200" src="{{ placeholder_img() }}" data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
+            <img class="object-contain w-full max-h-52 lazy h-52" width="200" src="{{ placeholder_img() }}"
+                data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
         </a>
 
         {{-- Gig content --}}

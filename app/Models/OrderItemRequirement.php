@@ -33,7 +33,8 @@ class OrderItemRequirement extends Model
         'item_id',
         'question',
         'form_type',
-        'form_value'
+        'form_value',
+        'file_value'
     ];
 
     /**
@@ -42,6 +43,7 @@ class OrderItemRequirement extends Model
      * @var array
      */
     protected $casts = [
-        'form_value' => 'array',
+        'form_value' => 'string',
+        'file_value' => 'array',
     ];
 }

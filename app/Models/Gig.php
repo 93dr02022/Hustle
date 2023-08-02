@@ -32,6 +32,7 @@ class Gig extends Model implements Sitemapable
         'description',
         'price',
         'delivery_time',
+        'number_of_review',
         'category_id',
         'subcategory_id',
         'image_thumb_id',
@@ -63,7 +64,7 @@ class Gig extends Model implements Sitemapable
 
 
     /**
-     * Scope a query to only include 
+     * Scope a query to only include
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder

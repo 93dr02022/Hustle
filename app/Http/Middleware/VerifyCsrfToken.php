@@ -26,6 +26,7 @@ class VerifyCsrfToken extends Middleware
         'callback/epoint/success',
         'callback/epoint/failed',
         'callback/epoint/results',
+        'livewire/*',
     ];
 
 

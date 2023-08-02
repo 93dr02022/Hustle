@@ -171,10 +171,10 @@
                             @endif
 
                             {{-- File --}}
-                            @if ($req->form_type === 'file')
+                            @if ($req->file_value)
                                 <div class="w-full mb-8 block">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ $req->question }}
+                                        Preview file
                                     </dt>
                                     <dd class="mt-2 text-sm text-gray-900 dark:text-gray-100">
                                         <ul role="list"
@@ -190,11 +190,11 @@
                                                             clip-rule="evenodd"></path>
                                                     </svg>
                                                     <span class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate">
-                                                        {{ $req->form_value['id'] }}.{{ $req->form_value['extension'] }}
+                                                        {{ $req->file_value['id'] }}.{{ $req->file_value['extension'] }}
                                                     </span>
                                                 </div>
                                                 <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0">
-                                                    <a href="{{ url('uploads/requirements/' . $item->order->uid . '/' . $item->uid . '/' . $req->id . '/' . $req->form_value['id']) }}"
+                                                    <a href="{{ url('uploads/requirements/' . $item->order->uid . '/' . $item->uid . '/' . $req->id . '/' . $req->file_value['id']) }}"
                                                         target="_blank"
                                                         class="font-medium text-primary-600 hover:text-primary-500">
                                                         {{ __('messages.t_download') }}

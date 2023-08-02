@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sellers:unavailable')->daily();
         $schedule->command('expired:bids')->daily();
         $schedule->command('expired:projects')->daily();
-        $schedule->command('refresh:cache')->everyTenMinutes();
+        $schedule->command('refresh:cache')->everySixHours();
     }
 
     /**

@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('user_notification_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->unique()->constrained('users')->cascadeOnDelete();
             $table->string('notification_token');
             $table->boolean('push_inbox_notifications')->default(false);
             $table->boolean('push_order_notifications')->default(false);
@@ -29,7 +29,6 @@ return new class extends Migration
             $table->dropColumn('push_order_updates');
             $table->dropColumn('push_inbox_messages');
             $table->dropColumn('push_marketing_notifications');
-
         });
     }
 

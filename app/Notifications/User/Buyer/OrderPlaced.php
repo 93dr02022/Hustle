@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Log;
 use Kutia\Larafirebase\Facades\Larafirebase;
 use Kutia\Larafirebase\Messages\FirebaseMessage;
 
@@ -35,8 +36,7 @@ class OrderPlaced extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        //Get the notification channels that the user has allowed to be notified of.
-        return $this->getActiveChannels($notifiable);
+        return ['mail'];
     }
 
     /**
@@ -47,6 +47,11 @@ class OrderPlaced extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        // Push notifications for order updates
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            rescue(fn () => $this->toFirebase($notifiable));
+        }
+
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
 
@@ -64,14 +69,14 @@ class OrderPlaced extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
         $url =  url('account/orders');
-        return  Larafirebase::withTitle($subject)
+
+        Larafirebase::withTitle($subject)
             ->withBody(__('messages.t_notification_buyer_order_placed'))
             ->withClickAction($url)
-            ->withIcon(asset( 'img/default/no-favicon.png'))
-            ->withImage(asset('img/default/no-favicon.png'))
+            ->withIcon(asset('img/default/no-favicon.png'))
+            // ->withImage(asset('img/default/no-favicon.png'))
             ->withPriority('high')
             ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
     }
@@ -86,13 +91,5 @@ class OrderPlaced extends Notification implements ShouldQueue
         return [
             //
         ];
-    }
-    private function getActiveChannels($notifiable)
-    {
-        //Check if user has allowed push notifications for order updates
-        if ($notifiable->userNotificationSetting->push_order_notifications) {
-            $this->toFirebase($notifiable);
-        }
-        return ['mail'];
     }
 }

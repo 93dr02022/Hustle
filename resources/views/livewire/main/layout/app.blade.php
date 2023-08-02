@@ -19,13 +19,18 @@
     {{-- Livewire styles --}}
     @livewireStyles
 
+
+
     {{-- Styles --}}
     @if (App::environment('local'))
         <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @else
-        <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css" as="style">
-        <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css">
+        @php
+            $cssVersion = \Illuminate\Support\Facades\Cache::rememberForever('cssVersion', fn() => uid());
+        @endphp
+        <link rel="preload" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css?v={{ $cssVersion }}" as="style">
+        <link rel="stylesheet" href="https://hustlebucket.s3.amazonaws.com/public/css/app.css?v={{ $cssVersion }}">
     @endif
 
     <link rel="preload" href="{{ livewire_asset_path() }}" as="script">
@@ -68,18 +73,16 @@
 
 
     <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4H3R1_H5xi0NvV_n6NXCG73tr_t6GjFg",
-            authDomain: "hustle-7d66f.firebaseapp.com",
-            projectId: "hustle-7d66f",
-            storageBucket: "hustle-7d66f.appspot.com",
-            messagingSenderId: "378681680907",
-            appId: "1:378681680907:web:0488b453643915a367930e",
-            measurementId: "G-B31LGQ7JG1"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp({
+            apiKey: "AIzaSyCmG2aLIjcMs6MnetmQ6JN26nNEHKRhPyY",
+            authDomain: "project-schoolbo-1597491385360.firebaseapp.com",
+            databaseURL: "https://project-schoolbo-1597491385360.firebaseio.com",
+            projectId: "project-schoolbo-1597491385360",
+            storageBucket: "project-schoolbo-1597491385360.appspot.com",
+            messagingSenderId: "59361698308",
+            appId: "1:59361698308:web:50385a00f7808afe0e0b51",
+            measurementId: "G-Z6BFE8XTZR",
+        });
 
         const messaging = firebase.messaging();
         @if (auth()->check())

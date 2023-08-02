@@ -23,7 +23,7 @@ class OrdersComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_my_orders')." $separator ".settings('general')->title;
+        $title = __('messages.t_my_orders') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -37,7 +37,7 @@ class OrdersComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -59,7 +59,7 @@ class OrdersComponent extends Component
      */
     public function getOrdersProperty()
     {
-        return Order::with(['quotation', 'items'])->where('buyer_id', auth()->id())->orderByDesc('id')->simplePaginate(10);
+        return Order::with(['quotation', 'items'])->where('buyer_id', auth()->id())->orderByDesc('id')->paginate(10);
     }
 
     /**

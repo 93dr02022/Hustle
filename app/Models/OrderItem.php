@@ -41,6 +41,9 @@ class OrderItem extends Model
         'gig_id',
         'owner_id',
         'quantity',
+        'total_reviews',
+        'count_review',
+        'deliver_work_opened',
         'has_upgrades',
         'is_requirements_sent',
         'total_value',
@@ -59,11 +62,12 @@ class OrderItem extends Model
 
     /**
      * The attributes that should be casts.
-     * 
+     *
      * @var array<string, string>
      */
     protected $casts = [
         'can_wallet' => 'boolean',
+        'deliver_work_opened' => 'boolean',
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Main;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Main\UpdateAccountRequest;
 use App\Models\User;
+use App\Models\UserNotificationSettings;
 use App\Support\Utils;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,7 @@ class UserController extends Controller
     }
 
     /**
-     * updat authenticated user account
+     * update authenticated user account
      * 
      * @return \Illuminate\Http\JsonResponse
      */
@@ -30,6 +31,27 @@ class UserController extends Controller
         try {
             User::where('id', auth()->id())
                 ->update($request->validated());
+
+            return Utils::successResp();
+        } catch (\Throwable $th) {
+            return Utils::errorResp();
+        }
+    }
+
+    /**
+     * Update the user fcm_token field
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upateFcmToken(Request $request)
+    {
+        $request->validate(['token' => 'required']);
+
+        try {
+            UserNotificationSettings::updateOrCreate(
+                ['user_id' => request()->user()->id],
+                ['notification_token' => request('token')]
+            );
 
             return Utils::successResp();
         } catch (\Throwable $th) {

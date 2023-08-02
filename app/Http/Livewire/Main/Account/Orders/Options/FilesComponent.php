@@ -221,4 +221,13 @@ class FilesComponent extends Component
         // Redirect user to give a review
         return redirect('account/reviews/create/' . $item->uid);
     }
+
+    //function to update reviews
+    function requestReview()
+    {
+        $this->item->deliver_work_opened = true;
+        $this->item->save();
+        session()->flash('success','Request for review sent successfully');
+        return redirect()->back();
+    }
 }

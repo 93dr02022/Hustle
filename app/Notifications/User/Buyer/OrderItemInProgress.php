@@ -48,10 +48,10 @@ class OrderItemInProgress extends Notification implements ShouldQueue
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_in_progress');
 
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_buyer_item_in_progress'))
-                    ->action(__('messages.t_my_orders'), url('account/orders'));
+            ->subject($subject)
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->line(__('messages.t_notification_buyer_item_in_progress'))
+            ->action(__('messages.t_my_orders'), url('account/orders'));
     }
     public function toFirebase($notifiable)
     {
@@ -83,7 +83,7 @@ class OrderItemInProgress extends Notification implements ShouldQueue
     private function getActiveChannels($notifiable)
     {
         //Check if user has allowed push notifications for order updates
-        if ($notifiable->userNotificationSetting->push_order_notifications) {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
             $this->toFirebase($notifiable);
         }
         return ['mail'];

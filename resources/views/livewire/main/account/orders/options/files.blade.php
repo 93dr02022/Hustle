@@ -14,6 +14,27 @@
 
                     {{-- Form --}}
                     <div class="py-6 px-4 sm:p-6 lg:pb-8">
+                {{-- Success --}}
+    @if (session()->has('success'))
+    <div class="w-full mb-8">
+        <div class="rounded-md bg-green-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ltr:ml-3 rtl:mr-3">
+                    <p class="text-sm font-medium text-green-800">{{ session()->get('success') }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+@endif
 
                         {{-- Section header --}}
                         <div class="mb-14 lg:flex lg:items-center lg:justify-between">
@@ -25,6 +46,26 @@
                             </div>
                             @if (!$item->is_finished && $item->status === 'delivered')
                                 <div class="mt-5 flex lg:mt-0 lg:ltr:ml-4 lg:rtl:mr-4">
+
+                                    {{-- Request review --}}
+                                    <span class="ltr:ml-3 rtl:mr-3">
+                                        <button
+                                            x-on:click='confirm("Are you sure to open review? You have {{ $item->total_reviews - $item->count_review }} remain review(s).") ? $wire.requestReview() : "" '
+                                            @if ($item->total_reviews == $item->count_review)
+                                            disabled="true"
+                                            @endif
+                                            wire:loading.attr="disabled" wire:target="requestReview" type="button"
+                                            class="inline-flex items-center disabled:cursor-not-allowed px-4 py-2 border border-gray-300 dark:border-zinc-600 rounded-sm shadow-sm text-xs font-bold tracking-wide text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 mr-2">
+                                            <svg class="ltr:-ml-1 ltr:mr-2 rtl:-mr-1 rtl:ml-2 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ __('messages.t_request_review') }}
+                                        </button>
+                                    </span>
 
                                     {{-- Request refund --}}
                                     @if (!$item->refund)
@@ -95,7 +136,8 @@
                                                         class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-100">
                                                         {{ __('messages.t_conversation_with_seller') }}</h3>
                                                     <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
-                                                        {{ __('messages.t_communicate_with_seller_about_changes') }}</p>
+                                                        {{ __('messages.t_communicate_with_seller_about_changes') }}
+                                                    </p>
                                                 </div>
                                                 <div class="ltr:ml-4 rtl:mr-4 mt-4 flex-shrink-0">
                                                     <a href="{{ url('account/orders') }}"
@@ -116,8 +158,8 @@
                                             <div class="w-full">
                                                 <ul role="list" class="py-6 px-8">
 
-                                                     @foreach ($item->conversation as
-                                                            $message)
+                                                        @foreach ($item->conversation
+                                                            as $message)
                                                             <li
                                                                 wire:key="seller-deliver-order-msg-id-{{ $message->id }}">
                                                                 <div class="relative pb-8">

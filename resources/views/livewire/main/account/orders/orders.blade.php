@@ -256,12 +256,12 @@
                                                                             </li>
 
                                                                             @php
-                                                                                
+
                                                                                 // Check expected delivery date
                                                                                 if ($item->expected_delivery_date && !$item->is_finished) {
                                                                                     // Parse expected delivery date
                                                                                     $parsed = \Carbon\Carbon::parse($item->expected_delivery_date);
-                                                                                
+
                                                                                     // Check if date is past
                                                                                     if ($parsed->isPast()) {
                                                                                         // Date in past, check item status
@@ -282,7 +282,7 @@
                                                                                 } else {
                                                                                     $can_refund = false;
                                                                                 }
-                                                                                
+
                                                                             @endphp
 
                                                                             {{-- View refund --}}
@@ -379,7 +379,7 @@
                                                                             @endif
 
                                                                             {{-- Send requirements --}}
-                                                                            @if (($item->status === 'pending' || $item->status === 'proceeded') && $item->order->invoice && $item->order->invoice->status === 'paid')
+                                                                            @if (($item->status === 'pending' || $item->status !== 'proceeded') && $item->order->invoice && $item->order->invoice->status === 'paid')
                                                                                 <li>
                                                                                     <a href="{{ url('account/orders/requirements?order=' . $order->uid . '&item=' . $item->uid) }}"
                                                                                         class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-b">
@@ -496,7 +496,7 @@
                                                             </div>
 
                                                             {{-- Send requirements --}}
-                                                            @if (($item->status === 'pending' || $item->status === 'proceeded') && $item->order->invoice && $item->order->invoice->status === 'paid')
+                                                            @if (($item->status === 'pending' || $item->status !== 'proceeded') && $item->order->invoice && $item->order->invoice->status === 'paid')
                                                                 <div class="flex-1 ltr:pl-4 rtl:pr-4 flex justify-center">
                                                                     <a href="{{ url('account/orders/requirements?order=' . $order->uid . '&item=' . $item->uid) }}"
                                                                         class="text-primary-600 whitespace-nowrap hover:text-primary-600">{{ __('messages.t_send_requirements') }}</a>
@@ -584,7 +584,7 @@
 
                                                 {{-- View gig --}}
                                                 <div class="flex justify-end text-sm font-medium">
-                                                    <a href="#" target="_blank" class="text-primary-600 whitespace-nowrap hover:text-primary-600">View
+                                                    <a href="/account/orders/{{ $order->id }}/quotation" class="text-primary-600 whitespace-nowrap hover:text-primary-600">View
                                                         quotation</a>
                                                 </div>
                                             </div>

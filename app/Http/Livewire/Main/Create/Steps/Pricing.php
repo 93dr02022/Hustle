@@ -14,6 +14,8 @@ class Pricing extends Component
 
     public $delivery_time;
 
+    public $number_of_review = 1;
+
     public $currency_symbol;
 
     public $upgrades = [];
@@ -21,6 +23,8 @@ class Pricing extends Component
     public $add_upgrade = [];
 
     public $available_deliveries = [];
+    
+    public $reviews = [];
 
     /**
      * Initialize component
@@ -42,6 +46,15 @@ class Pricing extends Component
             ['value' => 14, 'text' => __('messages.t_2_weeks')],
             ['value' => 21, 'text' => __('messages.t_3_weeks')],
             ['value' => 30, 'text' => __('messages.t_1_month')],
+        ];
+
+        // Set available deliveries dates
+        $this->reviews = [
+            ['value' => 1, 'text' => 1],
+            ['value' => 2, 'text' => 2],
+            ['value' => 3, 'text' => 3],
+            ['value' => 4, 'text' => 4],
+            ['value' => 5, 'text' => 5],
         ];
 
         // Get default currency
@@ -204,6 +217,7 @@ class Pricing extends Component
             // Set data
             $data['price'] = $this->price;
             $data['delivery_time'] = $this->delivery_time;
+            $data['number_of_review'] = $this->number_of_review;
             $data['upgrades'] = count($this->upgrades) ? $this->upgrades : [];
             $data['component_id'] = $this->id;
 

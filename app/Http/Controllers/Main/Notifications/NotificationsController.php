@@ -11,13 +11,10 @@ class NotificationsController extends Controller
     public function subscribe()
     {
         //Store the push notification token to the users table
-        $userNotificationSettings = UserNotificationSettings::where(['user_id' => request()->user()->id])->first();
-        if (!$userNotificationSettings) {
-            UserNotificationSettings::create([
-                'user_id' => request()->user()->id,
-                'notification_token' => request('token')
-            ]);
-        }
+        UserNotificationSettings::updateOrCreate(
+            ['user_id' => request()->user()->id],
+            ['notification_token' => request('token')]
+        );
 
         return response()->json(['message' => 'Subscribed!']);
     }

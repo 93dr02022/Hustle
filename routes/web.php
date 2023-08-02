@@ -277,6 +277,9 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
             // All
             Route::get('/', OrdersComponent::class);
 
+            // quotation order
+            Route::get('{orderId}/quotation', QuoteComponent::class);
+
             // Options
             Route::namespace('Options')->group(function () {
 

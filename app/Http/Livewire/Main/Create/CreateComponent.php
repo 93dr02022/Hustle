@@ -46,6 +46,7 @@ class CreateComponent extends Component
     public $price;
 
     public $delivery_time;
+    public $number_of_review;
 
     public $upgrades;
 
@@ -179,6 +180,7 @@ class CreateComponent extends Component
             // Set data
             $this->price = $data['price'];
             $this->delivery_time = $data['delivery_time'];
+            $this->number_of_review = $data['number_of_review'];
             $this->upgrades = $data['upgrades'];
 
             // Form valid, now go to next step
@@ -277,6 +279,9 @@ class CreateComponent extends Component
             // Get delivery time
             $delivery_time = $this->delivery_time;
 
+            // Get delivery time
+            $number_of_review = $this->number_of_review;
+
             // Get parent category
             $category_id = $this->category;
 
@@ -314,6 +319,7 @@ class CreateComponent extends Component
                 'description' => $description,
                 'price' => $price,
                 'delivery_time' => $delivery_time,
+                'number_of_review' => $number_of_review,
                 'category_id' => $category_id,
                 'subcategory_id' => $subcategory_id,
                 'image_thumb_id' => $imageThumbUrl,

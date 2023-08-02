@@ -92,32 +92,7 @@
                                             </div>
                                         @endif
 
-                                        {{-- File type --}}
-                                        @if ($req->type === 'file')
-                                            <div class="col-span-12">
-                                                <label for="requirements-file-{{ $key }}-{{ $item->uid }}"
-                                                    class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    {{ $req->question }}
-                                                    @if ($req->is_required)
-                                                        <span
-                                                            class="ltr:ml-1 rtl:mr-1 text-red-600 font-light text-xs italic lowercase">{{ __('messages.t_required') }}</span>
-                                                    @endif
-                                                </label>
-                                                <div class="mt-2 relative">
-                                                    <input type="file"
-                                                        x-on:change="fileInputChanged($event, 'requirements.{{ $req->id }}.value')"
-                                                        accept="{{ acceptableRequirementsMimeTypes() }}"
-                                                        id="requirements-file-{{ $key }}-{{ $item->uid }}"
-                                                        class="block w-full text-xs text-gray-700 font-medium bg-gray-100 rounded-md cursor-pointer focus:ring-0 focus:outline-none" />
-                                                </div>
-                                                <span class="text-xs text-gray-400 dark:text-gray-300 font-normal">Only
-                                                    <span
-                                                        class="text-gray-600 dark:text-white">{{ settings('media')->requirements_file_allowed_extensions }}</span>
-                                                    file extensions are allowed. Max file size is: <span
-                                                        class="text-gray-600 dark:text-white">{{ settings('media')->requirements_file_max_size }}
-                                                        MB</span></span>
-                                            </div>
-                                        @endif
+
 
                                         {{-- Multiple choices type --}}
                                         @if ($req->type === 'choice')
@@ -200,6 +175,27 @@
                                         @endif
 
                                     @endforeach
+                                    {{-- File type --}}
+                                    <div class="col-span-12">
+                                        <label for="requirements-file-{{ 'xyz' }}-{{ $item->uid }}"
+                                            class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __('messages.t_attach_a_file') }}
+                                        </label>
+                                        <div class="mt-2 relative">
+                                            <input type="file"
+                                                wire:model.defer="requirement_file"
+                                                x-on:change="fileInputChanged($event, 'requirements.{{ 'xyz' }}.value')"
+                                                accept="{{ acceptableRequirementsMimeTypes() }}"
+                                                id="requirements-file-{{ 'xyz' }}-{{ $item->uid }}"
+                                                class="block w-full text-xs text-gray-700 font-medium bg-gray-100 rounded-md cursor-pointer focus:ring-0 focus:outline-none" />
+                                        </div>
+                                        <span class="text-xs text-gray-400 dark:text-gray-300 font-normal">Only
+                                            <span
+                                                class="text-gray-600 dark:text-white">{{ settings('media')->requirements_file_allowed_extensions }}</span>
+                                            file extensions are allowed. Max file size is: <span
+                                                class="text-gray-600 dark:text-white">{{ settings('media')->requirements_file_max_size }}
+                                                MB</span></span>
+                                    </div>
                                 </div>
 
                                 {{-- Footer actions --}}
@@ -288,10 +284,10 @@
                                             @endif
 
                                             {{-- File --}}
-                                            @if ($req->form_type === 'file')
+                                            @if ($req->file_value)
                                                 <div class="w-full mb-8 block">
                                                     <dt class="text-sm font-medium text-gray-500">
-                                                        {{ $req->question }}
+                                                        Preview file
                                                     </dt>
                                                     <dd class="mt-2 text-sm text-gray-900 dark:text-gray-100">
                                                         <ul role="list"
@@ -309,11 +305,11 @@
                                                                     </svg>
                                                                     <span
                                                                         class="ltr:ml-2 rtl:mr-2 flex-1 w-0 truncate">
-                                                                        {{ $req->form_value['id'] }}.{{ $req->form_value['extension'] }}
+                                                                        {{ $req->file_value['id'] }}.{{ $req->file_value['extension'] }}
                                                                     </span>
                                                                 </div>
                                                                 <div class="ltr:ml-4 rtl:mr-4 flex-shrink-0">
-                                                                    <a href="{{ url('uploads/requirements/' . $order->uid . '/' . $item->uid . '/' . $req->id . '/' . $req->form_value['id']) }}"
+                                                                    <a href="{{ url('uploads/requirements/' . $order->uid . '/' . $item->uid . '/' . $req->id . '/' . $req->file_value['id']) }}"
                                                                         target="_blank"
                                                                         class="font-medium text-blue-600 hover:text-blue-500">
                                                                         {{ __('messages.t_download') }}

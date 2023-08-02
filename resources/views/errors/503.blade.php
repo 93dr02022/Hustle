@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,23 +13,27 @@
     {{-- Custom css --}}
     <style>
         :root {
-            --color-primary-h: {{ hex2hsl( settings('appearance')->colors['primary'] )[0] }};
-            --color-primary-s: {{ hex2hsl( settings('appearance')->colors['primary'] )[1] }}%;
-            --color-primary-l: {{ hex2hsl( settings('appearance')->colors['primary'] )[2] }}%;
+            --color-primary-h: {{ hex2hsl(settings('appearance')->colors['primary'])[0] }};
+            --color-primary-s: {{ hex2hsl(settings('appearance')->colors['primary'])[1] }}%;
+            --color-primary-l: {{ hex2hsl(settings('appearance')->colors['primary'])[2] }}%;
         }
+
         html {
-            font-family: @php echo settings('appearance')->font_family @endphp, sans-serif !important;
+            font-family: @php echo settings('appearance')->font_family
+        @endphp
+        ,
+        sans-serif !important;
         }
     </style>
 
     {{-- Styles --}}
-    <link rel="preload" href="{{ mix('css/app.css') }}" as="style">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    <link href="{{ mix('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
 </head>
+
 <body class="h-full">
-    
+
     <div class="bg-gray-50 min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
         <div class="max-w-max mx-auto">
             <main class="sm:flex">
@@ -43,8 +48,9 @@
                         </p>
                     </div>
                     <div class="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-                        <a href="{{ url('/') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">
-                            @lang('messages.t_refresh')    
+                        <a href="{{ url('/') }}"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">
+                            @lang('messages.t_refresh')
                         </a>
                     </div>
                 </div>
@@ -53,4 +59,5 @@
     </div>
 
 </body>
+
 </html>

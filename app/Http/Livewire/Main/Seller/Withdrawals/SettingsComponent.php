@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Main\Seller\Withdrawals;
 
 use App\Http\Validators\Main\Seller\Withdrawals\SettingsValidator;
 use App\Models\UserWithdrawalSettings;
+use App\Models\VerificationCenter;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -35,6 +36,8 @@ class SettingsComponent extends Component
 
     public $transferCode;
 
+    public $verification;
+
     /**
      * Init component
      *
@@ -43,6 +46,12 @@ class SettingsComponent extends Component
     public function mount()
     {
         $withdrawInfo = UserWithdrawalSettings::firstOrCreate(['user_id' => auth()->id()]);
+        $this->verification = VerificationCenter::where('user_id', auth()->id())->first();
+
+        if (!$this->verification) {
+            $this->toastSuccess('You need to complete your verification before setting bank account');
+            return redirect('/seller/verification');
+        }
 
         $this->personalBank = $withdrawInfo->personal_bank_code;
         $this->personalAccountName = $withdrawInfo->personal_account_name;
@@ -107,10 +116,12 @@ class SettingsComponent extends Component
     /**
      * Get bank name to save
      */
-    public function getBankName()
+    public function getBankName($type)
     {
-        $bank = collect($this->banks)->first(function ($bank) {
-            return $bank['code'] === $this->personalBank;
+        $bank = collect($this->banks)->first(function ($bank) use ($type) {
+            $bankCode = $type == 'personal' ? $this->personalBank : $this->businessBank;
+
+            return $bank['code'] == $bankCode;
         });
 
         return $bank['name'];
@@ -119,14 +130,14 @@ class SettingsComponent extends Component
     /**
      * Create Paystack Transfer code for recipient
      */
-    public function paystackRecipient()
+    public function paystackRecipient($type)
     {
         $response = Http::withToken(config('paystack.secretKey'))
             ->post("https://api.paystack.co/transferrecipient", [
                 'type' => 'nuban',
                 'name' => auth()->user()->first_name . " " . auth()->user()->first_name,
-                'account_number' => $this->personalAccountNumber,
-                'bank_code' =>  $this->personalBank,
+                'account_number' => $type == 'personal' ? $this->personalAccountNumber : $this->businessAccountNumber,
+                'bank_code' => $type == 'personal' ? $this->personalBank : $this->businessBank,
                 'currency' => 'NGN',
             ])
             ->object();
@@ -139,19 +150,62 @@ class SettingsComponent extends Component
     }
 
     /**
+     * Run paystack api to validate name via account number
+     */
+    public function accountMatch($type)
+    {
+        $response = Http::withToken(config('paystack.secretKey'))
+            ->get("https://api.paystack.co/bank/resolve", [
+                'account_number' => $type == 'personal' ? $this->personalAccountNumber : $this->businessAccountNumber,
+                'bank_code' => $type == 'personal' ? $this->personalBank : $this->businessBank
+            ])
+            ->object();
+
+        if (!$response->status) {
+            return false;
+        }
+
+        if ($type == 'personal') {
+            $containsAll = Str::containsAll($response->data->account_name, [
+                auth()->user()->first_name,
+                auth()->user()->last_name,
+            ], true);
+        }
+
+        if ($type == 'business') {
+            $containsAll = Str::containsAll($response->data->account_name, [
+                $this->verification->business_name
+            ], true);
+        }
+
+        if (!$containsAll) {
+            return false;
+        }
+
+        return $response->data->account_name;
+    }
+
+    /**
      * Very the seller supplied account information
      */
-    public function verify()
+    public function verify($type)
     {
-        $accountName = $this->accountMatch();
-        $transferCode = $this->paystackRecipient();
+        $accountName = $this->accountMatch($type);
+        $transferCode = $this->paystackRecipient($type);
 
         if (!$accountName || !$transferCode) {
             return false;
         }
 
-        $this->personalAccountName = $accountName;
-        $this->personalTransferCode = $transferCode;
+        if ($type == 'personal') {
+            $this->personalAccountName = $accountName;
+            $this->personalTransferCode = $transferCode;
+        }
+
+        if ($type == 'business') {
+            $this->businessAccountName = $accountName;
+            $this->businessTransferCode = $transferCode;
+        }
 
         return true;
     }
@@ -163,8 +217,13 @@ class SettingsComponent extends Component
      */
     public function updatePersonal()
     {
+        if (!$this->verification->has_personal) {
+            $this->toastError('Please complete your personal verification before setting withdrawal account.');
+            return false;
+        }
+
         try {
-            if (!$this->verify()) {
+            if (!$this->verify('personal')) {
                 $this->toastError(__('We are unable to verify your bank information please retry.'));
                 return false;
             }
@@ -172,7 +231,7 @@ class SettingsComponent extends Component
             UserWithdrawalSettings::where('user_id', auth()->id())
                 ->update([
                     'personal_acct_number' => $this->personalAccountNumber,
-                    'personal_bank_name' => $this->getBankName(),
+                    'personal_bank_name' => $this->getBankName('personal'),
                     'personal_bank_code' => $this->personalBank,
                     'personal_transfer_recipient' => $this->personalTransferCode,
                     'personal_account_name' => $this->personalAccountName,
@@ -191,8 +250,13 @@ class SettingsComponent extends Component
      */
     public function updateBusiness()
     {
+        if ($this->verification->business_verify_status !== 'verified') {
+            $this->toastError('you can only add business account when your business verified.');
+            return false;
+        }
+
         try {
-            if (!$this->verify()) {
+            if (!$this->verify('business')) {
                 $this->toastError(__('We are unable to verify your bank information please retry.'));
                 return false;
             }
@@ -200,7 +264,7 @@ class SettingsComponent extends Component
             UserWithdrawalSettings::where('user_id', auth()->id())
                 ->update([
                     'business_acct_number' => $this->businessAccountNumber,
-                    'business_bank_name' => $this->getBankName(),
+                    'business_bank_name' => $this->getBankName('business'),
                     'business_bank_code' => $this->businessBank,
                     'business_transfer_recipient' => $this->businessTransferCode,
                     'business_account_name' => $this->businessAccountName,
@@ -210,32 +274,6 @@ class SettingsComponent extends Component
         } catch (\Throwable $th) {
             $this->toastError($th->getMessage());
         }
-    }
-
-    /**
-     * Run paystack api to validate name via account number
-     * if BVN is not provided.
-     */
-    public function accountMatch()
-    {
-        $response = Http::withToken(config('paystack.secretKey'))
-            ->get("https://api.paystack.co/bank/resolve?account_number={$this->personalAccountNumber}&bank_code={$this->personalBank}")
-            ->object();
-
-        if (!$response->status) {
-            return false;
-        }
-
-        $containsAll = Str::containsAll($response->data->account_name, [
-            auth()->user()->first_name,
-            auth()->user()->last_name,
-        ], true);
-
-        if (!$containsAll) {
-            return false;
-        }
-
-        return $response->data->account_name;
     }
 
     /**
