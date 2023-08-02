@@ -62,6 +62,6 @@ class EditComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.seller.gigs.options.edit')->extends('livewire.main.seller.layout.app')->section('content');
+        return view('livewire.main.seller.gigs.options.edit')->extends('livewire.main.layout.app')->section('content');
     }
 }
