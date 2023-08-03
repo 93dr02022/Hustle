@@ -17,9 +17,9 @@
                         {{-- Section header --}}
                         <div class="mb-14">
                             <h2 class="text-base font-bold leading-6 text-gray-900 dark:text-gray-100">
-                                {{ __('messages.t_orders_history') }}</h2>
+                                {{ __('messages.t_order_details') }}</h2>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
-                                {{ __('messages.t_orders_history_subtitle') }}</p>
+                                View order details</p>
                         </div>
 
                         {{-- Session flash message --}}
@@ -42,7 +42,6 @@
 
                         {{-- Section content --}}
                         <div class="w-full mb-6">
-                            @forelse ($orders as $order)
 
                             {{-- if order is a gig service --}}
                             @if ($order->quotation == null)
@@ -75,7 +74,6 @@
 
                                 {{-- List of gigs in this order --}}
                                 <ul role="list" class="divide-y divide-gray-200 dark:divide-zinc-600">
-
                                     @foreach ($order->items as $item)
                                     <li class="p-4 sm:p-6">
                                         <div class="flex items-center sm:items-start">
@@ -221,16 +219,6 @@
                                                         </button>
                                                         <div id="orders-{{ $order->uid }}-item-{{ $item->id }}-actions-dropdown" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded shadow dark:bg-zinc-800">
                                                             <ul class="text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                                                                {{-- Order details --}}
-                                                                <li>
-                                                                    <a href="{{ url('account/orders/view-order', $order->uid) }}"  class="flex items-center px-4 py-2 rounded-t hover:bg-gray-100 dark:hover:bg-zinc-700">
-                                                                        <svg class="w-5 h-5 text-gray-500 ltr:mr-3 rtl:ml-3" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
-                                                                            </path>
-                                                                        </svg>
-                                                                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.t_order_details') }}</span>
-                                                                    </a>
-                                                                </li>
 
                                                                 {{-- Contact seller --}}
                                                                 <li>
@@ -456,14 +444,89 @@
 
                                         </div>
 
+                                        <div class="col-span-12 p-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-sm md:col-span-4 dark:border-zinc-700 dark:bg-zinc-800">
+                                            <h1 class="font-bold">Order Timeline</h1>
+
+                                            <ol class="relative border-l border-gray-200 dark:border-gray-700">
+                                                <li class="mb-10 ml-4">
+                                                    <div
+                                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                    </div>
+                                                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                        {{ format_date($item->placed_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Order placed</h3>
+                                                    <p class="mb-4 text-[13px] text-gray-500 dark:text-gray-400">
+                                                        <a class="font-extrabold tracking-wide"
+                                                            href="{{ '/profile/' . $item->order->buyer->username }}"
+                                                            target="_blank">{{ $item->order->buyer->username }}</a> placed the order
+                                                    </p>
+                                                </li>
+
+                                                @if ($item->proceeded_at)
+                                                    <li class="mb-10 ml-4">
+                                                        <div
+                                                            class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                        </div>
+                                                        <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                            {{ format_date($item->proceeded_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Order started</h3>
+                                                    </li>
+                                                @endif
+
+                                                @if ($item->delivered_at)
+                                                    <li class="mb-10 ml-4">
+                                                        <div
+                                                            class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                        </div>
+                                                        <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                            {{ format_date($item->delivered_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Order delivered</h3>
+                                                    </li>
+                                                @endif
+
+                                                @if ($item->canceled_at)
+                                                    <li class="mb-10 ml-4">
+                                                        <div
+                                                            class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                        </div>
+                                                        <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                            {{ format_date($item->canceled_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Order cancelled</h3>
+                                                    </li>
+                                                @endif
+
+                                                @if ($item->refunded_at)
+                                                    <li class="mb-10 ml-4">
+                                                        <div
+                                                            class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                        </div>
+                                                        <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                            {{ format_date($item->refunded_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Order refunded</h3>
+                                                    </li>
+                                                @endif
+
+                                                @if ($item->finished_at)
+                                                    <li class="mb-10 ml-4">
+                                                        <div
+                                                            class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                                        </div>
+                                                        <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                            {{ format_date($item->finished_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">The order was completed
+                                                        </h3>
+                                                    </li>
+                                                @endif
+
+                                            </ol>
+
+                                        </div>
                                     </li>
                                     @endforeach
-
                                 </ul>
 
                             </div>
                             @endif
-
                             {{-- if order is a quotation service --}}
                             @if ($order->quotation !== null)
                             <div class="mb-10 bg-white border border-gray-200 rounded-md dark:bg-zinc-700 dark:border-zinc-600" wire:key="orders-{{ $order->uid }}">
@@ -541,35 +604,8 @@
                                 </div>
                             </div>
                             @endif
-                            @empty
 
-                            {{-- No orders yet --}}
-                            <div class="p-4 rounded-md bg-blue-50">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1 ltr:ml-3 rtl:mr-3 md:flex md:justify-between">
-                                        <p class="text-sm font-medium text-blue-700">
-                                            {{ __('messages.t_ur_orders_history_is_empty_right_now') }}
-                                        </p>
-                                        <p class="mt-3 text-sm md:mt-0 md:ltr:ml-6 md:rtl:mr-6">
-                                            <a href="{{ url('/') }}" class="font-medium text-blue-700 whitespace-nowrap hover:text-blue-600">{{ __('messages.t_go_shopping') }}
-                                                <span aria-hidden="true">&rarr;</span></a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforelse
 
-                            {{-- Pages --}}
-                            @if ($orders->hasPages())
-                            <div class="flex justify-center px-4 py-5 bg-white border-t border-b border-gray-200 shadow-sm sm:rounded-lg sm:border sm:px-6">
-                                {!! $orders->links('pagination::tailwind') !!}
-                            </div>
-                            @endif
 
                         </div>
 
