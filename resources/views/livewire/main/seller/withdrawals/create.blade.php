@@ -130,7 +130,7 @@
                 </div>
             @endif
 
-            {{-- Password confirmation button --}}
+            {{-- otp confirmation button --}}
             <button class="hidden" id="otpmodalbutton" x-ref="modalButton"></button>
             <x-forms.modal placement="top" size="max-w-md" id="confirmModal" target="otpmodalbutton" uid="OtpConfirmation">
                 <x-slot:title>

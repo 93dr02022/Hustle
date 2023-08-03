@@ -8,10 +8,14 @@ Route::get('/docs', function () {
     return view('api');
 });
 
-//Notifications
+// Notifications
 Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
     Route::patch('/subscribe-to-notifications', 'NotificationsController@subscribe')->name('subscribe-to-notifications');
     Route::post('/unsubscribe-to-notifications', 'NotificationsController@unsubscribe')->name('unsubscribe-to-notifications');
+});
+
+Route::namespace('App\Http\Controllers\Chat')->group(function () {
+    Route::post('/chat-quote', 'QuoteController@getQuote')->name('chat-quote');
 });
 
 // Tasks

@@ -14,7 +14,7 @@ return [
     | files and derived images by default.
     |-------------------------------------
     */
-    'storage_disk_name' => 'chat',
+    'storage_disk_name' => 's3',
 
     /*
     |-------------------------------------
