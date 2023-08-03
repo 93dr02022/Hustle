@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('ch_messages', function (Blueprint $table) {
-            $table->foreignId('quotation_id')->index()->after('attachment');
+            $table->foreignId('quotation_id')->nullable()->index()->after('attachment');
         });
     }
 

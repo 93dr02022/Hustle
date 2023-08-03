@@ -106,7 +106,7 @@
                     </div>
 
                     <div class="flex justify-end mt-3">
-                        <button type="submit" @click="findQuote" class="btn-purple !px-4 !py-3 !bg-[#1D46F5]">Check Quotation</button>
+                        <button type="submit" @click="findQuote" class="btn-purple !px-4 !py-3 !bg-[#1D46F5] disabled:!bg-gray-300" :disabled="loading">Check Quotation</button>
                     </div>
                 </form>
             </div>
@@ -124,6 +124,7 @@
             hidden: true,
             quoteId: null,
             notFound: false,
+            loading: false,
             selectedQuote: {
                 reference: null,
             },
@@ -140,6 +141,7 @@
 
             findQuote() {
                 this.notFound = false
+                this.loading = true
 
                 window.axios.post("{{ route('chat-quote') }}", {
                     quoteRef: this.quoteId
@@ -153,8 +155,11 @@
                     if (!res.data?.reference) {
                         this.notFound = true
                     }
+
+                    this.loading = false
                 }).catch((err) => {
                     this.notFound = true
+                    this.loading = false
                 })
             },
 
@@ -180,7 +185,10 @@
 
             handleButton(event) {
                 if (this.selectedQuote?.id) {
-                    messageInput.val('..')
+                    if (messageInput.val().length <= 0) {
+                        messageInput.val('..')
+                    }
+
                     this.removeQuote()
                     sendMessage()
                 }
@@ -408,9 +416,6 @@
 
             // Initialize
             initialize() {
-
-                console.log(messageInput)
-
                 @if (settings('live_chat')->enable_emojis)
 
                     // Initialize emojis
