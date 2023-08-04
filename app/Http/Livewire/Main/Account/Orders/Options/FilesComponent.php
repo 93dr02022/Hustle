@@ -189,7 +189,11 @@ class FilesComponent extends Component
         $item->is_finished = true;
         $item->finished_at = now();
         $item->save();
-
+        //Creating timeline
+        $item->orderTimelines()->create([
+            'name' => 'Order finished',
+            'description' => __('messages.t_order_id_completed')
+        ]);
         // Remove item from queue list and success sales
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');
@@ -223,11 +227,5 @@ class FilesComponent extends Component
     }
 
     //function to update reviews
-    function requestReview()
-    {
-        $this->item->deliver_work_opened = true;
-        $this->item->save();
-        session()->flash('success','Request for review sent successfully');
-        return redirect()->back();
-    }
+
 }

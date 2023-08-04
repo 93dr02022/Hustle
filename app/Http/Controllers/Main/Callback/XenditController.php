@@ -1,7 +1,7 @@
 <?php
- 
+
 namespace App\Http\Controllers\Main\Callback;
- 
+
 use Xendit\Xendit;
 use App\Models\Gig;
 use App\Models\User;
@@ -23,7 +23,7 @@ use App\Notifications\User\Buyer\WebhookPaymentFailed;
 class XenditController extends Controller
 {
     public $cart;
-   
+
     /**
      * Xendit Notification webhook
      *
@@ -56,16 +56,16 @@ class XenditController extends Controller
 
             // Check if checkout callback
             if (Str::startsWith($transaction_id, 'CHECKOUT')) {
-                    
+
                 // Get payment
                 $webhook_payment = CheckoutWebhook::where('payment_id', $invoice_id)
-                                                    ->where('payment_method', 'xendit')
-                                                    ->where('status', 'pending')
-                                                    ->firstOrFail();
+                    ->where('payment_method', 'xendit')
+                    ->where('status', 'pending')
+                    ->firstOrFail();
 
                 // Check if payment succeeded
                 if (in_array($status, ['PAID', 'SETTLED'])) {
-                    
+
                     // Set cart
                     $this->cart = $webhook_payment->data['cart'];
 
@@ -74,15 +74,14 @@ class XenditController extends Controller
 
                     // Check if succeeded
                     if (is_array($response) && $response['success'] === true) {
-                        
+
                         // Success, delete webhook payload
                         $webhook_payment->status = 'succeeded';
                         $webhook_payment->save();
 
                         // Return
                         return response(null, 200);
-
-                    } else  {
+                    } else {
 
                         // Get buyer
                         $buyer = User::where('id', $webhook_payment->data['buyer_id'])->firstOrFail();
@@ -90,11 +89,9 @@ class XenditController extends Controller
                         // Send  a notification to buyer
                         $buyer->notify(new WebhookPaymentFailed($webhook_payment->payment_id, $webhook_payment->payment_method, isset($response['message']) ? $response['message'] : __('messages.t_toast_something_went_wrong')));
 
-                        // Return 
+                        // Return
                         return;
-
                     }
-
                 } else {
 
                     // Get buyer
@@ -107,22 +104,20 @@ class XenditController extends Controller
                     $webhook_payment->status = 'failed';
                     $webhook_payment->save();
 
-                    // Return 
+                    // Return
                     return;
-
                 }
-
             } else if (Str::startsWith($transaction_id, 'DEPOSIT')) {
-                
+
                 // Get payment
                 $payment = DepositWebhook::wherePaymentId($invoice_id)
-                                        ->wherePaymentMethod('xendit')
-                                        ->whereStatus('pending')
-                                        ->firstOrFail();
+                    ->wherePaymentMethod('xendit')
+                    ->whereStatus('pending')
+                    ->firstOrFail();
 
                 // Check if payment succeeded
                 if (in_array($status, ['PAID', 'SETTLED'])) {
-                    
+
                     // Get total amount
                     $total_amount      = $request->get('paid_amount');
 
@@ -135,9 +130,7 @@ class XenditController extends Controller
                         // Update payment
                         $payment->status = 'succeeded';
                         $payment->save();
-
                     }
-
                 } else {
 
                     // Get user
@@ -150,18 +143,14 @@ class XenditController extends Controller
                     $payment->status = 'failed';
                     $payment->save();
 
-                    // Return 
+                    // Return
                     return;
-
                 }
-
             }
-
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             throw $th;
-
         }
     }
 
@@ -177,7 +166,7 @@ class XenditController extends Controller
     protected function deposit($amount, $payment_id, $user_id)
     {
         try {
-            
+
 
             // Get default currency exchange rate
             $default_currency_exchange = settings('currency')->exchange_rate;
@@ -202,9 +191,9 @@ class XenditController extends Controller
             $deposit->user_id          = $user_id;
             $deposit->transaction_id   = $transaction_id;
             $deposit->payment_method   = $provider_name;
-            $deposit->amount_total     = round( ($amount * $default_currency_exchange) / $gateway_currency_exchange, 2 );
-            $deposit->amount_fee       = round( ($fee * $default_currency_exchange) / $gateway_currency_exchange, 2 );
-            $deposit->amount_net       = round( ( ($amount - $fee ) * $default_currency_exchange ) / $gateway_currency_exchange, 2 );
+            $deposit->amount_total     = round(($amount * $default_currency_exchange) / $gateway_currency_exchange, 2);
+            $deposit->amount_fee       = round(($fee * $default_currency_exchange) / $gateway_currency_exchange, 2);
+            $deposit->amount_net       = round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2);
             $deposit->currency         = $gateway_currency;
             $deposit->exchange_rate    = $gateway_currency_exchange;
             $deposit->status           = 'paid';
@@ -212,11 +201,10 @@ class XenditController extends Controller
             $deposit->save();
 
             // Add funds to account
-            $this->addFunds(round( ( ($amount - $fee ) * $default_currency_exchange ) / $gateway_currency_exchange, 2 ), $user_id);
+            $this->addFunds(round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2), $user_id);
 
             // Success
             return true;
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -232,18 +220,16 @@ class XenditController extends Controller
     protected function calculateFee($amount)
     {
         try {
-            
+
             // Get fee rate
             $fee_rate = settings('xendit')->deposit_fee;
 
             // Calculate fee
             return $amount * $fee_rate / 100;
-
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             return 0;
-
         }
     }
 
@@ -257,14 +243,13 @@ class XenditController extends Controller
     protected function addFunds($amount, $user_id)
     {
         try {
-            
+
             // Get user
             $user                    = User::where('id', $user_id)->first();
 
             // Add funds
             $user->balance_available = $user->balance_available + $amount;
             $user->save();
-
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -284,44 +269,37 @@ class XenditController extends Controller
 
         // Loop throug items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Check if item exists
             if ($item['id'] === $id) {
-                
+
                 // Get quantity
                 $quantity = (int) $item['quantity'];
 
                 // Sum upgrades total price
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
-                    $total_upgrades_price = array_reduce($item['upgrades'], function($i, $obj)
-                    {
+
+                    $total_upgrades_price = array_reduce($item['upgrades'], function ($i, $obj) {
                         // Calculate only selected upgrades
                         if ($obj['checked'] == true) {
                             return $i += $obj['price'];
                         } else {
                             return $i;
                         }
-
                     });
-
                 } else {
 
                     // No upgrades selected
                     $total_upgrades_price = 0;
-
                 }
 
                 // Set new total
                 $total = ($quantity * $item['gig']['price']) + ($total_upgrades_price * $quantity);
-
             }
-
         }
 
         // Return total price
         return $total;
-
     }
 
 
@@ -352,31 +330,27 @@ class XenditController extends Controller
 
         // Check if taxes enabled
         if ($settings->enable_taxes) {
-            
+
             // Check if type of taxes percentage
             if ($settings->tax_type === 'percentage') {
-                
+
                 // Get tax amount
                 $tax = bcmul($this->total(), $settings->tax_value) / 100;
 
                 // Return tax amount
                 return $tax;
-
             } else {
-                
+
                 // Fixed price
                 $tax = $settings->tax_value;
 
                 // Return tax
                 return $tax;
-
             }
-
         } else {
 
             // Taxes not enabled
             return 0;
-
         }
     }
 
@@ -393,10 +367,9 @@ class XenditController extends Controller
 
         // Loop through items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
-
         }
 
         // Return total price
@@ -417,15 +390,13 @@ class XenditController extends Controller
 
         // Commission percentage
         if ($settings->commission_type === 'percentage') {
-            
+
             // Calculate commission
             $commission = $settings->commission_value * $price / 100;
-
         } else {
 
             // Fixed amount
             $commission = $settings->commission_value;
-
         }
 
         // Return commission
@@ -474,13 +445,13 @@ class XenditController extends Controller
 
             // Now let's loop through items in this cart and save them
             foreach ($this->cart as $key => $item) {
-                
+
                 // Get gig
                 $gig = Gig::where('uid', $item['id'])->active()->first();
 
                 // Check if gig exists
                 if ($gig) {
-                    
+
                     // Get item total price
                     $item_total_price                   = $this->itemTotalPrice($item['id']);
 
@@ -499,19 +470,25 @@ class XenditController extends Controller
                     $order_item->profit_value           = $item_total_price - $commisssion;
                     $order_item->commission_value       = $commisssion;
                     $order_item->save();
+                    //Creating the ordertimeline
 
+                    $order_item->orderTimelines()->create([
+                        'name' => 'Order placed',
+                        'description' => auth()->user()->username . ' placed order'
+                    ]);
+                    
                     // Check if this item has upgrades
-                    if ( is_array($item['upgrades']) && count($item['upgrades']) ) {
-                        
+                    if (is_array($item['upgrades']) && count($item['upgrades'])) {
+
                         // Loop through upgrades
                         foreach ($item['upgrades'] as $index => $upg) {
-                            
+
                             // Get upgrade
                             $upgrade = GigUpgrade::where('uid', $upg['id'])->where('gig_id', $gig->id)->first();
 
                             // Check if upgrade exists
                             if ($upgrade) {
-                                
+
                                 // Save item upgrade
                                 $order_item_upgrade             = new OrderItemUpgrade();
                                 $order_item_upgrade->item_id    = $order_item->id;
@@ -519,11 +496,8 @@ class XenditController extends Controller
                                 $order_item_upgrade->price      = $upgrade->price;
                                 $order_item_upgrade->extra_days = $upgrade->extra_days;
                                 $order_item_upgrade->save();
-
                             }
-                            
                         }
-
                     }
 
                     // Update seller pending balance
@@ -536,7 +510,7 @@ class XenditController extends Controller
 
                     // Order item placed successfully
                     // Let's notify the seller about new order
-                    $gig->owner->notify( (new PendingOrder($order_item))->locale(config('app.locale')) );
+                    $gig->owner->notify((new PendingOrder($order_item))->locale(config('app.locale')));
 
                     // Send notification
                     notification([
@@ -544,9 +518,7 @@ class XenditController extends Controller
                         'action'  => url('seller/orders/details', $order_item->uid),
                         'user_id' => $order_item->owner_id
                     ]);
-
                 }
-
             }
 
             // Save invoice
@@ -572,22 +544,20 @@ class XenditController extends Controller
             session()->forget('cart');
 
             // Now let's notify the buyer that his order has been placed
-            $buyer->notify( (new OrderPlaced($order, $total))->locale(config('app.locale')) );
+            $buyer->notify((new OrderPlaced($order, $total))->locale(config('app.locale')));
 
             // After that the buyer has to send the seller the required form to start
             return [
                 'success' => true,
                 'message' => __('messages.t_u_have_send_reqs_asap_to_seller')
             ];
-
         } catch (\Throwable $th) {
-            
+
             // Error
             return [
                 'success' => false,
                 'message' => $th->getMessage()
             ];
-
         }
     }
 
@@ -602,7 +572,7 @@ class XenditController extends Controller
     protected function calculateExchangeAmount($gateway_exchange_rate = null)
     {
         try {
-            
+
             // Get total amount
             $amount                = $this->total() + $this->taxes();
 
@@ -611,23 +581,19 @@ class XenditController extends Controller
 
             // Set gateway exchange rate
             $gateway_exchange_rate = is_null($gateway_exchange_rate) ? $default_exchange_rate : (float) $gateway_exchange_rate;
-            
+
             // Check if same exchange rate
             if ($default_exchange_rate == $gateway_exchange_rate) {
-                
+
                 // No need to calculate amount
                 return $amount;
-
             } else {
-                
+
                 // Return new amount
-                return (float)number_format( ($amount * $gateway_exchange_rate) / $default_exchange_rate , 2, '.', '');
-
+                return (float)number_format(($amount * $gateway_exchange_rate) / $default_exchange_rate, 2, '.', '');
             }
-
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
 }

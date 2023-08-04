@@ -42,7 +42,7 @@ class DetailsComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_order_details')." $separator ".settings('general')->title;
+        $title = __('messages.t_order_details') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -56,7 +56,7 @@ class DetailsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -84,6 +84,11 @@ class DetailsComponent extends Component
             $this->order->expected_delivery_date = $this->calculateExpectedDeliveryDate();
             $this->order->proceeded_at = now();
             $this->order->save();
+            //Creating the ordertimeline
+            $this->order->orderTimelines()->create([
+                'name' => 'Order started',
+                'description' => __('messages.t_seller_has_started_ur_order')
+            ]);
 
             // Let's notify the buyer
             $this->order->order->buyer->notify((new OrderItemInProgress($this->order))->locale(config('app.locale')));
@@ -102,7 +107,6 @@ class DetailsComponent extends Component
                 'description' => __('messages.t_toast_operation_success'),
                 'icon' => 'success',
             ]);
-
         }
     }
 
@@ -153,7 +157,11 @@ class DetailsComponent extends Component
         $item->canceled_at = now();
         $item->is_finished = true;
         $item->save();
-
+        //Creating timeline
+        $item->orderTimelines()->create([
+            'name' => 'Order cancelled',
+            'description' => __('messages.t_buyer_has_canceled_order')
+        ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');

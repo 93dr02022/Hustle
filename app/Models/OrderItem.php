@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderItem extends Model
 {
@@ -58,6 +59,9 @@ class OrderItem extends Model
         'delivered_at',
         'canceled_at',
         'refunded_at',
+        'review_description',
+        'reviewed_at',
+        'is_review_sent'
     ];
 
     /**
@@ -138,6 +142,15 @@ class OrderItem extends Model
     public function conversation()
     {
         return $this->hasMany(OrderItemWorkConversation::class, 'item_id');
+    }
+    /**
+     * Get all of the orderTimelines for the OrderItem
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderTimelines(): HasMany
+    {
+        return $this->hasMany(OrderTimeline::class);
     }
 
     /**

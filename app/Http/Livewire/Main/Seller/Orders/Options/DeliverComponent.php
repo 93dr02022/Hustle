@@ -169,9 +169,14 @@ class DeliverComponent extends Component
             $this->order->deliver_work_opened = false;
             $this->order->delivered_at = now();
             $this->order->save();
-
             // Refresh this item
             $this->order->refresh();
+
+            //Creating the ordertimeline
+            $this->order->orderTimelines()->create([
+                'name' => 'Order delivered',
+                'description' => __('messages.t_seller_has_delivered_ur_order')
+            ]);
 
             // Send notification to buyer
             $this->order->order->buyer->notify((new OrderDelivered($this->order))->locale(config('app.locale')));
@@ -251,13 +256,18 @@ class DeliverComponent extends Component
 
             // update to dissable resubmit button
             $this->order->deliver_work_opened = false;
+            $this->order->is_review_sent = false;
             $this->order->save();
             // update count reviews of resubmit work until number is equal to total_reviews
             $this->order->increment('count_review');
 
+            //Creating the ordertimeline
+            $this->order->orderTimelines()->create([
+                'name' => 'Order delivered',
+                'description' => __('messages.t_seller_has_delivered_ur_order')
+            ]);
             // Refresh model
             $this->order->refresh();
-
             // Success
             $this->notification([
                 'title' => __('messages.t_success'),

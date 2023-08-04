@@ -2546,6 +2546,9 @@ input:checked + .toggle-bg {
 .-mt-4 {
   margin-top: -1rem;
 }
+.-mt-7 {
+  margin-top: -1.75rem;
+}
 .-mt-\[1px\] {
   margin-top: -1px;
 }
