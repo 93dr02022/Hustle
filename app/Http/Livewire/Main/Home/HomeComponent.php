@@ -10,9 +10,11 @@ use App\Models\NewsletterVerification;
 use App\Models\Project;
 use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use DB;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\PersonalAccessToken;
 use Livewire\Component;
 use Mail;
 use WireUi\Traits\Actions;
@@ -32,7 +34,14 @@ class HomeComponent extends Component
      */
     public function mount()
     {
-        //
+        if (request()->has('token') && !auth()->check()) {
+            $tokenable = PersonalAccessToken::where('token', request()->token)->first();
+
+            if ($tokenable) {
+                $user = User::where('id', $tokenable->tokenable_id)->first();
+                auth()->login($user, true);
+            }
+        }
     }
 
     /**

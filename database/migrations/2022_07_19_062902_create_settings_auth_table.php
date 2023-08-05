@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('settings_auth', function (Blueprint $table) {
             $table->id();
-            $table->boolean('verification_required')->default(false);
-            $table->enum('verification_type', ['admin', 'email'])->default('admin');
+            $table->boolean('verification_required')->default(true);
+            $table->enum('verification_type', ['admin', 'email'])->default('email');
             $table->integer('verification_expiry_period')->default(60);
             $table->integer('password_reset_expiry_period')->default(60);
             $table->string('auth_img_id')->nullable();
