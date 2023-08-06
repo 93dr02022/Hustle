@@ -143,13 +143,18 @@ class RequestReview extends Component
     function requestReview()
     {
         $this->validate([
-            'review_description'=>'required|string'
+            'review_description' => 'required|string'
         ]);
         $this->item->deliver_work_opened = true;
         $this->item->is_review_sent = true;
         $this->item->reviewed_at = now();
-        $this->item->review_description = $this->review_description;
         $this->item->save();
+
+        $this->item->deliveredWorks()->create([
+            'uid' => uid(),
+            'review_description' => $this->review_description
+        ]);
+
         $this->item->orderTimelines()->create([
             'name' => 'Order Reviewed',
             'description' => auth()->user()->username . ' request for review'

@@ -41,6 +41,8 @@ class DeliverComponent extends Component
         // Get order item
         $order = OrderItem::where('owner_id', $user_id)->where('uid', $id)->with(['gig', 'order'])->firstOrFail();
 
+
+
         // // Order item must be in ['delivered', 'proceeded'] status and not finished yet
         if (!in_array($order->status, ['proceeded', 'delivered'])) {
             return redirect('seller/orders')->with('message', __('messages.t_u_cant_send_delivered_work_anymore_status_wrong'));
@@ -93,6 +95,7 @@ class DeliverComponent extends Component
      */
     public function submit()
     {
+
         try {
 
             // Either quick response or files should be exist in request
@@ -102,19 +105,6 @@ class DeliverComponent extends Component
                 $this->notification([
                     'title' => __('messages.t_error'),
                     'description' => __('messages.t_u_have_to_select_deliverd_work_or_quick_response'),
-                    'icon' => 'error',
-                ]);
-
-                return;
-            }
-
-            // Check if seller already uploaded work before
-            if ($this->order->delivered_work) {
-
-                // Error
-                $this->notification([
-                    'title' => __('messages.t_error'),
-                    'description' => __('messages.t_looks_like_u_already_uploaded_completed_work'),
                     'icon' => 'error',
                 ]);
 
@@ -155,14 +145,25 @@ class DeliverComponent extends Component
                 // No files selected
                 $file = null;
             }
-
             // Save work
-            $work = new OrderItemWork();
-            $work->uid = uid();
-            $work->order_item_id = $this->order->id;
-            $work->attached_work = $file;
-            $work->quick_response = $this->quick_response ? clean($this->quick_response) : null;
-            $work->save();
+            $is_work = $this->order->deliveredWorks()->latest()->first();
+            if ($is_work) {
+                $is_work->update([
+                    'order_item_id' => $this->order->id,
+                    'attached_work' => $file,
+                    'quick_response' => $this->quick_response ? clean($this->quick_response) : null,
+                    'is_delivered' => true,
+                    'resubmit' => false
+                ]);
+            } else {
+                $work = new OrderItemWork();
+                $work->uid = uid();
+                $work->order_item_id = $this->order->id;
+                $work->attached_work = $file;
+                $work->is_delivered = true;
+                $work->quick_response = $this->quick_response ? clean($this->quick_response) : null;
+                $work->save();
+            }
 
             // Update order item
             $this->order->status = 'delivered';
@@ -231,53 +232,34 @@ class DeliverComponent extends Component
      */
     public function resubmit()
     {
-        // Check if order item has delivered work
-        if ($this->order->delivered_work) {
+        // update to dissable resubmit button
+        $this->order->deliver_work_opened = false;
+        $this->order->is_review_sent = false;
+        $this->order->save();
 
-            // Get delivered work
-            $work = $this->order->delivered_work;
-
-            // Check if work has files
-            if ($work->attached_work) {
-
-                // Get file
-                $file = public_path('storage/orders/delivered_work/' . $work->attached_work['id'] . '.' . $work->attached_work['extension']);
-
-                // Check if file exists
-                if (File::exists($file)) {
-
-                    // Delete file
-                    File::delete($file);
-                }
-            }
-
-            // Delete this files and reset
-            $work->delete();
-
-            // update to dissable resubmit button
-            $this->order->deliver_work_opened = false;
-            $this->order->is_review_sent = false;
-            $this->order->save();
-            // update count reviews of resubmit work until number is equal to total_reviews
-            $this->order->increment('count_review');
-
-            //Creating the ordertimeline
-            $this->order->orderTimelines()->create([
-                'name' => 'Order delivered',
-                'description' => __('messages.t_seller_has_delivered_ur_order')
+        $this->order->deliveredWorks()
+            ->latest()
+            ->first()
+            ->update([
+                'resubmit' => true
             ]);
-            // Refresh model
-            $this->order->refresh();
-            // Success
-            $this->notification([
-                'title' => __('messages.t_success'),
-                'description' => __('messages.t_toast_operation_success'),
-                'icon' => 'success',
-            ]);
-
-            // Refresh
-            redirect(Url::current());
-        }
+        // update count reviews of resubmit work until number is equal to total_reviews
+        $this->order->increment('count_review');
+        //Creating the ordertimeline
+        $this->order->orderTimelines()->create([
+            'name' => 'Order delivered',
+            'description' => __('messages.t_seller_has_delivered_ur_order')
+        ]);
+        // Refresh model
+        $this->order->refresh();
+        // Success
+        $this->notification([
+            'title' => __('messages.t_success'),
+            'description' => __('messages.t_toast_operation_success'),
+            'icon' => 'success',
+        ]);
+        // Refresh
+        redirect(Url::current());
     }
 
     /**

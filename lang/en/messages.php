@@ -453,7 +453,7 @@ return [
     "t_u_have_to_select_deliverd_work_or_quick_response"       => "You must either upload a completed work or enter a quick response for the buyer",
     "t_looks_like_u_already_uploaded_completed_work"           => "It looks like you already uploaded a completed work",
     "t_resubmit_work_again"                                    => "Re-submit work again",
-    "t_are_u_sure_u_want_to_resubmit_work_again"               => "Are you sure you want to re-submit the work again? the existing records will permanently deleted",
+    "t_are_u_sure_u_want_to_resubmit_work_again"               => "Are you sure you want to re-submit the work again?",
     "t_message"                                                => "Message",
     "t_send"                                                   => "Send",
     "t_gig_analytics"                                          => "Gig analytics",

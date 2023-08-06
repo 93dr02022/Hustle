@@ -15,7 +15,7 @@ class OrderItemWork extends Model
      * @var string
      */
     protected $table = 'order_item_work';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +25,10 @@ class OrderItemWork extends Model
         'uid',
         'order_item_id',
         'attached_work',
-        'quick_response'
+        'quick_response',
+        'review_description',
+        'is_delivered',
+        'resubmit'
     ];
 
     /**

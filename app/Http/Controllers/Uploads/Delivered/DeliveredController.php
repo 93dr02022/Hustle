@@ -1,7 +1,7 @@
 <?php
- 
+
 namespace App\Http\Controllers\Uploads\Delivered;
- 
+
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use App\Models\OrderItemRequirement;
@@ -11,7 +11,7 @@ use App\Models\OrderItemWork;
 
 class DeliveredController extends Controller
 {
-   
+
     /**
      * Download required file
      *
@@ -24,7 +24,7 @@ class DeliveredController extends Controller
     public function download($orderId, $itemId, $workId, $fileId)
     {
         try {
-            
+
             // Get user id
             $user_id = auth()->id();
 
@@ -52,7 +52,7 @@ class DeliveredController extends Controller
                 if (File::exists($path)) {
                     return response()->download($path, $fileId . '.' . $work->attached_work['extension'], []);
                 }
-    
+
                 // Not found
                 abort(404);
 

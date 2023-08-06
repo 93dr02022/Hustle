@@ -129,9 +129,9 @@ class OrderItem extends Model
      *
      * @return object
      */
-    public function delivered_work()
+    public function deliveredWorks()
     {
-        return $this->hasOne(OrderItemWork::class, 'order_item_id');
+        return $this->hasMany(OrderItemWork::class, 'order_item_id');
     }
 
     /**
