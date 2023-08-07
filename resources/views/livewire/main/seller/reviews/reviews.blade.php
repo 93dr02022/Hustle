@@ -219,9 +219,23 @@
                             {{-- Rating --}}
                             <td
                                 class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md text-center">
-                                <div>
-                                    {!! render_star_rating($review->rating, '1rem', '1rem', '#d0d0d0') !!}
-                                </div>
+                                @if ($review->seen)
+                                    <div>
+                                        {!! render_star_rating($review->rating, '1rem', '1rem', '#d0d0d0') !!}
+                                    </div>
+                                @else
+                                    <div class="flex items-center justify-center text-zinc-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-6 h-6">
+                                            <path
+                                                d="M3.53 2.47a.75.75 0 00-1.06 1.06l18 18a.75.75 0 101.06-1.06l-18-18zM22.676 12.553a11.249 11.249 0 01-2.631 4.31l-3.099-3.099a5.25 5.25 0 00-6.71-6.71L7.759 4.577a11.217 11.217 0 014.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113z" />
+                                            <path
+                                                d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0115.75 12zM12.53 15.713l-4.243-4.244a3.75 3.75 0 004.243 4.243z" />
+                                            <path
+                                                d="M6.75 12c0-.619.107-1.213.304-1.764l-3.1-3.1a11.25 11.25 0 00-2.63 4.31c-.12.362-.12.752 0 1.114 1.489 4.467 5.704 7.69 10.675 7.69 1.5 0 2.933-.294 4.242-.827l-2.477-2.477A5.25 5.25 0 016.75 12z" />
+                                        </svg>
+                                    </div>
+                                @endif
                             </td>
 
                             {{-- Date --}}
@@ -237,21 +251,36 @@
                             <td
                                 class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md text-center">
                                 <div class="flex justify-center items-center space-x-2 rtl:space-x-reverse">
-
-                                    {{-- Order details --}}
-                                    <button wire:click="details('{{ $review->uid }}')" type="button"
-                                        data-tooltip-target="tooltip-actions-review-details-{{ $review->uid }}"
-                                        class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                        wire:key="tooltip-actions-review-details-{{ $review->uid }}">
-                                        <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
-                                            stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <x-forms.tooltip id="tooltip-actions-review-details-{{ $review->uid }}"
-                                        :text="__('messages.t_review_details')" />
+                                    @if ($review->seen)
+                                        {{-- Order details --}}
+                                        <button wire:click="details('{{ $review->uid }}')" type="button"
+                                            data-tooltip-target="tooltip-actions-review-details-{{ $review->uid }}"
+                                            class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                            wire:key="tooltip-actions-review-details-{{ $review->uid }}">
+                                            <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
+                                                stroke-width="0" viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                        <x-forms.tooltip id="tooltip-actions-review-details-{{ $review->uid }}"
+                                            :text="__('messages.t_review_details')" />
+                                    @else
+                                        {{-- Order details --}}
+                                        <a href="{{ url('seller/reviews/create/' . $review->uid) }}"
+                                            class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                                <path fill-rule="evenodd"
+                                                    d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
+                                        <x-forms.tooltip id="tooltip-actions-review-details-{{ $review->uid }}"
+                                            :text="__('messages.t_unlock_to_review')" />
+                                    @endif
 
                                 </div>
                             </td>

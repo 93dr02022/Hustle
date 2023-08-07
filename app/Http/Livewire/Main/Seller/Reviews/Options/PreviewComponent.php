@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Livewire\Main\Seller\Reviews\Options;
 
+
 use App\Models\Review;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 
-class DetailsComponent extends Component
+class PreviewComponent extends Component
 {
     use SEOToolsTrait;
 
@@ -20,7 +21,7 @@ class DetailsComponent extends Component
     public function mount($id)
     {
         // Get review
-        $review = Review::where('uid', $id)->where('seller_id', auth()->id())->firstOrFail();
+        $review = Review::where('user_id', auth()->id())->where('uid', $id)->firstOrFail();
 
         // Set review
         $this->review = $review;
@@ -35,7 +36,7 @@ class DetailsComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_review_details')." $separator ".settings('general')->title;
+        $title = __('messages.t_preview_review')." $separator ".settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -59,6 +60,6 @@ class DetailsComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.seller.reviews.options.details')->extends('livewire.main.seller.layout.app')->section('content');
+        return view('livewire.main.seller.reviews.options.preview')->extends('livewire.main.seller.layout.app')->section('content');
     }
 }

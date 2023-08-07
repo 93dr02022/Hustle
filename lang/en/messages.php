@@ -2,6 +2,9 @@
 
 return [
     "t_create_account"                                         => "Create account",
+    "t_reply_review_to_buyer"                                  => "Reply review to buyer",
+    "t_create_reviews"                                         => "Create Review",
+    "t_edit_reviews"                                           => "Edit Review",
     "t_number_of_review"                                       => "Number of Reviews",
     "t_reviews"                                                => "Reviews",
     "t_choose_number_of_review"                                => "Choose number of reviews",
@@ -1326,6 +1329,7 @@ return [
     "t_mark_as_read"                                           => "Mark as read",
     "t_no_notification_right_now"                              => "No notification to show right now",
     "t_review_details"                                         => "Review details",
+    "t_unlock_to_review"                                       => "reply to unlock review",
     "t_browse_parent_category"                                 => "Browse :category",
     "t_welcome"                                                => "Welcome",
     "t_regards"                                                => "Regards",

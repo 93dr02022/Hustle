@@ -2546,9 +2546,6 @@ input:checked + .toggle-bg {
 .-mt-4 {
   margin-top: -1rem;
 }
-.-mt-7 {
-  margin-top: -1.75rem;
-}
 .-mt-\[1px\] {
   margin-top: -1px;
 }
@@ -5522,6 +5519,9 @@ input:checked + .toggle-bg {
 .text-right {
   text-align: right;
 }
+.text-justify {
+  text-align: justify;
+}
 .indent-6 {
   text-indent: 1.5rem;
 }
@@ -6224,6 +6224,10 @@ input:checked + .toggle-bg {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.text-yellow-300 {
+  --tw-text-opacity: 1;
+  color: rgb(250 202 21 / var(--tw-text-opacity));
 }
 .text-yellow-400 {
   --tw-text-opacity: 1;
@@ -10436,6 +10440,11 @@ input[type="number"].appearance-number-none {
 :is(.dark .dark\:text-white) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+:is(.dark .dark\:text-yellow-300) {
+  --tw-text-opacity: 1;
+  color: rgb(250 202 21 / var(--tw-text-opacity));
 }
 
 :is(.dark .dark\:text-yellow-400) {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Review extends Model
 {
@@ -26,9 +27,16 @@ class Review extends Model
         'user_id',
         'seller_id',
         'gig_id',
+        'order_item_id',
+        'review_id',
         'rating',
         'message',
-        'status'
+        'status',
+        'seen'
+    ];
+
+    protected $casts = [
+        'seen' => 'boolean'
     ];
 
     /**
@@ -49,7 +57,7 @@ class Review extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id')->withTrashed();
+        return $this->belongsTo(User::class, 'user_id')->withTrashed(); // Buyer
     }
 
     /**
@@ -69,6 +77,17 @@ class Review extends Model
      */
     public function gig()
     {
-        return $this->belongsTo(Gig::class, 'gig_id')->withTrashed();
+        return $this->belongsTo(Gig::class, 'gig_id');
     }
+
+     /**
+     * Get gig
+     *
+     * @return object
+     */
+    public function orderItem()
+    {
+        return $this->belongsTo(OrderItem::class);
+    }
+
 }

@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Livewire\Main\Account\Reviews\Options;
+namespace App\Http\Livewire\Main\Seller\Reviews\Options;
+
 
 use App\Http\Validators\Main\Account\Reviews\CreateValidator;
 use App\Models\Gig;
@@ -15,7 +16,7 @@ class CreateComponent extends Component
 {
     use SEOToolsTrait, Actions;
 
-    public $item;
+    public Review $review;
 
     public $rating;
 
@@ -24,35 +25,30 @@ class CreateComponent extends Component
     /**
      * Init component
      *
-     * @param  string  $itemId
+     * @param  string  $reviewId
      * @return void
      */
-    public function mount($itemId)
+    public function mount($reviewId)
     {
-        // Get item
-        $item = OrderItem::where('uid', $itemId)
-            ->whereHas('order', function ($query) {
-                return $query->where('buyer_id', auth()->id());
-            })
-            ->where('status', 'delivered')
-            ->where('is_finished', true)
-            ->first();
+        // Get review
+        $review = Review::where('uid', $reviewId)->where('seen', false)->first();
+
 
         // Check if order item exists
-        if (! $item) {
-            return redirect('account/reviews')->with('message', __('messages.t_order_item_could_not_be_found'));
+        if (!$review) {
+            return redirect('seller/reviews')->with('message', __('messages.t_order_item_could_not_be_found'));
         }
 
         // Get review if eists
-        $review = Review::where('user_id', auth()->id())->where('gig_id', $item->gig_id)->where('order_item_id',$item->id)->first();
-
-        // Check if review exists
-        if ($review) {
-            return redirect('account/reviews/edit/'.$review->uid);
+        $reviewEdit = Review::where('seller_id', auth()->id())->where('gig_id', $review->gig_id)->where('order_item_id', $review->order_item_id)->where('seen', true)->first();
+        // Check if reviewEdit exists
+        if ($reviewEdit) {
+            return redirect('seller/reviews/edit/' . $reviewEdit->uid);
         }
 
-        // Set item
-        $this->item = $item;
+
+        // Set review
+        $this->review = $review;
     }
 
     /**
@@ -64,7 +60,7 @@ class CreateComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_submit_new_review')." $separator ".settings('general')->title;
+        $title = __('messages.t_submit_new_review') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -78,7 +74,7 @@ class CreateComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -88,7 +84,7 @@ class CreateComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.account.reviews.options.create')->extends('livewire.main.layout.app')->section('content');
+        return view('livewire.main.seller.reviews.options.create')->extends('livewire.main.seller.layout.app')->section('content');
     }
 
     /**
@@ -106,42 +102,43 @@ class CreateComponent extends Component
             // Create new review
             $review = new Review();
             $review->uid = uid();
-            $review->user_id = auth()->id();
-            $review->seller_id = $this->item->owner_id;
-            $review->gig_id = $this->item->gig_id;
-            $review->order_item_id = $this->item->id;
+            $review->user_id = $this->review->user_id;
+            $review->seller_id = auth()->id();
+            $review->gig_id = $this->review->gig_id;
+            $review->order_item_id = $this->review->order_item_id;
             $review->rating = $this->rating;
             $review->message = clean($this->message);
+            $review->review_id = $this->review->id;
             $review->save();
 
+            $this->review->update(['seen' => true]);
             // Count total stars for this gig
-            $total_stars = Review::where('gig_id', $this->item->gig_id)->sum('rating');
+            $total_stars = Review::where(['gig_id' => $this->review->gig_id, 'review_id' => null])->sum('rating');
 
             // Count total reviews for this gig
-            $total_reviews = Review::where('gig_id', $this->item->gig_id)->count();
+            $total_reviews = Review::where(['gig_id' => $this->review->gig_id, 'review_id' => null])->count();
 
             // Set gig rating
             $gig_rating = $total_stars / $total_reviews;
 
             // Let's update gig rating
-            Gig::where('id', $this->item->gig_id)->update([
+            Gig::where('id', $this->review->gig_id)->update([
                 'counter_reviews' => $total_reviews,
                 'rating' => $gig_rating,
             ]);
 
             // Now let's send seller a notification message
-            $this->item->owner->notify((new ReviewReceived($this->item, $review))->locale(config('app.locale')));
+            $this->review->user->notify((new ReviewReceived($this->review->orderItem, $review))->locale(config('app.locale')));
 
             // Send notification
             notification([
                 'text' => 't_u_have_received_new_rating',
                 'action' => url('seller/reviews/details', $review->uid),
-                'user_id' => $this->item->owner_id,
+                'user_id' => $this->review->user_id,
             ]);
 
             // Redirect to review preview
-            return redirect('account/reviews/preview/'.$review->uid);
-
+            return redirect('seller/reviews');
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

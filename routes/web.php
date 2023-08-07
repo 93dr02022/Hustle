@@ -425,6 +425,14 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
                 // Details
                 Route::get('details/{id}', DetailsComponent::class);
+                // Create
+                Route::get('create/{reviewId}', CreateComponent::class);
+
+                // Preview
+                Route::get('preview/{id}', PreviewComponent::class);
+
+                // Edit
+                Route::get('edit/{id}', EditComponent::class);
             });
         });
 

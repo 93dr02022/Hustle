@@ -154,6 +154,16 @@ class OrderItem extends Model
     }
 
     /**
+     * Get all of the reviews for the OrderItem
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderItemReviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
      * Get refund
      *
      * @return object
