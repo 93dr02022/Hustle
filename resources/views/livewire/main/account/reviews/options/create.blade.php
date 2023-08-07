@@ -19,7 +19,7 @@
                             <h2 class="text-base leading-6 font-bold text-gray-900 dark:text-gray-100">{{ __('messages.t_write_a_review') }}</h2>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">{{ __('messages.t_give_ur_opinion_about_this_item') }}</p>
                         </div>
-                        
+
                         {{-- Section content --}}
                         <div class="grid grid-cols-12 md:gap-x-8 gap-y-8 mb-6">
 
@@ -35,7 +35,7 @@
                         					aria-hidden="true"
                         					class="rounded-sm text-gray-400 fill-current focus:outline-none
                         					focus:shadow-outline p-1 w-6 m-0 cursor-pointer"
-                        					:class="{'text-gray-600 dark:text-gray-100': hoverRating>= star, 'text-amber-400 dark:text-amber-400':
+                        					:class="{'text-yellow-300 dark:text-yellow-300': hoverRating>= star, 'text-amber-400 dark:text-amber-400':
                         					rating >= star && hoverRating >= star}">
                         					<svg class="w-6 transition duration-150"
                         						xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -75,7 +75,7 @@
 
                         </div>
 
-                    </div>               
+                    </div>
 
                 </div>
 
@@ -100,7 +100,7 @@
     				} else {
     					this.rating= amount;
     					@this.set('rating', amount);
-    				} 
+    				}
     			},
 
                 // Init
