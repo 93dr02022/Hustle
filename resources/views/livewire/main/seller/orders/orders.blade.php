@@ -189,7 +189,7 @@
                                     <div>
 
                                         {{-- Title --}}
-                                        <a href="{{ url('service', $order->gig->slug) }}"
+                                        <a href="{{ url('seller/orders/details', $order->uid) }}"
                                             class="font-medium whitespace-nowrap truncate block max-w-[240px] hover:text-primary-600 dark:text-white text-sm"
                                             title="{{ $order->gig->title }}">
                                             {{ $order->gig->title }}

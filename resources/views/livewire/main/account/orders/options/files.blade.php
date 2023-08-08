@@ -138,7 +138,6 @@
                                 <section>
                                     <div
                                         class="rounded-lg bg-white dark:bg-zinc-700 overflow-hidden border border-gray-200 dark:border-zinc-600">
-
                                         {{-- Section title --}}
                                         <div class="bg-gray-50 dark:bg-zinc-600 px-8 py-4 rounded-t-md">
                                             <div
@@ -165,15 +164,12 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div>
-
                                             {{-- Chat messages --}}
                                             <div class="w-full">
                                                 <ul role="list" class="py-6 px-8">
 
-                                                        @foreach ($item->conversation
-                                                            as $message)
+                                                        @foreach ($item->conversation as $message)
                                                             <li
                                                                 wire:key="seller-deliver-order-msg-id-{{ $message->id }}">
                                                                 <div class="relative pb-8">
@@ -209,11 +205,8 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            @endforeach
-
-                                                            </ul>
-                                                </div>
-
+                                                        @endforeach
+                                                </ul>
                                                 {{-- Send message --}}
                                                 @if (!$item->is_finished)
                                                     <div
@@ -255,10 +248,9 @@
                                                         </div>
                                                     </div>
                                                 @endif
-
                                             </div>
-
                                         </div>
+                                    </div>
                                 </section>
                             </div>
 
