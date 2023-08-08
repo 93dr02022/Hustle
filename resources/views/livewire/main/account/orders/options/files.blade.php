@@ -265,10 +265,7 @@
                             {{-- Delivered work --}}
                             <div class="col-span-12 xl:col-span-6">
                                 @php
-                                    $delivered_work = $item
-                                        ->deliveredWorks()
-                                        ->latest()
-                                        ->firstOrFail();
+                                    $delivered_work = $item->deliveredWorks()->latest()->first();
                                 @endphp
                                 {{-- Download files --}}
                                 @if ($delivered_work)
