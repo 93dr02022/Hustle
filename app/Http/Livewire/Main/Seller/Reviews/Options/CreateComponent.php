@@ -33,7 +33,6 @@ class CreateComponent extends Component
         // Get review
         $review = Review::where('uid', $reviewId)->where('seen', false)->first();
 
-
         // Check if order item exists
         if (!$review) {
             return redirect('seller/reviews')->with('message', __('messages.t_order_item_could_not_be_found'));
@@ -102,8 +101,8 @@ class CreateComponent extends Component
             // Create new review
             $review = new Review();
             $review->uid = uid();
-            $review->user_id = $this->review->user_id;
-            $review->seller_id = auth()->id();
+            $review->user_id =  auth()->id();
+            $review->seller_id = $this->review->user_id;
             $review->gig_id = $this->review->gig_id;
             $review->order_item_id = $this->review->order_item_id;
             $review->rating = $this->rating;

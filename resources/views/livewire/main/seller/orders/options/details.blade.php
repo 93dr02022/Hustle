@@ -382,15 +382,15 @@
                             <div class="mt-5 pl-5">
                                 <div class="flex items-center">
                                     <img src="{{ placeholder_img() }}"
-                                        data-src="{{ src($review->repliedReview->seller->avatar_id) }}"
-                                        alt="{{ $review->repliedReview->seller->username }}"
+                                        data-src="{{ src($review->repliedReview->user->avatar_id) }}"
+                                        alt="{{ $review->repliedReview->user->username }}"
                                         class="lazy h-8 w-8 rounded-full">
                                     <div class="ml-4 group">
-                                        <a href="{{ url('profile', $review->repliedReview->seller->username) }}"
+                                        <a href="{{ url('profile', $review->repliedReview->user->username) }}"
                                             target="_blank"
                                             class="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center group-hover:text-primary-600 dark:group-hover:text-primary-600">
-                                            {{ $review->repliedReview->seller->username }}
-                                            @if ($review->repliedReview->seller->status === 'verified')
+                                            {{ $review->repliedReview->user->username }}
+                                            @if ($review->repliedReview->user->status === 'verified')
                                                 <img data-tooltip-target="tooltip-account-verified-{{ $review->id }}"
                                                     class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5"
                                                     src="{{ url('img/auth/verified-badge.svg') }}"
@@ -403,11 +403,11 @@
                                             @endif
 
                                             {{-- Country --}}
-                                            @if ($review->repliedReview->seller->country)
+                                            @if ($review->repliedReview->user->country)
                                                 <div class="ml-2">
                                                     <img src="{{ placeholder_img() }}"
-                                                        data-src="{{ countryFlag($review->repliedReview->seller->country?->code) }}"
-                                                        alt="{{ $review->repliedReview->seller->country?->name }}"
+                                                        data-src="{{ countryFlag($review->repliedReview->user->country?->code) }}"
+                                                        alt="{{ $review->repliedReview->user->country?->name }}"
                                                         class="lazy h-3 -mt-px rounded-sm">
                                                 </div>
                                             @endif
