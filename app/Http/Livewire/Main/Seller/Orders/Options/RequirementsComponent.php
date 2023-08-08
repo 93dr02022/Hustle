@@ -103,7 +103,7 @@ class RequirementsComponent extends Component
         //Creating timeline
         $item->orderTimelines()->create([
             'name' => 'Order cancelled',
-            'description' => __('messages.t_buyer_has_canceled_order')
+            'description' => 'Buyer has cancelled your order'
         ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
@@ -150,7 +150,7 @@ class RequirementsComponent extends Component
         //Creating the ordertimeline
         $item->orderTimelines()->create([
             'name' => 'Order started',
-            'description' => __('messages.t_seller_has_started_ur_order')
+            'description' => 'seller has started your order'
         ]);
 
         // Send notification to buyer

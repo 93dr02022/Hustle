@@ -176,7 +176,7 @@ class DeliverComponent extends Component
             //Creating the ordertimeline
             $this->order->orderTimelines()->create([
                 'name' => 'Order delivered',
-                'description' => __('messages.t_seller_has_delivered_ur_order')
+                'description' => 'Seller delivered your order'
             ]);
 
             // Send notification to buyer
@@ -245,11 +245,6 @@ class DeliverComponent extends Component
             ]);
         // update count reviews of resubmit work until number is equal to total_reviews
         $this->order->increment('count_review');
-        //Creating the ordertimeline
-        $this->order->orderTimelines()->create([
-            'name' => 'Order delivered',
-            'description' => __('messages.t_seller_has_delivered_ur_order')
-        ]);
         // Refresh model
         $this->order->refresh();
         // Success

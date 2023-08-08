@@ -192,7 +192,7 @@ class FilesComponent extends Component
         //Creating timeline
         $item->orderTimelines()->create([
             'name' => 'Order finished',
-            'description' => __('messages.t_order_id_completed')
+            'description' => 'Order has been completed'
         ]);
         // Remove item from queue list and success sales
         if ($item->gig->orders_in_queue > 0) {

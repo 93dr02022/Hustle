@@ -87,7 +87,7 @@ class DetailsComponent extends Component
             //Creating the ordertimeline
             $this->order->orderTimelines()->create([
                 'name' => 'Order started',
-                'description' => __('messages.t_seller_has_started_ur_order')
+                'description' => 'Seller has started your order'
             ]);
 
             // Let's notify the buyer
@@ -160,7 +160,7 @@ class DetailsComponent extends Component
         //Creating timeline
         $item->orderTimelines()->create([
             'name' => 'Order cancelled',
-            'description' => __('messages.t_buyer_has_canceled_order')
+            'description' => 'Buyer has cancelled your order'
         ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
