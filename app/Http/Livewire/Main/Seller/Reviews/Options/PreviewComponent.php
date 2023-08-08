@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Livewire\Main\Seller\Reviews\Options;
 
-
+use App\Models\Gig;
 use App\Models\Review;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
@@ -21,8 +21,7 @@ class PreviewComponent extends Component
     public function mount($id)
     {
         // Get review
-        $review = Review::where('user_id', auth()->id())->where('uid', $id)->firstOrFail();
-
+        $review = Review::where('uid', $id)->firstOrFail();
         // Set review
         $this->review = $review;
     }
@@ -61,5 +60,35 @@ class PreviewComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.seller.reviews.options.preview')->extends('livewire.main.seller.layout.app')->section('content');
+    }
+    public function delete($id)
+    {
+        // Get review
+        $review = Review::where('id', $id)->where('seller_id', auth()->id())->firstOrFail();
+
+        // Count total rating
+        $total_rating = Review::where('id', '!=', $review->id)->where('gig_id', $review->gig_id)->where('review_id',null)->sum('rating');
+
+        // Count total reviews
+        $total_reviews = Review::where('id', '!=', $review->id)->where('gig_id', $review->gig_id)->where('review_id',null)->count();
+
+        // Calculate gig rating
+        $gig_rating = $total_reviews > 0 ? $total_rating / $total_reviews : 0;
+
+        // Get gig
+        Gig::where('id', $review->gig_id)->update([
+            'counter_reviews' => $total_reviews,
+            'rating' => $gig_rating,
+        ]);
+
+        // Delete review
+        $review->delete();
+
+        // success
+        $this->notification([
+            'title' => __('messages.t_success'),
+            'description' => __('messages.t_review_deleted_successfully'),
+            'icon' => 'success',
+        ]);
     }
 }

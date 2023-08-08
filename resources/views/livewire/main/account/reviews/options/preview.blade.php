@@ -68,6 +68,9 @@
 
                                             </a>
                                             <div class="mt-1 flex items-start">
+                                                <div>
+                                                    {!! render_star_rating($review->rating, '1rem', '1rem', '#d0d0d0') !!}
+                                                </div>
                                                 <div wire:ignore class="rating-item-container"
                                                     data-rating-value="{{ $review->rating }}"></div>
                                                 <span
@@ -77,14 +80,71 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     {{-- Message --}}
                                     @if ($review->message)
                                         <div class="mt-4 space-y-6 text-sm italic text-gray-600 dark:text-gray-50">
                                             <p>{{ $review->message }}</p>
                                         </div>
                                     @endif
+                                    
+                                    @if ($review->repliedReview)
+                                        <div class="mt-5 pl-5">
+                                            <div class="flex items-center">
+                                                <img src="{{ placeholder_img() }}"
+                                                    data-src="{{ src($review->repliedReview->seller->avatar_id) }}"
+                                                    alt="{{ $review->repliedReview->seller->username }}"
+                                                    class="lazy h-8 w-8 rounded-full">
+                                                <div class="ml-4 group">
+                                                    <a href="{{ url('profile', $review->repliedReview->seller->username) }}"
+                                                        target="_blank"
+                                                        class="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center group-hover:text-primary-600 dark:group-hover:text-primary-600">
+                                                        {{ $review->repliedReview->seller->username }}
+                                                        @if ($review->repliedReview->seller->status === 'verified')
+                                                            <img data-tooltip-target="tooltip-account-verified-{{ $review->id }}"
+                                                                class="ltr:ml-0.5 rtl:mr-0.5 h-4 w-4 -mt-0.5"
+                                                                src="{{ url('img/auth/verified-badge.svg') }}"
+                                                                alt="{{ __('messages.t_account_verified') }}">
+                                                            <div id="tooltip-account-verified-{{ $review->repliedReview->id }}"
+                                                                role="tooltip"
+                                                                class="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-sm shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                                                {{ __('messages.t_account_verified') }}
+                                                            </div>
+                                                        @endif
 
+                                                        {{-- Country --}}
+                                                        @if ($review->repliedReview->seller->country)
+                                                            <div class="ml-2">
+                                                                <img src="{{ placeholder_img() }}"
+                                                                    data-src="{{ countryFlag($review->repliedReview->seller->country?->code) }}"
+                                                                    alt="{{ $review->repliedReview->seller->country?->name }}"
+                                                                    class="lazy h-3 -mt-px rounded-sm">
+                                                            </div>
+                                                        @endif
+
+                                                    </a>
+                                                    <div class="mt-1 flex items-start">
+                                                        <div>
+                                                            {!! render_star_rating($review->repliedReview->rating, '1rem', '1rem', '#d0d0d0') !!}
+                                                        </div>
+                                                        <div wire:ignore class="rating-item-container"
+                                                            data-rating-value="{{ $review->repliedReview->rating }}">
+                                                        </div>
+                                                        <span
+                                                            class="ltr:ml-2 rtl:mr-2 text-[11px] font-normal text-gray-400"><span
+                                                                class="pr-2 text-gray-300">•</span>
+                                                            {{ format_date($review->repliedReview->created_at, 'ago') }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Message --}}
+                                            @if ($review->repliedReview->message)
+                                                <div
+                                                    class="mt-4 space-y-6 text-sm italic text-gray-600 dark:text-gray-50">
+                                                    <p>{{ $review->repliedReview->message }}</p>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

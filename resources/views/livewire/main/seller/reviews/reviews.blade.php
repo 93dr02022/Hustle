@@ -253,10 +253,9 @@
                                 <div class="flex justify-center items-center space-x-2 rtl:space-x-reverse">
                                     @if ($review->seen)
                                         {{-- Order details --}}
-                                        <button wire:click="details('{{ $review->uid }}')" type="button"
-                                            data-tooltip-target="tooltip-actions-review-details-{{ $review->uid }}"
+                                        <a href="{{ url('seller/reviews/preview/' . $review->uid) }}"
                                             class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                            wire:key="tooltip-actions-review-details-{{ $review->uid }}">
+                                            >
                                             <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
                                                 stroke-width="0" viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -264,11 +263,13 @@
                                                     d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
                                                 </path>
                                             </svg>
-                                        </button>
+                                        </a>
                                         <x-forms.tooltip id="tooltip-actions-review-details-{{ $review->uid }}"
                                             :text="__('messages.t_review_details')" />
+
+                                            
                                     @else
-                                        {{-- Order details --}}
+                                        {{-- Order lock --}}
                                         <a href="{{ url('seller/reviews/create/' . $review->uid) }}"
                                             class="inline-flex justify-center items-center border font-semibold focus:outline-none w-8 h-8 leading-5 text-sm rounded border-gray-300 bg-white text-gray-800 shadow-sm hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
                                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg"

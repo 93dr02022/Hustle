@@ -59,7 +59,10 @@ class Review extends Model
     {
         return $this->belongsTo(User::class, 'user_id')->withTrashed(); // Buyer
     }
-
+    public function repliedReview()
+    {
+        return $this->hasOne(self::class, 'review_id'); // Replied review
+    }
     /**
      * Get seller
      *

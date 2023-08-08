@@ -2717,6 +2717,12 @@ input:checked + .toggle-bg {
 .mt-auto {
   margin-top: auto;
 }
+.ml-6 {
+  margin-left: 1.5rem;
+}
+.-ml-2 {
+  margin-left: -0.5rem;
+}
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;

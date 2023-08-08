@@ -28,7 +28,7 @@ class EditComponent extends Component
     public function mount($id)
     {
         // Get review
-        $review = Review::where('user_id', auth()->id())->where('uid', $id)->firstOrFail();
+        $review = Review::where('seller_id', auth()->id())->where('uid', $id)->firstOrFail();
 
         // Set review
         $this->review = $review;
@@ -72,6 +72,7 @@ class EditComponent extends Component
         $this->seo()->jsonLd()->setDescription($description);
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
+        return view('livewire.main.seller.reviews.options.edit')->extends('livewire.main.seller.layout.app')->section('content');
 
     }
 
@@ -88,16 +89,16 @@ class EditComponent extends Component
             EditValidator::validate($this);
 
             // Update review
-            Review::where('id', $this->review->id)->where('user_id', auth()->id())->update([
+            Review::where('id', $this->review->id)->where('seller_id', auth()->id())->update([
                 'rating' => $this->rating,
                 'message' => clean($this->message),
             ]);
 
             // Calculate total stars
-            $total_rating = Review::where('gig_id', $this->review->gig_id)->sum('rating');
+            $total_rating = Review::where('gig_id', $this->review->gig_id)->where('review_id',null)->sum('rating');
 
             // Calculate total reviews
-            $total_reviews = Review::where('gig_id', $this->review->gig_id)->count();
+            $total_reviews = Review::where('gig_id', $this->review->gig_id)->where('review_id',null)->count();
 
             // Set rating
             $gig_rating = $total_reviews > 0 ? $total_rating / $total_reviews : 0;
