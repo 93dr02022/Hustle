@@ -6,6 +6,7 @@ use App\Models\OrderItem;
 use App\Models\Refund;
 use App\Models\RefundConversation;
 use App\Models\User;
+use App\Notifications\User\Buyer\OrderItemRefunded;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -102,6 +103,7 @@ class DetailsComponent extends Component
         User::where('id', $this->refund->seller_id)->update([
             'balance_pending' => convertToNumber($this->refund->seller->balance_pending) - convertToNumber($item->profit_value),
         ]);
+        $order_item->owner->notify((new OrderItemRefunded($order_item))->locale(config('app.locale')));
 
         // Send notification to buyer
         notification([

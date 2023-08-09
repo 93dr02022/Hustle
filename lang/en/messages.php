@@ -9,6 +9,7 @@ return [
     "t_reviews"                                                => "Reviews",
     "t_choose_number_of_review"                                => "Choose number of reviews",
     "t_request_review"                                         => "Request review",
+    "t_order_reviewed"                                         => "Order Reviewed",
     "t_request_review_subtitle"                                => "We recommend you always to contact the seller before request a review",
     "t_dont_have_any_review"                                   => "You do not have any review(s)",
     "t_sign_in"                                                => "Sign in",

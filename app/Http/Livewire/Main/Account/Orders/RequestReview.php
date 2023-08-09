@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Main\Account\Orders;
 use App\Http\Validators\Main\Account\Refunds\RequestValidator;
 use App\Models\OrderItem;
 use App\Models\Refund;
+use App\Notifications\User\Buyer\OrderItemReviewed;
 use App\Notifications\User\Seller\RefundRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
@@ -159,6 +160,8 @@ class RequestReview extends Component
             'name' => 'Order Reviewed',
             'description' => auth()->user()->username . ' request for review'
         ]);
+        $this->item->order->buyer->notify((new OrderItemReviewed($this->item))->locale(config('app.locale')));
+
         session()->flash('success', 'Request for review sent successfully. Only ' . ($this->item->total_reviews - $this->item->count_review) . ' review(s) remain.');
         return redirect('account/orders/files?orderId=' . $this->item->order->uid . '&itemId=' . $this->item->uid);
     }
