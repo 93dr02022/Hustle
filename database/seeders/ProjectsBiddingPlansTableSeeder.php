@@ -15,33 +15,33 @@ class ProjectsBiddingPlansTableSeeder extends Seeder
     public function run()
     {
         try {
-            \DB::table('projects_bidding_plans')->insert(array (
-                0 => 
-                array (
+            \DB::table('projects_bidding_plans')->insert(array(
+                0 =>
+                array(
                     'id' => 1,
                     'uid' => '79B051ABB70FD94B1114',
                     'plan_type' => 'sponsored',
-                    'price' => '1.99',
+                    'price' => '400',
                     'is_active' => 1,
                     'badge_text_color' => '#ffffff',
                     'badge_bg_color' => '#b760ce',
                 ),
-                1 => 
-                array (
+                1 =>
+                array(
                     'id' => 2,
                     'uid' => '3BD7320B7E36F14B8C92',
                     'plan_type' => 'sealed',
-                    'price' => '0.2',
+                    'price' => '250',
                     'is_active' => 1,
                     'badge_text_color' => '#ffffff',
                     'badge_bg_color' => '#4c8cff',
                 ),
-                2 => 
-                array (
+                2 =>
+                array(
                     'id' => 3,
                     'uid' => 'F0BB323B483D9EBE7E67',
                     'plan_type' => 'highlight',
-                    'price' => '0.49',
+                    'price' => '200',
                     'is_active' => 1,
                     'badge_text_color' => '#ffffff',
                     'badge_bg_color' => '#ffb134',
@@ -49,6 +49,6 @@ class ProjectsBiddingPlansTableSeeder extends Seeder
             ));
         } catch (\Throwable $th) {
             //throw $th;
-        } 
+        }
     }
 }

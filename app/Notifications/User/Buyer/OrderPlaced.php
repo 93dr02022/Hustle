@@ -47,8 +47,13 @@ class OrderPlaced extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        // Push notifications for order updates
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+        // if there is app token proceed
+        if ($notifiable?->userNotificationSetting?->app_token) {
+            rescue(fn () => $this->toMobile($notifiable));
+        }
+
+        // if there is web token proceed
+        if ($notifiable?->userNotificationSetting?->notification_token) {
             rescue(fn () => $this->toFirebase($notifiable));
         }
 
@@ -61,25 +66,44 @@ class OrderPlaced extends Notification implements ShouldQueue
             ->line(__('messages.t_notification_buyer_order_placed'))
             ->action(__('messages.t_my_orders'), url('account/orders'));
     }
+
     /**
      * Create the push notification.
      *
      * @param  mixed  $notifiable
-     * @return \NotificationChannels\OneSignal\OneSignalMessage
      */
     public function toFirebase($notifiable)
     {
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
-        $url =  url('account/orders');
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
 
-        Larafirebase::withTitle($subject)
-            ->withBody(__('messages.t_notification_buyer_order_placed'))
-            ->withClickAction($url)
-            ->withIcon(asset('img/default/no-favicon.png'))
-            // ->withImage(asset('img/default/no-favicon.png'))
-            ->withPriority('high')
-            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+            Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_buyer_order_placed'))
+                ->withClickAction('account/orders')
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+        }
     }
+
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toMobile($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
+
+            Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_buyer_order_placed'))
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendNotification([$notifiable->userNotificationSetting->app_token]);
+        }
+    }
+
     /**
      * Get the array representation of the notification.
      *
