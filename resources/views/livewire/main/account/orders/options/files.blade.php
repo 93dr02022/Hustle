@@ -11,7 +11,67 @@
 
                 {{-- Section content --}}
                 <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:col-span-9">
+                    {{-- Breadcrumbs --}}
+                    <div class="my-1 p-5 ml-2 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6 rtl:space-x-reverse">
+                        <ol class="inline-flex items-center mb-3 space-x-1 md:space-x-3 md:rtl:space-x-reverse sm:mb-0">
 
+                            {{-- Main home --}}
+                            <li>
+                                <div class="flex items-center">
+                                    <a href="{{ url('/') }}"
+                                        class="text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-zinc-300 dark:hover:text-white">
+                                        @lang('messages.t_home')
+                                    </a>
+                                </div>
+                            </li>
+
+                            {{-- orders --}}
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <a href="{{ url('/account/orders') }}"
+                                        class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ltr:ml-2 md:rtl:mr-2 dark:text-zinc-300 dark:hover:text-white">
+                                        @lang('messages.t_orders')
+                                    </a>
+                                </div>
+                            </li>
+                            {{-- order details  --}}
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <a href="{{ url('account/orders/view-order', $order->uid) }}"
+                                        class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ltr:ml-2 md:rtl:mr-2 dark:text-zinc-300 dark:hover:text-white">
+                                        @lang('messages.t_order_details')
+                                    </a>
+                                </div>
+                            </li>
+                            {{-- deliver work --}}
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="mx-1 text-sm font-medium text-gray-400 md:mx-2 dark:text-zinc-400">
+                                        @lang('messages.t_deliver_work')
+                                    </span>
+                                </div>
+                            </li>
+
+                        </ol>
+                    </div>
                     {{-- Form --}}
                     <div class="py-6 px-4 sm:p-6 lg:pb-8">
                         {{-- Success --}}
@@ -169,7 +229,8 @@
                                             <div class="w-full">
                                                 <ul role="list" class="py-6 px-8">
 
-                                                        @foreach ($item->conversation as $message)
+                                                         @foreach ($item->conversation
+                                                            as $message)
                                                             <li
                                                                 wire:key="seller-deliver-order-msg-id-{{ $message->id }}">
                                                                 <div class="relative pb-8">
@@ -205,59 +266,65 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                        @endforeach
-                                                </ul>
-                                                {{-- Send message --}}
-                                                @if (!$item->is_finished)
-                                                    <div
-                                                        class="mt-auto w-full px-8 py-10 border-t bg-gray-50 dark:border-zinc-700 dark:bg-zinc-600 rounded-br-md">
-                                                        <div class="flex items-start space-x-4 rtl:space-x-reverse">
-                                                            <div class="flex-shrink-0">
-                                                                <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
-                                                                    src="{{ placeholder_img() }}"
-                                                                    data-src="{{ src(auth()->user()->avatar_id) }}"
-                                                                    alt="{{ auth()->user()->username }}">
-                                                            </div>
-                                                            <div class="min-w-0 flex-1">
-                                                                <div class="relative">
+                                                            @endforeach
+                                                            </ul>
+                                                            {{-- Send message --}}
+                                                            @if (!$item->is_finished)
+                                                                <div
+                                                                    class="mt-auto w-full px-8 py-10 border-t bg-gray-50 dark:border-zinc-700 dark:bg-zinc-600 rounded-br-md">
                                                                     <div
-                                                                        class="border border-gray-300 dark:border-zinc-500 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                                                                        <textarea rows="3" maxlength="750" wire:model.defer="message"
-                                                                            class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200 dark:placeholder-gray-300"
-                                                                            placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
-                                                                        <div class="py-2" aria-hidden="true">
-                                                                            <div class="py-px">
-                                                                                <div class="h-9"></div>
+                                                                        class="flex items-start space-x-4 rtl:space-x-reverse">
+                                                                        <div class="flex-shrink-0">
+                                                                            <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
+                                                                                src="{{ placeholder_img() }}"
+                                                                                data-src="{{ src(auth()->user()->avatar_id) }}"
+                                                                                alt="{{ auth()->user()->username }}">
+                                                                        </div>
+                                                                        <div class="min-w-0 flex-1">
+                                                                            <div class="relative">
+                                                                                <div
+                                                                                    class="border border-gray-300 dark:border-zinc-500 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
+                                                                                    <textarea rows="3" maxlength="750" wire:model.defer="message"
+                                                                                        class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200 dark:placeholder-gray-300"
+                                                                                        placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
+                                                                                    <div class="py-2"
+                                                                                        aria-hidden="true">
+                                                                                        <div class="py-px">
+                                                                                            <div class="h-9"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div
+                                                                                    class="absolute bottom-0 inset-x-0 ltr:pl-3 ltr:pr-2 rtl:pr-3 rtl:pl-2 py-2 flex justify-between">
+                                                                                    <div></div>
+                                                                                    <div class="flex-shrink-0">
+                                                                                        <button
+                                                                                            wire:click="sendMessage"
+                                                                                            wire:loading.attr="disabled"
+                                                                                            wire:target="sendMessage"
+                                                                                            type="button"
+                                                                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-700 dark:ring-offset-primary-600">{{ __('messages.t_send') }}</button>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                    <div
-                                                                        class="absolute bottom-0 inset-x-0 ltr:pl-3 ltr:pr-2 rtl:pr-3 rtl:pl-2 py-2 flex justify-between">
-                                                                        <div></div>
-                                                                        <div class="flex-shrink-0">
-                                                                            <button wire:click="sendMessage"
-                                                                                wire:loading.attr="disabled"
-                                                                                wire:target="sendMessage"
-                                                                                type="button"
-                                                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-700 dark:ring-offset-primary-600">{{ __('messages.t_send') }}</button>
-                                                                        </div>
-                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                                            @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </section>
                             </div>
 
                             {{-- Delivered work --}}
                             <div class="col-span-12 xl:col-span-6">
                                 @php
-                                    $delivered_work = $item->deliveredWorks()->latest()->first();
+                                    $delivered_work = $item
+                                        ->deliveredWorks()
+                                        ->latest()
+                                        ->first();
                                 @endphp
                                 {{-- Download files --}}
                                 @if ($delivered_work)
@@ -280,12 +347,15 @@
                                             </div>
                                             <div class="px-8 py-5">
                                                 @php
-                                                    $prev_work = $item->deliveredWorks()->count() > 1 ? (object) $item
-                                                        ->deliveredWorks()
-                                                        ->latest()
-                                                        ->limit(2)
-                                                        ->get()
-                                                        ->toArray()[1] : null;
+                                                    $prev_work =
+                                                        $item->deliveredWorks()->count() > 1
+                                                            ? (object) $item
+                                                                ->deliveredWorks()
+                                                                ->latest()
+                                                                ->limit(2)
+                                                                ->get()
+                                                                ->toArray()[1]
+                                                            : null;
                                                 @endphp
 
                                                 @if ($prev_work && $prev_work->is_delivered)

@@ -2340,6 +2340,9 @@ input:checked + .toggle-bg {
 .m-auto {
   margin: auto;
 }
+.m-5 {
+  margin: 1.25rem;
+}
 .\!mx-0 {
   margin-left: 0px !important;
   margin-right: 0px !important;

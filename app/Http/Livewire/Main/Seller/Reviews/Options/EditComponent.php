@@ -28,7 +28,7 @@ class EditComponent extends Component
     public function mount($id)
     {
         // Get review
-        $review = Review::where('seller_id', auth()->id())->where('uid', $id)->firstOrFail();
+        $review = Review::where('user_id', auth()->id())->where('uid', $id)->firstOrFail();
 
         // Set review
         $this->review = $review;
