@@ -197,7 +197,7 @@ class LoginComponent extends Component
                     // Error
                     $this->notification([
                         'title' => __('messages.t_error'),
-                        'description' => __('messages.t_toast_something_went_wrong'),
+                        'description' => __('You need to verify your account before you can proceed.'),
                         'icon' => 'error',
                     ]);
 
@@ -212,7 +212,7 @@ class LoginComponent extends Component
                 'icon' => 'error',
             ]);
         } catch (\Throwable $th) {
-
+            dd($th);
             // Error
             $this->notification([
                 'title' => __('messages.t_error'),

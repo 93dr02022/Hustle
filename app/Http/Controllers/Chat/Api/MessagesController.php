@@ -155,8 +155,8 @@ class MessagesController extends Controller
             $toUser = User::find($request['id']);
             if ($toUser->push_inbox_messages) {
                 Larafirebase::withTitle("New Message!")
-                ->withBody("You have a new message")
-                ->sendMessage([$toUser->push_notification_id]);
+                    ->withBody("You have a new message")
+                    ->sendMessage([$toUser->push_notification_id]);
             }
         }
 

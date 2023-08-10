@@ -220,3 +220,30 @@ paths:
             application/json:
               schema:
                 type: object
+
+  /user/update-fcm:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - User
+      summary: Update mobile fcm token
+      description: Update mobile fcm token
+      operationId: updateMobileFCMToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: '...'
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+

@@ -31,8 +31,7 @@ class Marketing extends Notification
      */
     public function via($notifiable)
     {
-        //Get the notification channels that the user has allowed to be notified of.
-        return $this->getActiveChannels($notifiable);
+        return ['mail'];
     }
 
     /**
@@ -43,11 +42,54 @@ class Marketing extends Notification
      */
     public function toMail($notifiable)
     {
+        // if there is app token proceed
+        if ($notifiable?->userNotificationSetting?->app_token) {
+            rescue(fn () => $this->toMobile($notifiable));
+        }
+
+        // if there is web token proceed
+        if ($notifiable?->userNotificationSetting?->notification_token) {
+            rescue(fn () => $this->toFirebase($notifiable));
+        }
+
         return (new MailMessage)
             ->subject($this->marketingNotification->title)
             ->line($this->marketingNotification->message)
             ->action('Read More', $this->marketingNotification->url)
             ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toMobile($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            Larafirebase::withTitle($this->marketingNotification->title)
+                ->withBody($this->marketingNotification->message)
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendNotification([$notifiable->userNotificationSetting->app_token]);
+        }
+    }
+
+    /**
+     * Create the push notification.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toFirebase($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            Larafirebase::withTitle($this->marketingNotification->title)
+                ->withBody($this->marketingNotification->message)
+                ->withClickAction($this->marketingNotification->url)
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+        }
     }
 
     /**
@@ -61,26 +103,5 @@ class Marketing extends Notification
         return [
             //
         ];
-    }
-    public function toFirebase($notifiable)
-    {
-
-        return  Larafirebase::withTitle($this->marketingNotification->title)
-            ->withBody($this->marketingNotification->message)
-            ->withClickAction($this->marketingNotification->url)
-            ->withIcon(asset('img/default/no-favicon.png'))
-            ->withImage(asset('img/default/no-favicon.png'))
-            ->withPriority('high')
-            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-    }
-
-    private function getActiveChannels($notifiable)
-    {
-        //Check if user has allowed push notifications for order updates
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $this->toFirebase($notifiable);
-        }
-
-        return [];
     }
 }

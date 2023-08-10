@@ -170,6 +170,7 @@ class MessagesController extends Controller
      */
     public function send(Request $request)
     {
+        // dd($request->all());
         // default variables
         $error = (object)[
             'status'  => 0,
@@ -243,7 +244,8 @@ class MessagesController extends Controller
                 'type'       => 'user',
                 'from_id'    => auth()->id(),
                 'to_id'      => $request->get('id'),
-                'body'       => $request->get('message') ? clean($request->get('message')) : null,
+                'quotation_id' => $request->get('quotation', null),
+                'body' => $request->get('message') ? ($request->get('message') == ".." ? null : clean($request->get('message'))) : null,
                 'attachment' => ($attachment) ? json_encode((object)[
                     'new_name'  => $attachment,
                     'old_name'  => htmlentities(trim(clean($attachment_title)), ENT_QUOTES, 'UTF-8'),
@@ -264,8 +266,8 @@ class MessagesController extends Controller
             $toUser = User::find($request['id']);
             if ($toUser->push_inbox_messages) {
                 Larafirebase::withTitle("New Message!")
-                ->withBody("You have a new message")
-                ->sendMessage([$toUser->push_notification_id]);
+                    ->withBody("You have a new message")
+                    ->sendMessage([$toUser->push_notification_id]);
             }
         }
 

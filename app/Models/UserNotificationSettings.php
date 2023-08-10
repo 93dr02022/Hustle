@@ -16,6 +16,7 @@ class UserNotificationSettings extends Model
      */
     protected $fillable = [
         'notification_token',
+        'app_token',
         'user_id',
         'push_inbox_notifications',
         'push_order_notifications',

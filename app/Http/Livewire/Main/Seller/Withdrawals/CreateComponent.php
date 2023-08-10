@@ -7,8 +7,10 @@ use App\Jobs\Main\Seller\SendMoney;
 use App\Models\Admin;
 use App\Models\UserWithdrawalHistory;
 use App\Models\UserWithdrawalSettings;
+use App\Models\WithdrawOtp;
 use App\Notifications\Admin\PendingWithdrawal as AdminPendingWithdrawal;
 use App\Notifications\User\Seller\PendingWithdrawal as SellerPendingWithdrawal;
+use App\Notifications\User\Seller\WithdrawOtpNotice;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -32,6 +34,8 @@ class CreateComponent extends Component
     public $withdrawalSettings;
 
     public $accountType;
+
+    public $otp;
 
     /**
      * Init component
@@ -133,7 +137,7 @@ class CreateComponent extends Component
      *
      * @return void
      */
-    public function withdraw()
+    public function withdraw($formOne)
     {
         try {
             MakeValidator::validate($this);
@@ -143,9 +147,10 @@ class CreateComponent extends Component
                 ->when($this->accountType == 'business')->whereNotNull('business_acct_number')
                 ->first();
 
-            // Check if user has withdrawal email or not
+            // Check if user has withdrawal or not
             if (!$userWithdrawSettings) {
-                return redirect('seller/withdrawals/settings');
+                return redirect('seller/withdrawals/settings')
+                    ->with('message', __('you need to have an account in other to withdraw.'));;
             }
 
             // Get withdrawal settings
@@ -155,7 +160,6 @@ class CreateComponent extends Component
             // Check if user has this money in his account
             if ($this->amount > $available_balance) {
                 $this->toastError(__('messages.t_withdrawal_money_not_enough'));
-
                 return;
             }
 
@@ -186,6 +190,34 @@ class CreateComponent extends Component
                 return;
             }
 
+            if ($formOne) {
+                $otp = WithdrawOtp::create([
+                    'user_id' => auth()->id(),
+                    'otp' => mt_rand(111111, 999999)
+                ]);
+
+                auth()->user()->notify((new WithdrawOtpNotice($otp))->locale(config('app.locale')));
+
+                $this->toastSuccess('Please enter the otp sent to your email in other to continue.');
+                $this->dispatchBrowserEvent('show-otp');
+                return;
+            }
+
+            // check if otp is available and if its verify the code.
+            if (!$this->otp) {
+                $this->toastError('Please you need to enter your withdrawal otp to continue.');
+                return;
+            }
+
+            $codeExists = WithdrawOtp::where('user_id', auth()->id())
+                ->where('otp', $this->otp)
+                ->exists();
+
+            if (!$codeExists) {
+                $this->toastError('Sorry we are unable to verify your otp code please check retry.');
+                return;
+            }
+
             $withdrawal = UserWithdrawalHistory::create([
                 'uid' => strtolower(uid(25)),
                 'user_id' => auth()->id(),
@@ -209,7 +241,8 @@ class CreateComponent extends Component
             SendMoney::dispatch($withdrawal);
 
             // Success
-            return redirect('seller/withdrawals')->with('success', __('messages.t_ur_withdrawal_request_under_review'));
+            return redirect('seller/withdrawals')
+                ->with('success', __('messages.t_ur_withdrawal_request_under_review'));
         } catch (ValidationException $e) {
 
             $this->toastError(__('messages.t_toast_form_validation_error'));
@@ -222,7 +255,7 @@ class CreateComponent extends Component
     }
 
     /**
-     * Validate user withdrawal limit by heck withdrawal
+     * Validate user withdrawal limit by checking withdrawal
      * period settings
      */
     public function checkWithdrawLimit($settings, $latest)
@@ -271,6 +304,18 @@ class CreateComponent extends Component
             'title' => __('messages.t_error'),
             'description' => $message,
             'icon' => 'error',
+        ]);
+    }
+
+    /**
+     * Toast success message to user.
+     */
+    public function toastSuccess($message)
+    {
+        $this->notification([
+            'title' => __('messages.t_success'),
+            'description' => $message,
+            'icon' => 'success',
         ]);
     }
 }

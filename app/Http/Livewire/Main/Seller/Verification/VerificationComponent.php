@@ -261,7 +261,7 @@ class VerificationComponent extends Component
 
             $this->dispatchBrowserEvent('refresh');
         } catch (\Throwable $th) {
-            //throw $th;
+            $this->toastMessage('Sorry error occured while trying to verify your information.');
         }
     }
 
