@@ -184,20 +184,20 @@
     </div>
     
     {{-- Category Container --}}
-    <main class="max-w-7xl mx-auto">
+    <main class="px-4 sm:px-6 lg:px-8">
 
         {{-- Section title --}}
-        <div class="flex justify-between items-center mb-2 bg-transparent py-2 ltr:pr-6 rtl:pl-6 ltr:border-l-8 rtl:border-r-8 ltr:pl-4 rtl:pr-4 border-primary-600 rounded">
+        <div class="flex md:justify-between md:flex-row flex-col md:items-center mb-2 bg-transparent py-2">
 
             {{-- Category name --}}
-            <div>
+            <div class="border-l-8 border-primary-600 rounded pl-4">
                 <span class="font-extrabold text-base text-gray-800 dark:text-gray-100 pb-1 block tracking-wider">{{ $category->name }}</span>
                 <p class="text-sm text-gray-400">{{ $category->description }}</p>
             </div>
 
             {{-- Actions --}}
             <div>
-                <div class="flex items-center">
+                <div class="flex items-center justify-end md:mt-0 mt-4 gap-3">
 
                     {{-- Sort by --}}
                     <div x-data="Components.menu({ open: false })" x-init="init()" @keydown.escape.stop="open = false; focusButton()" @click.away="onClickAway($event)" class="relative inline-block ltr:text-left rtl:text-right">
@@ -268,8 +268,11 @@
                     </div>
         
                     {{-- Filter (Mobile) --}}
-                    <button type="button" class="p-2 -m-2 ltr:ml-4 rtl:mr-4 ltr:sm:ml-6 rtl:sm:mr-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="open = true">
-                        <svg class="w-4 h-4" aria-hidden="true" x-description="Heroicon name: solid/filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path> </svg>
+                    <button type="button" class="p-2 border rounded-md text-gray-400 hover:text-gray-500 lg:hidden" @click="open = true">
+                        <svg class="w-6 h-6" aria-hidden="true" x-description="Heroicon name: solid/filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
                     </button>
 
                 </div>
@@ -278,8 +281,8 @@
         </div>
 
         {{-- Section content --}}
-        <section aria-labelledby="products-heading" class="pt-6 pb-24">
-            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+        <section aria-labelledby="products-heading" class="pt-3 md:pt-6 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-5 md:gap-y-10">
 
                 {{-- Filter --}}
                 <div>
@@ -401,6 +404,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Location --}}
+                        <div x-data="{ open: true }" class="py-3">
+                            <h3 class="-my-3 flow-root bg-gray-50 dark:bg-zinc-700 px-4">
+                                <button @click="open = !open" type="button"
+                                    class="py-3 w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500 outline-none focus:outline-none">
+                                    <span class="font-medium text-gray-900">{{ __('Location') }}</span>
+                                    <span class="ltr:ml-6 rtl:mr-6 flex items-center">
+                                        <svg class="h-5 w-5" x-show="!(open)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <svg class="h-5 w-5" x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="display: none;">
+                                            <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </h3>
+                            <div class="pt-6 px-4" x-show="open" style="display: none;">
+                                <div class="space-y-4">
+
+                                    <div class="rounded-md shadow-sm -space-y-px">
+                                        <div class="w-full" wire:ignore>
+                                            <x-forms.select2 :label="__('States')" :placeholder="__('Choose Location')" model="location" :options="$states" :isDefer="true" :isAssociative="false" :componentId="$this->id"
+                                                :showLabel="false" value="name" text="name" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
     
                         {{-- Delivery time --}}
                         <div x-data="{ open: true }" class="py-3">
@@ -454,7 +487,7 @@
                             
                             {{-- Gig item --}}
                             <div class="col-span-12 lg:col-span-6 xl:col-span-4 md:col-span-6 sm:col-span-6" wire:key="gigs-list-{{ $gig->uid }}">
-                                @livewire('main.cards.gig', ['gig' => $gig], key("gig-item-" . $gig->uid))
+                                @livewire('main.cards.gig-card', ['gig' => $gig], key('gig-item-' . $gig->uid))
                             </div>
 
                         @empty

@@ -404,8 +404,8 @@
         </div>
 
         {{-- Section content --}}
-        <section aria-labelledby="products-heading" class="pt-4 md:pt-6 pb-24">
-            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+        <section aria-labelledby="products-heading" class="pt-3 md:pt-6 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-5 md:gap-y-10">
 
                 {{-- Filter --}}
                 <div>
