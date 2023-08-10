@@ -42,6 +42,19 @@ class SettingsAuth extends Model
     ];
 
     /**
+     * The attriutes that should be casts
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'verification_required' => 'boolean',
+        'is_facebook_login' => 'boolean',
+        'is_google_login' => 'boolean',
+        'is_twitter_login' => 'boolean',
+        'is_github_login' => 'boolean',
+    ];
+
+    /**
      * Get wallpaper for authentication screen 
      *
      * @return object
