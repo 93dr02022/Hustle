@@ -86,7 +86,6 @@
                                 d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
                                 clip-rule="evenodd" />
                         </svg>
-
                         {{ __('messages.t_back_to_orders') }}
                     </a>
                 </span>
@@ -111,127 +110,387 @@
                             {{ __('messages.t_deliver_completed_work_subtitle') }}
                         </h2>
                     </div>
-
+                    @php
+                        $submited_work = $order
+                            ->deliveredWorks()
+                            ->latest()
+                            ->first();
+                    @endphp
                     {{-- Section body --}}
-                    @if ($order->delivered_work)
-
+                    @if ($submited_work && !$submited_work->resubmit )
                         {{-- Check if have files --}}
-                        @if ($order->delivered_work->attached_work)
-                            <div class="py-4 flex items-center justify-between space-x-3 rtl:space-x-reverse mb-10">
-                                <div class="min-w-0 flex-1 flex items-center space-x-3 rtl:space-x-reverse">
-                                    <div class="flex-shrink-0">
-                                        <svg class="w-10" version="1.1" id="Layer_1"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                            viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                            xml:space="preserve">
-                                            <path style="fill:#ECEDEF;"
-                                                d="M100.641,0c-14.139,0-25.6,11.461-25.6,25.6v460.8c0,14.139,11.461,25.6,25.6,25.6h375.467c14.139,0,25.6-11.461,25.6-25.6V85.333L416.375,0H100.641z" />
-                                            <path style="fill:#D9DCDF;"
-                                                d="M441.975,85.333h59.733L416.375,0v59.733C416.375,73.872,427.836,85.333,441.975,85.333z" />
-                                            <path style="fill:#C6CACF;"
-                                                d="M399.308,42.667H75.041v153.6h324.267c4.713,0,8.533-3.821,8.533-8.533V51.2C407.841,46.487,404.02,42.667,399.308,42.667z" />
-                                            <path style="fill:#FFC44F;"
-                                                d="M382.241,179.2H18.843c-7.602,0-11.41-9.191-6.034-14.567L75.041,102.4L12.809,40.167C7.433,34.791,11.241,25.6,18.843,25.6h363.398c4.713,0,8.533,3.821,8.533,8.533v136.533C390.775,175.379,386.954,179.2,382.241,179.2z" />
-                                            <g>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M194.508,128H170.06l31.003-37.203c2.119-2.544,2.577-6.084,1.173-9.083c-1.405-2.998-4.417-4.914-7.728-4.914h-42.667c-4.713,0-8.533,3.821-8.533,8.533s3.821,8.533,8.533,8.533h24.448l-31.003,37.203c-2.119,2.544-2.577,6.084-1.173,9.083c1.405,2.998,4.417,4.914,7.728,4.914h42.667c4.713,0,8.533-3.821,8.533-8.533S199.22,128,194.508,128z" />
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M220.108,76.8c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-51.2C228.641,80.621,224.82,76.8,220.108,76.8z" />
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M279.841,76.8h-34.133c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h25.6c4.713,0,8.533-3.821,8.533-8.533v-25.6C288.375,80.621,284.554,76.8,279.841,76.8z M271.308,102.4h-17.067v-8.533h17.067V102.4z" />
-                                            </g>
-                                            <path style="fill:#A1A7AF;"
-                                                d="M416.37,332.8c-1.927,0-3.863-0.649-5.458-1.978l-51.2-42.667c-1.946-1.621-3.071-4.023-3.071-6.556s1.125-4.934,3.071-6.556l51.2-42.667c3.62-3.017,9.001-2.527,12.018,1.092c3.018,3.621,2.528,9.002-1.092,12.019L378.504,281.6l43.333,36.111c3.621,3.018,4.111,8.398,1.092,12.019C421.243,331.755,418.815,332.8,416.37,332.8z" />
-                                            <g>
-                                                <path style="fill:#55606E;"
-                                                    d="M313.975,315.733c-4.713,0-8.533-3.821-8.533-8.533v-25.6c0-4.713,3.821-8.533,8.533-8.533s8.533,3.821,8.533,8.533v25.6C322.508,311.913,318.687,315.733,313.975,315.733z" />
-                                                <path style="fill:#55606E;"
-                                                    d="M365.175,273.067h-17.067V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533s-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-17.067c-4.713,0-8.533,3.821-8.533,8.533c0,4.713,3.821,8.533,8.533,8.533h42.667V307.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h34.133V307.2c0,4.713,3.821,8.533,8.533,8.533s8.533-3.821,8.533-8.533v-17.067h93.867c4.713,0,8.533-3.821,8.533-8.533C373.708,276.887,369.887,273.067,365.175,273.067z" />
-                                                <path style="fill:#55606E;"
-                                                    d="M365.175,349.333c-4.419,0-8-3.582-8-8V281.6c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v59.733C373.175,345.751,369.594,349.333,365.175,349.333z" />
-                                            </g>
-                                            <path style="fill:#F79F4D;"
-                                                d="M333.54,364.434l25.6-25.6c3.332-3.332,8.736-3.332,12.068,0l25.6,25.6c1.6,1.6,2.499,3.771,2.499,6.034V460.8c0,4.713-3.821,8.533-8.533,8.533h-51.2c-4.713,0-8.533-3.821-8.533-8.533v-90.332C331.041,368.205,331.94,366.034,333.54,364.434z" />
-                                            <polygon style="fill:#FFC44F;"
-                                                points="339.575,460.8 339.575,370.467 365.175,344.867 390.775,370.467 390.775,460.8 " />
-                                            <g>
-                                                <path style="fill:#BF722A;"
-                                                    d="M365.175,451.733c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,448.151,369.594,451.733,365.175,451.733z" />
-                                                <path style="fill:#BF722A;"
-                                                    d="M365.175,400.533c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,396.951,369.594,400.533,365.175,400.533z" />
-                                            </g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                            <g></g>
-                                        </svg>
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate pb-2">
-                                            {{ $order->delivered_work->attached_work['id'] }}.{{ $order->delivered_work->attached_work['extension'] }}
-                                        </p>
-                                        <p class="text-xs font-[400] text-gray-400 truncate">
-                                            {{ human_filesize($order->delivered_work->attached_work['size']) }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <a href="{{ src($order->delivered_work->attached_work['path']) }}" target="_blank"
-                                        class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0"
-                                        download>
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="ltr:mr-2 rtl:ml-2 h-5 w-5 text-gray-400" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                        <span class="text-sm font-medium text-gray-700 dark:text-zinc-300">
-                                            {{ __('messages.t_download') }}
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-
-                        {{-- Check if have quick response --}}
-                        @if ($order->delivered_work->quick_response)
-                            <div class="flex flex-col space-y-4 overflow-y-auto mb-6">
-                                <div class="flex items-center">
+                        @php
+                            $prev_work = $order
+                                ->deliveredWorks()->count() > 1 ? (object) $order
+                                ->deliveredWorks()
+                                ->latest()
+                                ->limit(2)
+                                ->get()
+                                ->toArray()[1] : null;
+                        @endphp
+                        @if ($prev_work && $prev_work->is_delivered)
+                            <div class="border-t pt-3">
+                                <h1 class="text-base tracking-wide font-bold text-zinc-900 dark:text-gray-100">
+                                    Previous delivered work
+                                </h1>
+                                @if ($prev_work->attached_work)
                                     <div
-                                        class="flex flex-col space-y-2 text-sm ltr:ml-2 rtl:mr-2 order-2 items-center">
-                                        <div><span
-                                                class="px-4 py-2 rounded-lg italic inline-block bg-gray-100 text-gray-900 dark:bg-zinc-700 dark:text-zinc-300 w-full">{!! nl2br($order->delivered_work->quick_response) !!}</span>
+                                        class="py-4 flex items-center justify-between space-x-3 rtl:space-x-reverse mb-10">
+                                        <div class="min-w-0 flex-1 flex items-center space-x-3 rtl:space-x-reverse">
+                                            <div class="flex-shrink-0">
+                                                <svg class="w-10" version="1.1" id="Layer_1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                                    y="0px" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                                    <path style="fill:#ECEDEF;"
+                                                        d="M100.641,0c-14.139,0-25.6,11.461-25.6,25.6v460.8c0,14.139,11.461,25.6,25.6,25.6h375.467c14.139,0,25.6-11.461,25.6-25.6V85.333L416.375,0H100.641z" />
+                                                    <path style="fill:#D9DCDF;"
+                                                        d="M441.975,85.333h59.733L416.375,0v59.733C416.375,73.872,427.836,85.333,441.975,85.333z" />
+                                                    <path style="fill:#C6CACF;"
+                                                        d="M399.308,42.667H75.041v153.6h324.267c4.713,0,8.533-3.821,8.533-8.533V51.2C407.841,46.487,404.02,42.667,399.308,42.667z" />
+                                                    <path style="fill:#FFC44F;"
+                                                        d="M382.241,179.2H18.843c-7.602,0-11.41-9.191-6.034-14.567L75.041,102.4L12.809,40.167C7.433,34.791,11.241,25.6,18.843,25.6h363.398c4.713,0,8.533,3.821,8.533,8.533v136.533C390.775,175.379,386.954,179.2,382.241,179.2z" />
+                                                    <g>
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M194.508,128H170.06l31.003-37.203c2.119-2.544,2.577-6.084,1.173-9.083c-1.405-2.998-4.417-4.914-7.728-4.914h-42.667c-4.713,0-8.533,3.821-8.533,8.533s3.821,8.533,8.533,8.533h24.448l-31.003,37.203c-2.119,2.544-2.577,6.084-1.173,9.083c1.405,2.998,4.417,4.914,7.728,4.914h42.667c4.713,0,8.533-3.821,8.533-8.533S199.22,128,194.508,128z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M220.108,76.8c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-51.2C228.641,80.621,224.82,76.8,220.108,76.8z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M279.841,76.8h-34.133c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h25.6c4.713,0,8.533-3.821,8.533-8.533v-25.6C288.375,80.621,284.554,76.8,279.841,76.8z M271.308,102.4h-17.067v-8.533h17.067V102.4z" />
+                                                    </g>
+                                                    <path style="fill:#A1A7AF;"
+                                                        d="M416.37,332.8c-1.927,0-3.863-0.649-5.458-1.978l-51.2-42.667c-1.946-1.621-3.071-4.023-3.071-6.556s1.125-4.934,3.071-6.556l51.2-42.667c3.62-3.017,9.001-2.527,12.018,1.092c3.018,3.621,2.528,9.002-1.092,12.019L378.504,281.6l43.333,36.111c3.621,3.018,4.111,8.398,1.092,12.019C421.243,331.755,418.815,332.8,416.37,332.8z" />
+                                                    <g>
+                                                        <path style="fill:#55606E;"
+                                                            d="M313.975,315.733c-4.713,0-8.533-3.821-8.533-8.533v-25.6c0-4.713,3.821-8.533,8.533-8.533s8.533,3.821,8.533,8.533v25.6C322.508,311.913,318.687,315.733,313.975,315.733z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,273.067h-17.067V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533s-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-17.067c-4.713,0-8.533,3.821-8.533,8.533c0,4.713,3.821,8.533,8.533,8.533h42.667V307.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h34.133V307.2c0,4.713,3.821,8.533,8.533,8.533s8.533-3.821,8.533-8.533v-17.067h93.867c4.713,0,8.533-3.821,8.533-8.533C373.708,276.887,369.887,273.067,365.175,273.067z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,349.333c-4.419,0-8-3.582-8-8V281.6c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v59.733C373.175,345.751,369.594,349.333,365.175,349.333z" />
+                                                    </g>
+                                                    <path style="fill:#F79F4D;"
+                                                        d="M333.54,364.434l25.6-25.6c3.332-3.332,8.736-3.332,12.068,0l25.6,25.6c1.6,1.6,2.499,3.771,2.499,6.034V460.8c0,4.713-3.821,8.533-8.533,8.533h-51.2c-4.713,0-8.533-3.821-8.533-8.533v-90.332C331.041,368.205,331.94,366.034,333.54,364.434z" />
+                                                    <polygon style="fill:#FFC44F;"
+                                                        points="339.575,460.8 339.575,370.467 365.175,344.867 390.775,370.467 390.775,460.8 " />
+                                                    <g>
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,451.733c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,448.151,369.594,451.733,365.175,451.733z" />
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,400.533c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,396.951,369.594,400.533,365.175,400.533z" />
+                                                    </g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <p
+                                                    class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate pb-2">
+                                                    {{ $prev_work->attached_work['id'] }}.{{ $prev_work->attached_work['extension'] }}
+                                                </p>
+                                                <p class="text-xs font-[400] text-gray-400 truncate">
+                                                    {{ human_filesize($prev_work->attached_work['size']) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <a href="{{ src($prev_work->attached_work['path']) }}" target="_blank"
+                                                class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0"
+                                                download>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="ltr:mr-2 rtl:ml-2 h-5 w-5 text-gray-400" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                                <span class="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                                                    {{ __('messages.t_download') }}
+                                                </span>
+                                            </a>
                                         </div>
                                     </div>
-                                    <img src="{{ placeholder_img() }}"
-                                        data-src="{{ src(auth()->user()->avatar_id) }}"
-                                        alt="{{ auth()->user()->username }}"
-                                        class="lazy w-10 h-10 rounded-full order-1 object-cover">
-                                </div>
+                                @endif
+                                {{-- Check if have quick response --}}
+                                @if ($prev_work->quick_response)
+                                    <div class="flex flex-col space-y-4 overflow-y-auto mb-4">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex flex-col space-y-2 text-sm ltr:ml-2 rtl:mr-2 order-2 items-center">
+                                                <div><span
+                                                        class="px-4 py-2 rounded-lg italic inline-block bg-gray-100 text-gray-900 dark:bg-zinc-700 dark:text-zinc-300 w-full">{!! nl2br($prev_work->quick_response) !!}</span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ placeholder_img() }}"
+                                                data-src="{{ src(auth()->user()->avatar_id) }}"
+                                                alt="{{ auth()->user()->username }}"
+                                                class="lazy w-10 h-10 rounded-full order-1 object-cover">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <div>
+                                @if ($submited_work->attached_work)
+                                    <div
+                                        class="py-4 flex items-center justify-between space-x-3 rtl:space-x-reverse mb-10">
+                                        <div class="min-w-0 flex-1 flex items-center space-x-3 rtl:space-x-reverse">
+                                            <div class="flex-shrink-0">
+                                                <svg class="w-10" version="1.1" id="Layer_1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                                    y="0px" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                                    <path style="fill:#ECEDEF;"
+                                                        d="M100.641,0c-14.139,0-25.6,11.461-25.6,25.6v460.8c0,14.139,11.461,25.6,25.6,25.6h375.467c14.139,0,25.6-11.461,25.6-25.6V85.333L416.375,0H100.641z" />
+                                                    <path style="fill:#D9DCDF;"
+                                                        d="M441.975,85.333h59.733L416.375,0v59.733C416.375,73.872,427.836,85.333,441.975,85.333z" />
+                                                    <path style="fill:#C6CACF;"
+                                                        d="M399.308,42.667H75.041v153.6h324.267c4.713,0,8.533-3.821,8.533-8.533V51.2C407.841,46.487,404.02,42.667,399.308,42.667z" />
+                                                    <path style="fill:#FFC44F;"
+                                                        d="M382.241,179.2H18.843c-7.602,0-11.41-9.191-6.034-14.567L75.041,102.4L12.809,40.167C7.433,34.791,11.241,25.6,18.843,25.6h363.398c4.713,0,8.533,3.821,8.533,8.533v136.533C390.775,175.379,386.954,179.2,382.241,179.2z" />
+                                                    <g>
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M194.508,128H170.06l31.003-37.203c2.119-2.544,2.577-6.084,1.173-9.083c-1.405-2.998-4.417-4.914-7.728-4.914h-42.667c-4.713,0-8.533,3.821-8.533,8.533s3.821,8.533,8.533,8.533h24.448l-31.003,37.203c-2.119,2.544-2.577,6.084-1.173,9.083c1.405,2.998,4.417,4.914,7.728,4.914h42.667c4.713,0,8.533-3.821,8.533-8.533S199.22,128,194.508,128z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M220.108,76.8c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-51.2C228.641,80.621,224.82,76.8,220.108,76.8z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M279.841,76.8h-34.133c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h25.6c4.713,0,8.533-3.821,8.533-8.533v-25.6C288.375,80.621,284.554,76.8,279.841,76.8z M271.308,102.4h-17.067v-8.533h17.067V102.4z" />
+                                                    </g>
+                                                    <path style="fill:#A1A7AF;"
+                                                        d="M416.37,332.8c-1.927,0-3.863-0.649-5.458-1.978l-51.2-42.667c-1.946-1.621-3.071-4.023-3.071-6.556s1.125-4.934,3.071-6.556l51.2-42.667c3.62-3.017,9.001-2.527,12.018,1.092c3.018,3.621,2.528,9.002-1.092,12.019L378.504,281.6l43.333,36.111c3.621,3.018,4.111,8.398,1.092,12.019C421.243,331.755,418.815,332.8,416.37,332.8z" />
+                                                    <g>
+                                                        <path style="fill:#55606E;"
+                                                            d="M313.975,315.733c-4.713,0-8.533-3.821-8.533-8.533v-25.6c0-4.713,3.821-8.533,8.533-8.533s8.533,3.821,8.533,8.533v25.6C322.508,311.913,318.687,315.733,313.975,315.733z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,273.067h-17.067V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533s-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-17.067c-4.713,0-8.533,3.821-8.533,8.533c0,4.713,3.821,8.533,8.533,8.533h42.667V307.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h34.133V307.2c0,4.713,3.821,8.533,8.533,8.533s8.533-3.821,8.533-8.533v-17.067h93.867c4.713,0,8.533-3.821,8.533-8.533C373.708,276.887,369.887,273.067,365.175,273.067z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,349.333c-4.419,0-8-3.582-8-8V281.6c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v59.733C373.175,345.751,369.594,349.333,365.175,349.333z" />
+                                                    </g>
+                                                    <path style="fill:#F79F4D;"
+                                                        d="M333.54,364.434l25.6-25.6c3.332-3.332,8.736-3.332,12.068,0l25.6,25.6c1.6,1.6,2.499,3.771,2.499,6.034V460.8c0,4.713-3.821,8.533-8.533,8.533h-51.2c-4.713,0-8.533-3.821-8.533-8.533v-90.332C331.041,368.205,331.94,366.034,333.54,364.434z" />
+                                                    <polygon style="fill:#FFC44F;"
+                                                        points="339.575,460.8 339.575,370.467 365.175,344.867 390.775,370.467 390.775,460.8 " />
+                                                    <g>
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,451.733c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,448.151,369.594,451.733,365.175,451.733z" />
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,400.533c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,396.951,369.594,400.533,365.175,400.533z" />
+                                                    </g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <p
+                                                    class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate pb-2">
+                                                    {{ $submited_work->attached_work['id'] }}.{{ $submited_work->attached_work['extension'] }}
+                                                </p>
+                                                <p class="text-xs font-[400] text-gray-400 truncate">
+                                                    {{ human_filesize($submited_work->attached_work['size']) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <a href="{{ src($submited_work->attached_work['path']) }}"
+                                                target="_blank"
+                                                class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0"
+                                                download>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="ltr:mr-2 rtl:ml-2 h-5 w-5 text-gray-400" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                                <span class="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                                                    {{ __('messages.t_download') }}
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- Check if have quick response --}}
+                                @if ($submited_work->quick_response)
+                                    <div class="flex flex-col space-y-4 overflow-y-auto mb-4">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex flex-col space-y-2 text-sm ltr:ml-2 rtl:mr-2 order-2 items-center">
+                                                <div><span
+                                                        class="px-4 py-2 rounded-lg italic inline-block bg-gray-100 text-gray-900 dark:bg-zinc-700 dark:text-zinc-300 w-full">{!! nl2br($submited_work->quick_response) !!}</span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ placeholder_img() }}"
+                                                data-src="{{ src(auth()->user()->avatar_id) }}"
+                                                alt="{{ auth()->user()->username }}"
+                                                class="lazy w-10 h-10 rounded-full order-1 object-cover">
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         @endif
+                        {{-- Check if have quick response --}}
+                        @if ($submited_work->review_description)
+                            <div class="border-t pt-4 mb-4">
+                                <h1 class="text-base tracking-wide font-bold text-zinc-900 dark:text-gray-100">Requested
+                                    Review
+                                </h1>
+                                <p class="text-md tracking-wide text-zinc-500 text-justify dark:text-gray-100 mt-2">
+                                    {{ $submited_work->review_description }}
+                                </p>
+                                <div class="flex items-center mt-3 justify-end">
+                                    @if ($submited_work->is_delivered)
+                                        <span
+                                            class="px-2 py-1 text-xs text-green-800 bg-green-100 rounded-full">Submitted</span>
+                                    @else
+                                        <span class="px-2 py-1 text-xs text-red-800 bg-red-100 rounded-full">Wait for
+                                            submission</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div>
+                                @if ($submited_work->attached_work)
+                                    <div
+                                        class="py-4 flex items-center justify-between space-x-3 rtl:space-x-reverse mb-10">
+                                        <div class="min-w-0 flex-1 flex items-center space-x-3 rtl:space-x-reverse">
+                                            <div class="flex-shrink-0">
+                                                <svg class="w-10" version="1.1" id="Layer_1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                                    y="0px" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                                    <path style="fill:#ECEDEF;"
+                                                        d="M100.641,0c-14.139,0-25.6,11.461-25.6,25.6v460.8c0,14.139,11.461,25.6,25.6,25.6h375.467c14.139,0,25.6-11.461,25.6-25.6V85.333L416.375,0H100.641z" />
+                                                    <path style="fill:#D9DCDF;"
+                                                        d="M441.975,85.333h59.733L416.375,0v59.733C416.375,73.872,427.836,85.333,441.975,85.333z" />
+                                                    <path style="fill:#C6CACF;"
+                                                        d="M399.308,42.667H75.041v153.6h324.267c4.713,0,8.533-3.821,8.533-8.533V51.2C407.841,46.487,404.02,42.667,399.308,42.667z" />
+                                                    <path style="fill:#FFC44F;"
+                                                        d="M382.241,179.2H18.843c-7.602,0-11.41-9.191-6.034-14.567L75.041,102.4L12.809,40.167C7.433,34.791,11.241,25.6,18.843,25.6h363.398c4.713,0,8.533,3.821,8.533,8.533v136.533C390.775,175.379,386.954,179.2,382.241,179.2z" />
+                                                    <g>
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M194.508,128H170.06l31.003-37.203c2.119-2.544,2.577-6.084,1.173-9.083c-1.405-2.998-4.417-4.914-7.728-4.914h-42.667c-4.713,0-8.533,3.821-8.533,8.533s3.821,8.533,8.533,8.533h24.448l-31.003,37.203c-2.119,2.544-2.577,6.084-1.173,9.083c1.405,2.998,4.417,4.914,7.728,4.914h42.667c4.713,0,8.533-3.821,8.533-8.533S199.22,128,194.508,128z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M220.108,76.8c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-51.2C228.641,80.621,224.82,76.8,220.108,76.8z" />
+                                                        <path style="fill:#FFFFFF;"
+                                                            d="M279.841,76.8h-34.133c-4.713,0-8.533,3.821-8.533,8.533v51.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h25.6c4.713,0,8.533-3.821,8.533-8.533v-25.6C288.375,80.621,284.554,76.8,279.841,76.8z M271.308,102.4h-17.067v-8.533h17.067V102.4z" />
+                                                    </g>
+                                                    <path style="fill:#A1A7AF;"
+                                                        d="M416.37,332.8c-1.927,0-3.863-0.649-5.458-1.978l-51.2-42.667c-1.946-1.621-3.071-4.023-3.071-6.556s1.125-4.934,3.071-6.556l51.2-42.667c3.62-3.017,9.001-2.527,12.018,1.092c3.018,3.621,2.528,9.002-1.092,12.019L378.504,281.6l43.333,36.111c3.621,3.018,4.111,8.398,1.092,12.019C421.243,331.755,418.815,332.8,416.37,332.8z" />
+                                                    <g>
+                                                        <path style="fill:#55606E;"
+                                                            d="M313.975,315.733c-4.713,0-8.533-3.821-8.533-8.533v-25.6c0-4.713,3.821-8.533,8.533-8.533s8.533,3.821,8.533,8.533v25.6C322.508,311.913,318.687,315.733,313.975,315.733z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,273.067h-17.067V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533s-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-34.133V256c0-4.713-3.821-8.533-8.533-8.533c-4.713,0-8.533,3.821-8.533,8.533v17.067h-17.067c-4.713,0-8.533,3.821-8.533,8.533c0,4.713,3.821,8.533,8.533,8.533h42.667V307.2c0,4.713,3.821,8.533,8.533,8.533c4.713,0,8.533-3.821,8.533-8.533v-17.067h34.133V307.2c0,4.713,3.821,8.533,8.533,8.533s8.533-3.821,8.533-8.533v-17.067h93.867c4.713,0,8.533-3.821,8.533-8.533C373.708,276.887,369.887,273.067,365.175,273.067z" />
+                                                        <path style="fill:#55606E;"
+                                                            d="M365.175,349.333c-4.419,0-8-3.582-8-8V281.6c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v59.733C373.175,345.751,369.594,349.333,365.175,349.333z" />
+                                                    </g>
+                                                    <path style="fill:#F79F4D;"
+                                                        d="M333.54,364.434l25.6-25.6c3.332-3.332,8.736-3.332,12.068,0l25.6,25.6c1.6,1.6,2.499,3.771,2.499,6.034V460.8c0,4.713-3.821,8.533-8.533,8.533h-51.2c-4.713,0-8.533-3.821-8.533-8.533v-90.332C331.041,368.205,331.94,366.034,333.54,364.434z" />
+                                                    <polygon style="fill:#FFC44F;"
+                                                        points="339.575,460.8 339.575,370.467 365.175,344.867 390.775,370.467 390.775,460.8 " />
+                                                    <g>
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,451.733c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,448.151,369.594,451.733,365.175,451.733z" />
+                                                        <path style="fill:#BF722A;"
+                                                            d="M365.175,400.533c-4.419,0-8-3.582-8-8v-17.067c0-4.418,3.581-8,8-8c4.419,0,8,3.582,8,8v17.067C373.175,396.951,369.594,400.533,365.175,400.533z" />
+                                                    </g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                    <g></g>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <p
+                                                    class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate pb-2">
+                                                    {{ $submited_work->attached_work['id'] }}.{{ $submited_work->attached_work['extension'] }}
+                                                </p>
+                                                <p class="text-xs font-[400] text-gray-400 truncate">
+                                                    {{ human_filesize($submited_work->attached_work['size']) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <a href="{{ src($submited_work->attached_work['path']) }}"
+                                                target="_blank"
+                                                class="inline-flex items-center py-2 px-4 border border-transparent rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 focus:outline-none focus:ring-0"
+                                                download>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="ltr:mr-2 rtl:ml-2 h-5 w-5 text-gray-400" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                                <span class="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                                                    {{ __('messages.t_download') }}
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
 
+                                {{-- Check if have quick response --}}
+                                @if ($submited_work->quick_response)
+                                    <div class="flex flex-col space-y-4 overflow-y-auto mb-4">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex flex-col space-y-2 text-sm ltr:ml-2 rtl:mr-2 order-2 items-center">
+                                                <div><span
+                                                        class="px-4 py-2 rounded-lg italic inline-block bg-gray-100 text-gray-900 dark:bg-zinc-700 dark:text-zinc-300 w-full">{!! nl2br($submited_work->quick_response) !!}</span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ placeholder_img() }}"
+                                                data-src="{{ src(auth()->user()->avatar_id) }}"
+                                                alt="{{ auth()->user()->username }}"
+                                                class="lazy w-10 h-10 rounded-full order-1 object-cover">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                         {{-- Resubmit work --}}
                         @if (!$order->is_finished)
                             <div class="mt-12 mb-4">
                                 <button
                                     x-on:click="confirm('{{ __('messages.t_are_u_sure_u_want_to_resubmit_work_again') }}') ? $wire.resubmit() : ''"
-                                    type="button"
-                                    @if (!$order->deliver_work_opened)
-                                    disabled="true"
-                                    @endif
+                                    type="button" @if (!$order->deliver_work_opened) disabled="true" @endif
                                     class="text-white w-full disabled:cursor-not-allowed bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-0 font-medium rounded-md text-sm px-5 py-4 text-center inline-flex items-center justify-center"
                                     wire:loading.attr="disabled" wire:target="resubmit">
 

@@ -1,7 +1,7 @@
 <?php
- 
+
 namespace App\Http\Controllers\Main\Callback;
- 
+
 use App\Http\Controllers\Controller;
 use App\Models\DepositTransaction;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Http;
 class JazzcashController extends Controller
 {
     public $cart;
-   
+
     /**
      * JazzCash callback
      *
@@ -38,12 +38,12 @@ class JazzcashController extends Controller
 
                 // Check deposit callback
                 if ($callback_type === 'deposit') {
-                    
+
                     // Handle deposit payment
                     return $this->deposit($request);
 
                 } else if ($callback_type === 'checkout') {
-                    
+
                     // Set cart
                     $cart       = session('cart', []);
 
@@ -55,12 +55,12 @@ class JazzcashController extends Controller
 
                     // Check if succeeded
                     if (is_array($response) && $response['success'] === true) {
-                        
+
                         // Success
                         return redirect('account/orders')->with('message', $response['message']);
 
                     } else if (is_array($response) && $response['success'] === false) {
-                        
+
                         // Error
                         return redirect('checkout')->with('error', $response['message']);
 
@@ -86,7 +86,7 @@ class JazzcashController extends Controller
             }
 
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             throw $th;
 
@@ -103,7 +103,7 @@ class JazzcashController extends Controller
     protected function deposit(Request $request)
     {
         try {
-        
+
             // Set payment gateway settings
             $gateway_currency      = settings('jazzcash')->currency;
             $gateway_exchange_rate = (float)settings('jazzcash')->exchange_rate;
@@ -134,7 +134,7 @@ class JazzcashController extends Controller
                 "pp_SecureHash" => $pp_secure_hash,
                 "Source"        => "REST"
             ]);
-        
+
             // Get response
             $jazzcash_response = $jazzcash_inquire->json();
 
@@ -193,7 +193,7 @@ class JazzcashController extends Controller
             }
 
         } catch (\Throwable $th) {
-            
+
             // Error
             return redirect('account/deposit/history')->with('error', $th->getMessage());
 
@@ -210,7 +210,7 @@ class JazzcashController extends Controller
     protected function calculateFee($amount)
     {
         try {
-            
+
             // Get fee rate
             $fee_rate = settings('jazzcash')->deposit_fee;
 
@@ -218,7 +218,7 @@ class JazzcashController extends Controller
             return $amount * $fee_rate / 100;
 
         } catch (\Throwable $th) {
-            
+
             // Something went wrong
             return 0;
 
@@ -235,7 +235,7 @@ class JazzcashController extends Controller
     protected function addFunds($amount)
     {
         try {
-            
+
             // Get user
             $user                    = User::where('id', auth()->id())->first();
 
@@ -262,16 +262,16 @@ class JazzcashController extends Controller
 
         // Loop throug items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Check if item exists
             if ($item['id'] === $id) {
-                
+
                 // Get quantity
                 $quantity = (int) $item['quantity'];
 
                 // Sum upgrades total price
                 if (is_array($item['upgrades']) && count($item['upgrades'])) {
-                    
+
                     $total_upgrades_price = array_reduce($item['upgrades'], function($i, $obj)
                     {
                         // Calculate only selected upgrades
@@ -330,10 +330,10 @@ class JazzcashController extends Controller
 
         // Check if taxes enabled
         if ($settings->enable_taxes) {
-            
+
             // Check if type of taxes percentage
             if ($settings->tax_type === 'percentage') {
-                
+
                 // Get tax amount
                 $tax = bcmul($this->total(), $settings->tax_value) / 100;
 
@@ -341,7 +341,7 @@ class JazzcashController extends Controller
                 return $tax;
 
             } else {
-                
+
                 // Fixed price
                 $tax = $settings->tax_value;
 
@@ -371,7 +371,7 @@ class JazzcashController extends Controller
 
         // Loop through items in cart
         foreach ($this->cart as $key => $item) {
-            
+
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
 
@@ -395,7 +395,7 @@ class JazzcashController extends Controller
 
         // Commission percentage
         if ($settings->commission_type === 'percentage') {
-            
+
             // Calculate commission
             $commission = $settings->commission_value * $price / 100;
 
@@ -451,13 +451,13 @@ class JazzcashController extends Controller
                 "pp_SecureHash" => $pp_secure_hash,
                 "Source"        => "REST"
             ]);
-        
+
             // Get response
             $jazzcash_response = $jazzcash_inquire->json();
 
             // Check if payment succeeded
             if (is_array($jazzcash_response) && isset($jazzcash_response['pp_ResponseCode']) && $jazzcash_response['pp_ResponseCode'] == "000") {
-                
+
                 // Get paid amount
                 $amount   = $request->get('pp_Amount') / 100;
 
@@ -466,7 +466,7 @@ class JazzcashController extends Controller
 
                 // Check currency
                 if (strtolower($currency) != strtolower($gateway_currency)) {
-                    
+
                     // Error
                     return [
                         'success' => false,
@@ -477,11 +477,11 @@ class JazzcashController extends Controller
 
                 // This amount must equals amount in order
                 if ($amount != $exchange_total_amount) {
-                    
+
                     // Error
                     return [
                         'success' => false,
-                        'message' => $amount . " / " . $exchange_total_amount 
+                        'message' => $amount . " / " . $exchange_total_amount
                     ];
 
                 }
@@ -518,13 +518,13 @@ class JazzcashController extends Controller
 
                 // Now let's loop through items in this cart and save them
                 foreach ($this->cart as $key => $item) {
-                    
+
                     // Get gig
                     $gig = Gig::where('uid', $item['id'])->active()->first();
 
                     // Check if gig exists
                     if ($gig) {
-                        
+
                         // Get item total price
                         $item_total_price                   = $this->itemTotalPrice($item['id']);
 
@@ -544,18 +544,25 @@ class JazzcashController extends Controller
                         $order_item->commission_value       = $commisssion;
                         $order_item->save();
 
+                        //Creating the ordertimeline
+
+                        $order_item->orderTimelines()->create([
+                            'name' => 'Order placed',
+                            'description'=>auth()->user()->username.' placed order'
+                        ]);
+
                         // Check if this item has upgrades
                         if ( is_array($item['upgrades']) && count($item['upgrades']) ) {
-                            
+
                             // Loop through upgrades
                             foreach ($item['upgrades'] as $index => $upg) {
-                                
+
                                 // Get upgrade
                                 $upgrade = GigUpgrade::where('uid', $upg['id'])->where('gig_id', $gig->id)->first();
 
                                 // Check if upgrade exists
                                 if ($upgrade) {
-                                    
+
                                     // Save item upgrade
                                     $order_item_upgrade             = new OrderItemUpgrade();
                                     $order_item_upgrade->item_id    = $order_item->id;
@@ -565,7 +572,7 @@ class JazzcashController extends Controller
                                     $order_item_upgrade->save();
 
                                 }
-                                
+
                             }
 
                         }
@@ -636,7 +643,7 @@ class JazzcashController extends Controller
             }
 
         } catch (\Throwable $th) {
-            
+
             // Error
             return [
                 'success' => false,
@@ -657,7 +664,7 @@ class JazzcashController extends Controller
     protected function calculateExchangeAmount($gateway_exchange_rate = null)
     {
         try {
-            
+
             // Get total amount
             $amount                = $this->total() + $this->taxes();
 
@@ -666,15 +673,15 @@ class JazzcashController extends Controller
 
             // Set gateway exchange rate
             $gateway_exchange_rate = is_null($gateway_exchange_rate) ? $default_exchange_rate : (float) $gateway_exchange_rate;
-            
+
             // Check if same exchange rate
             if ($default_exchange_rate == $gateway_exchange_rate) {
-                
+
                 // No need to calculate amount
                 return $amount;
 
             } else {
-                
+
                 // Return new amount
                 return (float)number_format( ($amount * $gateway_exchange_rate) / $default_exchange_rate , 2, '.', '');
 

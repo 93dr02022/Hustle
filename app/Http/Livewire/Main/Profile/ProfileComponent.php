@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Gig;
 use App\Models\OrderItem;
 use App\Models\ReportedUser;
+use App\Models\Review;
 use App\Models\User;
 use App\Notifications\Admin\ProfileReported;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -33,7 +34,6 @@ class ProfileComponent extends Component
     {
         // Get user
         $user = User::where('username', $username)->whereIn('status', ['verified', 'active'])->firstOrFail();
-
         // Set user
         $this->user = $user;
 
@@ -50,7 +50,7 @@ class ProfileComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = $this->user->username." $separator ".settings('general')->title;
+        $title = $this->user->username . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -64,7 +64,7 @@ class ProfileComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -74,9 +74,13 @@ class ProfileComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.profile.profile', [
-            'gigs' => $this->gigs,
-        ])->extends('livewire.main.layout.app')->section('content');
+        $reviews = Review::active()->where(['seller_id' => $this->user->id]);
+
+        $data['reviews'] = $reviews->groupBy('seller_id')->paginate(15);
+
+        $data['stars'] = round($reviews->avg('rating'),1);
+        $data['gigs'] = $this->gigs;
+        return view('livewire.main.profile.profile', $data)->extends('livewire.main.layout.app')->section('content');
     }
 
     /**
@@ -86,6 +90,7 @@ class ProfileComponent extends Component
      */
     public function getGigsProperty()
     {
+
         return Gig::where('user_id', $this->user->id)
             ->active()
             ->orderByRaw('RAND()')
@@ -112,7 +117,6 @@ class ProfileComponent extends Component
                 ]);
 
                 return;
-
             }
 
             // Can't report your own profile
@@ -148,7 +152,6 @@ class ProfileComponent extends Component
                 'description' => __('messages.t_profile_has_been_successfully_reported'),
                 'icon' => 'success',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
 
             // Validation error

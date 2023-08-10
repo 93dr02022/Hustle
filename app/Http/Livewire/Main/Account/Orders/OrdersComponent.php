@@ -94,7 +94,10 @@ class OrdersComponent extends Component
         $item->canceled_at = now();
         $item->is_finished = true;
         $item->save();
-
+        $item->orderTimelines()->create([
+            'name' => 'Order cancelled',
+            'description' => 'Buyer has cancelled your order'
+        ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');

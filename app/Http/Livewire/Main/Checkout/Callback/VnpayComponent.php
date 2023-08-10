@@ -60,9 +60,9 @@ class VnpayComponent extends Component
             $hashData = '';
             foreach ($inputData as $key => $value) {
                 if ($i == 1) {
-                    $hashData = $hashData.'&'.urlencode($key).'='.urlencode($value);
+                    $hashData = $hashData . '&' . urlencode($key) . '=' . urlencode($value);
                 } else {
-                    $hashData = $hashData.urlencode($key).'='.urlencode($value);
+                    $hashData = $hashData . urlencode($key) . '=' . urlencode($value);
                     $i = 1;
                 }
             }
@@ -90,31 +90,24 @@ class VnpayComponent extends Component
 
                         // Error
                         return redirect('checkout')->with('error', __('messages.t_amount_in_cart_not_equals_received'));
-
                     }
 
                     // Place order
                     $this->checkout(request()->get('vnp_TransactionNo'));
-
                 } else {
 
                     // Payment failed
                     return redirect('checkout')->with('error', __('messages.t_we_could_not_handle_ur_payment'));
-
                 }
-
             } else {
 
                 // Does not match
                 return redirect('checkout')->with('error', __('messages.t_we_could_not_handle_ur_payment'));
-
             }
-
         } catch (\Throwable $th) {
 
             // Something went wrong
             return redirect('checkout')->with('error', $th->getMessage());
-
         }
     }
 
@@ -148,26 +141,20 @@ class VnpayComponent extends Component
                         } else {
                             return $i;
                         }
-
                     });
-
                 } else {
 
                     // No upgrades selected
                     $total_upgrades_price = 0;
-
                 }
 
                 // Set new total
                 $total = ($quantity * $item['gig']['price']) + ($total_upgrades_price * $quantity);
-
             }
-
         }
 
         // Return total price
         return $total;
-
     }
 
     /**
@@ -205,7 +192,6 @@ class VnpayComponent extends Component
 
                 // Return tax amount
                 return $tax;
-
             } else {
 
                 // Fixed price
@@ -213,14 +199,11 @@ class VnpayComponent extends Component
 
                 // Return tax
                 return $tax;
-
             }
-
         } else {
 
             // Taxes not enabled
             return 0;
-
         }
     }
 
@@ -239,7 +222,6 @@ class VnpayComponent extends Component
 
             // Update total price
             $total += $this->itemTotalPrice($item['id']);
-
         }
 
         // Return total price
@@ -262,12 +244,10 @@ class VnpayComponent extends Component
 
             // Calculate commission
             $commission = $settings->commission_value * $price / 100;
-
         } else {
 
             // Fixed amount
             $commission = $settings->commission_value;
-
         }
 
         // Return commission
@@ -340,7 +320,13 @@ class VnpayComponent extends Component
                     $order_item->profit_value = $item_total_price - $commisssion;
                     $order_item->commission_value = $commisssion;
                     $order_item->save();
+                    //Creating the ordertimeline
 
+                    $order_item->orderTimelines()->create([
+                        'name' => 'Order placed',
+                        'description' => auth()->user()->username . ' placed order'
+                    ]);
+                    
                     // Check if this item has upgrades
                     if (is_array($item['upgrades']) && count($item['upgrades'])) {
 
@@ -360,11 +346,8 @@ class VnpayComponent extends Component
                                 $order_item_upgrade->price = $upgrade->price;
                                 $order_item_upgrade->extra_days = $upgrade->extra_days;
                                 $order_item_upgrade->save();
-
                             }
-
                         }
-
                     }
 
                     // Update seller pending balance
@@ -385,9 +368,7 @@ class VnpayComponent extends Component
                         'action' => url('seller/orders/details', $order_item->uid),
                         'user_id' => $order_item->owner_id,
                     ]);
-
                 }
-
             }
 
             // Save invoice
@@ -417,7 +398,6 @@ class VnpayComponent extends Component
 
             // After that the buyer has to send the seller the required form to start
             return redirect('account/orders')->with('message', __('messages.t_u_have_send_reqs_asap_to_seller'));
-
         } catch (\Throwable $th) {
 
             // Validation error
@@ -426,7 +406,6 @@ class VnpayComponent extends Component
                 'description' => $th->getMessage(),
                 'icon' => 'error',
             ]);
-
         }
     }
 
@@ -455,14 +434,11 @@ class VnpayComponent extends Component
 
                 // No need to calculate amount
                 return $amount;
-
             } else {
 
                 // Return new amount
                 return (float) number_format(($amount * $gateway_exchange_rate) / $default_exchange_rate, 2, '.', '');
-
             }
-
         } catch (\Throwable $th) {
             return $amount;
         }

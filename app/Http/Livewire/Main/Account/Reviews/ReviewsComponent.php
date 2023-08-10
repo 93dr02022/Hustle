@@ -73,10 +73,10 @@ class ReviewsComponent extends Component
         $review = Review::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
 
         // Count total rating
-        $total_rating = Review::where('id', '!=', $review->id)->where('gig_id', $review->gig_id)->sum('rating');
+        $total_rating = Review::where('id', '!=', $review->id)->where('review_id',null)->where('gig_id', $review->gig_id)->sum('rating');
 
         // Count total reviews
-        $total_reviews = Review::where('id', '!=', $review->id)->where('gig_id', $review->gig_id)->count();
+        $total_reviews = Review::where('id', '!=', $review->id)->where('review_id',null)->where('gig_id', $review->gig_id)->count();
 
         // Calculate gig rating
         $gig_rating = $total_reviews > 0 ? $total_rating / $total_reviews : 0;

@@ -280,7 +280,10 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
             // All
             Route::get('/', OrdersComponent::class);
-
+            // View order details
+            Route::get('/view-order/{orderId}', ViewOrderComponent::class);
+            // quotation order
+            Route::get('/request-review/{orderId}', RequestReview::class);
             // quotation order
             Route::get('{orderId}/quotation', QuoteComponent::class);
 
@@ -426,6 +429,14 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
                 // Details
                 Route::get('details/{id}', DetailsComponent::class);
+                // Create
+                Route::get('create/{reviewId}', CreateComponent::class);
+
+                // Preview
+                Route::get('preview/{id}', PreviewComponent::class);
+
+                // Edit
+                Route::get('edit/{id}', EditComponent::class);
             });
         });
 

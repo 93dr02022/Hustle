@@ -11,7 +11,67 @@
 
                 {{-- Section content --}}
                 <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:col-span-9">
+{{-- Breadcrumbs --}}
+<div class="my-1 p-5 ml-2 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6 rtl:space-x-reverse">
+    <ol class="inline-flex items-center mb-3 space-x-1 md:space-x-3 md:rtl:space-x-reverse sm:mb-0">
 
+        {{-- Main home --}}
+        <li>
+            <div class="flex items-center">
+                <a href="{{ url('/') }}"
+                    class="text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-zinc-300 dark:hover:text-white">
+                    @lang('messages.t_home')
+                </a>
+            </div>
+        </li>
+
+        {{-- orders --}}
+        <li aria-current="page">
+            <div class="flex items-center">
+                <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <a href="{{ url('/account/orders') }}"
+                    class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ltr:ml-2 md:rtl:mr-2 dark:text-zinc-300 dark:hover:text-white">
+                    @lang('messages.t_orders')
+                </a>
+            </div>
+        </li>
+        {{-- order details  --}}
+        <li aria-current="page">
+            <div class="flex items-center">
+                <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <a href="{{ url('account/orders/view-order', $item->order->uid) }}"
+                    class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ltr:ml-2 md:rtl:mr-2 dark:text-zinc-300 dark:hover:text-white">
+                    @lang('messages.t_order_details')
+                </a>
+            </div>
+        </li>
+        {{-- order requirements --}}
+        <li aria-current="page">
+            <div class="flex items-center">
+                <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="mx-1 text-sm font-medium text-gray-400 md:mx-2 dark:text-zinc-400">
+                    @lang('messages.t_request_refund')
+                </span>
+            </div>
+        </li>
+
+    </ol>
+</div>
                     {{-- Form --}}
                     <div class="py-6 px-4 sm:p-6 lg:pb-8">
 
@@ -125,7 +185,7 @@
                                                 } elseif ($item->status === 'delivered') {
                                                     $width = '100%';
                                                 }
-                                                
+
                                             @endphp
 
                                             <div class="bg-gray-200 dark:bg-zinc-500 rounded-full overflow-hidden">

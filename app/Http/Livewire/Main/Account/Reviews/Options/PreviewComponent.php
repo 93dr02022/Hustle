@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Main\Account\Reviews\Options;
 
+use App\Models\Gig;
 use App\Models\Review;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
@@ -62,4 +63,5 @@ class PreviewComponent extends Component
 
         return view('livewire.main.account.reviews.options.preview')->extends('livewire.main.layout.app')->section('content');
     }
+    
 }

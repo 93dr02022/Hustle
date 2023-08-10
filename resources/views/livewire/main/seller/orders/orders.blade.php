@@ -189,7 +189,7 @@
                                     <div>
 
                                         {{-- Title --}}
-                                        <a href="{{ url('service', $order->gig->slug) }}"
+                                        <a href="{{ url('seller/orders/details', $order->uid) }}"
                                             class="font-medium whitespace-nowrap truncate block max-w-[240px] hover:text-primary-600 dark:text-white text-sm"
                                             title="{{ $order->gig->title }}">
                                             {{ $order->gig->title }}
@@ -334,7 +334,7 @@
                             {{-- Options --}}
                             <td
                                 class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
-                                <div class="flex items-center justify-center space-x-2 rtl:space-x-reverse">
+                                <div class="flex items-center justify-end space-x-2 rtl:space-x-reverse">
 
                                     {{-- Get started --}}
                                     @if ($order->status === 'pending' && $order->order?->invoice && $order->order->invoice->status !== 'pending')
