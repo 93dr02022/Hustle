@@ -37,7 +37,7 @@ class HomeComponent extends Component
     public function mount()
     {
         if (request()->has('token')) {
-            $tokenable = PersonalAccessToken::where('token', request()->token)->first();
+            $tokenable = PersonalAccessToken::findToken(request()->token);
 
             if (!$tokenable) {
                 return redirect('/auth/login');
