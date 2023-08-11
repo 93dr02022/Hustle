@@ -221,9 +221,9 @@
                         </div>
 
                         {{-- List of gigs --}}
-                        <div class="grid grid-cols-12 sm:gap-x-9 gap-y-6">
+                        <div class="grid grid-cols-12 xs:gap-x-7 sm:gap-x-9 md:gap-x-5 gap-y-6">
                            @foreach ($category->gigs as $gig)
-                              <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3">
+                              <div class="col-span-12 xs:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-3">
                                  @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
                               </div>
                            @endforeach

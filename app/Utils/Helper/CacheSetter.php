@@ -38,7 +38,7 @@ final class CacheSetter
             return Cache::rememberForever('random_gigs_cache', function () {
                 $categories = Category::where('is_visible', true)
                     ->inRandomOrder()
-                    ->take(6)
+                    ->take(5)
                     ->get();
 
                 $categories->each(function ($category) {
