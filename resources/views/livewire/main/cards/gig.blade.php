@@ -1,5 +1,5 @@
 <div class="gig-card" x-data="window._{{ $jsuid }}" dir="{{ config()->get('direction') }}">
-    <div class="overflow-hidden bg-white rounded-md shadow-sm dark:bg-zinc-800 ring-1 ring-white dark:ring-zinc-800">
+    <div class="overflow-hidden bg-white rounded-md shadow-sm dark:bg-zinc-800 ring-1 ring-gray-200 dark:ring-zinc-800">
 
         {{-- Preview --}}
         <a href="{{ url('service', $gig->slug) }}" @click="clickMiddleware($event)"

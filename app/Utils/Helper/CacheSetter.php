@@ -38,7 +38,7 @@ final class CacheSetter
             return Cache::rememberForever('random_gigs_cache', function () {
                 $categories = Category::where('is_visible', true)
                     ->inRandomOrder()
-                    ->take(7)
+                    ->take(6)
                     ->get();
 
                 $categories->each(function ($category) {
@@ -46,7 +46,7 @@ final class CacheSetter
                         ->whereIn('status', ['active', 'boosted', 'trending', 'featured'])
                         ->whereNull('deleted_at')
                         ->inRandomOrder()
-                        ->limit(7)
+                        ->limit(4)
                         ->with('owner')
                         ->get();
                 });
