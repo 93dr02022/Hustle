@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\User\Seller;
+namespace App\Notifications\User\Buyer;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -57,8 +57,8 @@ class QuotationPaid extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject($subject)
             ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-            ->line('You just received a new quote payment, click button below to see quote details')
-            ->action('Quote', url("/seller/quotations"))
+            ->line('You just made a payment for a quotation, click button below to see quote details')
+            ->action('Quote', url("/account/orders/quote"))
             ->line('Thank you for using our application!');
     }
 
@@ -73,8 +73,8 @@ class QuotationPaid extends Notification implements ShouldQueue
             $subject = "[" . config('app.name') . "] " . __('Quotation payment');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('Your quotation payment has been made by the user please check your dashboard to see payment details.'))
-                ->withClickAction('seller/quotations"')
+                ->withBody(__('You just made a payment for a quotation, check your account to see details'))
+                ->withClickAction('account/orders"')
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
@@ -92,7 +92,7 @@ class QuotationPaid extends Notification implements ShouldQueue
             $subject = "[" . config('app.name') . "] " . __('Quotation payment');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('Your quotation payment has been made by the user please check your dashboard to see payment details.'))
+                ->withBody(__('You just made a payment for a quotation, check your account to see details'))
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);

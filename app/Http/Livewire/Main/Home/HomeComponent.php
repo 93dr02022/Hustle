@@ -36,11 +36,20 @@ class HomeComponent extends Component
      */
     public function mount()
     {
-        if (request()->has('token') && !auth()->check()) {
+        if (request()->has('token')) {
             $tokenable = PersonalAccessToken::where('token', request()->token)->first();
+
+            if (!$tokenable) {
+                return redirect('/auth/login');
+            }
 
             if ($tokenable) {
                 $user = User::where('id', $tokenable->tokenable_id)->first();
+
+                if (!$user) {
+                    return redirect('/auth/login');
+                }
+                
                 auth()->login($user, true);
             }
         }
