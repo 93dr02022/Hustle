@@ -54,7 +54,7 @@ class VerificationComponent extends Component
         );
 
         // Set verification
-        $this->verification = $verification;
+        $this->verification = $verification->refresh();
 
         $this->first_name = auth()->user()->first_name;
         $this->last_name = auth()->user()->last_name;

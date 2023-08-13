@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('icon_id')->nullable();
             $table->string('image_id')->nullable();
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }
