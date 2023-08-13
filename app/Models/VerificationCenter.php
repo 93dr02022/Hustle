@@ -40,6 +40,7 @@ class VerificationCenter extends Model
         'has_business',
         'file_selfie',
         'registration_file',
+        'mask_bvn',
         'business_verify_status',
         'photo_status',
         'verified_at',

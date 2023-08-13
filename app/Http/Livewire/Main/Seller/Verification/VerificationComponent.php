@@ -142,8 +142,21 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastMessage('Sorry error occured unable to validate your information.');
+            $this->toastMessage('Sorry error occured unable to validate your information.1');
 
+            return false;
+        }
+
+        $exists = VerificationCenter::where('mask_bvn', Str::mask($this->bvn, '*', 0, 7))
+        ->where('user_id', '!=', auth()->id())->exists();
+
+        if ($exists) {
+            $this->toastMessage('Sorry selected bvn is invalid and cant be used.');
+            return false;
+        }
+
+        if ($response->data->is_blacklisted) {
+            $this->toastMessage('Sorry selected bvn is invalid and cant be used.');
             return false;
         }
 
@@ -227,30 +240,29 @@ class VerificationComponent extends Component
             }
 
             VerificationCenter::where('user_id', auth()->id())
-                ->update([
-                    'has_personal' => true,
-                ]);
+            ->update([
+                'has_personal' => true,
+                'mask_bvn' => Str::mask($this->bvn, '*', 0, 7),
+            ]);
 
             UserWithdrawalSettings::upsert(
                 [
                     [
                         'user_id' => auth()->id(),
-                        'gateway_provider_name' => 'offline',
-                        'account_type' => 'personal',
-                        'gateway_provider_id' => $this->accountNumber,
-                        'bank_name' => $this->getBankName(),
-                        'bank_code' => $this->bank,
-                        'transfer_recipient' => $transferCode,
-                        'account_name' => $accountName,
+                        'personal_acct_number' => $this->accountNumber,
+                        'personal_bank_name' => $this->getBankName(),
+                        'personal_bank_code' => $this->bank,
+                        'personal_transfer_recipient' => $transferCode,
+                        'personal_account_name' => $accountName,
                     ],
                 ],
                 ['user_id'],
                 [
-                    'gateway_provider_id',
-                    'bank_name',
-                    'bank_code',
-                    'transfer_recipient',
-                    'account_name'
+                    'personal_acct_number',
+                    'personal_bank_name',
+                    'personal_bank_code',
+                    'personal_transfer_recipient',
+                    'personal_account_name'
                 ]
             );
 
