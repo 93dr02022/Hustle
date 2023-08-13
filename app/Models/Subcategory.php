@@ -28,7 +28,17 @@ class Subcategory extends Model
         'slug',
         'description',
         'icon_id',
-        'image_id'
+        'image_id',
+        'is_visible',
+    ];
+
+    /**
+     * The attributes that should be casts
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_visible' => 'boolean',
     ];
 
     /**

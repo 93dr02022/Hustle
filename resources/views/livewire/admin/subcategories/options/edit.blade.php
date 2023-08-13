@@ -63,6 +63,11 @@
                     @endif
                 </div>
 
+                {{-- Show this category in home page --}}
+                <div class="col-span-12">
+                    <x-forms.checkbox :label="__('Show this cateogory in gig creation')" model="is_visible" />
+                </div>
+
             </div>
 
         </div>

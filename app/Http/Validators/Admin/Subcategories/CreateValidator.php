@@ -25,6 +25,7 @@ class CreateValidator
                 'icon'        => 'nullable|image|mimes:jpg,jpeg,png',
                 'image'       => 'nullable|image|mimes:jpg,jpeg,png',
                 'parent_id'   => 'required|exists:categories,id',
+                'is_visible' => 'boolean'
             ];
 
             // Set errors messages
@@ -52,7 +53,8 @@ class CreateValidator
                 'description' => $request->description,
                 'icon'        => $request->icon,
                 'image'       => $request->image,
-                'parent_id'   => $request->parent_id
+                'parent_id'   => $request->parent_id,
+                'is_visible' => $request->is_visible
             ];
 
             // Validate data

@@ -65,6 +65,11 @@
                     <x-forms.file-input :label="__('messages.t_subcategory_image')" model="image"  />
                 </div>
 
+                {{-- Show this category in home page --}}
+                <div class="col-span-12">
+                    <x-forms.checkbox :label="__('Show this cateogory in gig creation')" model="is_visible" />
+                </div>
+
             </div>
 
         </div>

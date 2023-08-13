@@ -30,6 +30,8 @@ class EditComponent extends Component
 
     public $subcategory;
 
+    public $is_visible;
+
     /**
      * Initialize component
      *
@@ -47,6 +49,7 @@ class EditComponent extends Component
             'slug' => $subcategory->slug,
             'description' => $subcategory->description,
             'parent_id' => $subcategory->parent_id,
+            'is_visible' => $subcategory->is_visible
         ]);
 
         // Set subcategory
@@ -116,6 +119,7 @@ class EditComponent extends Component
             $this->subcategory->icon_id = $iconPath;
             $this->subcategory->image_id = $imagePath;
             $this->subcategory->parent_id = $this->parent_id;
+            $this->subcategory->is_visible = $this->is_visible;
             $this->subcategory->save();
 
             // Success
