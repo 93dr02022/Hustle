@@ -36,4 +36,3 @@ jobs:
             php artisan view:clear
             php artisan optimize
             php artisan cdn:push
-            php artisan refresh:cache
