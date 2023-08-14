@@ -1,18 +1,22 @@
-<div class="messenger-sendCard" x-data="window.ieFgUjXUHsNGdOd" x-init="initialize">
+<div class="messenger-sendCard !mx-3 xs:!mx-5 !mb-3.5 xs:!mb-5" x-data="window.ieFgUjXUHsNGdOd" x-init="initialize">
 
     {{-- Emojis box --}}
     @if (settings('live_chat')->enable_emojis)
         <div id="emojis-box-container" style="display: none"></div>
     @endif
 
-    <div x-show="selectedQuote.reference" class="bg-gray-100 flex items-center border rounded-lg overflow-hidden gap-x-3 mb-5 relative" x-cloak>
-        <div class="bg-slate-800 text-xl text-white h-[70px] w-[70px] grid place-items-center" x-text="initials(`${selectedQuote?.first_name} ${selectedQuote?.last_name}`)"></div>
+    <div x-show="selectedQuote.reference"
+        class="bg-gray-100 flex items-center border rounded-lg overflow-hidden gap-x-3 mb-5 relative" x-cloak>
+        <div class="bg-slate-800 text-xl text-white h-[70px] w-[70px] grid place-items-center"
+            x-text="initials(`${selectedQuote?.first_name} ${selectedQuote?.last_name}`)"></div>
         <div class="flex flex-col">
             <div class="font-medium text-sm" x-text="`Ref: ${selectedQuote?.reference}`"></div>
-            <div class="text-sm" x-text="currencyFormat(Number(selectedQuote?.total ?? 0) + Number(selectedQuote?.total_tax ?? 0))"></div>
+            <div class="text-sm"
+                x-text="currencyFormat(Number(selectedQuote?.total ?? 0) + Number(selectedQuote?.total_tax ?? 0))">
+            </div>
             <div class="">
-                <span :class="selectedQuote?.paid ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600'" class="px-2.5 text-xs py-0.5 rounded"
-                    x-text="selectedQuote?.paid ? 'Paid' : 'Unpaid'"></span>
+                <span :class="selectedQuote?.paid ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600'"
+                    class="px-2.5 text-xs py-0.5 rounded" x-text="selectedQuote?.paid ? 'Paid' : 'Unpaid'"></span>
             </div>
         </div>
         <span @click="removeQuote"
@@ -27,7 +31,8 @@
     </div>
 
     {{-- Send message form --}}
-    <form id="message-form" method="POST" :action="`{{ route('send.message') }}`" enctype="multipart/form-data" x-ref="messageForm" class="items-center">
+    <form id="message-form" method="POST" :action="`{{ route('send.message') }}`" enctype="multipart/form-data"
+        x-ref="messageForm" class="items-center">
 
         @csrf
 
@@ -35,7 +40,8 @@
         @if (settings('live_chat')->enable_emojis)
             <div id="emojis-box-trigger">
                 <svg class="emoji-box-trigger-event action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
-                    data-tooltip-target="chat-tooltip-btn-insert-emoji" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
+                    data-tooltip-target="chat-tooltip-btn-insert-emoji" stroke="currentColor" fill="none"
+                    stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
                     xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
@@ -49,9 +55,13 @@
         {{-- Attach a file --}}
         @if (settings('live_chat')->enable_attachments)
             <label id="attachment-file-btn">
-                <svg class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none" data-tooltip-target="chat-tooltip-btn-insert-file"
-                    stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                <svg class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                    data-tooltip-target="chat-tooltip-btn-insert-file" stroke="currentColor" fill="none"
+                    stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                    </path>
                 </svg>
                 <input disabled='disabled' type="file" class="upload-attachment" name="file"
                     accept=".{{ implode(', .', config('chatify.attachments.allowed_images')) }}, .{{ implode(', .', config('chatify.attachments.allowed_files')) }}" />
@@ -61,10 +71,10 @@
 
         {{-- send quotation to user --}}
         @if (auth()->user()->account_type == 'seller')
-            <label @click="hidden = !hidden">
+            <label @click="openRightModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none" data-tooltip-target="ch-tooltip-quote"
-                    viewBox="0 0 16 16">
+                    class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                    data-tooltip-target="ch-tooltip-quote" viewBox="0 0 16 16">
                     <path
                         d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
                     <path
@@ -77,56 +87,111 @@
 
         {{-- Message content --}}
         <div class="w-full px-3 flex items-center justify-center">
-            <textarea x-model="message" id="live-chat-message-textarea" readonly='readonly' name="message" class="m-send app-scroll dark:placeholder:text-zinc-400" placeholder="@lang('messages.t_type_ur_message_here')"></textarea>
+            <textarea x-model="message" id="live-chat-message-textarea" readonly='readonly' name="message"
+                class="m-send app-scroll dark:placeholder:text-zinc-400" placeholder="@lang('messages.t_type_ur_message_here')"></textarea>
         </div>
 
         {{-- Send --}}
         <button class="focus:outline-none" @click="handleButton($event)">
-            <svg class="action-svg !h-6 !w-6 !text-primary-600 focus:outline-none rtl:-rotate-90 rtl:active:!-rotate-90" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+            <svg class="action-svg !h-5 !w-5 !text-primary-600 focus:outline-none rtl:-rotate-90 rtl:active:!-rotate-90"
+                stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <g>
                     <path fill="none" d="M0 0h24v24H0z"></path>
-                    <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                    <path
+                        d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                    </path>
                 </g>
             </svg>
         </button>
     </form>
 
-    {{-- quote invoice id modal --}}
-    <x-forms.dialog size="max-w-md" position="md:items-center items-end">
-        <x-slot:title>
-            <div>Send Quotation</div>
-            </x-slot>
+    {{-- list of quotes modal --}}
+    <x-forms.right-modal x-cloak bodyClass="bg-[#F3F4F6]">
+        <x-slot name="title">
+            <div class="">Quotation Details</div>
+            <x-forms.close-button action="closeModal"></x-forms.close-button>
+        </x-slot>
 
-            <div class="px-4 sm:px-6 py-6">
-                <form @submit.prevent class="!block">
-                    <div class="w-full">
-                        <x-forms.text-input label="{{ __('Quotation Reference') }}" placeholder="{{ __('Enter reference') }}" x-model="quoteId" type="text" required icon="key" />
-                        <div x-show="notFound" x-cloak class="text-xs text-red-500">Quotation record not found check selected reference</div>
+        <div class="min-h-screen">
+            <div class="flex items-center gap-x-2 mb-5">
+                <input type="search" class="form-ctr bg-white !py-3" placeholder="Find your quotes"
+                    x-model="searchInput" @keyup.enter="findQuotes">
+                <button
+                    class="!bg-[#F5841B] !text-sm !rounded-md !text-white !py-3 !px-4 flex items-center disabled:!bg-gray-400"
+                    :disabled="loading" @click="findQuotes">
+                    <span x-show="!loading">Find</span>
+                    <div x-show="loading">
+                        <svg role="status" class="inline w-4 h-4 mx-2 text-gray-700 animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="#E5E7EB" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
                     </div>
-
-                    <div class="flex justify-end mt-3">
-                        <button type="submit" @click="findQuote" class="btn-purple !px-4 !py-3 !bg-[#1D46F5] disabled:!bg-gray-300" :disabled="loading">Check Quotation</button>
-                    </div>
-                </form>
+                </button>
             </div>
-    </x-forms.dialog>
+
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm">Recent Quotes</span>
+                <a href="/seller/quotes/create" target="_blank" class="!bg-[#1D46F5] !text-sm !rounded-md !text-white !py-2.5 !px-4">Create Quote</a>
+            </div>
+
+            <template x-for="quote in quotes" :key="quote.id">
+                <div class="border bg-white rounded-md mt-2 mb-5" @click="selectedQuote = quote; hidden = !hidden">
+                    <div class="flex items-center px-4 py-3.5">
+                        <div
+                            class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3">
+                            <span x-text="initials(`${quote.first_name} ${quote.last_name}`)"></span>
+                        </div>
+                        <div class="text-sm font-medium">
+                            <dt x-text="`${quote.first_name} ${quote.last_name}`">
+                            </dt>
+                            <dd class="text-blue-600" x-text="`Ref: ${quote.reference}`"></dd>
+                        </div>
+                    </div>
+                    <div
+                        class="grid grid-cols-3 items-center text-sm font-normal text-slate-700 bg-[#e9fcec] py-3 px-3">
+                        <h6>Total Disc.</h6>
+                        <h6>Total</h6>
+                        <h6>Paid</h6>
+                    </div>
+                    <div class="grid grid-cols-3 items-center text-sm font-normal py-4 px-3">
+                        <h6 x-text="currencyFormat(quote.total_discount)"></h6>
+                        <h6 x-text="currencyFormat(quote.total)"></h6>
+                        <h6 x-text="quote.paid ? 'Paid' : 'Unpaid'"></h6>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+    </x-forms.right-modal>
 
 </div>
 
 <script>
-    // ?quotation=${selectedQuote.reference}
-
     function ieFgUjXUHsNGdOd() {
         return {
-
             message: null,
-            hidden: true,
+            hidden: false,
             quoteId: null,
             notFound: false,
             loading: false,
+            quotes: [],
+            searchInput: "",
             selectedQuote: {
                 reference: null,
+            },
+
+            openRightModal() {
+                this.hidden = !this.hidden;
+
+                if (this.quotes.length <= 0) {
+                    this.findQuotes()
+                }
             },
 
             closeModal(event) {
@@ -139,21 +204,17 @@
                 this.hidden = true
             },
 
-            findQuote() {
+            findQuotes() {
                 this.notFound = false
                 this.loading = true
 
-                window.axios.post("{{ route('chat-quote') }}", {
-                    quoteRef: this.quoteId
+                window.axios.post("{{ route('chatQuotes') }}", {
+                    search: this.searchInput
                 }).then(res => {
-                    if (res.data?.reference) {
-                        this.selectedQuote = res.data
-                        this.message = "."
+                    if (res.data?.length > 0) {
+                        this.quotes = res.data
+                        this.message = ""
                         this.hidden = true
-                    }
-
-                    if (!res.data?.reference) {
-                        this.notFound = true
                     }
 
                     this.loading = false
@@ -166,6 +227,16 @@
             removeQuote() {
                 this.selectedQuote = {
                     reference: ""
+                }
+            },
+
+            closeModal() {
+                this.hidden = false
+            },
+
+            closeRightModal(event) {
+                if (event.target.classList.contains('modal-backdrop')) {
+                    this.hidden = false
                 }
             },
 
