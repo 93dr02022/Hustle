@@ -513,6 +513,7 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
 
         // verifications
         Route::get('/', VerificationsComponent::class);
+        Route::get('/{uid}/details', DetailsComponent::class);
     });
 
     // Blog
