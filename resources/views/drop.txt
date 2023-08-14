@@ -10,15 +10,6 @@ $path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\stora
 
 dd($path);
 
-
-
-// self.addEventListener("notificationclick", function (event) {
-//     event.notification.close();
-
-//     event.waitUntil(clients.openWindow());
-// });
-
-
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
 //     apiKey: "AIzaSyBM5wCW5G9aXhbzCTjGuTqwhfS5W13fhUw",
@@ -31,77 +22,3 @@ dd($path);
 //   };
 
 #F2F2F2
-
-
-
-
-
-
-
- <div class="col-span-12">
-            @foreach ($randomCategories as $category)
-                <div
-                    class="odd:bg-[#B7C4FC] even:bg-[#F1F4FF] [&:nth-child(odd)_.swiper-button-prev]:bg-white [&:nth-child(even)_.swiper-button-prev]:bg-[#1F2937] [&:nth-child(odd)_.swiper-button-next]:bg-white [&:nth-child(even)_.swiper-button-next]:bg-[#1F2937] stripe-title w-full py-16">
-                    <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        {{-- Section title --}}
-                        <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
-                            <div>
-                                <span class="block pb-1 text-xl md:text-2xl font-extrabold tracking-wider text-gray-800 gig-title">
-                                    {{ $category->name }}
-                                </span>
-                            </div>
-
-                            <div>
-                                <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
-                                    {{ __('messages.t_view_more') }}
-
-                                    {{-- LTR arrow --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="hidden w-5 h-5 ltr:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        {{-- List of gigs --}}
-                        <div class="relative col-span-12">
-                            <div class="swiper w-full h-full gigs-swiper {{ $category->slug }}-swiper">
-                                <div class="swiper-wrapper">
-                                    @foreach ($category->gigs as $gig)
-                                        <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
-                                            @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $loop->index }}">
-                            </div>
-                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $loop->index }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-
-
-                // document.addEventListener('DOMContentLoaded', function() {
-        //     const gigSwiper = document.querySelectorAll('.gigs-swiper');
-
-        //     for (i = 0; i < gigSwiper.length; i++) {
-
-        //         gigSwiper[i].classList.add(`gigs-swiper-${i}`);
-
-        //         var slider = new Swiper(`.gigs-swiper-${i}`, {
-        //             slidesPerView: "auto",
-        //             spaceBetween: "18",
-
-        //             navigation: {
-        //                 nextEl: `.category-next-${i}`,
-        //                 prevEl: `.category-prev-${i}`,
-        //             },
-        //         });
-
-        //     }
-        // });
