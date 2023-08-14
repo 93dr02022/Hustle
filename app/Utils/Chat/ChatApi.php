@@ -203,7 +203,7 @@ class ChatApi
         }
 
         if ($msg->quotation_id) {
-            $quotation = Quotation::where('id', $msg->quotation_id)->first();
+            $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
         }
 
         // Return message

@@ -160,7 +160,7 @@
                         {{-- Quotation payment total and grand total --}}
                         <table width="100%">
                             <tr class="border-t dark:border-gray-600">
-                                <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Total</th>
+                                <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Sub total</th>
                                 <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total, settings('currency')->code, true)</th>
                             </tr>
 

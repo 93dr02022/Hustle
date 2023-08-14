@@ -15,7 +15,8 @@ Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
 });
 
 Route::namespace('App\Http\Controllers\Chat')->group(function () {
-    Route::post('/chat-quote', 'QuoteController@getQuote')->name('chat-quote');
+    Route::post('/chat-quote', 'QuoteController@getQuote')->name('chatQuote');
+    Route::post('/chat-quotes', 'QuoteController@quotes')->name('chatQuotes');
 });
 
 // Tasks
