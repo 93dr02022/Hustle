@@ -163,7 +163,7 @@
                         </div>
 
                         <div>
-                            <a href="{{ url('search') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                            <a href="{{ url('search') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
                                 {{ __('messages.t_view_more') }}
 
                                 {{-- LTR arrow --}}
@@ -185,9 +185,9 @@
                                 @endforeach
                             </div>
                         </div>
-                        <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm  bg-white swiper-button-prev for-you-prev">
+                        <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 flex sm:!flex px-4 rounded-full shadow-lg after:!text-sm  bg-white swiper-button-prev for-you-prev">
                         </div>
-                        <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm bg-white swiper-button-next for-you-next">
+                        <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 flex sm:!flex px-4 rounded-full shadow-lg after:!text-sm bg-white swiper-button-next for-you-next">
                         </div>
                     </div>
                 </div>
@@ -209,7 +209,7 @@
                             </div>
 
                             <div>
-                                <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                <a href="{{ url('categories', $category->slug) }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
                                     {{ __('messages.t_view_more') }}
 
                                     {{-- LTR arrow --}}
