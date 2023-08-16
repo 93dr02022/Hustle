@@ -157,7 +157,7 @@ class RequirementsComponent extends Component
                             'item_id' => $this->item->id,
                             'question' => $requirement->question,
                             'form_type' => $requirement->type,
-                            'form_value' => $value,
+                            'form_value' => json_encode($value),
                         ]);
                     }
                 }
