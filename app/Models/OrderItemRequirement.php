@@ -43,7 +43,7 @@ class OrderItemRequirement extends Model
      * @var array
      */
     protected $casts = [
-        'form_value' => 'string',
+        'form_value' => 'array',
         'file_value' => 'array',
     ];
 }
