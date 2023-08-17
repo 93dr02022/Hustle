@@ -88,6 +88,57 @@ paths:
               schema:
                 type: object
 
+  /verify:
+    post:
+      tags:
+        - Authentication
+      summary: verify user email
+      description: verify user email
+      operationId: verifyEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: 458525
+                email:
+                  type: string
+                  example: 'bob@surehustle.com'
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /resend:
+    post:
+      tags:
+        - Authentication
+      summary: resend verification token
+      description: resend verification token
+      operationId: resendverificationtoken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 'bob@surehustle.com'
+      responses:
+        default:
+          description: 'success'
+          content:
+            application/json:
+              schema:
+                type: object
+
   /logout:
     post:
       security:
