@@ -520,7 +520,7 @@ return [
     "t_by_continue_agree_terms_privacy"                        => "By continue, you agree to our <a href=':terms_link' class='font-medium text-gray-900 hover:underline'>:terms_text</a> and <a href=':privacy_link' class='font-medium text-gray-900 hover:underline'>:privacy_text</a>",
     "t_privacy_policy"                                         => "Privacy policy",
     "t_terms_of_service"                                       => "Terms of service",
-    "t_register_verification_email_sent"                       => "We've sent and email to :email to verify your email address and activate your account. The link in the email will expire in :minutes minutes",
+    "t_register_verification_email_sent"                       => "We've sent an email to :email to verify your email address and activate your account. The link in the email will expire in :minutes minutes",
     "t_register_verification_admin_pending"                    => "Thank you for sign up, your account is under review now and we will notify you when it is activated",
     "t_verification_email_not_exists"                          => "This verification link is invalid. Please request new one",
     "t_verification_email_link_expired"                        => "This verification link has expired. Please request new one",

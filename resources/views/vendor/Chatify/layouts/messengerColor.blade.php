@@ -48,7 +48,7 @@
 }
 
 .mc-sender .msg-card-content {
-    background: {{ $messengerColor }} !important;
+    background: #1D46F5 !important;
     border: unset;
     box-shadow: unset;
 }
