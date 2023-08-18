@@ -8,6 +8,7 @@ use App\Models\OrderItemRequirement;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Exception;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -177,7 +178,7 @@ class RequirementsComponent extends Component
                 $size = $this->requirement_file->getSize();
 
                 // Move this file to local storage
-                $path = $this->requirement_file->storeAs('orders/requirements', "$id.$extension", $disk = 'custom');
+                $path = $this->requirement_file->storeAs('orders/requirements', "$id.$extension", 's3');
 
                 // Set file data
                 $file = [
@@ -304,12 +305,14 @@ class RequirementsComponent extends Component
                     if ($requirement->requirement?->file_value) {
 
                         // Get file path
-                        $file = public_path('storage/orders/requirements/' . $requirement->file_value['id'] . '.' . $requirement->file_value['extension']);
+                        $oldFilePath = 'orders/requirements/' . $requirement->file_value['id'] . '.' . $requirement->file_value['extension'];
 
-                        // We have to delete file from local storage
-                        if (File::exists($file)) {
-                            File::delete($file);
-                        }
+                        rescue(fn () => Storage::disk('s3')->delete($oldFilePath));
+
+                        // // We have to delete file from local storage
+                        // if (File::exists($file)) {
+                        //     File::delete($file);
+                        // }
                     }
 
                     // Delete requirement
