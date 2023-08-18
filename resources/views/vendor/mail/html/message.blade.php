@@ -3,7 +3,7 @@
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
 <a href="{{ url('/') }}" class="h-full">
-    <img src="{{ src(settings('general')->logo) }}" alt="{{ settings('general')->title }}"
+    <img src="{{ asset('img/general/hustle-logo.svg') }}" alt="{{ settings('general')->title }}"
         height="30px">
 </a>
 @endcomponent
