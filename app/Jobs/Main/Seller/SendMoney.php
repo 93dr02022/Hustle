@@ -3,6 +3,7 @@
 namespace App\Jobs\Main\Seller;
 
 use App\Models\UserWithdrawalHistory;
+use App\Models\WithdrawOtp;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +33,10 @@ class SendMoney implements ShouldQueue
      */
     public function handle()
     {
+        rescue(function () {
+            WithdrawOtp::where('user_id', $this->withdrawal->user_id)->delete();
+        });
+
         try {
             $response = Http::withToken(config('paystack.secretKey'))
                 ->retry(3)

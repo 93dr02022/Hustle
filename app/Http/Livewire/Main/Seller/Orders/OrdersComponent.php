@@ -146,7 +146,12 @@ class OrdersComponent extends Component
         $item->canceled_at = now();
         $item->is_finished = true;
         $item->save();
-
+        
+        //Creating timeline
+        $item->orderTimelines()->create([
+            'name' => 'Order cancelled',
+            'description' => __('messages.t_buyer_has_canceled_order')
+        ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');
@@ -248,6 +253,12 @@ class OrdersComponent extends Component
         $item->status = 'proceeded';
         $item->proceeded_at = now();
         $item->save();
+
+        //Creating the ordertimeline
+        $item->orderTimelines()->create([
+            'name' => 'Order started',
+            'description' => __('messages.t_seller_has_started_ur_order')
+        ]);
 
         // Send notification to buyer
         $item->order->buyer->notify((new OrderItemInProgress($item))->locale(config('app.locale')));

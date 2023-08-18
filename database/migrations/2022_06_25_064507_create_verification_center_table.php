@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('has_business')->default(false);
             $table->mediumText('file_selfie')->nullable();
             $table->string('registration_file')->nullable();
+            $table->string('mask_bvn')->nullable()->index();
             $table->enum('business_verify_status', ['pending', 'awaiting', 'verified', 'declined'])->default('pending');
             $table->enum('photo_status', ['pending', 'awaiting', 'verified', 'declined'])->default('pending');
             $table->timestamp('verified_at')->nullable();

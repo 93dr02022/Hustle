@@ -53,7 +53,7 @@ class Overview extends Component
      */
     public function getCategoriesProperty()
     {
-        return Category::orderBy('name')->get();
+        return Category::where('is_visible', true)->orderBy('name')->get();
     }
 
     /**
@@ -65,7 +65,9 @@ class Overview extends Component
     public function updatedCategory($id)
     {
         // Get all subcategories in this parent category
-        $this->subcategories = Subcategory::where('parent_id', $id)->orderBy('name')->get();
+        $this->subcategories = Subcategory::where('parent_id', $id)
+            ->where('is_visible', true)
+            ->orderBy('name')->get();
     }
 
     /**

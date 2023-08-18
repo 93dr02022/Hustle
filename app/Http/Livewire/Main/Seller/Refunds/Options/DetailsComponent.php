@@ -47,7 +47,7 @@ class DetailsComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_refund_details')." $separator ".settings('general')->title;
+        $title = __('messages.t_refund_details') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -61,7 +61,7 @@ class DetailsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -82,7 +82,7 @@ class DetailsComponent extends Component
     public function send()
     {
         // Must insert message
-        if (! $this->message || $this->refund->status !== 'pending') {
+        if (!$this->message || $this->refund->status !== 'pending') {
             return;
         }
 
@@ -111,7 +111,6 @@ class DetailsComponent extends Component
 
             // Send notification to admin
             Admin::first()->notify((new AdminNewRefundMessage($this->refund, $message))->locale(config('app.locale')));
-
         }
 
         // Reset form
@@ -141,12 +140,16 @@ class DetailsComponent extends Component
         $item = $this->refund->item;
 
         // Update item status
-        OrderItem::where('id', $item->id)->update([
+        $order_item = OrderItem::where('id', $item->id)->firstOrFail();
+        $order_item->update([
             'status' => 'refunded',
             'is_finished' => true,
             'refunded_at' => now(),
         ]);
-
+        //Creating timeline
+        $order_item->orderTimelines()->create([
+            'name' => 'Order refunded',
+        ]);
         // Update refund
         $this->refund->update([
             'status' => 'accepted_by_seller',

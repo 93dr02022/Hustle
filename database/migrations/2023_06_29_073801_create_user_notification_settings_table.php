@@ -18,9 +18,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->unique()->constrained('users')->cascadeOnDelete();
             $table->string('notification_token');
-            $table->boolean('push_inbox_notifications')->default(false);
-            $table->boolean('push_order_notifications')->default(false);
-            $table->boolean('push_marketing_notifications')->default(false);
+            $table->boolean('push_inbox_notifications')->default(true);
+            $table->boolean('push_order_notifications')->default(true);
+            $table->boolean('push_marketing_notifications')->default(true);
             $table->timestamps();
         });
 

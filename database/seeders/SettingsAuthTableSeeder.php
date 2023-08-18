@@ -14,13 +14,13 @@ class SettingsAuthTableSeeder extends Seeder
      */
     public function run()
     {
-        
-        \DB::table('settings_auth')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('settings_auth')->insert(array(
+            0 =>
+            array(
                 'id'                           => 1,
-                'verification_required'        => 0,
-                'verification_type'            => 'admin',
+                'verification_required'        => 1,
+                'verification_type'            => 'email',
                 'verification_expiry_period'   => 60,
                 'password_reset_expiry_period' => 60,
                 'is_facebook_login'            => 0,
@@ -30,7 +30,5 @@ class SettingsAuthTableSeeder extends Seeder
                 'is_linkedin_login'            => 0,
             ),
         ));
-        
-        
     }
 }

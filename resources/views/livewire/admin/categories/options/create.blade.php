@@ -52,7 +52,7 @@
                 {{-- Show this category in home page --}}
                 <div class="col-span-12">
                     <x-forms.checkbox
-                        :label="__('messages.t_show_cat_gigs_in_home_checkbox')"
+                        :label="__('Show this cateogory in gig creation')"
                         model="is_visible" />
                 </div>
 

@@ -6,6 +6,7 @@ use App\Models\OrderItem;
 use App\Models\Refund;
 use App\Models\RefundConversation;
 use App\Models\User;
+use App\Notifications\User\Buyer\OrderItemRefunded;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -59,7 +60,7 @@ class DetailsComponent extends Component
     public function accept()
     {
         // Check refund status
-        if ($this->refund->status !== 'rejected_by_seller' && ! $this->refund->request_admin_intervention) {
+        if ($this->refund->status !== 'rejected_by_seller' && !$this->refund->request_admin_intervention) {
 
             $this->notification([
                 'title' => __('messages.t_error'),
@@ -68,7 +69,6 @@ class DetailsComponent extends Component
             ]);
 
             return;
-
         }
 
         // Update refund status
@@ -79,12 +79,16 @@ class DetailsComponent extends Component
         $item = $this->refund->item;
 
         // Update item status
-        OrderItem::where('id', $item->id)->update([
+        $order_item = OrderItem::where('id', $item->id)->firstOrFail();
+        $order_item->update([
             'status' => 'refunded',
             'is_finished' => true,
             'refunded_at' => now(),
         ]);
-
+        //Creating timeline
+        $order_item->orderTimelines()->create([
+            'name' => 'Order refunded',
+        ]);
         // Update this gig
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');
@@ -99,6 +103,7 @@ class DetailsComponent extends Component
         User::where('id', $this->refund->seller_id)->update([
             'balance_pending' => convertToNumber($this->refund->seller->balance_pending) - convertToNumber($item->profit_value),
         ]);
+        $order_item->owner->notify((new OrderItemRefunded($order_item))->locale(config('app.locale')));
 
         // Send notification to buyer
         notification([
@@ -135,7 +140,7 @@ class DetailsComponent extends Component
     public function decline()
     {
         // Check refund status
-        if ($this->refund->status !== 'rejected_by_seller' && ! $this->refund->request_admin_intervention) {
+        if ($this->refund->status !== 'rejected_by_seller' && !$this->refund->request_admin_intervention) {
 
             $this->notification([
                 'title' => __('messages.t_error'),
@@ -144,7 +149,6 @@ class DetailsComponent extends Component
             ]);
 
             return;
-
         }
 
         // Get refund item
@@ -155,7 +159,7 @@ class DetailsComponent extends Component
         $this->refund->save();
 
         // Check if order not finished yet
-        if (! $item->is_finished) {
+        if (!$item->is_finished) {
 
             // Get seller
             $seller = User::where('id', $this->refund->seller_id)->firstOrFail();
@@ -168,7 +172,6 @@ class DetailsComponent extends Component
             // Mark item as finished
             $item->is_finished = true;
             $item->save();
-
         }
 
         // Refresh refund

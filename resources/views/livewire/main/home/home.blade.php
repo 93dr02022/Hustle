@@ -152,7 +152,7 @@
 
         {{-- selected gigs for you --}}
         <div class="col-span-12">
-            <div class="odd:bg-[#F2F2F2] w-full py-16">
+            <div class="odd:bg-[#F1F4FF] w-full py-16">
                 <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {{-- Section title --}}
                     <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
@@ -163,7 +163,7 @@
                         </div>
 
                         <div>
-                            <a href="{{ url('search') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                            <a href="{{ url('search') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
                                 {{ __('messages.t_view_more') }}
 
                                 {{-- LTR arrow --}}
@@ -185,9 +185,9 @@
                                 @endforeach
                             </div>
                         </div>
-                        <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm  bg-white swiper-button-prev for-you-prev">
+                        <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 flex sm:!flex px-4 rounded-full shadow-lg after:!text-sm  bg-white swiper-button-prev for-you-prev">
                         </div>
-                        <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm bg-white swiper-button-next for-you-next">
+                        <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 flex sm:!flex px-4 rounded-full shadow-lg after:!text-sm bg-white swiper-button-next for-you-next">
                         </div>
                     </div>
                 </div>
@@ -195,13 +195,13 @@
         </div>
 
         {{-- Random gigs --}}
-        <div class="col-span-12">
+        <div class="col-span-12 bg-[#FAFAFA]">
             @foreach ($randomCategories as $category)
                 <div
-                    class="odd:bg-[#B7C4FC] even:bg-[#F1F4FF] [&:nth-child(odd)_.swiper-button-prev]:bg-white [&:nth-child(even)_.swiper-button-prev]:bg-[#1F2937] [&:nth-child(odd)_.swiper-button-next]:bg-white [&:nth-child(even)_.swiper-button-next]:bg-[#1F2937] stripe-title w-full py-16">
-                    <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    class="w-full mt-6 xl:mt-6 mb-16">
+                    <div class="container grid grid-cols-1 gap-y-6 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{-- Section title --}}
-                        <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
+                        <div class="flex items-center justify-between py-2 bg-transparent">
                             <div>
                                 <span class="block pb-1 text-xl md:text-2xl font-extrabold tracking-wider text-gray-800 gig-title">
                                     {{ $category->name }}
@@ -209,7 +209,7 @@
                             </div>
 
                             <div>
-                                <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                <a href="{{ url('categories', $category->slug) }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
                                     {{ __('messages.t_view_more') }}
 
                                     {{-- LTR arrow --}}
@@ -221,20 +221,12 @@
                         </div>
 
                         {{-- List of gigs --}}
-                        <div class="relative col-span-12">
-                            <div class="swiper w-full h-full gigs-swiper {{ $category->slug }}-swiper">
-                                <div class="swiper-wrapper">
-                                    @foreach ($category->gigs as $gig)
-                                        <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
-                                            @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $loop->index }}">
-                            </div>
-                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $loop->index }}">
-                            </div>
+                        <div class="grid grid-cols-12 xs:gap-x-7 sm:gap-x-9 md:gap-x-5 gap-y-6">
+                           @foreach ($category->gigs as $gig)
+                              <div class="col-span-12 xs:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-3">
+                                 @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
+                              </div>
+                           @endforeach
                         </div>
                     </div>
                 </div>
@@ -301,26 +293,6 @@
                 nextEl: '.for-you-next',
                 prevEl: '.for-you-prev',
             },
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const gigSwiper = document.querySelectorAll('.gigs-swiper');
-
-            for (i = 0; i < gigSwiper.length; i++) {
-
-                gigSwiper[i].classList.add(`gigs-swiper-${i}`);
-
-                var slider = new Swiper(`.gigs-swiper-${i}`, {
-                    slidesPerView: "auto",
-                    spaceBetween: "18",
-
-                    navigation: {
-                        nextEl: `.category-next-${i}`,
-                        prevEl: `.category-prev-${i}`,
-                    },
-                });
-
-            }
         });
     </script>
 @endpush

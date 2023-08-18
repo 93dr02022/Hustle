@@ -32,6 +32,20 @@ class UserSeeder extends Seeder
 
         User::create([
             'uid' => uid(),
+            'first_name' => 'sunday',
+            'last_name' => 'afuwape',
+            'email' => 'afuwapesunday12@gmail.com',
+            'username' => 'logic',
+            'password' => Hash::make('12345678'),
+            'status' => 'verified',
+            'level_id' => 2,
+            'country_id' => 160,
+            'state_id' => fake()->randomElement([2671, 2674]),
+            'account_type' => 'seller'
+        ]);
+
+        User::create([
+            'uid' => uid(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email' => 'josh@surehustle.com',

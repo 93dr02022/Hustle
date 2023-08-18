@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Main\Quotes;
 use App\Models\Order;
 use App\Models\OrderInvoice;
 use App\Models\Quotation;
+use App\Notifications\User\Buyer\QuotationPaid as BuyerQuotationPaid;
 use App\Notifications\User\Seller\QuotationPaid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -99,6 +100,9 @@ class PaymentComponent extends Component
                 if (auth()->check() && $this->quotation->user_id !== auth()->id()) {
                     Order::where('id', $this->quotation->order_id)
                         ->update(['buyer_id' => auth()->id()]);
+
+                    auth()->user()->notify((new BuyerQuotationPaid($this->quotation))
+                    ->locale(config('app.locale')));
                 }
 
                 // Pending Balance until resolve by cron
@@ -118,6 +122,8 @@ class PaymentComponent extends Component
                 return redirect()->to('/');
             } catch (\Throwable $th) {
                 DB::rollBack();
+
+                dd($th);
 
                 $this->payHasError = true;
                 $this->toastError('Oops sorry error occured while trying to process your payment.');

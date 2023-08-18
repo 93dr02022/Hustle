@@ -8,10 +8,15 @@ Route::get('/docs', function () {
     return view('api');
 });
 
-//Notifications
+// Notifications
 Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
     Route::patch('/subscribe-to-notifications', 'NotificationsController@subscribe')->name('subscribe-to-notifications');
     Route::post('/unsubscribe-to-notifications', 'NotificationsController@unsubscribe')->name('unsubscribe-to-notifications');
+});
+
+Route::namespace('App\Http\Controllers\Chat')->group(function () {
+    Route::post('/chat-quote', 'QuoteController@getQuote')->name('chatQuote');
+    Route::post('/chat-quotes', 'QuoteController@quotes')->name('chatQuotes');
 });
 
 // Tasks
@@ -276,7 +281,10 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
             // All
             Route::get('/', OrdersComponent::class);
-
+            // View order details
+            Route::get('/view-order/{orderId}', ViewOrderComponent::class);
+            // quotation order
+            Route::get('/request-review/{orderId}', RequestReview::class);
             // quotation order
             Route::get('{orderId}/quotation', QuoteComponent::class);
 
@@ -422,6 +430,14 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
                 // Details
                 Route::get('details/{id}', DetailsComponent::class);
+                // Create
+                Route::get('create/{reviewId}', CreateComponent::class);
+
+                // Preview
+                Route::get('preview/{id}', PreviewComponent::class);
+
+                // Edit
+                Route::get('edit/{id}', EditComponent::class);
             });
         });
 

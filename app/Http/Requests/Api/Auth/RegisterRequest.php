@@ -27,10 +27,10 @@ class RegisterRequest extends FormRequest
     {
         return [
             'username' => ['required', 'max:60', 'min:3', 'unique:users', new UsernameRule()],
-            'email'    => ['required', 'max:60', 'unique:users,email'],
+            'email' => ['required', 'max:60', 'unique:users,email'],
             'password' => ['required', 'max:60'],
             'first_name' => ['required', 'max:60', 'min:3'],
-            'last_name' => ['required', 'max:60', 'min:3']
+            'last_name' => ['required', 'max:60', 'min:3'],
         ];
     }
 
@@ -42,10 +42,9 @@ class RegisterRequest extends FormRequest
         return collect($this->safe()->except('password'))
             ->merge([
                 'uid' => uid(),
-                'level_id' => 2,
+                'level_id' => 1,
                 'status' => 'active',
-                'account_type' => 'seller',
-                'password' => Hash::make($this->input('password'))
+                'password' => Hash::make($this->input('password')),
             ])
             ->toArray();
     }

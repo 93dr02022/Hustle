@@ -31,6 +31,11 @@
                     <th
                         class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
                         {{ __('messages.t_social_media_image') }}</th>
+
+                    <th
+                        class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
+                        {{ __('messages.t_visibility') }}</th>
+
                     <th
                         class="font-bold text-[10px] text-slate-500 dark:text-gray-300 uppercase tracking-wider text-center">
                         {{ __('messages.t_options') }}</th>
@@ -78,6 +83,19 @@
                         <td class="text-center">
                             <img class="w-8 h-8 rounded object-cover mx-auto lazy" src="{{ placeholder_img() }}"
                                 data-src="{{ src($c->image_id) }}" alt="{{ $c->name }}" />
+                        </td>
+
+                        {{-- Visibility --}}
+                        <td class="text-center">
+                            @if ($c->is_visible)
+                                <strong class="bg-green-100 text-green-700 px-4 py-1.5 rounded text-xs font-medium">
+                                    {{ __('messages.t_visible') }}
+                                </strong>
+                            @else
+                                <strong class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded text-xs font-medium">
+                                    {{ __('messages.t_not_visible') }}
+                                </strong>
+                            @endif
                         </td>
 
                         {{-- Options --}}

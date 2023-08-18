@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Livewire\Main\Seller\Reviews\Options;
 
 use App\Models\Review;

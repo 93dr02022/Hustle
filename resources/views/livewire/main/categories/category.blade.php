@@ -184,29 +184,47 @@
     </div>
     
     {{-- Category Container --}}
-    <main class="max-w-7xl mx-auto">
+    <main class="px-4 sm:px-6 lg:px-8">
 
         {{-- Section title --}}
-        <div class="flex justify-between items-center mb-2 bg-transparent py-2 ltr:pr-6 rtl:pl-6 ltr:border-l-8 rtl:border-r-8 ltr:pl-4 rtl:pr-4 border-primary-600 rounded">
+        <div class="flex md:justify-between md:flex-row flex-col md:items-center mb-2 bg-transparent py-2">
 
             {{-- Category name --}}
-            <div>
+            <div class="border-l-8 border-primary-600 rounded pl-4">
                 <span class="font-extrabold text-base text-gray-800 dark:text-gray-100 pb-1 block tracking-wider">{{ $category->name }}</span>
                 <p class="text-sm text-gray-400">{{ $category->description }}</p>
             </div>
 
             {{-- Actions --}}
             <div>
-                <div class="flex items-center">
+                <div class="flex items-center justify-end md:mt-0 mt-4 gap-3">
 
                     {{-- Sort by --}}
                     <div x-data="Components.menu({ open: false })" x-init="init()" @keydown.escape.stop="open = false; focusButton()" @click.away="onClickAway($event)" class="relative inline-block ltr:text-left rtl:text-right">
 
                         {{-- Sort by button --}}
                         <div>
-                            <button type="button" class="group inline-flex justify-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-200" id="menu-button" x-ref="button" @click="onButtonClick()" @keyup.space.prevent="onButtonEnter()" @keydown.enter.prevent="onButtonEnter()" aria-expanded="false" aria-haspopup="true" x-bind:aria-expanded="open.toString()" @keydown.arrow-up.prevent="onArrowUp()" @keydown.arrow-down.prevent="onArrowDown()">
-                                {{ __('messages.t_sort_by') }}
-                                <svg class="flex-shrink-0 ltr:-mr-1 rtl:-ml-1 ltr:ml-1 rtl:mr-1 h-5 w-5 text-gray-400 dark:text-gray-300 group-hover:text-gray-500 dark:group-hover:text-gray-200 dark:hover:text-gray-200" x-description="Heroicon name: solid/chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"> <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path> </svg>
+                            <button type="button"
+                                class="group border rounded-md p-1 px-2 inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-200 min-w-[100px]"
+                                id="menu-button" x-ref="button" @click="onButtonClick()" @keyup.space.prevent="onButtonEnter()" @keydown.enter.prevent="onButtonEnter()" aria-expanded="false"
+                                aria-haspopup="true" x-bind:aria-expanded="open.toString()" @keydown.arrow-up.prevent="onArrowUp()" @keydown.arrow-down.prevent="onArrowDown()">
+                                <span class="flex flex-col text-left grow">
+                                    <span class="text-[11px] font-medium leading-[1.3]">{{ __('messages.t_sort_by') }}</span>
+                                    @if (is_null($sort_by))
+                                        <span class="text-[14px] leading-[1.3]">Best Match</span>
+                                    @elseif ($sort_by == 'price_low_high')
+                                        <span class="text-[14px] leading-[1.3]">Price: Low to High</span>
+                                    @elseif ($sort_by == 'price_high_low')
+                                        <span class="text-[14px] leading-[1.3]">Price: High to Low</span>
+                                    @else
+                                        <span class="text-[14px] leading-[1.3]">{{ $sort_by }}</span>
+                                    @endif
+                                </span>
+                                <svg class="flex-shrink-0 ltr:-mr-1 rtl:-ml-1 ltr:ml-1 rtl:mr-1 h-6 w-6 text-gray-400 dark:text-gray-300 group-hover:text-gray-500 dark:group-hover:text-gray-200 dark:hover:text-gray-200"
+                                    x-description="Heroicon name: solid/chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
                             </button>
                         </div>
         
@@ -250,8 +268,11 @@
                     </div>
         
                     {{-- Filter (Mobile) --}}
-                    <button type="button" class="p-2 -m-2 ltr:ml-4 rtl:mr-4 ltr:sm:ml-6 rtl:sm:mr-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="open = true">
-                        <svg class="w-4 h-4" aria-hidden="true" x-description="Heroicon name: solid/filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path> </svg>
+                    <button type="button" class="p-2 border rounded-md text-gray-400 hover:text-gray-500 lg:hidden" @click="open = true">
+                        <svg class="w-6 h-6" aria-hidden="true" x-description="Heroicon name: solid/filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
                     </button>
 
                 </div>
@@ -260,8 +281,8 @@
         </div>
 
         {{-- Section content --}}
-        <section aria-labelledby="products-heading" class="pt-6 pb-24">
-            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+        <section aria-labelledby="products-heading" class="pt-3 md:pt-6 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-5 md:gap-y-10">
 
                 {{-- Filter --}}
                 <div>
@@ -383,6 +404,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Location --}}
+                        <div x-data="{ open: true }" class="py-3">
+                            <h3 class="-my-3 flow-root bg-gray-50 dark:bg-zinc-700 px-4">
+                                <button @click="open = !open" type="button"
+                                    class="py-3 w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500 outline-none focus:outline-none">
+                                    <span class="font-medium text-gray-900">{{ __('Location') }}</span>
+                                    <span class="ltr:ml-6 rtl:mr-6 flex items-center">
+                                        <svg class="h-5 w-5" x-show="!(open)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <svg class="h-5 w-5" x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="display: none;">
+                                            <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </h3>
+                            <div class="pt-6 px-4" x-show="open" style="display: none;">
+                                <div class="space-y-4">
+
+                                    <div class="rounded-md shadow-sm -space-y-px">
+                                        <div class="w-full" wire:ignore>
+                                            <x-forms.select2 :label="__('States')" :placeholder="__('Choose Location')" model="location" :options="$states" :isDefer="true" :isAssociative="false" :componentId="$this->id"
+                                                :showLabel="false" value="name" text="name" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
     
                         {{-- Delivery time --}}
                         <div x-data="{ open: true }" class="py-3">
@@ -436,7 +487,7 @@
                             
                             {{-- Gig item --}}
                             <div class="col-span-12 lg:col-span-6 xl:col-span-4 md:col-span-6 sm:col-span-6" wire:key="gigs-list-{{ $gig->uid }}">
-                                @livewire('main.cards.gig', ['gig' => $gig], key("gig-item-" . $gig->uid))
+                                @livewire('main.cards.gig-card', ['gig' => $gig], key('gig-item-' . $gig->uid))
                             </div>
 
                         @empty

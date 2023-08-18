@@ -897,7 +897,13 @@ class CheckoutComponent extends Component
                         $order_item->profit_value = $item_total_price - $commisssion;
                         $order_item->commission_value = $commisssion;
                         $order_item->save();
+                        //Creating the ordertimeline
 
+                        $order_item->orderTimelines()->create([
+                            'name' => 'Order placed',
+                            'description' => auth()->user()->username . ' placed order'
+                        ]);
+                        
                         // Check if this item has upgrades
                         if (is_array($item['upgrades']) && count($item['upgrades'])) {
 

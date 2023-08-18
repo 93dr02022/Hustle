@@ -7,6 +7,7 @@ use Pusher\Pusher;
 use Astrotomic\Twemoji\Twemoji;
 use App\Models\ChMessage as Message;
 use App\Models\ChFavorite as Favorite;
+use App\Models\Quotation;
 use Illuminate\Support\Facades\Storage;
 
 class ChatApi
@@ -72,7 +73,7 @@ class ChatApi
     {
         return config('chatify.colors');
     }
-    
+
 
     /**
      * Trigger an event using Pusher
@@ -113,7 +114,7 @@ class ChatApi
         if (auth()->check()) {
 
             // Check if authorized
-            if($requestUser->id == $authUser->id){
+            if ($requestUser->id == $authUser->id) {
                 return $this->pusher->authorizeChannel(
                     $channelName,
                     $socket_id,
@@ -122,12 +123,11 @@ class ChatApi
             }
 
             // If not authorized
-            return response()->json(['message'=>'Unauthorized'], 401);
-
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         // If not authenticated
-        return response()->json(['message'=>'Not authenticated'], 403);
+        return response()->json(['message' => 'Not authenticated'], 403);
     }
 
 
@@ -147,11 +147,13 @@ class ChatApi
         $attachment_extension = null;
         $attachment_size      = null;
 
+        $quotation = null;
+
         // Fetch message
         $msg = Message::where('id', $id)->first();
 
         // Check if message does not exists
-        if(!$msg){
+        if (!$msg) {
             return [];
         }
 
@@ -168,43 +170,40 @@ class ChatApi
 
             // Get file type
             if (in_array($attachment_extension, $this->getAllowedImages())) {
-                
+
                 // Image
                 $attachment_type = 'image';
-
             } else {
 
                 // File
                 $attachment_type = 'file';
-
             }
 
             // Set image size
             $attachment_size      = $attachment_results->size;
-
         }
 
         // Set message
         if ($msg->body) {
-            
+
             // Check if emojis enabled
             if (settings('live_chat')->enable_emojis) {
-                
+
                 // Enable emojis
                 $message = Twemoji::text($msg->body)->toHtml();
-
             } else {
 
                 // Not enabled
                 $message = clean($msg->body);
-
             }
-
         } else {
 
             // No message
             $message = null;
+        }
 
+        if ($msg->quotation_id) {
+            $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
         }
 
         // Return message
@@ -214,6 +213,7 @@ class ChatApi
             'from_id'         => $msg->from_id,
             'to_id'           => $msg->to_id,
             'message'         => $message,
+            'quotation'  => $quotation,
             'attachment'      => [$attachment, $attachment_title, $attachment_type, $attachment_extension, $attachment_size],
             'time'            => $msg->created_at->diffForHumans(),
             'fullTime'        => $msg->created_at,
@@ -249,9 +249,9 @@ class ChatApi
     public function fetchMessagesQuery($user_id)
     {
         return Message::where('from_id', auth()->id())
-                        ->where('to_id', $user_id)
-                        ->orWhere('from_id', $user_id)
-                        ->where('to_id', auth()->id());
+            ->where('to_id', $user_id)
+            ->orWhere('from_id', $user_id)
+            ->where('to_id', auth()->id());
     }
 
 
@@ -270,6 +270,7 @@ class ChatApi
         $message->to_id      = $data['to_id'];
         $message->body       = clean(strip_tags($data['body']));
         $message->attachment = $data['attachment'];
+        $message->quotation_id = $data['quotation_id'];
         $message->save();
     }
 
@@ -285,9 +286,9 @@ class ChatApi
     {
         // Update messages
         Message::Where('from_id', $user_id)
-                ->where('to_id', auth()->id())
-                ->where('seen', false)
-                ->update([ 'seen' => true ]);
+            ->where('to_id', auth()->id())
+            ->where('seen', false)
+            ->update(['seen' => true]);
 
         // Success
         return true;
@@ -365,7 +366,7 @@ class ChatApi
     public function inFavorite($user_id)
     {
         return Favorite::where('user_id', auth()->id())
-                        ->where('favorite_id', $user_id)->count() > 0 ? true : false;
+            ->where('favorite_id', $user_id)->count() > 0 ? true : false;
     }
 
 
@@ -412,7 +413,7 @@ class ChatApi
                     $attachment = json_decode($msg->attachment);
                     // determine the type of the attachment
                     in_array(pathinfo($attachment->new_name, PATHINFO_EXTENSION), $this->getAllowedImages())
-                    ? array_push($images, $attachment->new_name) : '';
+                        ? array_push($images, $attachment->new_name) : '';
                 }
             }
         }
@@ -437,28 +438,24 @@ class ChatApi
                 if (isset($msg->attachment)) {
 
                     // Get file path
-                    $path = config('chatify.attachments.folder').'/'.json_decode($msg->attachment)->new_name;
+                    $path = config('chatify.attachments.folder') . '/' . json_decode($msg->attachment)->new_name;
 
                     // Delete it
                     if (self::storage()->exists($path)) {
                         self::storage()->delete($path);
                     }
-
                 }
 
                 // Delete from database
                 $msg->delete();
-
             }
 
             // Success
             return true;
-
         } catch (Exception $e) {
 
             // Error
             return false;
-
         }
     }
 
@@ -486,7 +483,6 @@ class ChatApi
                 if (self::storage()->exists($path)) {
                     self::storage()->delete($path);
                 }
-
             }
 
             // delete from database
@@ -494,12 +490,10 @@ class ChatApi
 
             // Success
             return true;
-
         } catch (Exception $e) {
 
             // Not found
             return false;
-
         }
     }
 
@@ -524,7 +518,7 @@ class ChatApi
     {
         return self::storage()->url(config('chatify.user_avatar.folder') . '/' . $user_avatar_name);
     }
-    
+
 
     /**
      * Get attachment's url.

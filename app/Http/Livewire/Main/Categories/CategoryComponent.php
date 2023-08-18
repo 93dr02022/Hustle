@@ -28,7 +28,9 @@ class CategoryComponent extends Component
 
     public $delivery_times;
 
-    protected $queryString = ['min_price', 'max_price', 'delivery_time', 'rating', 'sort_by'];
+    public $location;
+
+    protected $queryString = ['min_price', 'max_price', 'delivery_time', 'rating', 'sort_by', 'location'];
 
     /**
      * Init component
@@ -94,6 +96,7 @@ class CategoryComponent extends Component
 
         return view('livewire.main.categories.category', [
             'gigs' => $this->gigs,
+            'states' => modelCaches('nigerian_states')
         ])->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -105,7 +108,8 @@ class CategoryComponent extends Component
     public function getGigsProperty()
     {
         // start a new query
-        $query = Gig::query()->where('category_id', $this->category->id)->active();
+        $query = Gig::query()->where('category_id', $this->category->id)
+            ->whereIn('gigs.status', ['active', 'boosted', 'trending', 'featured']);
 
         // Check price
         if ($this->min_price) {
@@ -125,6 +129,11 @@ class CategoryComponent extends Component
         // Check rating
         if ($this->rating) {
             $query->whereBetween('rating', [$this->rating, $this->rating + 1]);
+        }
+
+        // check location
+        if ($this->location) {
+            $query->where('states.name', $this->location);
         }
 
         // Check sort by
@@ -168,7 +177,16 @@ class CategoryComponent extends Component
         }
 
         // Set results
-        return $query->paginate(42);
+        return $query->addSelect(
+                'gigs.*',
+                'users.username',
+                'users.avatar_id',
+                'users.status as user_status',
+                'states.name as state_name'
+            )
+            ->leftJoin('users', 'gigs.user_id', 'users.id')
+            ->leftJoin('states', 'states.id', 'users.state_id')
+            ->paginate(42);
     }
 
     /**
@@ -199,6 +217,11 @@ class CategoryComponent extends Component
         // Check if has delivery time
         if ($this->delivery_time) {
             $queries['delivery_time'] = $this->delivery_time;
+        }
+
+        // Check if has location
+        if ($this->location) {
+            $queries['location'] = $this->location;
         }
 
         // Change this to query string

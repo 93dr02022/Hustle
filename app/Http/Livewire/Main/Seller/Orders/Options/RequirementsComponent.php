@@ -47,7 +47,7 @@ class RequirementsComponent extends Component
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('messages.t_requirements')." $separator ".settings('general')->title;
+        $title = __('messages.t_requirements') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -61,7 +61,7 @@ class RequirementsComponent extends Component
         $this->seo()->opengraph()->addImage($ogimage);
         $this->seo()->twitter()->setImage($ogimage);
         $this->seo()->twitter()->setUrl(url()->current());
-        $this->seo()->twitter()->setSite('@'.settings('seo')->twitter_username);
+        $this->seo()->twitter()->setSite('@' . settings('seo')->twitter_username);
         $this->seo()->twitter()->addValue('card', 'summary_large_image');
         $this->seo()->metatags()->addMeta('fb:page_id', settings('seo')->facebook_page_id, 'property');
         $this->seo()->metatags()->addMeta('fb:app_id', settings('seo')->facebook_app_id, 'property');
@@ -100,7 +100,11 @@ class RequirementsComponent extends Component
         $item->canceled_at = now();
         $item->is_finished = true;
         $item->save();
-
+        //Creating timeline
+        $item->orderTimelines()->create([
+            'name' => 'Order cancelled',
+            'description' => 'Buyer has cancelled your order'
+        ]);
         // Decrement orders in queue
         if ($item->gig->orders_in_queue > 0) {
             $item->gig()->decrement('orders_in_queue');
@@ -143,6 +147,11 @@ class RequirementsComponent extends Component
         $item->status = 'proceeded';
         $item->proceeded_at = now();
         $item->save();
+        //Creating the ordertimeline
+        $item->orderTimelines()->create([
+            'name' => 'Order started',
+            'description' => 'seller has started your order'
+        ]);
 
         // Send notification to buyer
         $item->order->buyer->notify((new OrderItemInProgress($item))->locale(config('app.locale')));

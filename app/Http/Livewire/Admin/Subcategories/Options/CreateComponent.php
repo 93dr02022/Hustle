@@ -28,6 +28,8 @@ class CreateComponent extends Component
 
     public $parent_id;
 
+    public $is_visible;
+
     /**
      * Render component
      *
@@ -89,6 +91,7 @@ class CreateComponent extends Component
             $subcategory->icon_id = $iconPath;
             $subcategory->image_id = $imagePath;
             $subcategory->parent_id = $this->parent_id;
+            $subcategory->is_visible = $this->is_visible;
             $subcategory->save();
 
             // Reset form

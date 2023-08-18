@@ -7,6 +7,7 @@ use App\Models\Favorite;
 use App\Models\Gig;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderItemWork;
 use App\Models\ReportedGig;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -148,8 +149,8 @@ class TrashComponent extends Component
                 // Delete upgrades
                 $item->upgrades()->delete();
 
-                // Delete delivered work
-                $item->delivered_work()->delete();
+                // Delete delivered works
+                OrderItemWork::destroy($item->deliveredWorks()->pluck('id'));
 
                 // Delete conversation in this delivered work
                 $item->conversation()->delete();

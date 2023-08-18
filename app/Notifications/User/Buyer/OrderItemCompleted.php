@@ -32,8 +32,7 @@ class OrderItemCompleted extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        //Get the notification channels that the user has allowed to be notified of.
-        return $this->getActiveChannels($notifiable);
+        return ['mail'];
     }
 
     /**
@@ -44,6 +43,16 @@ class OrderItemCompleted extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        // if there is app token proceed
+        if ($notifiable?->userNotificationSetting?->app_token) {
+            rescue(fn () => $this->toMobile($notifiable));
+        }
+
+        // if there is web token proceed
+        if ($notifiable?->userNotificationSetting?->notification_token) {
+            rescue(fn () => $this->toFirebase($notifiable));
+        }
+
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_completed_thanks');
 
@@ -54,18 +63,41 @@ class OrderItemCompleted extends Notification implements ShouldQueue
             ->action(__('messages.t_my_orders'), url('account/orders'));
     }
 
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
     public function toFirebase($notifiable)
     {
-        // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_completed_thanks');
-        $url =  url('account/orders');
-        return  Larafirebase::withTitle($subject)
-            ->withBody(__('messages.t_notification_buyer_item_completed'))
-            ->withClickAction($url)
-            ->withIcon(asset('img/default/no-favicon.png'))
-            ->withImage(asset('img/default/no-favicon.png'))
-            ->withPriority('high')
-            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_completed_thanks');
+
+            Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_buyer_item_completed'))
+                ->withClickAction('account/orders')
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+        }
+    }
+
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toMobile($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_item_completed_thanks');
+
+            Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_buyer_item_completed'))
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendNotification([$notifiable->userNotificationSetting->app_token]);
+        }
     }
 
     /**
@@ -79,14 +111,5 @@ class OrderItemCompleted extends Notification implements ShouldQueue
         return [
             //
         ];
-    }
-
-    private function getActiveChannels($notifiable)
-    {
-        //Check if user has allowed push notifications for order updates
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $this->toFirebase($notifiable);
-        }
-        return ['mail'];
     }
 }
