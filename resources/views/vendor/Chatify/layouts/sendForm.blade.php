@@ -53,7 +53,7 @@
         @endif
 
         {{-- Attach a file --}}
-        @if (settings('live_chat')->enable_attachments)
+        @if (auth()->user()->account_type == 'buyer')
             <label id="attachment-file-btn">
                 <svg class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
                     data-tooltip-target="chat-tooltip-btn-insert-file" stroke="currentColor" fill="none"
@@ -69,20 +69,83 @@
             <x-forms.tooltip id="chat-tooltip-btn-insert-file" :text="__('messages.t_attach_a_file')" />
         @endif
 
-        {{-- send quotation to user --}}
+        {{-- plus button to add actions --}}
         @if (auth()->user()->account_type == 'seller')
-            <label @click="openRightModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
-                    data-tooltip-target="ch-tooltip-quote" viewBox="0 0 16 16">
-                    <path
-                        d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
-                    <path
-                        d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
-                </svg>
-            </label>
-            <input type="text" class="hidden" :value="selectedQuote.id" name="quotation" />
-            <x-forms.tooltip id="ch-tooltip-quote" :text="__('Send Quote')" />
+            <div class="static">
+                <a class="flex items-center [&>*]:pointer-events-none" data-tooltip-target="ch-tooltip-actions"
+                    data-offset="10" data-lc-toggle="dropdown" data-popper-placement="bottom-end">
+                    <svg class="action-svg w-5 h-5 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-plus-square" viewBox="0 0 16 16">
+                        <path
+                            d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    <x-forms.tooltip id="ch-tooltip-actions" text="Actions" />
+                </a>
+                <div
+                    class="z-10 hidden w-48 px-1.5 py-4 bg-white border border-gray-200 rounded x-shadow dark:bg-zinc-800">
+                    <ul class="text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+                        {{-- quotation item --}}
+                        <li>
+                            <div @click="openRightModal()"
+                                class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor"
+                                    class="action-svg w-54h-54!text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
+                                    <path
+                                        d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
+                                </svg>
+                                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Quotations</span>
+                                <input type="text" class="hidden" :value="selectedQuote.id" name="quotation" />
+                            </div>
+                        </li>
+
+                        {{-- custom offer --}}
+                        <li>
+                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700"
+                                @click="offerHidden = !offerHidden">
+                                <svg class="action-svg w-4 h-4 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
+                                </svg>
+                                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Custom Offer</span>
+                            </div>
+                        </li>
+
+                        {{-- file attachment --}}
+                        <li>
+                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700">
+                                <label id="attachment-file-btn">
+                                    <svg class="action-svg w-4 h-4 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                        data-tooltip-target="chat-tooltip-btn-insert-file" stroke="currentColor"
+                                        fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                        stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                                        </path>
+                                    </svg>
+                                    <input disabled='disabled' type="file" class="upload-attachment"
+                                        id="upload-attachment" name="file"
+                                        accept=".{{ implode(', .', config('chatify.attachments.allowed_images')) }}, .{{ implode(', .', config('chatify.attachments.allowed_files')) }}" />
+                                </label>
+                                <label for="upload-attachment"
+                                    class="text-xs font-medium text-gray-700 dark:text-gray-300"
+                                    @click="document.body.click()">Attachment</label>
+                                <x-forms.tooltip id="chat-tooltip-btn-insert-file" :text="__('messages.t_attach_a_file')" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         @endif
 
         {{-- Message content --}}
@@ -137,7 +200,8 @@
 
             <div class="flex justify-between items-center mb-2">
                 <span class="text-sm">Recent Quotes</span>
-                <a href="/seller/quotes/create" target="_blank" class="!bg-[#1D46F5] !text-sm !rounded-md !text-white !py-2.5 !px-4">Create Quote</a>
+                <a href="/seller/quotes/create" target="_blank"
+                    class="!bg-[#1D46F5] !text-sm !rounded-md !text-white !py-2.5 !px-4">Create Quote</a>
             </div>
 
             <template x-for="quote in quotes" :key="quote.id">
@@ -170,13 +234,119 @@
         </div>
     </x-forms.right-modal>
 
+    {{-- offer creation modal --}}
+    <x-forms.right-modal x-cloak toggleKey="offerHidden">
+        <x-slot name="title">
+            <button x-show="offerStep == 2" class="!bg-[#F5F9FB] !text-sm !rounded-md !text-gray-700 !py-2 !px-4"
+                @click="offerStep = 1">Go back</button>
+            <div x-show="offerStep == 1" class="">Create a Custom Offer</div>
+            <x-forms.close-button action="closeModal"></x-forms.close-button>
+        </x-slot>
+
+        <div class="min-h-screen">
+            <div x-show="offerStep == 1" class="grid grid-cols-1 gap-y-2">
+                <div
+                    class="flex items-start px-4 py-5 mb-5 mt-3 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400">
+                    <svg class="flex-shrink-0 inline w-6 h-6 mr-3" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Offer Info</span> Select an existing service you want to create
+                        custom
+                        offer.
+                    </div>
+                </div>
+
+                @foreach ($gigs as $gig)
+                    <div class="flex items-center border border-[#d1f3d6] rounded-[7px] p-4 cursor-pointer hover:bg-slate-100/30"
+                        @click="selectOffer(@js($gig))">
+                        <div class="flex items-center gap-x-3 grow">
+                            <div class="h-12 w-12">
+                                <img class="w-full h-full rounded-md object-cover lazy" src="{{ placeholder_img() }}"
+                                    data-src="{{ src($gig->image_thumb_id) }}" alt="{{ $gig->title }}">
+                            </div>
+                            <div class="flex flex-col text-sm">
+                                <div
+                                    class="font-medium whitespace-nowrap truncate max-w-[240px] text-gray-700 dark:text-white">
+                                    {{ $gig->title }}
+                                </div>
+                                <div class="text-base font-bold text-gray-700 dark:text-gray-100">
+                                    @money($gig->price, settings('currency')->code, true)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- offer details form --}}
+            <div x-show="offerStep == 2" class="-mt-2">
+                <div
+                    class="flex items-start px-4 py-5 mb-5 mt-3 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400">
+                    <svg class="flex-shrink-0 inline w-6 h-6 mr-3" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Offer Info</span>
+                        Check your offer details before submission as you can no longer edit an offer.
+                    </div>
+                </div>
+
+                <div class="flex items-center border border-[#d1f3d6] rounded-t-[7px] p-4">
+                    <div class="flex items-center gap-x-3 grow">
+                        <div class="h-12 w-12">
+                            <img class="w-full h-full rounded-md object-cover lazy" src="{{ placeholder_img() }}"
+                                :data-src="`https://dttc4kal57acd.cloudfront.net/${selectedOffer?.image_thumb_id}`"
+                                alt=" ">
+                        </div>
+                        <div class="flex flex-col text-sm">
+                            <div class="font-medium whitespace-nowrap truncate max-w-[240px] text-gray-700 dark:text-white"
+                                x-text="selectedOffer?.title">
+                            </div>
+                            <div class="text-base font-bold text-gray-700 dark:text-gray-100"
+                                x-text="currencyFormat(selectedOffer?.price ?? 0)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="!block" @submit.prevent>
+                    <div
+                        class="text-sm font-medium text-gray-900 bg-gray-100 border border-gray-200 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 p-4">
+                            <span class="">Total offer amount</span>
+                            <input type="number" placeholder="" class="form-ctr max-w-16" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="border-t my-3 pt-3 flex justify-end">
+                        <button type="submit" class="btn-purple">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </x-forms.right-modal>
+
 </div>
+
+<style>
+    .x-shadow {
+        box-shadow: 0 12px 40px 8px rgba(140, 152, 164, 0.19) !important;
+    }
+</style>
 
 <script>
     function ieFgUjXUHsNGdOd() {
         return {
             message: null,
             hidden: false,
+            offerHidden: false,
             quoteId: null,
             notFound: false,
             loading: false,
@@ -184,6 +354,14 @@
             searchInput: "",
             selectedQuote: {
                 reference: null,
+            },
+            offerStep: 1,
+            selectedOffer: {},
+            offerForm: {
+                custom_offer_id: "",
+                description: "",
+                offer_amount: 0,
+                delivery_time: 1
             },
 
             openRightModal() {
@@ -197,11 +375,13 @@
             closeModal(event) {
                 if (event.target.classList.contains('modal-backdrop')) {
                     this.hidden = true
+                    this.offerHidden = true
                 }
             },
 
             closeButton() {
                 this.hidden = true
+                this.offerHidden = true
             },
 
             findQuotes() {
@@ -232,11 +412,13 @@
 
             closeModal() {
                 this.hidden = false
+                this.offerHidden = false
             },
 
             closeRightModal(event) {
                 if (event.target.classList.contains('modal-backdrop')) {
                     this.hidden = false
+                    this.offerHidden = false
                 }
             },
 
@@ -263,6 +445,100 @@
                     this.removeQuote()
                     sendMessage()
                 }
+            },
+
+            refresh() {
+                messenger = 1;
+                noMoreMessages = false;
+                messagesLoading = false;
+
+                fetchMessages(getMessengerId(), true);
+            },
+
+            selectOffer(gig) {
+                this.selectedOffer = gig;
+                this.offerStep = 2;
+            },
+
+            // custom send Message
+            sendMessage() {
+                temporaryMsgId += 1;
+                let tempID = `temp_${temporaryMsgId}`;
+                let hasFile = !!$(".upload-attachment").val();
+                const inputValue = $.trim(messageInput.val());
+                if (inputValue.length > 0 || hasFile) {
+                    const formData = new FormData($("#message-form")[0]);
+                    formData.append("id", getMessengerId());
+                    formData.append("temporaryMsgId", tempID);
+                    formData.append("_token", csrfToken);
+                    $.ajax({
+                        url: $("#message-form").attr("action"),
+                        method: "POST",
+                        data: formData,
+                        dataType: "JSON",
+                        processData: false,
+                        contentType: false,
+                        beforeSend: () => {
+                            // remove message hint
+                            $(".messages").find(".message-hint").hide();
+                            // append a temporary message card
+                            if (hasFile) {
+                                messagesContainer
+                                    .find(".messages")
+                                    .append(
+                                        sendTempMessageCard(
+                                            inputValue + "\n" + loadingSVG("28px"),
+                                            tempID
+                                        )
+                                    );
+                            } else {
+                                messagesContainer
+                                    .find(".messages")
+                                    .append(sendTempMessageCard(inputValue, tempID));
+                            }
+                            // scroll to bottom
+                            scrollToBottom(messagesContainer);
+                            messageInput.css({
+                                height: "42px"
+                            });
+                            // form reset and focus
+                            $("#message-form").trigger("reset");
+                            cancelAttachment();
+                            messageInput.focus();
+                        },
+                        success: (data) => {
+                            if (data.error > 0) {
+                                // message card error status
+                                errorMessageCard(tempID);
+                                console.error(data.error_msg);
+                            } else {
+                                // update contact item
+                                updateContactItem(getMessengerId());
+                                // temporary message card
+                                const tempMsgCardElement = messagesContainer.find(
+                                    `.message-card[data-id=${data.tempID}]`
+                                );
+                                // add the message card coming from the server before the temp-card
+                                tempMsgCardElement.before(data.message);
+                                // then, remove the temporary message card
+                                tempMsgCardElement.remove();
+                                // scroll to bottom
+                                scrollToBottom(messagesContainer);
+                                // send contact item updates
+                                sendContactItemUpdates(true);
+                            }
+                        },
+                        error: () => {
+                            // message card error status
+                            errorMessageCard(tempID);
+                            // error log
+                            console.error(
+                                "Failed sending the message! Please, check your server response."
+                            );
+                        },
+                    });
+                }
+                return false;
             },
 
             // Initialize emojis box

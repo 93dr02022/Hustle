@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\ChMessage as Message;
 use App\Models\ChFavorite as Favorite;
+use App\Models\Gig;
 use Illuminate\Support\Facades\Response;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Kutia\Larafirebase\Facades\Larafirebase;
@@ -97,6 +98,7 @@ class MessagesController extends Controller
             'type'           => 'user',
             'messengerColor' => settings('appearance')->colors['primary'],
             'dark_mode'      => current_theme(),
+            'gigs' => auth()->user()->account_type == 'seller' ? Gig::where('user_id', auth()->id())->get() : []
         ]);
     }
 
@@ -263,12 +265,16 @@ class MessagesController extends Controller
                 'to_id'   => $request->get('id'),
                 'message' => $this->chat->messageCard($messageData, 'default')
             ]);
+
             $toUser = User::find($request['id']);
-            if ($toUser->push_inbox_messages) {
-                Larafirebase::withTitle("New Message!")
-                    ->withBody("You have a new message")
-                    ->sendMessage([$toUser->push_notification_id]);
-            }
+
+            rescue(function () use ($toUser) {
+                if ($toUser->push_inbox_messages) {
+                    Larafirebase::withTitle("New Message!")
+                        ->withBody("You have a new message")
+                        ->sendMessage([$toUser->push_notification_id]);
+                }
+            });
         }
 
         // Send the response

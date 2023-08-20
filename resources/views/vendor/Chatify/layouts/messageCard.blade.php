@@ -1,59 +1,40 @@
 {{-- -------------------- The default card (white) -------------------- --}}
-<script>
-    function nameInitials(str) {
-        return str.match(/(^\S\S?|\b\S)?/g)
-            .join("")
-            .match(/(^\S|\S$)?/g).join("")
-            .toUpperCase();
-    }
-
-    function moneyFormat(amount) {
-        return new Intl.NumberFormat('en-NG', {
-                style: 'currency',
-                currency: 'NGN'
-            })
-            .format(amount);
-    }
-</script>
-
 @if ($viewType == 'default')
     @if ($from_id != $to_id)
         <div class="message-card" data-id="{{ $id }}">
             <div class="flex flex-col justify-start ltr:ml-1.5 rtl:mr-1.5">
 
-                @if ($quotation)
+                @if ($quotationId)
                     <div x-data="{
-                        quote: @js($quotation),
-                        isHidden: false,
-                        closeRightModal() {
-                            if (event.target.classList.contains('modal-backdrop')) {
-                                this.isHidden = !this.isHidden
-                            }
+                        quote: {},
+                        quotationId: '{{ $quotationId }}',
+                        openMain() {
+                            globalQuote = this.quote;
+                            mainIsHidden = !mainIsHidden
                         },
-                        closeModal() {
-                            this.isHidden = !this.isHidden
-                        },
-                        initials(str) {
-                            return nameInitials(str)
-                        },
-                        currency(amount) {
-                            return moneyFormat(amount)
+                        init() {
+                            window.axios.post('{{ route('chatQuote') }}', {
+                                    quoteId: this.quotationId
+                                })
+                                .then(res => {
+                                    this.quote = res.data;
+                                })
+                                .catch(err => console.error(error));
                         }
                     }" class="flex justify-start sm:max-w-[320px]"
                         style="direction: ltr !important">
                         <div
-                            class="flex flex-col w-full overflow-hidden bg-white border border-[#d1f3d6] rounded-[7px] mb-2">
+                            class="flex flex-col w-full overflow-hidden bg-white border border-[#d1f3d6] rounded-[7px] mb-2 relative">
+                            <div x-show="Object.keys(quote).length <= 0"
+                                class="absolute inset-0 bg-gray-100/70 backdrop-blur-sm z-10"></div>
                             <div class="py-3 bg-[#D8F4DC]">
                                 <div class="flex items-center px-4">
-                                    <div
-                                        class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3">
-                                        {{ mb_substr($quotation->first_name, 0, 1) }}{{ mb_substr($quotation->last_name, 0, 1) }}
+                                    <div class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3"
+                                        x-text="nameInitials(`${quote?.first_name} ${quote.last_name}`)">
                                     </div>
                                     <div class="text-sm font-medium">
-                                        <dt>
-                                            {{ $quotation->first_name }} {{ $quotation->last_name }}
-                                        </dt>
-                                        <dd class="text-blue-600">Ref: {{ $quotation->reference }}</dd>
+                                        <dt x-text="`${quote?.first_name} ${quote.last_name}`"></dt>
+                                        <dd class="text-blue-600" x-text="`Ref: ${quote.reference}`"></dd>
                                     </div>
                                 </div>
                             </div>
@@ -62,8 +43,8 @@
                                     <dt class="text-sm font-semibold text-gray-400">
                                         Sub Total
                                     </dt>
-                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                        @money($quotation->total, settings('currency')->code, true)
+                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                        x-text="moneyFormat(quote.total)">
                                     </dd>
                                 </div>
 
@@ -71,8 +52,8 @@
                                     <dt class="text-sm font-semibold text-gray-400">
                                         Total Tax
                                     </dt>
-                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                        @money($quotation->total_tax, settings('currency')->code, true)
+                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                        x-text="moneyFormat(quote.total_tax)">
                                     </dd>
                                 </div>
 
@@ -80,8 +61,8 @@
                                     <dt class="text-sm font-semibold text-gray-400">
                                         Grand Total
                                     </dt>
-                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                        @money($quotation->total + $quotation->total_tax, settings('currency')->code, true)
+                                    <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                        x-text="moneyFormat(Number(quote.total) + Number(quote.total_tax))">
                                     </dd>
                                 </div>
 
@@ -92,7 +73,7 @@
                                 </div>
                             </div>
                             <div class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-3 px-3 flex items-center">
-                                <div class="w-1/2 flex items-center gap-2 cursor-pointer" @click="isHidden = !isHidden">
+                                <div class="w-1/2 flex items-center gap-2 cursor-pointer" @click="openMain()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
                                         <path
@@ -104,7 +85,7 @@
                                     <span class="text-slate-500">View Quote</span>
                                 </div>
                                 <div class="bg-slate-300 h-5 w-[1px]"></div>
-                                <a @if ($quotation->user_id !== auth()->id()) href="/quotations/{{ $quotation->reference }}/payment" @endif
+                                <a :href="`/quotations/${quote?.reference}/payment`"
                                     target="_blank" class="w-1/2 flex items-center gap-2 pl-3 cursor-pointer">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
@@ -118,65 +99,6 @@
                                 </a>
                             </div>
                         </div>
-
-                        {{-- quotation details modal --}}
-                        <x-forms.right-modal toggleKey="isHidden" x-cloak>
-                            <x-slot name="title">
-                                <div class="">Quotation Details</div>
-                                <x-forms.close-button action="closeModal"></x-forms.close-button>
-                            </x-slot>
-
-                            <div class="">
-                                <div class="border rounded mt-2 mb-5">
-                                    <div class="flex items-center px-4 py-3.5">
-                                        <div
-                                            class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3">
-                                            <span x-text="initials(`${quote.first_name} ${quote.last_name}`)"></span>
-                                        </div>
-                                        <div class="text-sm font-medium">
-                                            <dt x-text="`${quote.first_name} ${quote.last_name}`">
-                                            </dt>
-                                            <dd class="text-blue-600" x-text="`Ref: ${quote.reference}`"></dd>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="grid grid-cols-3 items-center text-sm font-normal text-slate-700 bg-[#E9FCEC] py-3 px-3">
-                                        <h6>Total Disc.</h6>
-                                        <h6>Total</h6>
-                                        <h6>Paid</h6>
-                                    </div>
-                                    <div class="grid grid-cols-3 items-center text-sm font-normal py-4 px-3">
-                                        <h6 x-text="currency(quote.total_discount)"></h6>
-                                        <h6 x-text="currency(quote.total)"></h6>
-                                        <h6 x-text="quote.paid ? 'Paid' : 'Unpaid'"></h6>
-                                    </div>
-                                </div>
-
-                                <div class="text-sm font-semibold mb-3">Quote Items</div>
-                                <template x-for="item in quote.items" :key="item.id">
-                                    <div
-                                        class="border rounded py-4 px-3 grid grid-cols-3 gap-y-2 gap-x-3 sm:gap-x-5 mb-3">
-                                        <div class="col-span-2 md:col-span-3">
-                                            <div class="text-sm text-gray-500">Description</div>
-                                            <div class="text-sm" x-text="item.description"></div>
-                                        </div>
-                                        <div class="">
-                                            <div class="text-sm text-gray-500">Quantity</div>
-                                            <div class="text-sm" x-text="`${item.quantity} qty`"></div>
-                                        </div>
-                                        <div class="">
-                                            <div class="text-sm text-gray-500">Price</div>
-                                            <div class="text-sm" x-text="currency(item.price)"></div>
-                                        </div>
-                                        <div class="">
-                                            <div class="text-sm text-gray-500">Discount</div>
-                                            <div class="text-sm" x-text="currency(item.discount)"></div>
-                                        </div>
-                                    </div>
-                                </template>
-
-                            </div>
-                        </x-forms.right-modal>
                     </div>
                 @endif
 
@@ -246,39 +168,37 @@
     <div class="message-card mc-sender" data-id="{{ $id }}">
         <div class="flex flex-col justify-end ltr:ml-1.5 rtl:mr-1.5">
 
-            @if ($quotation)
+            @if ($quotationId)
                 <div x-data="{
-                    quote: @js($quotation),
-                    isHidden: false,
-                    closeRightModal() {
-                        if (event.target.classList.contains('modal-backdrop')) {
-                            this.isHidden = !this.isHidden
-                        }
+                    quote: {},
+                    quotationId: '{{ $quotationId }}',
+                    openMain() {
+                        globalQuote = this.quote;
+                        mainIsHidden = !mainIsHidden
                     },
-                    closeModal() {
-                        this.isHidden = !this.isHidden
-                    },
-                    initials(str) {
-                        return nameInitials(str)
-                    },
-                    currency(amount) {
-                        return moneyFormat(amount)
+                    init() {
+                        window.axios.post('{{ route('chatQuote') }}', {
+                                quoteId: this.quotationId
+                            })
+                            .then(res => {
+                                this.quote = res.data;
+                            })
+                            .catch(err => console.error(error));
                     }
                 }" class="flex justify-end sm:max-w-[320px]"
                     style="direction: ltr !important">
                     <div
-                        class="flex flex-col w-full overflow-hidden bg-white border border-[#d1f3d6] rounded-[7px] mb-2">
+                        class="flex flex-col w-full overflow-hidden bg-white border border-[#d1f3d6] rounded-[7px] mb-2 relative">
+                        <div x-show="Object.keys(quote).length <= 0"
+                            class="absolute inset-0 bg-gray-100/70 backdrop-blur-sm z-10"></div>
                         <div class="py-3 bg-[#D8F4DC]">
                             <div class="flex items-center px-4">
-                                <div
-                                    class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3">
-                                    {{ mb_substr($quotation->first_name, 0, 1) }}{{ mb_substr($quotation->last_name, 0, 1) }}
+                                <div class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3"
+                                    x-text="nameInitials(`${quote?.first_name} ${quote.last_name}`)">
                                 </div>
                                 <div class="text-sm font-medium">
-                                    <dt>
-                                        {{ $quotation->first_name }} {{ $quotation->last_name }}
-                                    </dt>
-                                    <dd class="text-blue-600">Ref: {{ $quotation->reference }}</dd>
+                                    <dt x-text="`${quote?.first_name} ${quote.last_name}`"></dt>
+                                    <dd class="text-blue-600" x-text="`Ref: ${quote.reference}`"></dd>
                                 </div>
                             </div>
                         </div>
@@ -287,8 +207,8 @@
                                 <dt class="text-sm font-semibold text-gray-400">
                                     Sub Total
                                 </dt>
-                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                    @money($quotation->total, settings('currency')->code, true)
+                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                    x-text="moneyFormat(quote.total)">
                                 </dd>
                             </div>
 
@@ -296,8 +216,8 @@
                                 <dt class="text-sm font-semibold text-gray-400">
                                     Total Tax
                                 </dt>
-                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                    @money($quotation->total_tax, settings('currency')->code, true)
+                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                    x-text="moneyFormat(quote.total_tax)">
                                 </dd>
                             </div>
 
@@ -305,8 +225,8 @@
                                 <dt class="text-sm font-semibold text-gray-400">
                                     Grand Total
                                 </dt>
-                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900">
-                                    @money($quotation->total + $quotation->total_tax, settings('currency')->code, true)
+                                <dd class="mt-0.5 text-[13px] font-medium text-gray-900"
+                                    x-text="moneyFormat(Number(quote.total) + Number(quote.total_tax))">
                                 </dd>
                             </div>
 
@@ -317,7 +237,7 @@
                             </div>
                         </div>
                         <div class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-3 px-3 flex items-center">
-                            <div class="w-1/2 flex items-center gap-2 cursor-pointer" @click="isHidden = !isHidden">
+                            <div class="w-1/2 flex items-center gap-2 cursor-pointer" @click="openMain()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
                                     <path
@@ -329,8 +249,7 @@
                                 <span class="text-slate-500">View Quote</span>
                             </div>
                             <div class="bg-slate-300 h-5 w-[1px]"></div>
-                            <a @if ($quotation->user_id !== auth()->id()) href="/quotations/{{ $quotation->reference }}/payment" @endif
-                                class="w-1/2 flex items-center gap-2 pl-3 cursor-pointer">
+                            <a class="w-1/2 flex items-center gap-2 pl-3 cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
                                     <path
@@ -343,64 +262,6 @@
                             </a>
                         </div>
                     </div>
-
-                    {{-- quotation details modal --}}
-                    <x-forms.right-modal toggleKey="isHidden" x-cloak>
-                        <x-slot name="title">
-                            <div class="">Quotation Details</div>
-                            <x-forms.close-button action="closeModal"></x-forms.close-button>
-                        </x-slot>
-
-                        <div class="">
-                            <div class="border rounded mt-2 mb-5">
-                                <div class="flex items-center px-4 py-3.5">
-                                    <div
-                                        class="flex items-center text-white flex-shrink-0 justify-center h-10 w-10 rounded-lg bg-slate-700 mr-3">
-                                        <span x-text="initials(`${quote.first_name} ${quote.last_name}`)"></span>
-                                    </div>
-                                    <div class="text-sm font-medium">
-                                        <dt x-text="`${quote.first_name} ${quote.last_name}`">
-                                        </dt>
-                                        <dd class="text-blue-600" x-text="`Ref: ${quote.reference}`"></dd>
-                                    </div>
-                                </div>
-                                <div
-                                    class="grid grid-cols-3 items-center text-sm font-normal text-slate-700 bg-[#E9FCEC] py-3 px-3">
-                                    <h6>Total Disc.</h6>
-                                    <h6>Total</h6>
-                                    <h6>Paid</h6>
-                                </div>
-                                <div class="grid grid-cols-3 items-center text-sm font-normal py-4 px-3">
-                                    <h6 x-text="currency(quote.total_discount)"></h6>
-                                    <h6 x-text="currency(quote.total)"></h6>
-                                    <h6 x-text="quote.paid ? 'Paid' : 'Unpaid'"></h6>
-                                </div>
-                            </div>
-
-                            <div class="text-sm font-semibold mb-3">Quote Items</div>
-                            <template x-for="item in quote.items" :key="item.id">
-                                <div class="border rounded py-4 px-3 grid grid-cols-3 gap-y-2 gap-x-3 sm:gap-x-5 mb-3">
-                                    <div class="col-span-2 md:col-span-3">
-                                        <div class="text-sm text-gray-500">Description</div>
-                                        <div class="text-sm" x-text="item.description"></div>
-                                    </div>
-                                    <div class="">
-                                        <div class="text-sm text-gray-500">Quantity</div>
-                                        <div class="text-sm" x-text="`${item.quantity} qty`"></div>
-                                    </div>
-                                    <div class="">
-                                        <div class="text-sm text-gray-500">Price</div>
-                                        <div class="text-sm" x-text="currency(item.price)"></div>
-                                    </div>
-                                    <div class="">
-                                        <div class="text-sm text-gray-500">Discount</div>
-                                        <div class="text-sm" x-text="currency(item.discount)"></div>
-                                    </div>
-                                </div>
-                            </template>
-
-                        </div>
-                    </x-forms.right-modal>
                 </div>
             @endif
 

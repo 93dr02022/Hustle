@@ -202,9 +202,11 @@ class ChatApi
             $message = null;
         }
 
-        if ($msg->quotation_id) {
-            $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
-        }
+        // if ($msg->quotation_id) {
+        //     // $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
+        //     // $quotation = Quotation::select('first_name', 'last_name', 'reference', 'total', 'total_tax', 'reference', 'paid')
+        //     //     ->where('id', $msg->quotation_id)->first();
+        // }
 
         // Return message
         return [
@@ -213,7 +215,7 @@ class ChatApi
             'from_id'         => $msg->from_id,
             'to_id'           => $msg->to_id,
             'message'         => $message,
-            'quotation'  => $quotation,
+            'quotationId' => $msg->quotation_id,
             'attachment'      => [$attachment, $attachment_title, $attachment_type, $attachment_extension, $attachment_size],
             'time'            => $msg->created_at->diffForHumans(),
             'fullTime'        => $msg->created_at,
