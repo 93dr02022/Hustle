@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('gig_id')->constrained();
             $table->foreignId('owner_id')->index();
-            $table->foreignId('user_id')->index();
+            $table->foreignId('user_id')->nullable()->index();
             $table->string('uid')->index();
             $table->mediumText('description');
             $table->decimal('offer_amount', 12)->index();
             $table->integer('delivery_time')->index();
-            $table->enum('offer_status', ['accepted', 'withdrawn', 'rejected']);
+            $table->enum('offer_status', ['accepted', 'withdrawn', 'rejected'])->nullable();
             $table->timestamps();
         });
     }

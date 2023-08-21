@@ -201,13 +201,7 @@ class ChatApi
             // No message
             $message = null;
         }
-
-        // if ($msg->quotation_id) {
-        //     // $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
-        //     // $quotation = Quotation::select('first_name', 'last_name', 'reference', 'total', 'total_tax', 'reference', 'paid')
-        //     //     ->where('id', $msg->quotation_id)->first();
-        // }
-
+        
         // Return message
         return [
             'index'           => $index,
@@ -216,6 +210,7 @@ class ChatApi
             'to_id'           => $msg->to_id,
             'message'         => $message,
             'quotationId' => $msg->quotation_id,
+            'offerId' => $msg->custom_offer_id,
             'attachment'      => [$attachment, $attachment_title, $attachment_type, $attachment_extension, $attachment_size],
             'time'            => $msg->created_at->diffForHumans(),
             'fullTime'        => $msg->created_at,
@@ -273,6 +268,7 @@ class ChatApi
         $message->body       = clean(strip_tags($data['body']));
         $message->attachment = $data['attachment'];
         $message->quotation_id = $data['quotation_id'];
+        $message->custom_offer_id = $data['offerId'];
         $message->save();
     }
 

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->foreignId('custom_offer_id')->nullable()->index()->after('gig_id');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->boolean('is_custom')->default(false)->index()->after('is_finished');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn('custom_offer_id');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('is_custom');
         });
     }
 };

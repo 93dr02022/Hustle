@@ -298,7 +298,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center border border-[#d1f3d6] rounded-t-[7px] p-4">
+                <div class="flex items-center border border-[#d1f3d6] rounded-t-[7px] p-4 mb-4">
                     <div class="flex items-center gap-x-3 grow">
                         <div class="h-12 w-12">
                             <img class="w-full h-full rounded-md object-cover lazy" src="{{ placeholder_img() }}"
@@ -316,17 +316,49 @@
                     </div>
                 </div>
 
-                <form class="!block" @submit.prevent>
+                <form class="!block" @submit.prevent="customMessage">
                     <div
                         class="text-sm font-medium text-gray-900 bg-gray-100 border border-gray-200 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 p-4">
+                        <div
+                            class="flex justify-between items-center py-2 px-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 p-4">
                             <span class="">Total offer amount</span>
-                            <input type="number" placeholder="" class="form-ctr max-w-16" placeholder="" />
+                            <input type="number" class="form-ctr max-w-[100px] !py-2" min="10000" step="200"
+                                placeholder="0.00" x-model="offerForm.offer_amount" required />
+                        </div>
+                        <div
+                            class="flex justify-between items-center py-2 px-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 p-4">
+                            <span class="">Delivery days</span>
+                            <input type="number" class="form-ctr max-w-[100px] !py-2" min="1" max="30"
+                                step="1" placeholder="0.00" x-model="offerForm.delivery_time" required />
+                        </div>
+                    </div>
+
+                    <div class="mt-5">
+                        <label for="description" class="block mb-2 text-sm dark:text-gray-100">Description</label>
+                        <textarea id="description" class="form-ctr focus:!border-solid focus:!border" rows="3"
+                            x-model="offerForm.description" required></textarea>
+                    </div>
+
+                    <div x-show="offerError.length > 0"
+                        class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 py-3 px-4 my-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="ltr:ml-3 rtl:mr-3">
+                                <p class="text-sm text-yellow-700" x-text="offerError"></p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="border-t my-3 pt-3 flex justify-end">
-                        <button type="submit" class="btn-purple">Submit</button>
+                        <button type="submit" :disabled="sendingOffer"
+                            class="!bg-[#1D46F5] !text-sm !rounded-md !text-white !py-3 !px-4 flex items-center disabled:!bg-gray-400">Submit</button>
                     </div>
                 </form>
             </div>
@@ -358,11 +390,13 @@
             offerStep: 1,
             selectedOffer: {},
             offerForm: {
-                custom_offer_id: "",
+                gig_id: "",
                 description: "",
-                offer_amount: 0,
+                offer_amount: 10000,
                 delivery_time: 1
             },
+            offerError: "",
+            sendingOffer: false,
 
             openRightModal() {
                 this.hidden = !this.hidden;
@@ -460,20 +494,40 @@
                 this.offerStep = 2;
             },
 
+            resetOffer() {
+                this.offerForm = {
+                    gig_id: "",
+                    description: "",
+                    offer_amount: 10000,
+                    delivery_time: 1
+                }
+
+                this.offerStep = 1;
+                this.offerHidden = false
+            },
+
             // custom send Message
-            sendMessage() {
+            customMessage() {
+                this.offerForm.gig_id = this.selectedOffer.id;
+                this.sendingOffer = true
+
                 temporaryMsgId += 1;
                 let tempID = `temp_${temporaryMsgId}`;
-                let hasFile = !!$(".upload-attachment").val();
                 const inputValue = $.trim(messageInput.val());
-                if (inputValue.length > 0 || hasFile) {
+                if (this.offerForm) {
                     const formData = new FormData($("#message-form")[0]);
                     formData.append("id", getMessengerId());
                     formData.append("temporaryMsgId", tempID);
-                    formData.append("_token", csrfToken);
+                    Object
+                        .keys(this.offerForm)
+                        .forEach(key => formData.append(`offer[${key}]`, this.offerForm[key]));
+
                     $.ajax({
                         url: $("#message-form").attr("action"),
                         method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         data: formData,
                         dataType: "JSON",
                         processData: false,
@@ -481,36 +535,24 @@
                         beforeSend: () => {
                             // remove message hint
                             $(".messages").find(".message-hint").hide();
+
                             // append a temporary message card
-                            if (hasFile) {
-                                messagesContainer
-                                    .find(".messages")
-                                    .append(
-                                        sendTempMessageCard(
-                                            inputValue + "\n" + loadingSVG("28px"),
-                                            tempID
-                                        )
-                                    );
-                            } else {
-                                messagesContainer
-                                    .find(".messages")
-                                    .append(sendTempMessageCard(inputValue, tempID));
-                            }
+                            messagesContainer
+                                .find(".messages")
+                                .append(sendTempMessageCard(inputValue, tempID));
+
                             // scroll to bottom
                             scrollToBottom(messagesContainer);
-                            messageInput.css({
-                                height: "42px"
-                            });
-                            // form reset and focus
-                            $("#message-form").trigger("reset");
-                            cancelAttachment();
-                            messageInput.focus();
+
                         },
                         success: (data) => {
-                            if (data.error > 0) {
+                            this.sendingOffer = false
+
+                            if (data.error.status) {
                                 // message card error status
-                                errorMessageCard(tempID);
+                                // errorMessageCard(tempID);
                                 console.error(data.error_msg);
+                                this.offerError = data.error.message;
                             } else {
                                 // update contact item
                                 updateContactItem(getMessengerId());
@@ -526,9 +568,12 @@
                                 scrollToBottom(messagesContainer);
                                 // send contact item updates
                                 sendContactItemUpdates(true);
+                                this.resetOffer()
                             }
                         },
                         error: () => {
+                            this.sendingOffer = false
+
                             // message card error status
                             errorMessageCard(tempID);
                             // error log
@@ -538,6 +583,7 @@
                         },
                     });
                 }
+
                 return false;
             },
 

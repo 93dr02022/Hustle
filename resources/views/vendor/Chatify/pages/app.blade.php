@@ -207,6 +207,10 @@
                     closeModal() {
                         this.mainIsHidden = !this.mainIsHidden
                     },
+                
+                    withdrawOffer(offer) {
+                
+                    }
                 }">
                     <x-forms.right-modal toggleKey="mainIsHidden" x-cloak>
                         <x-slot name="title">
@@ -265,6 +269,30 @@
 
                         </div>
                     </x-forms.right-modal>
+
+                    {{-- withdraw offer modal --}}
+                    <x-forms.modal id="withdraw-offer-container"
+                        target="withdraw-offer-button"
+                        uid="withdraw_offer-{{ uid() }}" placement="center-center" size="max-w-2xl">
+
+                        {{-- Modal heading --}}
+                        <x-slot name="title">Withdraw Offer</x-slot>
+
+                        {{-- Modal content --}}
+                        <x-slot name="content">
+                            <div class="w-full relative">
+                            </div>
+                        </x-slot>
+
+                        {{-- Footer --}}
+                        <x-slot name="footer">
+                            <div class="flex justify-between items-center w-full">
+                                <div></div>
+                                <button type="button" class=""></button>
+                            </div>
+                        </x-slot>
+
+                    </x-forms.modal>
 
                     <div class="messages space-y-10">
                         <p class="message-hint center-el"><span>@lang('messages.t_no_conversation_selected_subtitle')</span></p>

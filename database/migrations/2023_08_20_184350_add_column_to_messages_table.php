@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->foreignId('custom_offer_id')->nullable()->index()->after('gig_id');
+        Schema::table('ch_messages', function (Blueprint $table) {
+            $table->foreignId('custom_offer_id')->nullable()->index()->after('quotation_id');
         });
     }
 
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('order_items', function (Blueprint $table) {
+        Schema::table('ch_messages', function (Blueprint $table) {
             $table->dropColumn('custom_offer_id');
         });
     }

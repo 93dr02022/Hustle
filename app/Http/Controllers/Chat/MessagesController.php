@@ -12,9 +12,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\ChMessage as Message;
 use App\Models\ChFavorite as Favorite;
+use App\Models\CustomOffer;
 use App\Models\Gig;
 use Illuminate\Support\Facades\Response;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Validator;
 use Kutia\Larafirebase\Facades\Larafirebase;
 
 class MessagesController extends Controller
@@ -226,11 +228,27 @@ class MessagesController extends Controller
             $get_message = clean($request->get('message'));
 
             // Check if message is empty or not set
-            if (!$get_message) {
+            if (!$get_message && !$request->has('offer')) {
 
                 // Error
                 $error->status  = true;
                 $error->message = __('messages.t_enter_your_message');
+            }
+        }
+
+        if ($request->has('offer')) {
+            $validator = Validator::make($request->offer, [
+                'gig_id' => ['required', 'exists:gigs,id'],
+                'description' => ['required'],
+                'offer_amount' => ['required', 'numeric', 'min:10000'],
+                'delivery_time' => ['required', 'min:1', 'max:15'],
+            ]);
+
+            if ($validator->fails()) {
+                $error->status = true;
+                $errors = $validator->errors()->toArray();
+
+                $error->message = reset($errors)[0];
             }
         }
 
@@ -240,6 +258,23 @@ class MessagesController extends Controller
             // Generate message id
             $message_id = mt_rand(9, 999999999) + time();
 
+            $offer = rescue(function () use ($request) {
+                if ($request->has('offer')) {
+                    return CustomOffer::create([
+                        'gig_id' => $request->offer['gig_id'],
+                        'owner_id' => auth()->id(),
+                        'user_id' => null,
+                        'uid' => uid(25),
+                        'description' => $request->offer['description'],
+                        'offer_amount' => $request->offer['offer_amount'],
+                        'delivery_time' => $request->offer['delivery_time'],
+                        'offer_status' => null,
+                    ]);
+                }
+
+                return null;
+            });
+
             // Save message
             $this->chat->newMessage([
                 'id'         => $message_id,
@@ -247,6 +282,7 @@ class MessagesController extends Controller
                 'from_id'    => auth()->id(),
                 'to_id'      => $request->get('id'),
                 'quotation_id' => $request->get('quotation', null),
+                'offerId' => is_null($offer) ? null : $offer->id,
                 'body' => $request->get('message') ? ($request->get('message') == ".." ? null : clean($request->get('message'))) : null,
                 'attachment' => ($attachment) ? json_encode((object)[
                     'new_name'  => $attachment,

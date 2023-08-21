@@ -14,7 +14,16 @@ class CustomOffer extends Model
      * 
      * @var array<string, string>
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'gig_id',
+        'owner_id',
+        'user_id',
+        'uid',
+        'description',
+        'offer_amount',
+        'delivery_time',
+        'offer_status',
+    ];
 
     /**
      * Get the offer gig service
@@ -22,6 +31,6 @@ class CustomOffer extends Model
      */
     public function gig()
     {
-        return $this->belongsTo(Gig::class)
+        return $this->belongsTo(Gig::class);
     }
 }

@@ -50,7 +50,7 @@ class QuoteController extends Controller
      * 
      * @return \Illuminate\http\JsonResponse
      */
-    public function getOfferDetails(Request $request)
+    public function offerDetails(Request $request)
     {
         $offer = CustomOffer::where('id', $request->offerId)->with('gig')->first();
 
