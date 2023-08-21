@@ -180,7 +180,7 @@
                         globalQuote = this.quote;
                         mainIsHidden = !mainIsHidden
                     },
-                    init() {
+                    fetchData() {
                         window.axios.post('{{ route('offerDetails') }}', {
                                 offerId: this.offerId
                             })
@@ -188,11 +188,21 @@
                                 this.offer = res.data;
                             })
                             .catch(err => console.error(err));
+                    },
+                    init() {
+                        window.addEventListener('withdrawn', event => {
+                            if(event.detail.id == this.offerId) {
+                                this.fetchData()
+                            }
+                        })
+
+                        this.fetchData();
                     }
-                }" class="flex justify-end sm:max-w-[350px]"
+                }" class="flex justify-end sm:max-w-[400px]"
                     style="direction: ltr !important">
                     <div class="flex flex-col w-full overflow-hidden bg-white border rounded-md mb-2 relative">
-                        <div x-show="false" class="absolute inset-0 bg-gray-100/70 backdrop-blur-sm z-10"></div>
+                        <div x-show="Object.keys(offer).length <= 0"
+                            class="absolute inset-0 bg-gray-100/70 backdrop-blur-sm z-10"></div>
 
                         <div class="p-3 bg-[#f9f9f9] border-b min-h-[40px]" x-text="offer?.gig?.title"></div>
 
@@ -221,8 +231,9 @@
                         </div>
                         <div
                             class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-2 px-3 flex items-center justify-end gap-x-2">
-                            <button
-                                class="!bg-[#F5841B] !text-xs !rounded !text-white !py-2.5 !px-2 disabled:!bg-gray-400">
+                            <dt x-show="offer.offer_status !== null" class="text-gray-700 py-1 w-full text-center" x-text="`Offer ${offer.offer_status}`" x-cloak></dt>
+                            <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
+                                class="!bg-[#F5841B] !text-xs !rounded !text-white !py-2.5 !px-2 disabled:!bg-gray-400" x-cloak>
                                 Withdraw Offer
                             </button>
                         </div>

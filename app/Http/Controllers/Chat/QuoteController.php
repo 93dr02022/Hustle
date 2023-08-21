@@ -62,14 +62,18 @@ class QuoteController extends Controller
      * 
      * @return \Illuminate\http\JsonResponse
      */
-    public function createOffer(Request $request)
+    public function withdrawOffer(Request $request)
     {
         try {
-            $offer = CustomOffer::create();
+            CustomOffer::whereId($request->offerId)
+                ->whereNull('offer_status')
+                ->update([
+                    'offer_status' => 'withdrawn',
+                ]);
 
-            return Utils::successResp($offer);
+            return Utils::successResp();
         } catch (\Throwable $th) {
-            //throw $th;
+            return Utils::errorResp();
         }
     }
 }
