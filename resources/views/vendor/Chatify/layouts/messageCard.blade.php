@@ -5,7 +5,81 @@
             <div class="flex flex-col justify-start ltr:ml-1.5 rtl:mr-1.5">
 
                 @if ($offerId)
-                    <div class="bg-zinc-700 p-5 rounded">This is offer test</div>
+                    <div x-data="{
+                        offer: {},
+                        offerId: '{{ $offerId }}',
+                        openMain() {
+                            globalQuote = this.quote;
+                            mainIsHidden = !mainIsHidden
+                        },
+                        fetchData() {
+                            window.axios.post('{{ route('offerDetails') }}', {
+                                    offerId: this.offerId
+                                })
+                                .then(res => {
+                                    this.offer = res.data;
+                                })
+                                .catch(err => console.error(err));
+                        },
+                        init() {
+                            window.addEventListener('offer', event => {
+                                if (event.detail.id == this.offerId) {
+                                    this.fetchData()
+                                }
+                            })
+                    
+                            this.fetchData();
+                        }
+                    }" class="flex justify-start sm:max-w-[400px]"
+                        style="direction: ltr !important">
+                        <div class="flex flex-col w-full overflow-hidden bg-white border rounded-md mb-2 relative">
+                            <div x-show="Object.keys(offer).length <= 0"
+                                class="absolute inset-0 bg-gray-100/70 backdrop-blur-sm z-10"></div>
+
+                            <div class="p-3 bg-[#f9f9f9] border-b min-h-[40px]" x-text="offer?.gig?.title"></div>
+
+                            <div class="pt-3 pb-3 px-4 text-slate-600">
+                                <div class="text-sm line-clamp-2 mb-2" x-text="offer?.description"></div>
+                                <div class="flex items-center gap-x-2 mb-2.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                        fill="currentColor" class="text-slate-400" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z" />
+                                        <path
+                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
+                                    </svg>
+                                    <dt x-text="`Offer price: ${moneyFormat(offer.offer_amount)}`"></dt>
+                                </div>
+                                <div class="flex items-center gap-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+                                        fill="currentColor" class="text-slate-400" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
+                                        <path
+                                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
+                                    </svg>
+                                    <dt x-text="`${offer.delivery_time} days delivery`"></dt>
+                                </div>
+                            </div>
+                            <div
+                                class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-2 px-3 flex items-center justify-start gap-x-2">
+                                <dt x-show="offer.offer_status !== null" class="text-gray-700 py-1 w-full text-center"
+                                    x-text="`Offer ${offer.offer_status}`" x-cloak></dt>
+                                <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
+                                    class="!bg-[#F5841B] !text-xs font-semibold !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
+                                    x-cloak>
+                                    Reject offer
+                                </button>
+                                <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
+                                    class="!bg-[#33C581] !text-xs font-semibold !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
+                                    x-cloak>
+                                    Accept offer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 @endif
 
                 @if ($quotationId)
@@ -190,12 +264,12 @@
                             .catch(err => console.error(err));
                     },
                     init() {
-                        window.addEventListener('withdrawn', event => {
-                            if(event.detail.id == this.offerId) {
+                        window.addEventListener('offer', event => {
+                            if (event.detail.id == this.offerId) {
                                 this.fetchData()
                             }
                         })
-
+                
                         this.fetchData();
                     }
                 }" class="flex justify-end sm:max-w-[400px]"
@@ -231,14 +305,15 @@
                         </div>
                         <div
                             class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-2 px-3 flex items-center justify-end gap-x-2">
-                            <dt x-show="offer.offer_status !== null" class="text-gray-700 py-1 w-full text-center" x-text="`Offer ${offer.offer_status}`" x-cloak></dt>
+                            <dt x-show="offer.offer_status !== null" class="text-gray-700 py-1 w-full text-center"
+                                x-text="`Offer ${offer.offer_status}`" x-cloak></dt>
                             <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
-                                class="!bg-[#F5841B] !text-xs !rounded !text-white !py-2.5 !px-2 disabled:!bg-gray-400" x-cloak>
+                                class="!bg-[#F5841B] !text-xs !rounded !text-white !py-2.5 !px-2 disabled:!bg-gray-400"
+                                x-cloak>
                                 Withdraw Offer
                             </button>
                         </div>
                     </div>
-
                 </div>
             @endif
 
@@ -310,8 +385,8 @@
                                     :class="quote.paid ? 'text-green-500' : 'text-red-600'"></span>
                             </div>
                         </div>
-                        <div class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-3 px-3 flex items-center">
-                            <div class="w-1/2 flex items-center gap-2 cursor-pointer" @click="openMain()">
+                        <div class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-3 px-3 flex items-center justify-center">
+                            <div class="flex items-center gap-2 cursor-pointer" @click="openMain()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
                                     <path
@@ -322,18 +397,6 @@
 
                                 <span class="text-slate-500">View Quote</span>
                             </div>
-                            <div class="bg-slate-300 h-5 w-[1px]"></div>
-                            <a class="w-1/2 flex items-center gap-2 pl-3 cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="text-slate-500" viewBox="0 0 16 16">
-                                    <path
-                                        d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z" />
-                                    <path
-                                        d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z" />
-                                </svg>
-
-                                <span class="text-slate-500">Payment</span>
-                            </a>
                         </div>
                     </div>
                 </div>

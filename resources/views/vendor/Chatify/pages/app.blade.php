@@ -203,6 +203,11 @@
                     globalOffer: {},
                     withdrawLoading: false,
                     withdrawError: null,
+
+                    evalToggle: true,
+                    evalLoading: false,
+                    evalError: null,
+                    evalType: null,
                 
                     closeDialog() {
                 
@@ -230,7 +235,7 @@
                                 offerId: this.globalOffer.id
                             })
                             .then(res => {
-                                this.$dispatch('withdrawn', this.globalOffer);
+                                this.$dispatch('offer', this.globalOffer);
                                 this.withdrawToggle = !this.withdrawToggle;
                                 this.withdrawLoading = false
                             })
@@ -248,6 +253,34 @@
                     cancelWithdrawButton() {
                         this.globalOffer = {};
                         this.withdrawToggle = !this.withdrawToggle;
+                    },
+
+                    evalOffer() {
+                        this.evalLoading = true
+                        this.evalError = null
+
+                        window.axios.post('{{ route('withdrawOffer') }}', {
+                                offerId: this.globalOffer.id
+                            })
+                            .then(res => {
+                                this.$dispatch('offer', this.globalOffer);
+                                this.evalToggle = !this.evalToggle;
+                                this.evalLoading = false
+                            })
+                            .catch(err => {
+                                this.evalLoading = false
+                                this.evalError = 'Error occured while processing your request'
+                            });
+                    },
+                
+                    evalButton(offer) {
+                        this.globalOffer = offer;
+                        this.evalToggle = !this.evalToggle;
+                    },
+
+                    cancelEvalButton() {
+                        this.globalOffer = {};
+                        this.evalToggle = !this.evalToggle;
                     }
                 }">
                     <x-forms.right-modal toggleKey="mainIsHidden" x-cloak>

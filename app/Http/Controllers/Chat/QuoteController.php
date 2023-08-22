@@ -76,4 +76,24 @@ class QuoteController extends Controller
             return Utils::errorResp();
         }
     }
+
+    /**
+     * Evaluate offer to either accept or reject
+     * 
+     * @return \Illuminate\http\JsonResponse
+     */
+    public function evalOffer(Request $request)
+    {
+        try {
+            CustomOffer::whereId($request->offerId)
+                ->whereNull('offer_status')
+                ->update([
+                    'offer_status' => $request->status,
+                ]);
+
+            return Utils::successResp();
+        } catch (\Throwable $th) {
+            return Utils::errorResp();
+        }
+    }
 }
