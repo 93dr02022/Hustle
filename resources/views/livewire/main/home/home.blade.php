@@ -158,7 +158,7 @@
                                                                     @endforeach
                                                                 </div>
                                                             @else
-                                                                <div class="h-16"></div>
+                                                                <div class="h-5"></div>
                                                             @endif
 
                                                         </dd>
