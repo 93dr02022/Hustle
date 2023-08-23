@@ -639,9 +639,9 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="flex sm:flex-row flex-col mt-3 items-start space-x-2 justify-between">
+                                                <div class="flex sm:flex-row flex-col mt-3 items-start space-x-1 justify-between">
 
-                                                    <div class="flex-1">
+                                                    <div class="flex-1 mb-3 lg:mb-0 ">
                                                         <section>
                                                             <div
                                                                 class="rounded-lg bg-white dark:bg-zinc-700 overflow-hidden border border-gray-200 dark:border-zinc-600">
@@ -763,9 +763,11 @@
 
 
                                                     <!-- Order timeline -->
+                                                    <div class="w-full lg:w-auto">
                                                     @if ($item->orderTimelines()->count())
                                                         <x-order-timelines :order-item="$item" />
                                                     @endif
+                                                    </div>
                                                 </div>
                                             </li>
                                         @endforeach
