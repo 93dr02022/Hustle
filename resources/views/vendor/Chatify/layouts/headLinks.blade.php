@@ -73,5 +73,6 @@
 	<script src="{{ url('js/plugins/momentjs/moment-with-locales.js') }}"></script>
 	<script src="{{ url('js/plugins/momentjs/moment-timezone.min.js') }}"></script>
 	<script src="{{ url('js/plugins/momentjs/moment-timezone-with-data-1970-2030.min.js') }}"></script>
+	<script src="{{ url('js/dropdown.js') }}"></script>
 
 </head>

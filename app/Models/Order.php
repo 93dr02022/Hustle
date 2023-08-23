@@ -42,8 +42,17 @@ class Order extends Model
         'subtotal_value',
         'taxes_value',
         'is_finished',
+        'is_custom'
     ];
 
+    /**
+     * The attributes that should be casts
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_custom' => 'boolean',
+    ];
 
     /**
      * Get buyer

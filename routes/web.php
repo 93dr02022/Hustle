@@ -8,6 +8,10 @@ Route::get('/docs', function () {
     return view('api');
 });
 
+Route::namespace('App\Http\Controllers\Api\Auth')->group(function () {
+    Route::get('/auth/logout', 'LoginController@webLogout');
+});
+
 // Notifications
 Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
     Route::patch('/subscribe-to-notifications', 'NotificationsController@subscribe')->name('subscribe-to-notifications');
@@ -17,6 +21,9 @@ Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
 Route::namespace('App\Http\Controllers\Chat')->group(function () {
     Route::post('/chat-quote', 'QuoteController@getQuote')->name('chatQuote');
     Route::post('/chat-quotes', 'QuoteController@quotes')->name('chatQuotes');
+    Route::post('/offer-info', 'QuoteController@offerDetails')->name('offerDetails');
+    Route::post('/withdraw-offer', 'QuoteController@withdrawOffer')->name('withdrawOffer');
+    Route::post('/eval-offer', 'QuoteController@evalOffer')->name('evalOffer');
 });
 
 // Tasks
@@ -180,12 +187,12 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
         });
     });
 
-    // Logout
-    Route::namespace('Auth')->middleware('auth')->prefix('auth')->group(function () {
+    // // Logout
+    // Route::namespace('Auth')->middleware('auth')->prefix('auth')->group(function () {
 
-        // Logout
-        Route::get('logout', LogoutComponent::class);
-    });
+    //     // Logout
+    //     Route::get('logout', LogoutComponent::class);
+    // });
 
     // Service
     Route::namespace('Service')->prefix('service')->group(function () {

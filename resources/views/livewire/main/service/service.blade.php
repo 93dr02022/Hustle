@@ -566,40 +566,43 @@
     </div>
 
     {{-- floating chat message icon --}}
-    <a href="/messages/new/{{ $gig->owner->username }}" target="_blank" class="relative inline-block">
-        <div
-            class="rounded-[68px] bg-white fixed bottom-5 shadow-md drop-shadow-sm left-7 p-2 hover:bg-[#f5f5f5] flex items-center gap-x-4 z-20">
-            <div target="_blank" class="relative inline-block">
-                <img class="object-cover w-10 h-10 sm:w-[48px] sm:h-[48px] rounded-full lazy" src="{{ placeholder_img() }}"
-                    data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
-                @if ($gig->owner->isOnline() && !$gig->owner->availability)
-                <span
-                    class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-green-400"></span>
-                @elseif ($gig->owner->availability)
-                <span
-                    class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-gray-400"></span>
-                @else
-                <span
-                    class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-red-400"></span>
-                @endif
-            </div>
-            <div class="flex flex-col gap-y-[2px] mr-3 sm:mr-4">
-                <h3 class="text-gray-700 dark:text-gray-100 text-base font-medium inline-flex gap-x-1">
-                    <span>Message </span>
-                    <span class="hidden md:block truncate max-w-[80px]">{{ $gig->owner->username }}</span>
-                </h3>
-               <div class="hidden md:block">
+    @if ($gig->owner->username !== auth()->user()->username)
+        <a href="/messages/new/{{ $gig->owner->username }}" target="_blank" class="relative inline-block">
+            <div
+                class="rounded-[68px] bg-white dark:bg-zinc-700 fixed bottom-5 shadow-md drop-shadow-sm left-7 p-2 hover:bg-[#f5f5f5] dark:hover:bg-zinc-600 flex items-center gap-x-4 z-20">
+                <div target="_blank" class="relative inline-block">
+                    <img class="object-cover w-10 h-10 sm:w-[48px] sm:h-[48px] rounded-full lazy" src="{{ placeholder_img() }}"
+                        data-src="{{ src($gig->owner->avatar_id) }}" alt="{{ $gig->owner->username }}">
                     @if ($gig->owner->isOnline() && !$gig->owner->availability)
-                        <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Online</div>
+                    <span
+                        class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-green-400"></span>
                     @elseif ($gig->owner->availability)
-                        <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Away</div>
+                    <span
+                        class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-gray-400"></span>
                     @else
-                        <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Offline</div>
+                    <span
+                        class="absolute bottom-0.5 right-0.5 block h-3.5 w-3.5 rounded-full ring-[3px] ring-white dark:ring-zinc-800 bg-red-400"></span>
                     @endif
-               </div>
+                </div>
+                <div class="flex flex-col gap-y-[2px] mr-3 sm:mr-4">
+                    <h3 class="text-gray-700 dark:text-gray-100 text-base font-medium inline-flex gap-x-1">
+                        <span>Message </span>
+                        <span class="hidden md:block truncate max-w-[80px]">{{ $gig->owner->username }}</span>
+                    </h3>
+                <div class="hidden md:block">
+                        @if ($gig->owner->isOnline() && !$gig->owner->availability)
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Online</div>
+                        @elseif ($gig->owner->availability)
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Away</div>
+                        @else
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-100">Offline</div>
+                        @endif
+                </div>
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+    @endif
+    
 
     {{-- Related gigs --}}
     @if ($related_gigs)

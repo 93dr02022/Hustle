@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Main\Cart;
 
+use App\Models\CustomOffer;
 use App\Models\Gig;
 use App\Models\GigUpgrade;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
