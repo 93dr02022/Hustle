@@ -42,4 +42,21 @@ class LoginController extends Controller
         $request->user()->tokens()->delete();
         return Utils::successResp([], 'Successfully logged out');
     }
+
+    /**
+     * we are using the logout here due to 
+     * mobile app not being able to intercept the logout url
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function webLogout(Request $request)
+    {
+        auth()->logout();
+
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }

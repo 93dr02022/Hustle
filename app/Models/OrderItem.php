@@ -40,6 +40,7 @@ class OrderItem extends Model
         'uid',
         'order_id',
         'gig_id',
+        'custom_offer_id',
         'owner_id',
         'quantity',
         'total_reviews',
@@ -82,6 +83,15 @@ class OrderItem extends Model
     public function gig()
     {
         return $this->belongsTo(Gig::class, 'gig_id')->withTrashed();
+    }
+
+    /**
+     * Get the offer this gig belongs to
+     * 
+     */
+    public function offer()
+    {
+        return $this->belongsTo(CustomOffer::class);
     }
 
     /**

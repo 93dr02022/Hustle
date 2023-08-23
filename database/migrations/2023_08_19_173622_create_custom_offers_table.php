@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('offer_amount', 12)->index();
             $table->integer('delivery_time')->index();
             $table->enum('offer_status', ['accepted', 'withdrawn', 'rejected'])->nullable();
+            $table->boolean('is_paid')->default(false)->index();
             $table->timestamps();
         });
     }

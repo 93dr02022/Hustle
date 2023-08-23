@@ -263,7 +263,7 @@ class MessagesController extends Controller
                     return CustomOffer::create([
                         'gig_id' => $request->offer['gig_id'],
                         'owner_id' => auth()->id(),
-                        'user_id' => null,
+                        'user_id' => $request->id,
                         'uid' => uid(25),
                         'description' => $request->offer['description'],
                         'offer_amount' => $request->offer['offer_amount'],

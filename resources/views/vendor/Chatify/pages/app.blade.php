@@ -203,7 +203,7 @@
                     globalOffer: {},
                     withdrawLoading: false,
                     withdrawError: null,
-
+                
                     evalToggle: true,
                     evalLoading: false,
                     evalError: null,
@@ -213,8 +213,14 @@
                 
                     },
                 
-                    dialogButton() {
-                        this.withdrawToggle = !this.withdrawToggle;
+                    dialogButton(action) {
+                        if (action == 'withdraw-offer') {
+                            this.withdrawToggle = !this.withdrawToggle;
+                        }
+                
+                        if (action == 'eval-offer') {
+                            this.evalToggle = !this.evalToggle;
+                        }
                     },
                 
                     closeRightModal() {
@@ -230,7 +236,7 @@
                     withdrawOffer() {
                         this.withdrawLoading = true
                         this.withdrawError = null
-
+                
                         window.axios.post('{{ route('withdrawOffer') }}', {
                                 offerId: this.globalOffer.id
                             })
@@ -249,18 +255,19 @@
                         this.globalOffer = offer;
                         this.withdrawToggle = !this.withdrawToggle;
                     },
-
+                
                     cancelWithdrawButton() {
                         this.globalOffer = {};
                         this.withdrawToggle = !this.withdrawToggle;
                     },
-
+                
                     evalOffer() {
                         this.evalLoading = true
                         this.evalError = null
-
-                        window.axios.post('{{ route('withdrawOffer') }}', {
-                                offerId: this.globalOffer.id
+                
+                        window.axios.post('{{ route('evalOffer') }}', {
+                                offerId: this.globalOffer.id,
+                                status: this.evalType
                             })
                             .then(res => {
                                 this.$dispatch('offer', this.globalOffer);
@@ -273,13 +280,15 @@
                             });
                     },
                 
-                    evalButton(offer) {
+                    evalButton(offer, type) {
                         this.globalOffer = offer;
+                        this.evalType = type
                         this.evalToggle = !this.evalToggle;
                     },
-
+                
                     cancelEvalButton() {
                         this.globalOffer = {};
+                        this.evalType = null;
                         this.evalToggle = !this.evalToggle;
                     }
                 }">
@@ -343,27 +352,16 @@
 
                     {{-- withdraw offer modal --}}
                     <div x-cloak>
-                        <x-common.dialog toggleKey="withdrawToggle" sheetHeight="h-[60%]">
+                        <x-common.dialog toggleKey="withdrawToggle" sheetHeight="h-[60%]" uid="withdraw-offer">
 
                             {{-- Modal heading --}}
                             <x-slot name="title">Withdraw Offer</x-slot>
 
                             {{-- Modal content --}}
-                            <div class="w-full relative px-4 pt-5 pb-5">
+                            <div class="w-full relative px-5 pt-3 pb-5">
                                 <div class="sm:flex sm:items-start">
                                     <div
-                                        class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z">
-                                            </path>
-                                        </svg>
-                                    </div>
-
-                                    <div
-                                        class="mt-3 text-center sm:mt-0 sm:ltr:ml-4 sm:rtl:mr-4 sm:ltr:text-left sm:rtl:text-right">
+                                        class="mt-3 text-center">
                                         <h3 class="text-base font-medium leading-6 text-gray-600 dark:text-white">
                                             Are you sure you want to withdraw this offer, this action can't be undone.
                                         </h3>
@@ -388,20 +386,79 @@
                                 </div>
 
                                 <div class="!mt-5 sm:!mt-6 flex gap-x-3 justify-center sm:justify-end">
-                                    <button type="button" @click="withdrawOffer"
-                                        :disabled="withdrawLoading"
+                                    <button type="button" @click="withdrawOffer" :disabled="withdrawLoading"
                                         class="rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none disabled:!bg-gray-400">
                                         Withdraw </button>
 
-                                    <button type="button"
-                                        :disabled="withdrawLoading"
-                                        @click="cancelWithdrawButton"
+                                    <button type="button" :disabled="withdrawLoading" @click="cancelWithdrawButton"
                                         class="rounded-md border border-gray-300 bg-white dark:bg-[#454545] dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-[#202020] px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none disabled:!bg-gray-400">
                                         Cancel </button>
                                 </div>
                             </div>
                         </x-common.dialog>
                     </div>
+
+
+                    {{-- Evaluate offer modal --}}
+                    <div x-cloak>
+                        <x-common.dialog toggleKey="evalToggle" sheetHeight="h-[60%]" uid="eval-offer">
+
+                            {{-- Modal heading --}}
+                            <x-slot name="title">Offer Acceptance</x-slot>
+
+                            {{-- Modal content --}}
+                            <div class="w-full relative px-5 pt-3 pb-5">
+                                <div class="sm:flex sm:items-start">
+                                    <div
+                                        class="mt-3 text-center">
+                                        <h3 x-show="evalType == 'accepted'"
+                                            class="text-base font-medium leading-6 text-gray-600 dark:text-white">
+                                            Are you sure you want to accept this offer, your order will only start until
+                                            you make payment for this offer.
+                                        </h3>
+                                        <h3 x-show="evalType == 'rejected'"
+                                            class="text-base font-medium leading-6 text-gray-600 dark:text-white">
+                                            Are you sure you want to reject this offer, this action can't be undone.
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div x-show="evalError"
+                                    class="bg-yellow-50 ltr:border-l-4 rtl:border-r-4 border-yellow-400 py-3 px-4 my-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ltr:ml-3 rtl:mr-3">
+                                            <p class="text-sm text-yellow-700" x-text="evalError"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="!mt-5 sm:!mt-6 flex gap-x-3 justify-center sm:justify-end">
+                                    <button x-show="evalType == 'rejected'" type="button" @click="evalOffer"
+                                        :disabled="evalLoading"
+                                        class="rounded-md border border-transparent bg-[#F5841B] px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none disabled:!bg-gray-400">
+                                        Reject offer</button>
+
+                                    <button x-show="evalType == 'accepted'" type="button" @click="evalOffer"
+                                        :disabled="evalLoading"
+                                        class="rounded-md border border-transparent bg-[#33C581] px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none disabled:!bg-gray-400">
+                                        Accept offer </button>
+
+                                    <button type="button" :disabled="withdrawLoading" @click="cancelEvalButton"
+                                        class="rounded-md border border-gray-300 bg-white dark:bg-[#454545] dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-[#202020] px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none disabled:!bg-gray-400">
+                                        Cancel </button>
+                                </div>
+                            </div>
+                        </x-common.dialog>
+                    </div>
+
 
                     <div class="messages space-y-10">
                         <p class="message-hint center-el"><span>@lang('messages.t_no_conversation_selected_subtitle')</span></p>

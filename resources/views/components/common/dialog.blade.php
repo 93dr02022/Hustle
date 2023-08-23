@@ -1,4 +1,4 @@
-@props(['toggleKey' => 'hidden', 'position' => null, 'sheetHeight' => 'h-[calc(80%-5rem)]'])
+@props(['toggleKey' => 'hidden', 'position' => null, 'sheetHeight' => 'h-[calc(80%-5rem)]', 'uid' => null])
 
 <div class="modal-backdrop bg-zinc-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40 overflow-x-hidden xs:overflow-y-auto w-full h-full {{ $position }}" :class="{{ $toggleKey }} ? 'hidden' : 'flex'"
     @click="closeDialog">
@@ -13,7 +13,7 @@
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
                         {{ $title }}
                     </h3>
-                    <button @click="dialogButton" type="button"
+                    <button @click="dialogButton('{{ $uid }}')" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm !p-1.5 inline-flex items-center dark:hover:bg-zinc-600 dark:hover:text-white">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Chat;
 use App\Http\Controllers\Controller;
 use App\Models\CustomOffer;
 use App\Models\Quotation;
+use App\Notifications\User\Buyer\OfferWithdrawn;
+use App\Notifications\User\Seller\OfferDecision;
 use App\Support\Utils;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,7 @@ class QuoteController extends Controller
 {
     /**
      * Get quote information
-     * 
+     *
      * @return \Illuminate\http\JsonResponse
      */
     public function getQuote(Request $request)
@@ -26,7 +28,7 @@ class QuoteController extends Controller
 
     /**
      * Get quote information
-     * 
+     *
      * @return \Illuminate\http\JsonResponse
      */
     public function quotes(Request $request)
@@ -47,7 +49,7 @@ class QuoteController extends Controller
 
     /**
      * Get custom offer details
-     * 
+     *
      * @return \Illuminate\http\JsonResponse
      */
     public function offerDetails(Request $request)
@@ -59,7 +61,7 @@ class QuoteController extends Controller
 
     /**
      * Create a new custom offer
-     * 
+     *
      * @return \Illuminate\http\JsonResponse
      */
     public function withdrawOffer(Request $request)
@@ -71,6 +73,12 @@ class QuoteController extends Controller
                     'offer_status' => 'withdrawn',
                 ]);
 
+            $offer = CustomOffer::find($request->offerId);
+
+            if ($offer->offer_status == 'withdrawn') {
+                $offer->buyer->notify(new OfferWithdrawn($offer));
+            }
+
             return Utils::successResp();
         } catch (\Throwable $th) {
             return Utils::errorResp();
@@ -79,20 +87,36 @@ class QuoteController extends Controller
 
     /**
      * Evaluate offer to either accept or reject
-     * 
+     *
+     * @see skipped form request here intent.
+     *
      * @return \Illuminate\http\JsonResponse
      */
     public function evalOffer(Request $request)
     {
+        $request->validate([
+            'status' => ['required', 'in:accepted,rejected'],
+            'offerId' => ['required'],
+        ]);
+
+        $offer = CustomOffer::whereId($request->offerId)
+            ->whereNull('offer_status')
+        ->first();
+
+        if (!$offer) {
+            return Utils::errorResp();
+        }
+
         try {
-            CustomOffer::whereId($request->offerId)
-                ->whereNull('offer_status')
-                ->update([
-                    'offer_status' => $request->status,
-                ]);
+            $offer->update([
+                'offer_status' => $request->status,
+            ]);
+
+            $offer->seller->notify(new OfferDecision($offer));
 
             return Utils::successResp();
         } catch (\Throwable $th) {
+            dd($th);
             return Utils::errorResp();
         }
     }

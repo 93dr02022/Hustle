@@ -12,12 +12,14 @@ class LogoutComponent extends Component
 
     public function mount()
     {
+        dd('');
+
         Auth::logout();
 
         request()->session()->invalidate();
 
         request()->session()->regenerateToken();
 
-        return redirect('/');
+        // return redirect('/');
     }
 }

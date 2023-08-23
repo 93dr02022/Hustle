@@ -23,7 +23,33 @@ class CustomOffer extends Model
         'offer_amount',
         'delivery_time',
         'offer_status',
+        'is_paid'
     ];
+
+    /**
+     * The attributes that should b casts
+     * 
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_paid' => 'boolean',
+    ];
+
+    /**
+     * Get the offer owner
+     */
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the offer owner
+     */
+    public function buyer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * Get the offer gig service

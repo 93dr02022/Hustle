@@ -39,7 +39,7 @@
                             <div class="p-3 bg-[#f9f9f9] border-b min-h-[40px]" x-text="offer?.gig?.title"></div>
 
                             <div class="pt-3 pb-3 px-4 text-slate-600">
-                                <div class="text-sm line-clamp-2 mb-2" x-text="offer?.description"></div>
+                                <div class="text-sm line-clamp-2 mb-2.5" x-text="offer?.description"></div>
                                 <div class="flex items-center gap-x-2 mb-2.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                         fill="currentColor" class="text-slate-400" viewBox="0 0 16 16">
@@ -50,7 +50,7 @@
                                         <path
                                             d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
                                     </svg>
-                                    <dt x-text="`Offer price: ${moneyFormat(offer.offer_amount)}`"></dt>
+                                    <dt class="text-sm" x-text="`Offer price: ${moneyFormat(offer.offer_amount)}`"></dt>
                                 </div>
                                 <div class="flex items-center gap-x-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
@@ -60,20 +60,27 @@
                                         <path
                                             d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
                                     </svg>
-                                    <dt x-text="`${offer.delivery_time} days delivery`"></dt>
+                                    <dt class="text-sm" x-text="`${offer.delivery_time} days delivery`"></dt>
                                 </div>
                             </div>
                             <div
                                 class="border-t border-[#D8F4DC] bg-[#f9f9f9] py-2 px-3 flex items-center justify-start gap-x-2">
-                                <dt x-show="offer.offer_status !== null" class="text-gray-700 py-1 w-full text-center"
+                                <dt x-show="offer.offer_status !== null" class="text-gray-700 text-sm py-1 w-full text-center"
                                     x-text="`Offer ${offer.offer_status}`" x-cloak></dt>
-                                <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
-                                    class="!bg-[#F5841B] !text-xs font-semibold !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
+                                <a :href="`/checkout?offer=${offer.uid}`" target="_blank" x-show="offer?.id && offer.offer_status == 'accepted' && !offer.is_paid"
+                                    class="!bg-[#33C581] !text-xs font-medium !rounded !text-white !py-2 !px-3 "
+                                    x-cloak>
+                                    Checkout
+                                </a>
+                                <button x-show="offer?.id && offer.offer_status == null"
+                                    @click="evalButton(offer, 'rejected')"
+                                    class="!bg-[#F5841B] !text-xs font-medium !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
                                     x-cloak>
                                     Reject offer
                                 </button>
-                                <button x-show="offer?.id && offer.offer_status == null" @click="withdrawButton(offer)"
-                                    class="!bg-[#33C581] !text-xs font-semibold !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
+                                <button x-show="offer?.id && offer.offer_status == null"
+                                    @click="evalButton(offer, 'accepted')"
+                                    class="!bg-[#33C581] !text-xs font-medium !rounded !text-white !py-2 !px-2 disabled:!bg-gray-400"
                                     x-cloak>
                                     Accept offer
                                 </button>
@@ -281,7 +288,7 @@
                         <div class="p-3 bg-[#f9f9f9] border-b min-h-[40px]" x-text="offer?.gig?.title"></div>
 
                         <div class="pt-3 pb-3 px-4 text-slate-600">
-                            <div class="text-sm line-clamp-2 mb-2" x-text="offer?.description"></div>
+                            <div class="text-sm line-clamp-2 mb-2.5" x-text="offer?.description"></div>
                             <div class="flex items-center gap-x-2 mb-2.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     fill="currentColor" class="text-slate-400" viewBox="0 0 16 16">
@@ -291,7 +298,7 @@
                                     <path
                                         d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
                                 </svg>
-                                <dt x-text="`Offer price: ${moneyFormat(offer.offer_amount)}`"></dt>
+                                <dt class="text-sm" x-text="`Offer price: ${moneyFormat(offer.offer_amount)}`"></dt>
                             </div>
                             <div class="flex items-center gap-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
@@ -300,7 +307,7 @@
                                         d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
                                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
                                 </svg>
-                                <dt x-text="`${offer.delivery_time} days delivery`"></dt>
+                                <dt class="text-sm" x-text="`${offer.delivery_time} days delivery`"></dt>
                             </div>
                         </div>
                         <div
