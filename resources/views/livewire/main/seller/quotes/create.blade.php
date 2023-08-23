@@ -228,9 +228,9 @@
                 errors: @json($errors),
                 successful: false,
                 form: {
-                    first_name: "",
-                    last_name: "",
-                    email: "",
+                    first_name: "{{ $quotePerson ? $quotePerson->first_name : '' }}",
+                    last_name: "{{ $quotePerson ? $quotePerson->last_name : '' }}",
+                    email: "{{ $quotePerson ? $quotePerson->email : '' }}",
                     phone_number: "",
                     items: [{
                         description: "",

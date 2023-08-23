@@ -90,7 +90,7 @@
                         {{-- quotation item --}}
                         <li>
                             <div @click="openRightModal()"
-                                class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700">
+                                class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor"
                                     class="action-svg w-54h-54!text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
@@ -107,7 +107,7 @@
 
                         {{-- custom offer --}}
                         <li>
-                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700"
+                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
                                 @click="offerHidden = !offerHidden">
                                 <svg class="action-svg w-4 h-4 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -123,7 +123,7 @@
 
                         {{-- file attachment --}}
                         <li>
-                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700">
+                            <div class="flex items-center p-0 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
                                 <label id="attachment-file-btn">
                                     <svg class="action-svg w-4 h-4 !text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
                                         data-tooltip-target="chat-tooltip-btn-insert-file" stroke="currentColor"
@@ -200,7 +200,7 @@
 
             <div class="flex justify-between items-center mb-2">
                 <span class="text-sm">Recent Quotes</span>
-                <a href="/seller/quotes/create" target="_blank"
+                <a :href="`/seller/quotes/create?uid=${chatPersonId}`" target="_self"
                     class="!bg-[#1D46F5] !text-sm !rounded-md !text-white !py-2.5 !px-4">Create Quote</a>
             </div>
 
@@ -380,6 +380,7 @@
             hidden: false,
             offerHidden: false,
             quoteId: null,
+            chatPersonId: null,
             notFound: false,
             loading: false,
             quotes: [],
@@ -400,6 +401,8 @@
 
             openRightModal() {
                 this.hidden = !this.hidden;
+                
+                this.chatPersonId = getMessengerId();
 
                 if (this.quotes.length <= 0) {
                     this.findQuotes()
