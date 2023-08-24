@@ -28,7 +28,7 @@
                     {{-- Login form --}}
                     <div class="mt-6 mx-auto max-w-md">
                         <h3 class="text-slate-800 dark:text-slate-300 text-xl sm:text-2xl font-bold mb-4">
-                            To view this service in detail, please login or create an <a href="/auth/login" class="text-[#F18522]">account.</a>
+                            To view this service in detail, please login or create an <a href="/auth/register" class="text-[#F18522]">account.</a>
                         </h3>
                         <form x-on:submit.prevent="login" class="grid grid-cols-12 md:gap-x-6 gap-y-6">
 
@@ -135,7 +135,7 @@
                             <span class="py-2 px-2 text-slate-700">Or</span>
                         </div>
 
-                        <a href="/auth/login" class="block w-full bg-white border-2 text-neutral-500 py-4.5 px-4 rounded-md text-[13px] text-center font-semibold tracking-wide">
+                        <a href="/auth/register" class="block w-full bg-white border-2 text-neutral-500 py-4.5 px-4 rounded-md text-[13px] text-center font-semibold tracking-wide">
                             Create Account
                         </a>
                     </div>
