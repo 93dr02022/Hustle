@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Main\Seller\Home;
 use App\Models\ChMessage as Message;
 use App\Models\Gig;
 use App\Models\OrderItem;
+use App\Models\OrderTimeline;
 use App\Models\Project;
 use App\Models\ProjectBid;
 use App\Models\ProjectMilestone;
@@ -39,6 +40,8 @@ class HomeComponent extends Component
 
     public $latest_awarded_projects;
 
+    public $timelines = [];
+
     /**
      * Initialize component
      *
@@ -50,7 +53,13 @@ class HomeComponent extends Component
 
             // Get user id
             $user_id = auth()->id();
-
+            $timelines = OrderTimeline::select('order_timelines.*','gigs.title','order_items.uid')
+            ->leftjoin('order_items','order_items.id','order_timelines.order_item_id')
+            ->leftjoin('gigs','order_items.gig_id','gigs.id')->latest()->take(5)->get();
+            if($timelines){
+            // array_push($this->timelines,$timelines);
+            $this->timelines = $timelines->toArray();
+            }
             // Calculate total earnings
             $earnings_from_gigs = OrderItem::where('owner_id', $user_id)
                 ->where('is_finished', true)

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Seller\Orders\Options;
 
 use App\Models\OrderItem;
+use App\Models\OrderTimeline;
 use App\Notifications\User\Buyer\OrderItemCanceled;
 use App\Notifications\User\Buyer\OrderItemInProgress;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
@@ -14,6 +15,7 @@ class DetailsComponent extends Component
     use SEOToolsTrait, Actions;
 
     public $order;
+    public $timeline = [];
 
     /**
      * Init component
@@ -31,6 +33,14 @@ class DetailsComponent extends Component
 
         // Set order
         $this->order = $order;
+
+        $timelines = OrderTimeline::select('order_timelines.*','gigs.title','order_items.uid')
+            ->leftjoin('order_items','order_items.id','order_timelines.order_item_id')
+            ->leftjoin('gigs','order_items.gig_id','gigs.id')->latest()->take(5)->get();
+            if($timelines){
+            // array_push($this->timelines,$timelines);
+            $this->timelines = $timelines->toArray();
+            }
     }
 
     /**
