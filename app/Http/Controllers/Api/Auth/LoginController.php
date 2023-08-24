@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Models\User;
 use App\Support\Utils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
@@ -56,6 +57,12 @@ class LoginController extends Controller
         request()->session()->invalidate();
 
         request()->session()->regenerateToken();
+
+        foreach ($request->cookies as $name => $value) {
+            if ($name !== 'default_theme') {
+                Cookie::queue(Cookie::forget($name));
+            }
+        }
 
         return redirect('/');
     }
