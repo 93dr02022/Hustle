@@ -21,6 +21,10 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
+        if ($request->has('from_app')) {
+            return $next($request);
+        }
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
 
