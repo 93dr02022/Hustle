@@ -228,6 +228,16 @@ class VerificationComponent extends Component
      */
     public function personalVerify()
     {
+        // check nobody has used this account number before
+        $acctExists = UserWithdrawalSettings::where('personal_acct_number', $this->accountNumber)
+            ->where('user_id', '!=', auth()->id())
+            ->exists();
+
+        if ($acctExists) {
+            $this->toastMessage('Your account number has been flagged please change');
+            return;
+        }
+        
         try {
             $bvnInfo = $this->bvnMatch();
 

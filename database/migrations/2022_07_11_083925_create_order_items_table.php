@@ -27,8 +27,9 @@ return new class extends Migration
             $table->string('profit_value', 20);
             $table->string('commission_value')->default(0);
             $table->enum('status', ['pending', 'proceeded', 'delivered', 'canceled', 'refunded'])->default('pending');
-            $table->boolean('is_finished')->default(false);
-            $table->boolean('can_wallet')->default(false);
+            $table->boolean('is_finished')->default(false)->index();
+            $table->boolean('can_wallet')->default(false)->index();
+            $table->boolean('in_wallet')->default(false)->index();
 
             $table->timestamp('placed_at');
             $table->timestamp('expected_delivery_date')->nullable();

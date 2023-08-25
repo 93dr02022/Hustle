@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('sitemap:generate')->everyMinute();
         $schedule->command('paystack:mark-payables')->everyMinute();
-        $schedule->command('orders:complete')->daily();
+        $schedule->command('orders:complete')->everyThirtyMinutes();
         $schedule->command('sellers:unavailable')->daily();
         $schedule->command('expired:bids')->daily();
         $schedule->command('expired:projects')->daily();

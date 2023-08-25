@@ -6,6 +6,7 @@ use App\Models\OrderItem;
 use App\Models\Quotation;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ProcessWallet extends Command
 {
@@ -40,30 +41,35 @@ class ProcessWallet extends Command
      */
     public function completeOrder()
     {
-        $items = OrderItem::where('status', 'delivered')
-            ->where('is_finished', false)
-            ->whereNotNull('delivered_at')
-            ->where('can_wallet', true)
+        DB::transaction(function () {
+            $items = OrderItem::where('status', 'delivered')
+                ->where('is_finished', true)
+                ->whereNotNull('delivered_at')
+                ->where('can_wallet', true)
+                ->where('in_wallet', false)
             ->whereDoesntHave('refund', function ($query) {
                 return $query->where('status', '!=', 'pending');
             })
-            ->get();
+                ->limit(20)
+                ->get();
 
-        $items->each(function ($item) {
-            User::where('id', $item->owner_id)->update([
-                'balance_pending' => $item->owner->balance_pending - $item->profit_value,
-                'balance_available' => $item->owner->balance_available + $item->profit_value,
-            ]);
+            $items->each(function ($item) {
+                User::where('id', $item->owner_id)->update([
+                    'balance_pending' => $item->owner->balance_pending - $item->profit_value,
+                    'balance_available' => $item->owner->balance_available + $item->profit_value,
+                ]);
 
-            // Remove item from queue list and success sales
-            if ($item->gig->orders_in_queue > 0) {
-                $item->gig()->decrement('orders_in_queue');
-            }
+                // Remove item from queue list and success sales
+                if ($item->gig->orders_in_queue > 0) {
+                    $item->gig()->decrement('orders_in_queue');
+                }
 
-            $item->gig()->increment('counter_sales');
+                $item->gig()->increment('counter_sales');
 
-            $item->is_finished = true;
-            $item->save();
+                $item->is_finished = true;
+                $item->in_wallet = true;
+                $item->save();
+            });
         });
     }
 
@@ -75,15 +81,21 @@ class ProcessWallet extends Command
     public function completeQuotation()
     {
         $quotations = Quotation::where('can_wallet', true)
+            ->where('in_wallet', false)
             ->where('paid', true)
             ->take(50)
             ->get();
 
         $quotations->each(function ($quotation) {
-            User::where('id', $quotation->owner_id)->update([
-                'balance_pending' => $quotation->owner->balance_pending - $quotation->profit_value,
-                'balance_available' => $quotation->owner->balance_available + $quotation->profit_value,
-            ]);
+            DB::transaction(function () use ($quotation) {
+                User::where('id', $quotation->owner_id)->update([
+                    'balance_pending' => $quotation->owner->balance_pending - $quotation->profit_value,
+                    'balance_available' => $quotation->owner->balance_available + $quotation->profit_value,
+                ]);
+
+                $quotation->in_wallet = true;
+                $quotation->save();
+            });
         });
     }
 }

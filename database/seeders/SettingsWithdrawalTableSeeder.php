@@ -19,8 +19,8 @@ class SettingsWithdrawalTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'min_withdrawal_amount' => 10,
-                'withdrawal_period' => 'daily',
+                'min_withdrawal_amount' => 1000,
+                'withdrawal_period' => 'weekly',
             ),
         ));
         
