@@ -27,7 +27,7 @@ return [
      * Live secret Key From Paystack Dashboard
      *
      */
-    'liveSecretKey' => 'sk_live_38a3ef34793a9a111b4dfa6b692a50ae30315ede',
+    'liveSecretKey' => env('PAYSTACK_LIVE_SECRET_KEY'),
 
     /**
      * Paystack Payment URL
