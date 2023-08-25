@@ -50,13 +50,14 @@ class SettingsComponent extends Component
         $this->verification = VerificationCenter::where('user_id', auth()->id())->first();
 
         if (!$this->verification) {
-            $this->toastSuccess('You need to complete your verification before setting bank account');
-            return redirect('/seller/verification');
+            return redirect('/seller/verification?redirect');
         }
 
-        $withdrawInfo = UserWithdrawalSettings::firstOrCreate(['user_id' => auth()->id()]);
+        $withdrawInfo = UserWithdrawalSettings::where('user_id', auth()->id())->first();
 
-        $withdrawInfo->refresh();
+        if (!$withdrawInfo) {
+            return redirect('/seller/verification?redirect');
+        }
 
         $this->withdrawInfo = $withdrawInfo;
 

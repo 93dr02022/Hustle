@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_withdrawal_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->unique()->constrained();
             $table->string('personal_acct_number', 10)->nullable(); // account number
             $table->string('personal_bank_name')->nullable()->index();
             $table->string('personal_account_name')->nullable()->index();
