@@ -15,7 +15,7 @@ class DetailsComponent extends Component
     use SEOToolsTrait, Actions;
 
     public $order;
-    public $timeline = [];
+    public $timelines = [];
 
     /**
      * Init component
@@ -34,13 +34,16 @@ class DetailsComponent extends Component
         // Set order
         $this->order = $order;
 
-        $timelines = OrderTimeline::select('order_timelines.*','gigs.title','order_items.uid')
-            ->leftjoin('order_items','order_items.id','order_timelines.order_item_id')
-            ->leftjoin('gigs','order_items.gig_id','gigs.id')->latest()->take(5)->get();
-            if($timelines){
-            // array_push($this->timelines,$timelines);
-            $this->timelines = $timelines->toArray();
-            }
+        // Get order timelines for seller
+        $timelines = OrderTimeline::select('order_timelines.*', 'gigs.title', 'order_items.uid')
+        ->leftjoin('order_items', 'order_items.id', 'order_timelines.order_item_id')
+        ->leftjoin('gigs', 'order_items.gig_id', 'gigs.id')
+        ->where('order_items.owner_id', $user_id)
+        ->latest()
+        ->take(5)
+        ->get();
+
+        $this->timelines = $timelines;
     }
 
     /**

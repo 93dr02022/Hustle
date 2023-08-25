@@ -8,7 +8,8 @@
                 <div class="flex-1 min-w-0">
 
                     {{-- Welcome back --}}
-                    <h2 class="text-lg font-bold leading-7 text-zinc-700 dark:text-gray-50 sm:truncate sm:text-xl sm:tracking-tight">
+                    <h2
+                        class="text-lg font-bold leading-7 text-zinc-700 dark:text-gray-50 sm:truncate sm:text-xl sm:tracking-tight">
                         @lang('messages.t_welcome_back'), {{ auth()->user()->fullname ?? auth()->user()->username }}!
                     </h2>
 
@@ -18,8 +19,9 @@
                         {{-- Verified account --}}
                         @if (auth()->user()->status === 'verified')
                             <div class="flex items-center mt-2 text-sm text-gray-500 dark:text-zinc-200">
-                                <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0"
-                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300"
+                                    stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0H24V24H0z"></path>
                                         <path
@@ -33,11 +35,13 @@
 
                         {{-- Available in wallet --}}
                         <div class="flex items-center mt-2 text-sm text-gray-500 dark:text-zinc-200">
-                            <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300"
+                                stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <g>
                                     <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path d="M2 9h19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9zm1-6h15v4H2V4a1 1 0 0 1 1-1zm12 11v2h3v-2h-3z">
+                                    <path
+                                        d="M2 9h19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9zm1-6h15v4H2V4a1 1 0 0 1 1-1zm12 11v2h3v-2h-3z">
                                     </path>
                                 </g>
                             </svg>
@@ -46,11 +50,13 @@
 
                         {{-- Joined date --}}
                         <div class="flex items-center mt-2 text-sm text-gray-500 dark:text-zinc-200">
-                            <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="ltr:mr-1.5 rtl:ml-1.5 -mt-0.5 h-4.5 w-4.5 flex-shrink-0 text-gray-400 dark:text-zinc-300"
+                                stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <g>
                                     <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path d="M2 11h20v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9zm15-8h4a1 1 0 0 1 1 1v5H2V4a1 1 0 0 1 1-1h4V1h2v2h6V1h2v2z">
+                                    <path
+                                        d="M2 11h20v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9zm15-8h4a1 1 0 0 1 1 1v5H2V4a1 1 0 0 1 1-1h4V1h2v2h6V1h2v2z">
                                     </path>
                                 </g>
                             </svg>
@@ -107,13 +113,16 @@
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 sm:gap-3 lg:gap-4">
 
                     {{-- Earnings --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 @money($earnings, settings('currency')->code, true)
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0"
                                     viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -128,13 +137,16 @@
                     </div>
 
                     {{-- Funds pending clearance --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 @money(convertToNumber(auth()->user()->balance_pending), settings('currency')->code, true)
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" aria-hidden="true"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
                                         d="M11.484 2.17a.75.75 0 011.032 0 11.209 11.209 0 007.877 3.08.75.75 0 01.722.515 12.74 12.74 0 01.635 3.985c0 5.942-4.064 10.933-9.563 12.348a.749.749 0 01-.374 0C6.314 20.683 2.25 15.692 2.25 9.75c0-1.39.223-2.73.635-3.985a.75.75 0 01.722-.516l.143.001c2.996 0 5.718-1.17 7.734-3.08zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zM12 15a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H12z"
@@ -146,13 +158,16 @@
                     </div>
 
                     {{-- Awarded projects --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($awarded_projects, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -167,13 +182,16 @@
                     </div>
 
                     {{-- Total gigs --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($total_gigs, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -188,13 +206,16 @@
                     </div>
 
                     {{-- Completed orders --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($completed_orders, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -209,13 +230,16 @@
                     </div>
 
                     {{-- Pending orders --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($pending_orders, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0H24V24H0z"></path>
@@ -230,13 +254,16 @@
                     </div>
 
                     {{-- Orders under progress --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($orders_under_progress, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -251,13 +278,16 @@
                     </div>
 
                     {{-- Canceled orders --}}
-                    <div class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
                         <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                             <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
                                 {{ number_format($canceled_orders, 0, '.', ' ') }}
                             </p>
-                            <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                    fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                         <path fill="none" d="M0 0h24v24H0z"></path>
@@ -276,7 +306,8 @@
 
             {{-- Latest messages --}}
             <div class="col-span-12 xl:col-span-4">
-                <div class="px-4 py-4 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 sm:px-5">
+                <div
+                    class="px-4 py-4 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 sm:px-5">
 
                     {{-- Section header --}}
                     <div class="flex items-center justify-between h-8 mb-4">
@@ -288,13 +319,15 @@
                     {{-- Section content --}}
                     <div class="space-y-4">
                         @forelse ($latest_messages as $message)
-                            <a href="{{ url('inbox', $message['uid']) }}" class="flex items-center justify-between space-x-2 cursor-pointer rtl:space-x-reverse">
+                            <a href="{{ url('inbox', $message['uid']) }}"
+                                class="flex items-center justify-between space-x-2 cursor-pointer rtl:space-x-reverse">
 
                                 <div class="flex items-center space-x-3 rtl:space-x-reverse">
 
                                     {{-- Avatar --}}
                                     <div class="w-10 h-10">
-                                        <img class="object-contain rounded-full" src="{{ $message['avatar'] }}" alt="{{ $message['username'] }}">
+                                        <img class="object-contain rounded-full" src="{{ $message['avatar'] }}"
+                                            alt="{{ $message['username'] }}">
                                     </div>
 
                                     {{-- Message content --}}
@@ -306,10 +339,13 @@
                                         </div>
                                         <p class="text-xs text-slate-400 truncate block max-w-[180px]">
                                             @if ($message['message']['attachment'])
-                                                <div class="flex items-center space-x-1 text-xs rtl:space-x-reverse text-slate-400">
-                                                    <svg class="w-4 h-4" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" aria-hidden="true"
+                                                <div
+                                                    class="flex items-center space-x-1 text-xs rtl:space-x-reverse text-slate-400">
+                                                    <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
+                                                        stroke-width="0" viewBox="0 0 20 20" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
                                                             clip-rule="evenodd"></path>
                                                     </svg>
                                                     <span>@lang('messages.t_attachment')</span>
@@ -324,8 +360,10 @@
 
                                 {{-- Go to conversation --}}
                                 <div class="hover:text-primary-600 focus:text-primary-600 text-slate-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rtl:rotate-180"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
                                     </svg>
                                 </div>
 
@@ -371,23 +409,27 @@
                                     <th
                                         class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                         @lang('messages.t_status')</th>
-                                        <th
+                                    <th
                                         class="font-bold tracking-wider text-gray-600 px-5 py-4.5 text-center border-b-0 whitespace-nowrap text-xs uppercase dark:text-zinc-300 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                         @lang('messages.t_options')
-                                        </th>
+                                    </th>
                                 </tr>
                             </thead>
                             <thead>
                                 @forelse ($latest_orders as $order)
-                                    <tr class="h-16 bg-white rounded-md shadow-sm intro-x dark:bg-zinc-800" wire:key="freelancer-dashboard-latest-order-{{ $order->uid }}">
+                                    <tr class="h-16 bg-white rounded-md shadow-sm intro-x dark:bg-zinc-800"
+                                        wire:key="freelancer-dashboard-latest-order-{{ $order->uid }}">
 
                                         {{-- Gig --}}
-                                        <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-72 rtl:text-right">
+                                        <td
+                                            class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-72 rtl:text-right">
                                             <div class="flex items-center space-x-3 rtl:space-x-reverse">
 
                                                 {{-- Thumbnail --}}
                                                 <div class="w-10 h-10">
-                                                    <img class="object-cover w-full h-full rounded-md lazy" src="{{ placeholder_img() }}" data-src="{{ src($order->gig->image_thumb_id) }}"
+                                                    <img class="object-cover w-full h-full rounded-md lazy"
+                                                        src="{{ placeholder_img() }}"
+                                                        data-src="{{ src($order->gig->image_thumb_id) }}"
                                                         alt="{{ $order->gig->title }}">
                                                 </div>
 
@@ -396,19 +438,22 @@
 
                                                     {{-- Title --}}
                                                     <a href="{{ url('service', $order->gig->slug) }}"
-                                                        class="block max-w-sm text-sm font-medium truncate whitespace-nowrap hover:text-primary-600 dark:text-white" title="{{ $order->gig->title }}">
+                                                        class="block max-w-sm text-sm font-medium truncate whitespace-nowrap hover:text-primary-600 dark:text-white"
+                                                        title="{{ $order->gig->title }}">
                                                         {{ $order->gig->title }}
                                                     </a>
 
                                                     {{-- Category --}}
                                                     <div class="mt-2 text-xs text-slate-500 whitespace-nowrap">
                                                         <nav class="flex" aria-label="Breadcrumb">
-                                                            <ol role="list" class="flex items-center space-x-1 rtl:space-x-reverse">
+                                                            <ol role="list"
+                                                                class="flex items-center space-x-1 rtl:space-x-reverse">
 
                                                                 {{-- Parent category --}}
                                                                 <li>
                                                                     <div class="flex items-center">
-                                                                        <a href="{{ url('categories', $order->gig->category->slug) }}" target="_blank"
+                                                                        <a href="{{ url('categories', $order->gig->category->slug) }}"
+                                                                            target="_blank"
                                                                             class="text-xs font-normal text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">{{ $order->gig->category->name }}</a>
                                                                     </div>
                                                                 </li>
@@ -418,14 +463,17 @@
                                                                     <div class="flex items-center">
 
                                                                         {{-- Chevron --}}
-                                                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                            fill="currentColor" aria-hidden="true">
+                                                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400 rtl:rotate-180"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 20 20" fill="currentColor"
+                                                                            aria-hidden="true">
                                                                             <path fill-rule="evenodd"
                                                                                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                                                                 clip-rule="evenodd" />
                                                                         </svg>
 
-                                                                        <a href="{{ url('categories/' . $order->gig->category->slug . '/' . $order->gig->subcategory->slug) }}" target="_blank"
+                                                                        <a href="{{ url('categories/' . $order->gig->category->slug . '/' . $order->gig->subcategory->slug) }}"
+                                                                            target="_blank"
                                                                             class="text-xs font-normal text-gray-500 ltr:ml-1 rtl:mr-1 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
                                                                             aria-current="page">{{ $order->gig->subcategory->name }}</a>
 
@@ -442,30 +490,38 @@
                                         </td>
 
                                         {{-- Profit --}}
-                                        <td class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
-                                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-300">@money($order->profit_value, settings('currency')->code, true)</span>
+                                        <td
+                                            class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                            <span
+                                                class="text-sm font-semibold text-zinc-900 dark:text-zinc-300">@money($order->profit_value, settings('currency')->code, true)</span>
                                         </td>
 
                                         {{-- Expected delivery date --}}
-                                        <td class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                        <td
+                                            class="px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                             @if ($order->expected_delivery_date)
                                                 <span
                                                     class="text-sm font-normal whitespace-nowrap text-zinc-600 dark:text-zinc-300">{{ format_date($order->expected_delivery_date, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</span>
                                             @elseif (in_array($order->status, ['pending', 'proceeded']) && !$order->is_requirements_sent)
-                                                <span class="text-sm font-normal whitespace-nowrap text-zinc-600 dark:text-zinc-300">{{ __('messages.t_waiting_for_requirements') }}</span>
+                                                <span
+                                                    class="text-sm font-normal whitespace-nowrap text-zinc-600 dark:text-zinc-300">{{ __('messages.t_waiting_for_requirements') }}</span>
                                             @else
-                                                <span class="block mx-auto text-2xl font-normal text-center text-zinc-600 dark:text-zinc-300">-</span>
+                                                <span
+                                                    class="block mx-auto text-2xl font-normal text-center text-zinc-600 dark:text-zinc-300">-</span>
                                             @endif
                                         </td>
 
                                         {{-- Status --}}
-                                        <td class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                        <td
+                                            class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                             @if ($order->refund && $order->refund->status === 'pending')
-                                                <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-50 text-red-800 dark:text-red-500">
+                                                <span
+                                                    class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-50 text-red-800 dark:text-red-500">
                                                     {{ __('messages.t_dispute_opened') }}
                                                 </span>
                                             @elseif ($order->order?->invoice && $order->order->invoice->status === 'pending')
-                                                <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-amber-50 text-amber-800 dark:text-amber-500">
+                                                <span
+                                                    class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-amber-50 text-amber-800 dark:text-amber-500">
                                                     {{ __('messages.t_pending_payment') }}
                                                 </span>
                                             @else
@@ -480,28 +536,32 @@
 
                                                     {{-- Delivered --}}
                                                     @case('delivered')
-                                                        <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-green-50 text-green-800 dark:text-green-500">
+                                                        <span
+                                                            class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-green-50 text-green-800 dark:text-green-500">
                                                             {{ __('messages.t_delivered') }}
                                                         </span>
                                                     @break
 
                                                     {{-- Refunded --}}
                                                     @case('refunded')
-                                                        <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-50 text-red-800 dark:text-red-500">
+                                                        <span
+                                                            class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-50 text-red-800 dark:text-red-500">
                                                             {{ __('messages.t_refunded') }}
                                                         </span>
                                                     @break
 
                                                     {{-- Proceeded --}}
                                                     @case('proceeded')
-                                                        <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-blue-50 text-blue-800 dark:text-blue-500">
+                                                        <span
+                                                            class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-blue-50 text-blue-800 dark:text-blue-500">
                                                             {{ __('messages.t_in_the_process') }}
                                                         </span>
                                                     @break
 
                                                     {{-- Canceled --}}
                                                     @case('canceled')
-                                                        <span class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-gray-50 text-gray-800 dark:text-gray-500">
+                                                        <span
+                                                            class="inline-flex dark:bg-transparent items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-gray-50 text-gray-800 dark:text-gray-500">
                                                             {{ __('messages.t_canceled') }}
                                                         </span>
                                                     @break
@@ -512,64 +572,66 @@
                                         </td>
 
                                         {{-- Action --}}
-                                        <td class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
-                                            <div class="flex items-center justify-center space-x-2 rtl:space-x-reverse">
+                                        <td
+                                            class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                            <div
+                                                class="flex items-center justify-center space-x-2 rtl:space-x-reverse">
                                                 {{-- Order details --}}
                                                 <a href="{{ url('seller/orders/details', $order->uid) }}"
                                                     data-tooltip-target="tooltip-actions-order-details-{{ $order->uid }}"
                                                     class="inline-flex items-center justify-center w-8 h-8 text-sm font-semibold leading-5 text-gray-800 bg-white border border-gray-300 rounded shadow-sm focus:outline-none hover:text-gray-800 hover:bg-gray-100 hover:border-gray-300 hover:shadow focus:ring focus:ring-gray-500 focus:ring-opacity-25 active:bg-white active:border-white active:shadow-none dark:bg-zinc-700 dark:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:border-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                                                     wire:key="tooltip-actions-order-details-{{ $order->uid }}">
                                                     <svg class="w-4 h-4" stroke="currentColor" fill="currentColor"
-                                                        stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        stroke-width="0" viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M4 6h2v2H4zm0 5h2v2H4zm0 5h2v2H4zm16-8V6H8.023v2H18.8zM8 11h12v2H8zm0 5h12v2H8z">
                                                         </path>
                                                     </svg>
                                                 </a>
-                                                <x-forms.tooltip id="tooltip-actions-order-details-{{ $order->uid }}"
+                                                <x-forms.tooltip
+                                                    id="tooltip-actions-order-details-{{ $order->uid }}"
                                                     :text="__('messages.t_order_details')" />
                                             </div>
                                         </td>
                                     </tr>
                                     @empty
                                     @endforelse
-                            </thead>
-                        </table>
+                                </thead>
+                            </table>
 
-                    </div>
-                  {{-- Timeline--}}
-                    <div>
-                        @if ($order->orderTimelines()->count())
-                      
-                      
-                            <div class="col-span-12 px-6 py-4 text-sm bg-white border border-gray-200 rounded-lg shadow-sm md:col-span-6 dark:border-zinc-700 dark:bg-zinc-800">
-                                <h1 class="font-bold text-">Order Timeline</h1>
-                                      
+                        </div>
+                        {{-- Timeline --}}
+                        <div>
+                            @if (count($timelines) > 0)
+                                <div
+                                    class="col-span-12 px-6 py-4 text-sm bg-white border border-gray-200 rounded-lg shadow-sm md:col-span-6 dark:border-zinc-700 dark:bg-zinc-800">
+                                    <h1 class="font-bold text-">Order Timelines</h1>
+
                                     <ol class="relative text-xs border-l border-gray-200 dark:border-gray-700">
-                                               @foreach ($timelines as $timeline)
-                                                      
+                                        @foreach ($timelines as $timeline)
                                             <li class="py-3 ml-4">
                                                 <div
                                                     class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
                                                 </div>
-                                                <time class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
-                                                    {{format_date($timeline['created_at'], config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
-                                                <h3 class="text-sm font-normal text-gray-900 dark:text-white">({{$timeline['title'] }})</h3>
-                                                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{$timeline['name'] }}</h3>
+                                                <time
+                                                    class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
+                                                    {{ format_date($timeline->created_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                                <h3 class="text-sm font-normal text-gray-900 dark:text-white">
+                                                    ({{ $timeline->title }})</h3>
+                                                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                    {{ $timeline->name }}</h3>
                                                 <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                                                    {{$timeline['description']}}
+                                                    {{ $timeline->description }}
                                                 </p>
                                             </li>
                                         @endforeach
-
                                     </ol>
-
-                            </div>
-
-                        @endif
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
 
@@ -616,18 +678,22 @@
                             </thead>
                             <thead>
                                 @foreach ($latest_awarded_projects as $project)
-                                    <tr class="h-16 bg-white rounded-md shadow-sm intro-x dark:bg-zinc-800" wire:key="freelancer-dashboard-latest-projects-{{ $project->uid }}">
+                                    <tr class="h-16 bg-white rounded-md shadow-sm intro-x dark:bg-zinc-800"
+                                        wire:key="freelancer-dashboard-latest-projects-{{ $project->uid }}">
 
                                         {{-- Project --}}
-                                        <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-60 rtl:text-right">
+                                        <td
+                                            class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-60 rtl:text-right">
                                             <a href="{{ url('project/' . $project->pid . '/' . $project->slug) }}"
-                                                class="block max-w-sm text-sm font-medium truncate whitespace-nowrap hover:text-primary-600 dark:text-white" title="{{ $project->title }}">
+                                                class="block max-w-sm text-sm font-medium truncate whitespace-nowrap hover:text-primary-600 dark:text-white"
+                                                title="{{ $project->title }}">
                                                 {{ $project->title }}
                                             </a>
                                         </td>
 
                                         {{-- Status --}}
-                                        <td class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                        <td
+                                            class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                             @switch($project->status)
                                                 {{-- Pending final review --}}
                                                 @case('pending_final_review')
@@ -682,14 +748,16 @@
                                         </td>
 
                                         {{-- Your proposal --}}
-                                        <td class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                        <td
+                                            class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                             <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-300">
                                                 @money($project->awarded_bid->amount, settings('currency')->code, true)
                                             </span>
                                         </td>
 
                                         {{-- Awarded date --}}
-                                        <td class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
+                                        <td
+                                            class="w-40 px-5 py-3 text-center first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md">
                                             <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-300">
                                                 {{ format_date($project->awarded_bid->awarded_date) }}
                                             </span>

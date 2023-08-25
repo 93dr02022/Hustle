@@ -131,207 +131,212 @@
     </div>
 
     {{-- Content --}}
-<div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
-    <div class="grid lg:grid-cols-2 gap-4">
-                <div>
-                    <dl
-                        class=" lg:py-6 p-6  rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
+        <div class="grid lg:grid-cols-2 gap-4">
+            <div>
+                <dl
+                    class=" lg:py-6 p-6  rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
 
-                        {{-- Placed at --}}
-                        <div class="rounded-t-lg bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_date_placed') }}
-                            </dt>
-                            <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
-                                {{ format_date($order->placed_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
-                            </dd>
-                        </div>
+                    {{-- Placed at --}}
+                    <div class="rounded-t-lg bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">
+                            {{ __('messages.t_date_placed') }}
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+                            {{ format_date($order->placed_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
+                        </dd>
+                    </div>
 
-                        {{-- Status --}}
-                        <div class="bg-white px-6 lg:py-12 py-6 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_status') }}</dt>
-                            <dd class="mt-1 sm:col-span-2 sm:mt-0">
-                                @if ($order->order->invoice && $order->order->invoice->status === 'pending')
-                                    <span
-                                        class="inline-flex items-center rounded-sm bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800 dark:bg-transparent dark:text-amber-400">
-                                        {{ __('messages.t_pending_payment') }}
-                                    </span>
-                                @else
-                                    @switch($order->status)
-                                        {{-- Pending --}}
-                                        @case('pending')
-                                            <span
-                                                class="inline-flex items-center rounded-sm bg-yellow-50 px-2.5 py-1 text-[13px] font-medium text-yellow-800 dark:bg-transparent dark:text-yellow-400">
-                                                {{ __('messages.t_pending') }}
-                                            </span>
-                                        @break
+                    {{-- Status --}}
+                    <div class="bg-white px-6 lg:py-12 py-6 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_status') }}
+                        </dt>
+                        <dd class="mt-1 sm:col-span-2 sm:mt-0">
+                            @if ($order->order->invoice && $order->order->invoice->status === 'pending')
+                                <span
+                                    class="inline-flex items-center rounded-sm bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800 dark:bg-transparent dark:text-amber-400">
+                                    {{ __('messages.t_pending_payment') }}
+                                </span>
+                            @else
+                                @switch($order->status)
+                                    {{-- Pending --}}
+                                    @case('pending')
+                                        <span
+                                            class="inline-flex items-center rounded-sm bg-yellow-50 px-2.5 py-1 text-[13px] font-medium text-yellow-800 dark:bg-transparent dark:text-yellow-400">
+                                            {{ __('messages.t_pending') }}
+                                        </span>
+                                    @break
 
-                                        {{-- Delivered --}}
-                                        @case('delivered')
-                                            <span
-                                                class="inline-flex items-center rounded-sm bg-green-50 px-2.5 py-1 text-[13px] font-medium text-green-800 dark:bg-transparent dark:text-green-400">
-                                                {{ __('messages.t_delivered') }}
-                                            </span>
-                                        @break
+                                    {{-- Delivered --}}
+                                    @case('delivered')
+                                        <span
+                                            class="inline-flex items-center rounded-sm bg-green-50 px-2.5 py-1 text-[13px] font-medium text-green-800 dark:bg-transparent dark:text-green-400">
+                                            {{ __('messages.t_delivered') }}
+                                        </span>
+                                    @break
 
-                                        {{-- Refunded --}}
-                                        @case('refunded')
-                                            <span
-                                                class="inline-flex items-center rounded-sm bg-red-50 px-2.5 py-1 text-[13px] font-medium text-red-800 dark:bg-transparent dark:text-red-400">
-                                                {{ __('messages.t_refunded') }}
-                                            </span>
-                                        @break
+                                    {{-- Refunded --}}
+                                    @case('refunded')
+                                        <span
+                                            class="inline-flex items-center rounded-sm bg-red-50 px-2.5 py-1 text-[13px] font-medium text-red-800 dark:bg-transparent dark:text-red-400">
+                                            {{ __('messages.t_refunded') }}
+                                        </span>
+                                    @break
 
-                                        {{-- Proceeded --}}
-                                        @case('proceeded')
-                                            <span
-                                                class="inline-flex items-center rounded-sm bg-blue-50 px-2.5 py-1 text-[13px] font-medium text-blue-800 dark:bg-transparent dark:text-blue-400">
-                                                {{ __('messages.t_in_the_process') }}
-                                            </span>
-                                        @break
+                                    {{-- Proceeded --}}
+                                    @case('proceeded')
+                                        <span
+                                            class="inline-flex items-center rounded-sm bg-blue-50 px-2.5 py-1 text-[13px] font-medium text-blue-800 dark:bg-transparent dark:text-blue-400">
+                                            {{ __('messages.t_in_the_process') }}
+                                        </span>
+                                    @break
 
-                                        {{-- Canceled --}}
-                                        @case('canceled')
-                                            <span
-                                                class="inline-flex items-center rounded-sm bg-gray-50 px-2.5 py-1 text-[13px] font-medium text-gray-800 dark:bg-transparent dark:text-gray-300">
-                                                {{ __('messages.t_canceled') }}
-                                            </span>
-                                        @break
+                                    {{-- Canceled --}}
+                                    @case('canceled')
+                                        <span
+                                            class="inline-flex items-center rounded-sm bg-gray-50 px-2.5 py-1 text-[13px] font-medium text-gray-800 dark:bg-transparent dark:text-gray-300">
+                                            {{ __('messages.t_canceled') }}
+                                        </span>
+                                    @break
 
-                                        @default
-                                    @endswitch
-                                @endif
-                            </dd>
-                        </div>
+                                    @default
+                                @endswitch
+                            @endif
+                        </dd>
+                    </div>
 
-                        {{-- Expected delivery date --}}
-                        <div class="bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">
-                                {{ __('messages.t_expected_delivery_date') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
-                                @if ($order->expected_delivery_date)
-                                    {{ format_date($order->expected_delivery_date, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
-                                @else
-                                    —
-                                @endif
-                            </dd>
-                        </div>
+                    {{-- Expected delivery date --}}
+                    <div class="bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">
+                            {{ __('messages.t_expected_delivery_date') }}</dt>
+                        <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+                            @if ($order->expected_delivery_date)
+                                {{ format_date($order->expected_delivery_date, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
+                            @else
+                                —
+                            @endif
+                        </dd>
+                    </div>
 
-                        {{-- Expected delivery date --}}
-                        <div class="bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">
-                                {{ __('messages.t_expected_delivery_date') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
-                                @if ($order->expected_delivery_date)
-                                    {{ format_date($order->expected_delivery_date, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
-                                @else
-                                    —
-                                @endif
-                            </dd>
-                        </div>
+                    {{-- Expected delivery date --}}
+                    <div class="bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">
+                            {{ __('messages.t_expected_delivery_date') }}</dt>
+                        <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+                            @if ($order->expected_delivery_date)
+                                {{ format_date($order->expected_delivery_date, config('carbon-formats.F_j,_Y_h_:_i_A')) }}
+                            @else
+                                —
+                            @endif
+                        </dd>
+                    </div>
 
-                        {{-- Quantity --}}
-                        <div class="bg-white px-6 py-5 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_quantity') }}
-                            </dt>
-                            <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
-                                {{ $order->quantity }}
-                            </dd>
-                        </div>
+                    {{-- Quantity --}}
+                    <div class="bg-white px-6 py-5 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_quantity') }}
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+                            {{ $order->quantity }}
+                        </dd>
+                    </div>
 
-                        {{-- Gig --}}
-                        <div class="bg-white px-6 py-5 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_gig') }}</dt>
-                            <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        <img class="lazy h-12 w-12 rounded-md object-cover object-center shadow-sm"
-                                            src="{{ placeholder_img() }}" data-src="{{ src($order->gig->image_thumb_id) }}"
-                                            alt="">
-                                    </div>
-                                    <div class="ltr:ml-4 rtl:mr-4">
-                                        <h3 class="mb-2 block text-sm font-medium leading-6 text-gray-700 dark:text-gray-50">
-                                            {{ $order->gig->title }}
-                                        </h3>
-                                        <div class="mt-1 space-x-2 text-xs rtl:space-x-reverse">
+                    {{-- Gig --}}
+                    <div class="bg-white px-6 py-5 dark:bg-zinc-600 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-semibold text-black dark:text-gray-400">{{ __('messages.t_gig') }}</dt>
+                        <dd class="mt-1 text-sm text-gray-500 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="lazy h-12 w-12 rounded-md object-cover object-center shadow-sm"
+                                        src="{{ placeholder_img() }}"
+                                        data-src="{{ src($order->gig->image_thumb_id) }}" alt="">
+                                </div>
+                                <div class="ltr:ml-4 rtl:mr-4">
+                                    <h3
+                                        class="mb-2 block text-sm font-medium leading-6 text-gray-700 dark:text-gray-50">
+                                        {{ $order->gig->title }}
+                                    </h3>
+                                    <div class="mt-1 space-x-2 text-xs rtl:space-x-reverse">
 
-                                            {{-- View gig --}}
-                                            <a href="{{ url('service', $order->gig->slug) }}" target="_blank"
-                                                class="font-medium text-primary-600">
-                                                {{ __('messages.t_view_gig') }}
-                                            </a>
+                                        {{-- View gig --}}
+                                        <a href="{{ url('service', $order->gig->slug) }}" target="_blank"
+                                            class="font-medium text-primary-600">
+                                            {{ __('messages.t_view_gig') }}
+                                        </a>
 
 
-                                            <span class="font-black text-gray-500 dark:text-gray-300">·</span>
+                                        <span class="font-black text-gray-500 dark:text-gray-300">·</span>
 
-                                            {{-- Edit gig --}}
-                                            <a href="{{ url('seller/gigs/edit', $order->gig->uid) }}" target="_blank"
-                                                class="font-medium text-primary-600">
-                                                {{ __('messages.t_edit_gig') }}
-                                            </a>
+                                        {{-- Edit gig --}}
+                                        <a href="{{ url('seller/gigs/edit', $order->gig->uid) }}" target="_blank"
+                                            class="font-medium text-primary-600">
+                                            {{ __('messages.t_edit_gig') }}
+                                        </a>
 
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                        </dd>
+                    </div>
+
+                    {{-- List of upgrades --}}
+                    @if ($order->has('upgrades'))
+                        <div
+                            class="rounded-b-lg bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt class="text-sm font-semibold text-black dark:text-gray-400">
+                                {{ __('messages.t_upgrades') }}
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                <fieldset class="space-y-5">
+                                    @foreach ($order->upgrades as $upgrade)
+                                        <div class="relative flex items-start">
+                                            <div class="flex h-5 items-center">
+                                                <input type="checkbox"
+                                                    class="pointer-events-none h-4 w-4 cursor-not-allowed rounded-sm border-2 border-gray-200 text-gray-300 dark:disabled:bg-zinc-500"
+                                                    checked disabled>
+                                            </div>
+                                            <div class="mt-[-3px] text-sm ltr:ml-3 rtl:mr-3">
+                                                <label
+                                                    class="text-sm font-medium text-gray-500 dark:text-gray-200">{{ $upgrade->title }}</label>
+                                                <p class="font-normal text-gray-400">
+                                                <div class="mt-1 flex text-sm">
+                                                    <p class="text-xs text-gray-400">+ @money($upgrade->price, settings('currency')->code, true)</p>
+
+                                                    @if ($upgrade->extra_days)
+                                                        <p
+                                                            class="border-gray-200 text-xs text-gray-400 ltr:ml-4 ltr:border-l ltr:pl-4 rtl:mr-4 rtl:border-r rtl:pr-4">
+                                                            {{ __('messages.t_extra_days_delivery_time_short', ['time' => delivery_time_trans($upgrade->extra_days)]) }}
+                                                        </p>
+                                                    @else
+                                                        <p
+                                                            class="border-gray-200 text-xs text-gray-400 ltr:ml-4 ltr:border-l ltr:pl-4 rtl:mr-4 rtl:border-r rtl:pr-4">
+                                                            {{ __('messages.t_no_changes_delivery_time') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                </p>
+                                            </div>
+                                    @endforeach
+                                </fieldset>
                             </dd>
                         </div>
-
-                        {{-- List of upgrades --}}
-                        @if ($order->has('upgrades'))
-                            <div class="rounded-b-lg bg-gray-50 px-6 py-5 dark:bg-zinc-700/40 sm:grid sm:grid-cols-3 sm:gap-4">
-                                <dt class="text-sm font-semibold text-black dark:text-gray-400">
-                                    {{ __('messages.t_upgrades') }}
-                                </dt>
-                                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                    <fieldset class="space-y-5">
-                                        @foreach ($order->upgrades as $upgrade)
-                                            <div class="relative flex items-start">
-                                                <div class="flex h-5 items-center">
-                                                    <input type="checkbox"
-                                                        class="pointer-events-none h-4 w-4 cursor-not-allowed rounded-sm border-2 border-gray-200 text-gray-300 dark:disabled:bg-zinc-500"
-                                                        checked disabled>
-                                                </div>
-                                                <div class="mt-[-3px] text-sm ltr:ml-3 rtl:mr-3">
-                                                    <label
-                                                        class="text-sm font-medium text-gray-500 dark:text-gray-200">{{ $upgrade->title }}</label>
-                                                    <p class="font-normal text-gray-400">
-                                                    <div class="mt-1 flex text-sm">
-                                                        <p class="text-xs text-gray-400">+ @money($upgrade->price, settings('currency')->code, true)</p>
-
-                                                        @if ($upgrade->extra_days)
-                                                            <p
-                                                                class="border-gray-200 text-xs text-gray-400 ltr:ml-4 ltr:border-l ltr:pl-4 rtl:mr-4 rtl:border-r rtl:pr-4">
-                                                                {{ __('messages.t_extra_days_delivery_time_short', ['time' => delivery_time_trans($upgrade->extra_days)]) }}
-                                                            </p>
-                                                        @else
-                                                            <p
-                                                                class="border-gray-200 text-xs text-gray-400 ltr:ml-4 ltr:border-l ltr:pl-4 rtl:mr-4 rtl:border-r rtl:pr-4">
-                                                                {{ __('messages.t_no_changes_delivery_time') }}
-                                                            </p>
-                                                        @endif
-                                                    </div>
-                                                    </p>
-                                                </div>
-                                        @endforeach
-                                    </fieldset>
-                                </dd>
-                            </div>
-                        @endif
-                        @php
-                            $review = $order->orderItemReviews()->first();
-                        @endphp
-                        {{-- Review --}}
-                        @if($review && $review->seen)
+                    @endif
+                    @php
+                        $review = $order->orderItemReviews()->first();
+                    @endphp
+                    {{-- Review --}}
+                    @if ($review && $review->seen)
                         <div class="col-span-12">
                             <div
-                            class="bg-white dark:bg-zinc-700 dark:border-zinc-600 relative block p-8 overflow-hidden border border-gray-100 rounded-lg mb-6">
+                                class="bg-white dark:bg-zinc-700 dark:border-zinc-600 relative block p-8 overflow-hidden border border-gray-100 rounded-lg mb-6">
 
-                            {{-- <span
+                                {{-- <span
                             class="absolute inset-x-0 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span> --}}
-                            <h1 class="text-base -ml-2 font-semibold text-black  my-5 dark:text-gray-400">
-                                {{ __('messages.t_reviews') }}</h1>
+                                <h1 class="text-base -ml-2 font-semibold text-black  my-5 dark:text-gray-400">
+                                    {{ __('messages.t_reviews') }}</h1>
 
                                 <div class="flex items-center">
-                                    <img src="{{ placeholder_img() }}" data-src="{{ src($review->user->avatar_id) }}"
+                                    <img src="{{ placeholder_img() }}"
+                                        data-src="{{ src($review->user->avatar_id) }}"
                                         alt="{{ $review->user->username }}" class="lazy h-8 w-8 rounded-full">
                                     <div class="ml-4 group">
                                         <a href="{{ url('profile', $review->user->username) }}" target="_blank"
@@ -379,7 +384,7 @@
                                         <p>{{ $review->message }}</p>
                                     </div>
                                 @endif
-                                @if ($review->repliedReview )
+                                @if ($review->repliedReview)
                                     <div class="mt-5 pl-5">
                                         <div class="flex items-center">
                                             <img src="{{ placeholder_img() }}"
@@ -421,7 +426,8 @@
                                                     <div wire:ignore class="rating-item-container"
                                                         data-rating-value="{{ $review->repliedReview->rating }}">
                                                     </div>
-                                                    <span class="ltr:ml-2 rtl:mr-2 text-[11px] font-normal text-gray-400"><span
+                                                    <span
+                                                        class="ltr:ml-2 rtl:mr-2 text-[11px] font-normal text-gray-400"><span
                                                             class="pr-2 text-gray-300">•</span>
                                                         {{ format_date($review->repliedReview->created_at, 'ago') }}</span>
                                                 </div>
@@ -440,10 +446,9 @@
                                                 role="menuitem" tabindex="-1" id="menu-item-0">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="ltr:mr-3 rtl:ml-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-300"
-                                                    fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                             </a>
@@ -456,8 +461,8 @@
                                                 type="button"
                                                 class="text-gray-800 dark:text-gray-300 dark:hover:text-gray-400 group flex items-center px-2 py-2 text-sm"
                                                 role="menuitem" tabindex="-1"> --}}
-                                                {{-- Loading indicator --}}
-                                                {{-- <div wire:loading
+                                            {{-- Loading indicator --}}
+                                            {{-- <div wire:loading
                                                     wire:target="delete('{{ $review->repliedReview->id }}')">
                                                     <svg role="status"
                                                         class="ltr:mr-3 rtl:ml-3 inline w-5 h-5 text-gray-500 animate-spin"
@@ -472,8 +477,8 @@
                                                     </svg>
                                                 </div> --}}
 
-                                                {{-- Icon --}}
-                                                {{-- <div wire:loading.remove
+                                            {{-- Icon --}}
+                                            {{-- <div wire:loading.remove
                                                     wire:target="delete('{{ $review->id }}')">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                         class="ltr:mr-3 rtl:ml-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-300"
@@ -491,36 +496,38 @@
                                 @endif
                             </div>
                         </div>
-                        @endif
-                    </dl>
-                </div>
-                @if ($order->orderTimelines()->count())
-                <div class=" px-6 py-4 lg:py-8 text-sm bg-white border border-gray-200 rounded-lg shadow-sm  dark:border-zinc-700 dark:bg-zinc-800">
-                                    <h1 class="font-bold text-">Order Timeline</h1>
-                                        
-                                        <ol class="relative text-xs border-l border-gray-200 dark:border-gray-700">
-                                                @foreach ($timelines as $timeline)
-                                                        
-                                                <li class="py-3 ml-4">
-                                                    <div
-                                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
-                                                    </div>
-                                                    <time class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
-                                                        {{format_date($timeline['created_at'], config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
-                                                    <h3 class="text-sm font-normal text-gray-900 dark:text-white">({{$timeline['title'] }})</h3>
-                                                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{$timeline['name'] }}</h3>
-                                                    <p class=" text-sm text-gray-500 dark:text-gray-400">
-                                                        {{$timeline['description']}}
-                                                    </p>
-                                                </li>
-                                            @endforeach
+                    @endif
+                </dl>
+            </div>
+            @if (count($timelines) > 0)
+                <div
+                    class=" px-6 py-4 lg:py-8 text-sm bg-white border border-gray-200 rounded-lg shadow-sm  dark:border-zinc-700 dark:bg-zinc-800">
+                    <h1 class="font-bold text-">Order Timeline</h1>
 
-                                        </ol>
+                    <ol class="relative text-xs border-l border-gray-200 dark:border-gray-700">
+                        @foreach ($timelines as $timeline)
+                            <li class="py-3 ml-4">
+                                <div
+                                    class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700">
+                                </div>
+                                <time class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
+                                    {{ format_date($timeline->created_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+                                <h3 class="text-sm font-normal text-gray-900 dark:text-white">
+                                    ({{ $timeline->title }})</h3>
+                                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                                    {{ $timeline->name }}</h3>
+                                <p class=" text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $timeline->description }}
+                                </p>
+                            </li>
+                        @endforeach
+
+                    </ol>
 
                 </div>
-                @endif
+            @endif
+        </div>
     </div>
-</div>
 
 </div>
 

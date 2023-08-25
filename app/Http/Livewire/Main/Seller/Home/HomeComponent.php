@@ -53,13 +53,7 @@ class HomeComponent extends Component
 
             // Get user id
             $user_id = auth()->id();
-            $timelines = OrderTimeline::select('order_timelines.*','gigs.title','order_items.uid')
-            ->leftjoin('order_items','order_items.id','order_timelines.order_item_id')
-            ->leftjoin('gigs','order_items.gig_id','gigs.id')->latest()->take(5)->get();
-            if($timelines){
-            // array_push($this->timelines,$timelines);
-            $this->timelines = $timelines->toArray();
-            }
+            
             // Calculate total earnings
             $earnings_from_gigs = OrderItem::where('owner_id', $user_id)
                 ->where('is_finished', true)
@@ -156,6 +150,17 @@ class HomeComponent extends Component
                 }
 
             }
+
+            // Get order timelines for seller
+            $timelines = OrderTimeline::select('order_timelines.*', 'gigs.title', 'order_items.uid')
+            ->leftjoin('order_items', 'order_items.id', 'order_timelines.order_item_id')
+            ->leftjoin('gigs', 'order_items.gig_id', 'gigs.id')
+            ->where('order_items.owner_id', $user_id)
+            ->latest()
+            ->take(5)
+            ->get();
+
+            $this->timelines = $timelines;
 
             // Get latest orders
             $this->latest_orders = OrderItem::where('owner_id', $user_id)
