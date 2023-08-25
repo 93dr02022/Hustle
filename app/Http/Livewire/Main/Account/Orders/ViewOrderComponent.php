@@ -12,17 +12,26 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use RalphJSmit\Livewire\Urls\Facades\Url;
 use WireUi\Traits\Actions;
+use App\Models\OrderTimeline;
 
 class ViewOrderComponent extends Component
 {
     use WithPagination, SEOTools, Actions;
     public $order;
     public $message;
+    public $timelines = [];
     function mount(string $orderId)
     {
         $this->order = Order::where('uid', $orderId)->first();
+        $timelines = OrderTimeline::select('order_timelines.*','gigs.title','order_items.uid')
+            ->leftjoin('order_items','order_items.id','order_timelines.order_item_id')
+            ->leftjoin('gigs','order_items.gig_id','gigs.id')->latest()->take(5)->get();
+            if($timelines){
+            // array_push($this->timelines,$timelines);
+            $this->timelines = $timelines->toArray();
+            }
     }
-    public function render()
+    public function render() 
     {
         // SEO
         $separator = settings('general')->separator;
@@ -49,6 +58,7 @@ class ViewOrderComponent extends Component
         $this->seo()->jsonLd()->setDescription($description);
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
+        
         return view('livewire.main.account.orders.view-order-component')->extends('livewire.main.layout.app')->section('content');
     }
 
