@@ -131,7 +131,7 @@ class VerificationComponent extends Component
      */
     public function bvnMatch()
     {
-        $response = Http::withToken(config('paystack.secretKey'))
+        $response = Http::withToken(config('paystack.liveSecretKey'))
             ->post('https://api.paystack.co/bvn/match', [
                 'bvn' => $this->bvn,
                 'bank_code' => $this->bank,
@@ -142,7 +142,7 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastMessage('Sorry error occured unable to validate your information.1');
+            $this->toastMessage('Sorry error occured unable to validate your information.');
 
             return false;
         }
