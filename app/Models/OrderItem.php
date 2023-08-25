@@ -54,6 +54,7 @@ class OrderItem extends Model
         'status',
         'is_finished',
         'can_wallet',
+        'in_wallet',
         'expected_delivery_date',
         'canceled_by',
         'proceeded_at',
