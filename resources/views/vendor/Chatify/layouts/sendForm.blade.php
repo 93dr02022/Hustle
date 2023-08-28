@@ -1,9 +1,9 @@
 <style>
 @media screen (min-width: 980px) {
   .messenger-card-cover {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    position: fixed !important;
+    bottom: 0 !important;
+    width: 100% !important;
   }
 }
 </style>
