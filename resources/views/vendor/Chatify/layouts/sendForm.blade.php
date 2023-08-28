@@ -1,12 +1,3 @@
-<style>
-@media screen (min-width: 980px) {
-  .messenger-card-cover {
-    position: fixed !important;
-    bottom: 0 !important;
-    width: 100% !important;
-  }
-}
-</style>
 <div class="messenger-card-cover" x-data="window.ieFgUjXUHsNGdOd" x-init="initialize">
     <div class="messenger-sendCard !mx-3 xs:!mx-5 !mb-3.5 xs:!mb-5">
 
