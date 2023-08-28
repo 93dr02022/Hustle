@@ -265,6 +265,15 @@ class DepositComponent extends Component
 
             // Check if amount is correct
             if (is_numeric($this->amount) && $this->amount >= 1) {
+                if ($this->amount > 1000000) {
+                    $this->notification([
+                        'title' => __('messages.t_error'),
+                        'description' => __('Deposit amount cant be greater than 1,000,000'),
+                        'icon' => 'error',
+                    ]);
+
+                    return;
+                }
 
                 // Check selected payment method
                 switch ($this->selected) {
