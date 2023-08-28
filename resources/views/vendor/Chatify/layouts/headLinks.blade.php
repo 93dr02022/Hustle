@@ -50,6 +50,22 @@
 			margin: 5px;
 			display: inline-block;
 		}
+
+		@media screen (min-width: 980px) {
+			.messenger-card-cover {
+				position: fixed !important;
+				bottom: 0 !important;
+				width: 100% !important;
+			}
+		}
+
+		@media only screen (min-width: 500px) {
+			.messenger-card-cover {
+				position: fixed !important;
+				bottom: 0 !important;
+				width: 100% !important;
+			}
+		}
 	</style>
 
 	{{-- JavaScript variables --}}
