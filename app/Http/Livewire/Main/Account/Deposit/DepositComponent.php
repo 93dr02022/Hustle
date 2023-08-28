@@ -1199,9 +1199,9 @@ class DepositComponent extends Component
                 $deposit->user_id = auth()->id();
                 $deposit->transaction_id = $transaction_id;
                 $deposit->payment_method = $provider_name;
-                $deposit->amount_total = round(($amount * $default_currency_exchange) / $gateway_currency_exchange, 2);
-                $deposit->amount_fee = round(($fee * $default_currency_exchange) / $gateway_currency_exchange, 2);
-                $deposit->amount_net = round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2);
+                $deposit->amount_total = round($amount, 2);
+                $deposit->amount_fee = round($fee, 2);
+                $deposit->amount_net = round(($amount - $fee), 2);
                 $deposit->currency = $gateway_currency;
                 $deposit->exchange_rate = $gateway_currency_exchange;
                 $deposit->status = 'paid';
@@ -1209,7 +1209,7 @@ class DepositComponent extends Component
                 $deposit->save();
 
                 // Add funds to account
-                $this->addFunds(round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2));
+                $this->addFunds(round($amount - $fee, 2));
 
                 // Set response
                 $response = [
