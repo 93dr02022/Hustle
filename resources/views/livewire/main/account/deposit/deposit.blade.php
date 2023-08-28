@@ -809,7 +809,7 @@
                                                         <input wire:model.debounce.500ms="amount" type="text"
                                                             id="deposit-amount-input"
                                                             class="border border-gray-300 text-gray-900 text-sm rounded-lg font-medium focus:ring-primary-500 focus:border-primary-500 block w-full ltr:pr-12 rtl:pl-12 p-4  dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                            placeholder="0.00" required>
+                                                            placeholder="0.00" max="1000000" required>
                                                         <div
                                                             class="absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center ltr:pr-3 rtl:pl-3 font-bold text-xs tracking-widest dark:text-gray-300">
                                                             {{ $currency }}
