@@ -1,4 +1,4 @@
-<div class="gig-card" x-data="window._{{ $gig->uid }}" dir="{{ config()->get('direction') }}">
+<div class="gig-card" x-data="window._{{ $jsuid }}" dir="{{ config()->get('direction') }}">
     <div class="overflow-hidden bg-white rounded-md shadow-sm dark:bg-zinc-800 ring-1 ring-white dark:ring-zinc-800">
 
         {{-- Preview --}}
@@ -141,7 +141,7 @@
 @push('scripts')
     {{-- AlpineJs --}}
     <script>
-        function _{{ $gig->uid }}() {
+        function _{{ $jsuid }}() {
             return {
                 authed: @js(auth()->check()),
                 loginToAddToFavorite() {
@@ -163,6 +163,6 @@
                 }
             }
         }
-        window._{{ $gig->uid }} = _{{ $gig->uid }}();
+        window._{{ $jsuid }} = _{{ $jsuid }}();
     </script>
 @endpush

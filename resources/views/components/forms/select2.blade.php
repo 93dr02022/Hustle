@@ -1,4 +1,4 @@
-@props(['label', 'placeholder', 'model', 'options', 'isDefer', 'isAssociative', 'componentId', 'value', 'text', 'selected' => null, 'class' => null, 'show_option_insead' => false, 'showLabel' => true])
+@props(['label', 'placeholder', 'model', 'options', 'isDefer', 'isAssociative', 'componentId', 'value', 'text', 'selected' => null, 'class' => null, 'show_option_insead' => false, 'showLabel' => true, 'keyuid' => null])
 
 <div class="relative default-select2 {{ $errors->first($model) ? 'select2-custom-has-error' : '' }}">
     @if ($showLabel)
@@ -7,7 +7,7 @@
     @endif
 
     <select data-pharaonic="select2" data-component-id="{{ $componentId }}"
-        wire:model{{ $isDefer ? '.defer' : '' }}="{{ $model }}" id="select2-id-{{ $model }}"
+        wire:model{{ $isDefer ? '.defer' : '' }}="{{ $model }}" id="select2-id-{{ $model }}{{ $keyuid  }}"
         data-placeholder="{{ $placeholder }}" class="{{ $class ? $class : 'select2' }}" {{ $attributes }}
         data-dir="{{ config()->get('direction') }}" style="display: none" onload="this.style.display = 'block'">
         <option value=""></option>
