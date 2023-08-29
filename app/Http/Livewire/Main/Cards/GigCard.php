@@ -17,6 +17,8 @@ class GigCard extends Component
 
     public $profile_visible;
 
+    public $jsuid;
+
     /**
      * Init component
      *
@@ -27,6 +29,7 @@ class GigCard extends Component
     {
         // Get gig
         $this->gig = $gig;
+        $this->jsuid = $gig->uid . uid();
 
         // Check if user authenticated
         if (auth()->check()) {

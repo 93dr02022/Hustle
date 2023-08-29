@@ -586,7 +586,7 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
         Route::get('{parent}', CategoryComponent::class);
 
         // Subcategory
-        Route::get('{parent}/{subcategory}', SubcategoryComponent::class);
+        Route::get('{parent}/{subcategory:slug}', SubcategoryComponent::class);
     });
 
     // Profile

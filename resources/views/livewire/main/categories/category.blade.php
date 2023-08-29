@@ -1,5 +1,6 @@
 <div class="w-full" x-data="window.AxZSIHcEeIYErvQ" x-init="initialize()" @keydown.window.escape="open = false" x-cloak>
-    
+    <x-forms.loading zindex="1000" />
+
     {{-- Mobile filters --}}
     <div x-show="open" class="fixed inset-0 flex z-40 lg:hidden" x-ref="dialog" aria-modal="true">
     
@@ -137,6 +138,36 @@
                     </div>
                 </div>
 
+                {{-- Location --}}
+                <div x-data="{ open: true }" class="py-3">
+                    <h3 class="-my-3 flow-root bg-gray-50 dark:bg-zinc-700 px-4">
+                        <button @click="open = !open" type="button"
+                            class="py-3 w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500 outline-none focus:outline-none">
+                            <span class="font-medium text-gray-900">{{ __('Location') }}</span>
+                            <span class="ltr:ml-6 rtl:mr-6 flex items-center">
+                                <svg class="h-5 w-5" x-show="!(open)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                <svg class="h-5 w-5" x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="display: none;">
+                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    </h3>
+                    <div class="pt-6 px-4" x-show="open">
+                        <div class="space-y-4">
+
+                            <div class="rounded-md shadow-sm -space-y-px">
+                                <div class="w-full" wire:ignore>
+                                    <x-forms.select2 :label="__('States')" :placeholder="__('Choose Location')" model="location" :options="$states" :isDefer="true" :isAssociative="false" :componentId="$this->id"
+                                        :showLabel="false" value="name" text="name" keyuid="mobile-location-select" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Delivery time --}}
                 <div x-data="{ open: true }" class="py-3">
                     <h3 class="-my-3 flow-root bg-gray-50 dark:bg-zinc-700 px-4">
@@ -233,32 +264,32 @@
                             <div class="py-1" role="none">
                             
                                 {{-- Most popular --}}
-                                <button wire:click="$set('sort_by', 'popular')" type="button" class="{{ $sort_by === 'popular' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'popular')" type="button" class="{{ $sort_by === 'popular' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_most_popular') }}
                                 </button>
 
                                 {{-- Best rating --}}
-                                <button wire:click="$set('sort_by', 'rating')" type="button" class="{{ $sort_by === 'rating' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'rating')" type="button" class="{{ $sort_by === 'rating' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_best_rating') }}
                                 </button>
 
                                 {{-- Best selling --}}
-                                <button wire:click="$set('sort_by', 'sales')" type="button" class="{{ $sort_by === 'sales' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'sales')" type="button" class="{{ $sort_by === 'sales' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_most_selling') }}
                                 </button>
 
                                 {{-- Newest first --}}
-                                <button wire:click="$set('sort_by', 'newest')" type="button" class="{{ $sort_by === 'newest' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'newest')" type="button" class="{{ $sort_by === 'newest' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_newest_first') }}
                                 </button>
 
                                 {{-- Price: Low to High --}}
-                                <button wire:click="$set('sort_by', 'price_low_high')" type="button" class="{{ $sort_by === 'price_low_high' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'price_low_high')" type="button" class="{{ $sort_by === 'price_low_high' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_price_low_to_high') }}
                                 </button>
 
                                 {{-- Price: High to Low --}}
-                                <button wire:click="$set('sort_by', 'price_high_low')" type="button" class="{{ $sort_by === 'price_high_low' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
+                                <button @click="document.body.click()" wire:click="$set('sort_by', 'price_high_low')" type="button" class="{{ $sort_by === 'price_high_low' ? 'text-gray-900' : 'text-gray-500' }} block px-4 py-3 text-xs font-medium hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-gray-400 w-full ltr:text-left rtl:text-right">
                                     {{ __('messages.t_price_high_to_low') }}
                                 </button>
                             
