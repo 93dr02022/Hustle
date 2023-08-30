@@ -51,7 +51,7 @@
 			display: inline-block;
 		}
 
-		@media screen (min-width: 980px) {
+		@media screen (max-width: 980px) {
 			.messenger-card-cover {
 				position: fixed !important;
 				bottom: 0 !important;
@@ -59,7 +59,7 @@
 			}
 		}
 
-		@media only screen (min-width: 500px) {
+		@media only screen (max-width: 500px) {
 			.messenger-card-cover {
 				position: fixed !important;
 				bottom: 0 !important;
