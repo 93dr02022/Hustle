@@ -221,11 +221,56 @@
             @endif
         @endauth
 
+        {{-- selected gigs for you --}}
+        <div class="col-span-12">
+            <div class="odd:bg-[#F2F2F2] w-full py-16">
+                <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    {{-- Section title --}}
+                    <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
+                        <div>
+                            <span class="block pb-1 text-xl font-extrabold tracking-wider uppercase text-[#1F2937] gig-title">
+                                @lang('messages.t_selected_gigs_for_u')
+                            </span>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('search') }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
+                                {{ __('messages.t_view_more') }}
+
+                                {{-- LTR arrow --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="hidden w-5 h-5 ltr:inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- List of gigs --}}
+                    <div class="relative col-span-12">
+                        <div class="swiper selected-gigs-swiper">
+                            <div class="swiper-wrapper">
+                                @foreach ($gigs as $gig)
+                                    <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
+                                        @livewire('main.cards.gig', ['gig' => $gig], key('gig-item-' . $gig->uid))
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm  bg-white swiper-button-prev for-you-prev">
+                        </div>
+                        <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm bg-white swiper-button-next for-you-next">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Random gigs --}}
         <div class="col-span-12 bg-[#FAFAFA]">
             @foreach ($randomCategories as $category)
-                <div class="w-full mt-6 xl:mt-6 mb-16">
-                    <div class="container grid grid-cols-1 gap-y-6 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div
+                    class="odd:bg-[#B7C4FC] even:bg-[#F1F4FF] [&:nth-child(odd)_.swiper-button-prev]:bg-white [&:nth-child(even)_.swiper-button-prev]:bg-[#1F2937] [&:nth-child(odd)_.swiper-button-next]:bg-white [&:nth-child(even)_.swiper-button-next]:bg-[#1F2937] stripe-title w-full py-16">
+                    <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{-- Section title --}}
                         <div class="flex items-center justify-between py-2 bg-transparent">
                             <div>
@@ -236,8 +281,7 @@
                             </div>
 
                             <div>
-                                <a href="{{ url('categories', $category->slug) }}"
-                                    class="text-sm font-semibold text-primary-600 hover:text-primary-700">
+                                <a href="{{ url('categories', $category->slug) }}" class="hidden text-sm font-semibold text-primary-600 hover:text-primary-700 sm:block">
                                     {{ __('messages.t_view_more') }}
 
                                     {{-- LTR arrow --}}
@@ -251,12 +295,20 @@
                         </div>
 
                         {{-- List of gigs --}}
-                        <div class="grid grid-cols-12 xs:gap-x-7 sm:gap-x-9 md:gap-x-5 gap-y-6">
-                            @foreach ($category->gigs as $gig)
-                                <div class="col-span-12 xs:col-span-6 md:col-span-4 lg:col-span-4 xl:col-span-3">
-                                    @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
+                        <div class="relative col-span-12">
+                            <div class="swiper w-full h-full gigs-swiper {{ $category->slug }}-swiper">
+                                <div class="swiper-wrapper">
+                                    @foreach ($category->gigs as $gig)
+                                        <div class="swiper-slide max-w-[230px] xs:max-w-[280px]">
+                                            @livewire('main.cards.gig', ['gig' => $gig], key(uid() . 'gig-item-' . $category->id . '-' . $gig->uid))
+                                        </div>
+                                    @endforeach
                                 </div>
-                            @endforeach
+                            </div>
+                            <div class="!h-8 !-left-3 lg:!-left-6 xl:!-left-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-prev category-prev-{{ $loop->index }}">
+                            </div>
+                            <div class="!h-8 !-right-3 lg:!-right-6 xl:!-right-9 !hidden sm:!flex px-4 rounded-full shadow-lg after:!text-sm swiper-button-next category-next-{{ $loop->index }}">
+                            </div>
                         </div>
                     </div>
                 </div>

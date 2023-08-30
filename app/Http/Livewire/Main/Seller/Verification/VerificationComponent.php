@@ -142,7 +142,7 @@ class VerificationComponent extends Component
             ->object();
 
         if (!$response->status) {
-            $this->toastMessage('Sorry error occured unable to validate your information.');
+            $this->toastMessage('Sorry error occured unable to validate your information.1');
 
             return false;
         }

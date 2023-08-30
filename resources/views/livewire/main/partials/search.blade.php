@@ -1,7 +1,7 @@
 <div x-data="window.jDxKFKNiKkfxISD" x-init="init()" x-cloak>
 
     {{-- Search button --}}
-    <div class="py-2 mx-4 text-gray-400 hover:text-gray-500 dark:text-gray-100 dark:hover:text-white cursor-pointer md:hidden"
+    <div class="py-2 mx-4 text-gray-400 hover:text-gray-500 dark:text-gray-100 dark:hover:text-white cursor-pointer hidden md:hidden"
         @click="open()">
         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             aria-hidden="true">

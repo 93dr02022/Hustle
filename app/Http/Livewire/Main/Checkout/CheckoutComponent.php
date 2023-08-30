@@ -957,6 +957,7 @@ class CheckoutComponent extends Component
                         $order_item->commission_value = $commisssion;
                         $order_item->custom_offer_id = is_null($itemOffer) ? null : $itemOffer['id'];
                         $order_item->save();
+                        //Creating the ordertimeline
 
                         // Creating the ordertimeline
                         $order_item->orderTimelines()->create([
