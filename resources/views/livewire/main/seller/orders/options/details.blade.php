@@ -132,8 +132,8 @@
 
     {{-- Content --}}
     <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
-        <div class="grid lg:grid-cols-2 gap-4">
-            <div>
+        <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2">
                 <dl
                     class=" lg:py-6 p-6  rounded-lg border border-gray-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
 
@@ -501,7 +501,7 @@
             </div>
             @if (count($timelines) > 0)
                 <div
-                    class=" px-6 py-4 lg:py-8 text-sm bg-white border border-gray-200 rounded-lg shadow-sm  dark:border-zinc-700 dark:bg-zinc-800">
+                    class=" px-6 py-4  lg:col-span-1 lg:py-8 text-sm bg-white border border-gray-200 rounded-lg shadow-sm  dark:border-zinc-700 dark:bg-zinc-800">
                     <h1 class="font-bold text-">Order Timeline</h1>
 
                     <ol class="relative text-xs border-l border-gray-200 dark:border-gray-700">
