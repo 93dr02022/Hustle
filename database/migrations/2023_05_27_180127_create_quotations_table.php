@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('paid')->index();
 
             $table->boolean('can_wallet')->default(false)->index();
+            $table->boolean('in_wallet')->default(false)->index();
             $table->decimal('total')->index();
             $table->dateTime('expires_at')->index();
             $table->decimal('total_discount')->index();

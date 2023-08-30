@@ -38,6 +38,8 @@ class SettingsComponent extends Component
 
     public $verification;
 
+    public $withdrawInfo;
+
     /**
      * Init component
      *
@@ -45,13 +47,19 @@ class SettingsComponent extends Component
      */
     public function mount()
     {
-        $withdrawInfo = UserWithdrawalSettings::firstOrCreate(['user_id' => auth()->id()]);
         $this->verification = VerificationCenter::where('user_id', auth()->id())->first();
 
         if (!$this->verification) {
-            $this->toastSuccess('You need to complete your verification before setting bank account');
-            return redirect('/seller/verification');
+            return redirect('/seller/verification?redirect');
         }
+
+        $withdrawInfo = UserWithdrawalSettings::where('user_id', auth()->id())->first();
+
+        if (!$withdrawInfo) {
+            return redirect('/seller/verification?redirect');
+        }
+
+        $this->withdrawInfo = $withdrawInfo;
 
         $this->personalBank = $withdrawInfo->personal_bank_code;
         $this->personalAccountName = $withdrawInfo->personal_account_name;
@@ -222,6 +230,16 @@ class SettingsComponent extends Component
             return false;
         }
 
+        // check nobody else has used this account before
+        $acctExists = UserWithdrawalSettings::where('personal_acct_number', $this->accountNumber)
+            ->where('user_id', '!=', auth()->id())
+            ->exists();
+
+        if ($acctExists) {
+            $this->toastMessage('Your account number has been flagged please change');
+            return;
+        }
+
         try {
             if (!$this->verify('personal')) {
                 $this->toastError(__('We are unable to verify your bank information please retry.'));
@@ -253,6 +271,16 @@ class SettingsComponent extends Component
         if ($this->verification->business_verify_status !== 'verified') {
             $this->toastError('you can only add business account when your business verified.');
             return false;
+        }
+
+        // check nobody else has used this account before
+        $acctExists = UserWithdrawalSettings::where('business_acct_number', $this->businessAccountNumber)
+            ->where('user_id', '!=', auth()->id())
+            ->exists();
+
+        if ($acctExists) {
+            $this->toastMessage('Your account number has been flagged please change');
+            return;
         }
 
         try {

@@ -19,10 +19,14 @@ class CreateQuoteComponent extends Component
     use Actions;
 
     public $expiration;
+    public $quotePerson = null;
 
     public function mount()
     {
         $this->expiration = now()->addDays(7)->format('Y-m-d');
+        if (request()->has('uid')) {
+            $this->quotePerson = User::find(request()->uid);
+        }
     }
 
     public function render()
@@ -113,6 +117,10 @@ class CreateQuoteComponent extends Component
                 'description' => 'Quotation created successfully. you can now share quotation to customers to pay',
                 'icon' => 'success',
             ]);
+
+            if ($this->quotePerson) {
+                return redirect("/inbox/" . strtolower($this->quotePerson->uid));
+            }
 
             return $quotation->toArray();
         } catch (\Throwable $th) {

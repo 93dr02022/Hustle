@@ -29,7 +29,7 @@
             </div>
 
             {{-- Menu --}}
-            <div class="pointer-events-none fixed inset-y-0 ltr:right-0 rtl:left-0 flex max-w-full ltr:pl-10 rtl:pr-10">
+            <div class="pointer-events-none fixed inset-y-0 ltr:right-0 rtl:left-0 flex max-w-full ltr:md:pl-10">
                 <div 
                     x-show="cart_open" 
                     style="display: none;"
@@ -65,8 +65,8 @@
                                                     <div class="ltr:ml-4 rtl:mr-4 flex flex-1 flex-col">
                                                         <div>
                                                             <div class="flex justify-between text-sm font-medium text-gray-900 dark:text-white">
-                                                                <h3 class="ltr:pr-2 rtl:pl-2 truncate max-w-[150px] lg:w-auto">
-                                                                    <a href="{{ url('service', $item['gig']['slug']) }}" target="_blank" class="hover:text-primary-600 font-bold truncate w-52 block"> {{ $item['gig']['title'] }} </a>
+                                                                <h3 class="ltr:pr-2 rtl:pl-2">
+                                                                    <a href="{{ url('service', $item['gig']['slug']) }}" target="_blank" class="hover:text-primary-600 line-clamp-2 font-bold block"> {{ $item['gig']['title'] }} </a>
                                                                 </h3>
                                                                 <p class="ltr:ml-5 rtl:mr-5  font-black text-gray-500 dark:text-gray-300 pt-0.5">@money($this->itemTotalPrice($item['id']), settings('currency')->code, true)</p>
                                                             </div>

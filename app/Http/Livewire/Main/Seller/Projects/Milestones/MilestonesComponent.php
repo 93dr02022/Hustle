@@ -198,19 +198,19 @@ class MilestonesComponent extends Component
             $this->dialog()->confirm([
                 'title' => '<h1 class="text-base font-bold tracking-wide">' . __('messages.t_confirm_milestone_payment') . '</h1>',
                 'description' => "<div class='leading-relaxed'>" . __('messages.t_pls_review_ur_milestone_payment_details') . "<br></div>
-                <div class='rounded border dark:border-secondary-600 my-8'>
+                <div class='my-8 border rounded dark:border-secondary-600'>
                 <dl class='divide-y divide-gray-200 dark:divide-gray-600'>
-                    <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_requested_amount') . "</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount), settings('currency')->code, true) . "</dd>
+                    <div class='grid grid-cols-3 gap-4 px-4 py-3'>
+                        <dt class='text-sm font-medium text-gray-500 whitespace-nowrap dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_requested_amount') . "</dt>
+                        <dd class='col-span-2 mt-0 text-sm font-semibold text-zinc-900 dark:text-secondary-400 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount), settings('currency')->code, true) . "</dd>
                     </div>  
-                    <div class='grid grid-cols-3 gap-4 py-3 px-4'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_milestone_freelancer_fee_name') . "</dt>
-                        <dd class='text-sm font-semibold text-red-600 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>- " . money(convertToNumber($freelancer_commission), settings('currency')->code, true) . "</dd>
+                    <div class='grid grid-cols-3 gap-4 px-4 py-3'>
+                        <dt class='text-sm font-medium text-gray-500 whitespace-nowrap dark:text-secondary-500 ltr:text-left rtl:text-right'>" . __('messages.t_milestone_freelancer_fee_name') . "</dt>
+                        <dd class='col-span-2 mt-0 text-sm font-semibold text-red-600 dark:text-secondary-400 ltr:text-right rtl:text-left'>- " . money(convertToNumber($freelancer_commission), settings('currency')->code, true) . "</dd>
                     </div>  
-                    <div class='grid grid-cols-3 gap-4 py-3 px-4 bg-gray-100/60 dark:bg-secondary-700 rounded-b'>
-                        <dt class='text-sm font-medium whitespace-nowrap text-gray-500 dark:text-secondary-400 ltr:text-left rtl:text-right'>" . __('messages.t_u_will_get') . "</dt>
-                        <dd class='text-sm font-semibold text-zinc-900 dark:text-secondary-400 col-span-2 mt-0 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount) - convertToNumber($freelancer_commission), settings('currency')->code, true) . '</dd>
+                    <div class='grid grid-cols-3 gap-4 px-4 py-3 rounded-b bg-gray-100/60 dark:bg-secondary-700'>
+                        <dt class='text-sm font-medium text-gray-500 whitespace-nowrap dark:text-secondary-400 ltr:text-left rtl:text-right'>" . __('messages.t_u_will_get') . "</dt>
+                        <dd class='col-span-2 mt-0 text-sm font-semibold text-zinc-900 dark:text-secondary-400 ltr:text-right rtl:text-left'>" . money(convertToNumber($this->amount) - convertToNumber($freelancer_commission), settings('currency')->code, true) . '</dd>
                     </div>  
                 </dl>
                 </div>

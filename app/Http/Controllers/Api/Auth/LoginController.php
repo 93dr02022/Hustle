@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Models\User;
 use App\Support\Utils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
@@ -41,5 +42,28 @@ class LoginController extends Controller
     {
         $request->user()->tokens()->delete();
         return Utils::successResp([], 'Successfully logged out');
+    }
+
+    /**
+     * we are using the logout here due to 
+     * mobile app not being able to intercept the logout url
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function webLogout(Request $request)
+    {
+        auth()->logout();
+
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        foreach ($request->cookies as $name => $value) {
+            if ($name !== 'default_theme') {
+                Cookie::queue(Cookie::forget($name));
+            }
+        }
+
+        return redirect('/');
     }
 }

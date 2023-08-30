@@ -28,6 +28,7 @@ class Quotation extends Model
         'is_draft',
         'paid',
         'can_wallet',
+        'in_wallet',
         'total',
         'expires_at',
         'total_discount',

@@ -265,6 +265,15 @@ class DepositComponent extends Component
 
             // Check if amount is correct
             if (is_numeric($this->amount) && $this->amount >= 1) {
+                if ($this->amount > 1000000) {
+                    $this->notification([
+                        'title' => __('messages.t_error'),
+                        'description' => __('Deposit amount cant be greater than 1,000,000'),
+                        'icon' => 'error',
+                    ]);
+
+                    return;
+                }
 
                 // Check selected payment method
                 switch ($this->selected) {
@@ -1199,9 +1208,9 @@ class DepositComponent extends Component
                 $deposit->user_id = auth()->id();
                 $deposit->transaction_id = $transaction_id;
                 $deposit->payment_method = $provider_name;
-                $deposit->amount_total = round(($amount * $default_currency_exchange) / $gateway_currency_exchange, 2);
-                $deposit->amount_fee = round(($fee * $default_currency_exchange) / $gateway_currency_exchange, 2);
-                $deposit->amount_net = round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2);
+                $deposit->amount_total = round($amount, 2);
+                $deposit->amount_fee = round($fee, 2);
+                $deposit->amount_net = round(($amount - $fee), 2);
                 $deposit->currency = $gateway_currency;
                 $deposit->exchange_rate = $gateway_currency_exchange;
                 $deposit->status = 'paid';
@@ -1209,7 +1218,7 @@ class DepositComponent extends Component
                 $deposit->save();
 
                 // Add funds to account
-                $this->addFunds(round((($amount - $fee) * $default_currency_exchange) / $gateway_currency_exchange, 2));
+                $this->addFunds(round($amount - $fee, 2));
 
                 // Set response
                 $response = [

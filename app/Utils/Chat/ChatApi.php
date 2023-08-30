@@ -201,11 +201,7 @@ class ChatApi
             // No message
             $message = null;
         }
-
-        if ($msg->quotation_id) {
-            $quotation = Quotation::where('id', $msg->quotation_id)->with('items')->first();
-        }
-
+        
         // Return message
         return [
             'index'           => $index,
@@ -213,7 +209,8 @@ class ChatApi
             'from_id'         => $msg->from_id,
             'to_id'           => $msg->to_id,
             'message'         => $message,
-            'quotation'  => $quotation,
+            'quotationId' => $msg->quotation_id,
+            'offerId' => $msg->custom_offer_id,
             'attachment'      => [$attachment, $attachment_title, $attachment_type, $attachment_extension, $attachment_size],
             'time'            => $msg->created_at->diffForHumans(),
             'fullTime'        => $msg->created_at,
@@ -271,6 +268,7 @@ class ChatApi
         $message->body       = clean(strip_tags($data['body']));
         $message->attachment = $data['attachment'];
         $message->quotation_id = $data['quotation_id'];
+        $message->custom_offer_id = $data['offerId'];
         $message->save();
     }
 

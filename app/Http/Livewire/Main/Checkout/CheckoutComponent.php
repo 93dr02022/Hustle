@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Main\Checkout;
 
 use App\Models\Admin;
 use App\Models\CheckoutWebhook;
+use App\Models\CustomOffer;
 use App\Models\Gig;
 use App\Models\GigUpgrade;
 use App\Models\Order;
@@ -76,6 +77,8 @@ class CheckoutComponent extends Component
 
     public $nowpayments_pay_amount;
 
+    public $offer = null;
+
     // Mercadopago
     public $mercadopago_preference_id;
 
@@ -93,6 +96,39 @@ class CheckoutComponent extends Component
      */
     public function mount()
     {
+
+        // if request has offer then we will unset all previous
+        // cart items then place offer gig in the cart
+        if (request()->has('offer')) {
+            $offer = CustomOffer::where('uid', request()->offer)
+                ->where('is_paid', false)
+                ->where('offer_status', 'accepted')
+                ->with('gig')->first();
+
+            if ($offer) {
+                session()->forget('cart');
+                $this->offer = $offer;
+
+                $offerCart = [
+                    'id' => $offer->gig->uid,
+                    'offer_uid' => $offer->uid,
+                    'gig_price' => $offer->gig->price,
+                    'quantity' => 1,
+                    'offer' => $offer->toArray(),
+                    'gig' => [
+                        'title' => $offer->gig->title,
+                        'slug' => $offer->gig->slug,
+                        'price' => $offer->offer_amount,
+                        'delivery' => $offer->delivery_time,
+                        'thumbnail' => $offer->gig->image_thumb_id,
+                    ],
+                    'upgrades' => [],
+                ];
+
+                session()->put('cart', [$offerCart]);
+            }
+        }
+
         // We have to validate the cart
         // How? For example if user is not logged in, he may be able to add his own gigs to cart and the login to checkout
         // So we need to remove his own gigs from cart after login
@@ -430,6 +466,23 @@ class CheckoutComponent extends Component
     }
 
     /**
+     * Get cart item offer
+     * 
+     */
+    public function itemOffer($id)
+    {
+        $offer = null;
+
+        collect($this->cart)->each(function ($item) use (&$offer, $id) {
+            if ($item['id'] === $id && array_key_exists('offer', $item)) {
+                $offer = $item['offer'];
+            }
+        });
+
+        return $offer;
+    }
+
+    /**
      * Count total price of an item in cart
      *
      * @param  string  $id
@@ -603,7 +656,12 @@ class CheckoutComponent extends Component
             ];
 
             // Payment gateway is required
-            if (!array_key_exists($this->payment_method, $supported_payment_gateways) || !isset($supported_payment_gateways[$this->payment_method]) || !$supported_payment_gateways[$this->payment_method]) {
+            if (
+                !array_key_exists(
+                    $this->payment_method,
+                    $supported_payment_gateways
+                ) || !isset($supported_payment_gateways[$this->payment_method]) || !$supported_payment_gateways[$this->payment_method]
+            ) {
 
                 // Error
                 $this->notification([
@@ -619,7 +677,7 @@ class CheckoutComponent extends Component
             // Check selected payment gateway
             switch ($this->payment_method) {
 
-                    // Paypal
+                // Paypal
                 case 'paypal':
 
                     // Get response
@@ -880,6 +938,7 @@ class CheckoutComponent extends Component
 
                         // Get item total price
                         $item_total_price = $this->itemTotalPrice($item['id']);
+                        $itemOffer = $this->itemOffer($item['id']);
 
                         // Calculate commission first
                         $commisssion = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
@@ -896,14 +955,22 @@ class CheckoutComponent extends Component
                         $order_item->total_value = $item_total_price;
                         $order_item->profit_value = $item_total_price - $commisssion;
                         $order_item->commission_value = $commisssion;
+                        $order_item->custom_offer_id = is_null($itemOffer) ? null : $itemOffer['id'];
                         $order_item->save();
                         //Creating the ordertimeline
 
+                        // Creating the ordertimeline
                         $order_item->orderTimelines()->create([
                             'name' => 'Order placed',
-                            'description' => auth()->user()->username . ' placed order'
+                            'description' => auth()->user()->username . ' placed order',
                         ]);
-                        
+
+                        // update offer is paid in other update offer pay status
+                        if (!is_null($this->offer)) {
+                            $this->offer->is_paid = true;
+                            $this->offer->save();
+                        }
+
                         // Check if this item has upgrades
                         if (is_array($item['upgrades']) && count($item['upgrades'])) {
 
@@ -1207,7 +1274,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $order['id'],
                         'payment_method' => 'paypal',
                         'payment_status' => 'paid',
-                        'amount_paid' => $amount
+                        'amount_paid' => $amount,
                     ],
                 ];
 
@@ -1274,7 +1341,7 @@ class CheckoutComponent extends Component
                         'payment_id' => uid(),
                         'payment_method' => 'wallet',
                         'payment_status' => 'paid',
-                        'amount_paid' => $total_amount
+                        'amount_paid' => $total_amount,
                     ],
                 ];
 
@@ -1362,7 +1429,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $payment['data']['id'],
                         'payment_method' => 'paystack',
                         'payment_status' => 'paid',
-                        'amount_paid' => $amount
+                        'amount_paid' => $amount,
                     ],
                 ];
 
@@ -1503,7 +1570,7 @@ class CheckoutComponent extends Component
                             'payment_id' => $payment['cf_order_id'],
                             'payment_method' => 'cashfree',
                             'payment_status' => 'paid',
-                            'amount_paid' => $amount
+                            'amount_paid' => $amount,
                         ],
                     ];
 
@@ -1636,7 +1703,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $payment->id,
                         'payment_method' => 'razorpay',
                         'payment_status' => 'paid',
-                        'amount_paid' => $amount
+                        'amount_paid' => $amount,
                     ],
                 ];
 
@@ -1733,7 +1800,7 @@ class CheckoutComponent extends Component
                         'payment_id' => $data['payment_id'],
                         'payment_method' => 'nowpayments',
                         'payment_status' => 'paid',
-                        'amount_paid' => $amount
+                        'amount_paid' => $amount,
                     ],
                 ];
 

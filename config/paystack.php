@@ -24,6 +24,12 @@ return [
     'secretKey' => env('PAYSTACK_SECRET_KEY'),
 
     /**
+     * Live secret Key From Paystack Dashboard
+     *
+     */
+    'liveSecretKey' => env('PAYSTACK_LIVE_SECRET_KEY'),
+
+    /**
      * Paystack Payment URL
      *
      */

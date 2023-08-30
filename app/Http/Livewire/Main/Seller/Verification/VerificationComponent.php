@@ -131,7 +131,7 @@ class VerificationComponent extends Component
      */
     public function bvnMatch()
     {
-        $response = Http::withToken(config('paystack.secretKey'))
+        $response = Http::withToken(config('paystack.liveSecretKey'))
             ->post('https://api.paystack.co/bvn/match', [
                 'bvn' => $this->bvn,
                 'bank_code' => $this->bank,
@@ -228,6 +228,16 @@ class VerificationComponent extends Component
      */
     public function personalVerify()
     {
+        // check nobody has used this account number before
+        $acctExists = UserWithdrawalSettings::where('personal_acct_number', $this->accountNumber)
+            ->where('user_id', '!=', auth()->id())
+            ->exists();
+
+        if ($acctExists) {
+            $this->toastMessage('Your account number has been flagged please change');
+            return;
+        }
+        
         try {
             $bvnInfo = $this->bvnMatch();
 

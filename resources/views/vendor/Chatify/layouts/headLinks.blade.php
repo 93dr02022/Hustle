@@ -3,7 +3,7 @@
 <head>
 
 	{{-- Meta tags --}}
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 	<meta name="id" content="{{ $id }}">
 	<meta name="uid" content="{{ $uid }}">
 	<meta name="type" content="{{ $type }}">
@@ -50,6 +50,22 @@
 			margin: 5px;
 			display: inline-block;
 		}
+
+		@media screen (max-width: 980px) {
+			.messenger-card-cover {
+				position: fixed !important;
+				bottom: 0 !important;
+				width: 100% !important;
+			}
+		}
+
+		@media only screen (max-width: 500px) {
+			.messenger-card-cover {
+				position: fixed !important;
+				bottom: 0 !important;
+				width: 100% !important;
+			}
+		}
 	</style>
 
 	{{-- JavaScript variables --}}
@@ -73,5 +89,6 @@
 	<script src="{{ url('js/plugins/momentjs/moment-with-locales.js') }}"></script>
 	<script src="{{ url('js/plugins/momentjs/moment-timezone.min.js') }}"></script>
 	<script src="{{ url('js/plugins/momentjs/moment-timezone-with-data-1970-2030.min.js') }}"></script>
+	<script src="{{ url('js/dropdown.js') }}"></script>
 
 </head>
