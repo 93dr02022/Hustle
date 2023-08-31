@@ -106,6 +106,6 @@ class SellerComponent extends Component
         ]);
 
         // Redirect to seller dashboard
-        return redirect('seller/home');
+        return redirect('seller/verification');
     }
 }

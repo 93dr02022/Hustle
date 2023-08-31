@@ -41,13 +41,14 @@ class YouBecameSeller extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_u_became_seller');
+        $subject = '['.config('app.name').'] '.__('messages.t_subject_seller_u_became_seller');
 
         return (new MailMessage)
-                    ->subject($subject)
-                    ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_seller_line_1_u_became_seller'))
-                    ->action(__('messages.t_seller_dashboard'), url('seller/home'));
+            ->subject($subject)
+            ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
+            ->line(__('messages.t_notification_seller_line_1_u_became_seller'))
+            ->line(__('You need to complete the seller verification process in other to start creating gigs.'))
+        ->action(__('Verification'), url('seller/verification'));
     }
 
     /**
