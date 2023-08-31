@@ -92,7 +92,7 @@ class Pricing extends Component
             ['value' => 8, 'text' => 8],
             ['value' => 9, 'text' => 9],
             ['value' => 10, 'text' => 10],
-            ['value' => 9999999999999999999999999, 'text' => unlimited],
+            ['value' => 9999999999999999999999999, 'text' => 'unlimited'],
            
 
 
