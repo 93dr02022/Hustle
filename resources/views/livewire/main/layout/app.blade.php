@@ -149,11 +149,11 @@
 
     {{-- pull to refresh for mobile --}}
     <div
-        class="pull-to-refresh flex justify-center items-center transition-all duration-500 z-[5000] fixed -top-[150px] w-full h-[200px] [&.visible]:top-0">
+        class="pull-to-refresh hidden justify-center items-end transition-all duration-500 z-[5000] fixed top-0 w-full h-24 [&.visible]:flex">
         <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-700 border-r-gray-300 align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status">
             <span
-                class="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]">Loading...</span>
+                class="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]">Loading</span>
         </div>
     </div>
 
