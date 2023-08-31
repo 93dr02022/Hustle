@@ -29,7 +29,8 @@ class ProjectMilestone extends Model
         'employer_id',
         'amount',
         'description',
-        'status'
+        'status',
+        'decline_reason'
     ];
 
     /**

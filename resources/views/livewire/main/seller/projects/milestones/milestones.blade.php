@@ -261,13 +261,21 @@
                             </td>
 
                             {{-- Description --}}
-                            <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-48 flex items-center rtl:text-right">
-                                <div class="text-gray-700 dark:text-gray-100 text-sm font-medium truncate overflow-auto w-48 flex-none">
+                            <td class="px-5 pt-6 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-48 flex items-center gap-x-2 rtl:text-right">
+                                <div class="text-gray-700 dark:text-gray-100 text-sm font-medium truncate overflow-auto w-48">
                                     {{ $p->description }}
                                 </div>
-                                @if (strlen($p->description) > 30)
-                                    <span x-on:click="description('{{ str_replace(["'", "\n", "\r", "\r\n"], ' ', $p->description) }}')"
-                                        class="cursor-pointer font-medium hover:text-slate-500 text-[11px] text-slate-400 tracking-wider whitespace-nowrap mt-0.5">@lang('messages.t_read_more')</span>
+                                @if (strlen($p->description) > 15)
+                                    <div class="static">
+                                        <a class="" data-offset="8" data-lc-toggle="dropdown" data-popper-placement="bottom">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-blue-600 pointer-events-none" viewBox="0 0 16 16">
+                                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                            </svg>
+                                        </a>
+                                        <div class="z-10 hidden text-left text-white text-xs w-[210px] px-3 py-4 bg-slate-700/90 border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                                            {{ $p->description }}
+                                        </div>
+                                    </div>
                                 @endif
                             </td>
 
@@ -290,10 +298,23 @@
 
                                     {{-- declined --}}
                                     @case('declined')
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400">
-                                            {{ __('declined') }}
-                                        </span>
+                                        <div class="flex items-center gap-x-2">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-sm text-xs font-medium bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400">
+                                                {{ __('declined') }}
+                                            </span>
+                                            <div class="static">
+                                                <a class="" data-offset="8" data-lc-toggle="dropdown" data-popper-placement="bottom">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-red-600 pointer-events-none" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                                                    </svg>
+                                                </a>
+                                                <div class="z-10 hidden text-left text-white text-xs w-[210px] px-3 py-4 bg-slate-700/90 border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                                                    {{ $p->decline_reason }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     @break
+                                    
 
                                     {{-- Funded --}}
                                     @case('funded')

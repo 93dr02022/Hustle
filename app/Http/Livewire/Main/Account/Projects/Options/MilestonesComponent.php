@@ -868,8 +868,18 @@ class MilestonesComponent extends Component
      * Decline milestone payment
      * 
      */
-    public function declineMilestone($uid)
+    public function declineMilestone($uid, $reason)
     {
+        if (strlen($reason) <= 1) {
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => __('The decline reason field is required in other to decline a milestone payment.'),
+                'icon' => 'error',
+            ]);
+
+            return;
+        }
+        
         try {
             // Project must be active
             $payment = ProjectMilestone::where('project_id', $this->project->id)
@@ -879,7 +889,7 @@ class MilestonesComponent extends Component
             if ($payment->status !== 'request') {
                 $this->notification([
                     'title' => __('messages.t_error'),
-                    'description' => __('you can only cancel milestone with request status.'),
+                    'description' => __('you can only decline a milestone payment with request status.'),
                     'icon' => 'error',
                 ]);
 
@@ -889,6 +899,7 @@ class MilestonesComponent extends Component
             // update milestone status to delicne and notify user
             $freelancer = $this->project->awarded_bid->user;
             $payment->status = 'declined';
+            $payment->decline_reason = $reason;
             $payment->save();
 
             $freelancer->notify(new EmployerDeclineMilestone($payment));
