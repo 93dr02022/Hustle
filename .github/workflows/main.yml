@@ -29,7 +29,6 @@ jobs:
             composer i
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            npm install
             npm run prod
             php artisan config:clear
             php artisan view:clear

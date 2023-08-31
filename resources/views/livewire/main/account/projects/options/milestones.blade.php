@@ -363,10 +363,22 @@
                                         </td>
 
                                         {{-- Description --}}
-                                        <td class="px-5 py-3 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-48 rtl:text-right">
-                                            <div class="text-gray-500 leading-relaxed dark:text-gray-100 text-[13px] font-normal break-words flex-none truncate w-48 overflow-hidden block">
+                                        <td class="px-5 pt-6 first:ltr:rounded-l-md last:ltr:rounded-r-md first:rtl:rounded-r-md last:rtl:rounded-l-md w-48 flex items-center gap-x-2 rtl:text-right">
+                                            <div class="text-gray-700 leading-relaxed dark:text-gray-100 text-sm font-medium truncate overflow-auto w-48">
                                                 {{ $p->description }}
                                             </div>
+                                            @if (strlen($p->description) > 15)
+                                                <div class="static">
+                                                    <a class="" data-offset="8" data-lc-toggle="dropdown" data-popper-placement="bottom">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-blue-600 pointer-events-none" viewBox="0 0 16 16">
+                                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                                        </svg>
+                                                    </a>
+                                                    <div class="z-10 hidden text-left text-white text-xs w-[210px] px-3 py-4 bg-slate-700/90 border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                                                        {{ $p->description }}
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </td>
 
                                         {{-- Status --}}
@@ -390,10 +402,23 @@
 
                                                 {{-- declined --}}
                                                 @case('declined')
-                                                    <span
-                                                        class="inline-flex items-center px-4 py-2 rounded-3xl text-xs tracking-wide font-medium bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400">
-                                                        {{ __('declined') }}
-                                                    </span>
+                                                    <div class="flex items-center gap-x-2">
+                                                        <span
+                                                            class="inline-flex items-center px-4 py-2 rounded-3xl text-xs tracking-wide font-medium bg-red-100 text-red-800 dark:bg-transparent dark:text-red-400">
+                                                            {{ __('declined') }}
+                                                        </span>
+                                                        <div class="static">
+                                                            <a class="" data-offset="8" data-lc-toggle="dropdown" data-popper-placement="bottom">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-red-600 pointer-events-none" viewBox="0 0 16 16">
+                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                                                                </svg>
+                                                            </a>
+                                                            <div class="z-10 hidden text-left text-white text-xs w-[210px] px-3 py-4 bg-slate-700/90 border border-gray-200 rounded shadow-lg dark:bg-zinc-800">
+                                                                {{ $p->decline_reason }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
                                                 @break
 
                                                 {{-- Funded --}}
@@ -450,7 +475,7 @@
                                                     @if ($p->status === 'request')
                                                         <a @click="selectedMilestonePay = '{{ $p->uid }}'" id="modal-decline-milestone-button-{{ $project->uid }}"
                                                             class="block text-sm py-2 px-3 rounded hover:bg-slate-100 cursor-pointer">
-                                                            {{ __('Cancel Request') }}
+                                                            {{ __('Decline Request') }}
                                                         </a>
                                                     @endif
 
@@ -634,7 +659,7 @@
         </x-forms.modal>
 
 
-        {{-- cancel milestone dialog --}}
+        {{-- decline milestone dialog --}}
         <x-forms.modal id="modal-decline-milestone-container-{{ $project->uid }}" target="modal-decline-milestone-button-{{ $project->uid }}" uid="modal_decline_milestone_funds_{{ $project->uid }}"
             placement="center-center" size="max-w-md">
 
@@ -657,14 +682,18 @@
                         </div>
 
                         <div class="mt-4 w-full sm:mt-0">
-                            <h3 class="text-lg leading-6 font-medium text-secondary-900 dark:text-secondary-400 text-center sm:text-left sm:rtl:text-right">
+                            <h3 class="text-lg leading-6 font-medium text-secondary-900 dark:text-gray-400 text-center sm:text-left sm:rtl:text-right">
                                 <h1 class="text-base font-bold tracking-wide">Decline Milestone</h1>
                             </h3>
 
-                            <p class="mt-2 text-sm text-secondary-500 text-center sm:text-left sm:rtl:text-right">
+                            <p class="mt-2 text-sm text-secondary-500 dark:text-gray-500 text-center sm:text-left sm:rtl:text-right">
                                 You are about to decline a milestone request doing this might result in freelancer not doing your work.
                             </p>
                         </div>
+                    </div>
+                    <div class="">
+                        <label for="block text-sm text-secondary-500 dark:text-gray-500">Decline reason</label>
+                        <textarea class="form-ctr" rows="3" x-model="declineReason" maxlength="160"></textarea>
                     </div>
                 </div>
             </x-slot>
@@ -680,7 +709,7 @@
                     </button>
 
                     {{-- Create --}}
-                    <button type="button" @click="$wire.declineMilestone(selectedMilestonePay)" wire:loading.attr="disabled"
+                    <button type="button" @click="$wire.declineMilestone(selectedMilestonePay, declineReason)"  :disabled="declineReason.length <= 0" wire:loading.attr="disabled"
                         class="inline-flex justify-center items-center rounded border font-semibold focus:outline-none px-3 py-2 leading-5 text-xs tracking-wide border-transparent bg-yellow-400 text-white hover:bg-yellow-500 focus:ring focus:ring-primary-500 focus:ring-opacity-25 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed">
 
                         {{-- Loading indicator --}}
@@ -986,6 +1015,7 @@
                     selectedMilestonePay: "",
                     topupAmount: '',
                     increaseAmount: '',
+                    declineReason: '',
 
                     hidden: false,
                     milestone: {},
