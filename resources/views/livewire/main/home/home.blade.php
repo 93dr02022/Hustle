@@ -2,7 +2,7 @@
     <div class="grid grid-cols-12">
         {{-- selected gigs for you --}}
         <div class="col-span-12">
-            <div class="odd:bg-[#F1F4FF] w-full py-16">
+            <div class="odd:bg-[#F2F2F2] w-full py-16">
                 <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {{-- Section title --}}
                     <div class="flex items-center justify-between py-2 mb-3.5 bg-transparent">
