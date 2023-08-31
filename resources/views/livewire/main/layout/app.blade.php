@@ -47,6 +47,10 @@
         html {
             font-family: Heebo, sans-serif !important;
         }
+
+        body {
+            overscroll-behavior-y: auto;
+        }
     </style>
 
     {{-- Styles --}}
@@ -143,6 +147,16 @@
     {{-- global login handler --}}
     @livewire('main.auth.pop-login-component')
 
+    {{-- pull to refresh for mobile --}}
+    <div
+        class="pull-to-refresh flex justify-center items-center transition-all duration-500 z-[5000] fixed -top-[100px] w-full h-28 [&.visible]:top-0">
+        <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-700 border-r-gray-300 align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status">
+            <span
+                class="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]">Loading...</span>
+        </div>
+    </div>
+    
     {{-- Content --}}
     @if (request()->is('/'))
         <main class="flex-grow">
@@ -260,6 +274,29 @@
         document.ontouchmove = function(event) {
             event.preventDefault();
         }
+
+        const pullToRefresh = document.querySelector('.pull-to-refresh');
+        let touchstartY = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchstartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', e => {
+            const touchY = e.touches[0].clientY;
+            const touchDiff = touchY - touchstartY;
+            if (touchDiff > 0 && window.scrollY === 0) {
+                pullToRefresh.classList.add('visible');
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('touchend', e => {
+            if (pullToRefresh.classList.contains('visible')) {
+                pullToRefresh.classList.remove('visible');
+                location.reload();
+            }
+        });
     </script>
 
     {{-- Custom scripts --}}
