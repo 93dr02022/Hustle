@@ -37,7 +37,7 @@ class Hero extends Component
      */
     public function render()
     {
-        return view('livewire.main.includes.hero3', [
+        return view('livewire.main.includes.hero', [
             'states' => modelCaches('nigerian_states'),
             'slides' => $this->slides()
         ]);

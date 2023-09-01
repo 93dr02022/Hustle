@@ -183,6 +183,15 @@ class User extends Authenticatable
     }
 
     /**
+     * The user keyword searches
+     * 
+     */
+    public function searches()
+    {
+        return $this->hasMany(UserSearch::class);
+    }
+
+    /**
      * Get seller rating
      *
      * @return integer

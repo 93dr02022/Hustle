@@ -18,6 +18,13 @@ Route::namespace('App\Http\Controllers\Main\Notifications')->group(function () {
     Route::post('/unsubscribe-to-notifications', 'NotificationsController@unsubscribe')->name('unsubscribe-to-notifications');
 });
 
+// General landing page ajax
+Route::namespace('App\Http\Controllers\Main\Common')->group(function () {
+    Route::get('/ajax/user-searches', 'AjaxController@getUserSearch')->name('userSearches');
+    Route::post('/ajax/save-keyword', 'AjaxController@saveKeywords')->name('userSaveKeywords');
+    Route::post('/ajax/delete-keyword', 'AjaxController@deleteKeywords')->name('userDeleteKeywords');
+});
+
 Route::namespace('App\Http\Controllers\Chat')->group(function () {
     Route::post('/chat-quote', 'QuoteController@getQuote')->name('chatQuote');
     Route::post('/chat-quotes', 'QuoteController@quotes')->name('chatQuotes');
