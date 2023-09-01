@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1" x-data="window.LandingPageHeroSection">
-    <div class="bg-[#F1F4FF] xs:bg-white grid grid-cols-1 xs:flex flex-col grow overflow-hidden h-[320px] xs:min-h-[380px] sm:min-h-[385px] md:max-h-[430px] xs:h-full w-full relative">
-        <div class="bg-white xs:bg-none mx-4 xs:mx-0 mt-3 xs:mt-0 order-2 xs:order-1 grid h-full grid-cols-1">
-            <div class="swiper hero-swiper w-full xs:h-full" wire:ignore>
+    <div class="bg-[#F1F4FF] xs:bg-white grid grid-cols-1 grow h-[325px] xs:min-h-[380px] sm:h-[390px] md:h-[430px] xs:h-full w-full">
+        <div class="xs:row-start-1 col-start-1 overflow-hidden bg-white xs:bg-none mx-4 xs:mx-0 mt-3 xs:mt-0 order-2 xs:order-1 grid h-full grid-cols-1">
+            <div class="swiper hero-swiper bg-white w-full xs:h-full" wire:ignore>
                 <div class="swiper-wrapper">
                     @foreach ($slides as $slide)
                         <div class="w-full swiper-slide [&.swiper-slide:not(.swiper-slide-active)_.slide-img]:hidden">
@@ -24,7 +24,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-5">
-                                            <div class="flex justify-center xs:overflow-hidde mt-2 xs:mt-5 md:mt-10">
+                                            <div class="flex justify-center mt-2 overflow-hidden xs:mt-5 md:mt-10">
                                                 <img src="{{ $slide['image'] }}" class="object-contain slide-img transition-opacity duration-500" alt="">
                                             </div>
                                         </div>
@@ -37,10 +37,10 @@
             </div>
         </div>
 
-        <div class="flex-shrink-0 order-1 xs:order-2 xs:absolute mt-2 xs:mt-0 z-20 bottom-0 left-[0] md:top-[44%] right-[0] px-4 lg:bottom-[40px]">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="row-start-1 col-start-1 flex flex-col justify-end flex-shrink-0 order-1 xs:order-2 mt-2 xs:mt-0 z-30">
+            <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
                 <div
-                    class="max-w-[620px] py-2 sm:py-5 px-3-0 xs:px-4 md:px-7 xs:mb-12 z-10 backdrop-blur-[5px] sm:backdrop-blur-[15px] border-[0.5px] border-[#1D46F5] rounded-2xl xs:rounded-[10px] lg:rounded-[18px] bg-[rgba(217,217,217,0.05)]">
+                    class="max-w-[620px] py-2 sm:py-5 xs:px-4 md:px-7 xs:mb-16 z-10 backdrop-blur-[5px] sm:backdrop-blur-[15px] border-[0.5px] border-[#1D46F5] rounded-2xl xs:rounded-[10px] lg:rounded-[18px] bg-[rgba(217,217,217,0.05)]">
                     <div class="flex items-center justify-center gap-2 flex-wrap mb-3 mt-2">
                         <div class="text-[#1D46F5] font-medium">Find Pros in</div>
                         <div @click="showStates = true" class="cursor-pointer py-1 px-2 rounded max-w-[120px] text-white flex gap-x-2 items-center bg-black/70 backdrop-blur-md">
@@ -62,11 +62,12 @@
                                     </svg>
                                 </div>
                                 <input type="text" class="hidden" name="location" x-model="selectedState" hidden>
-                                <input type="search" name="q" wire:model.debounce.200ms="q" wire:keydown.enter="enter" x-ref="search" x-on:click="open = true"
+                                <input type="text" name="q" wire:model.debounce.200ms="q" wire:keydown.enter="enter" x-ref="search" x-on:click="open = true"
                                     class="bg-white border border-[#f1f1f1] text-gray-900 text-sm font-medium rounded-md block w-full pl-4 xs:pl-10 px-2.5 py-4 focus:outline-none focus:ring-0 shadow-sm"
-                                    placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" required>
+                                    placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" x-model="searchInput" autocomplete="off" maxlength="225" required>
                             </div>
                             <button type="submit"
+                                @click="ItemClick(searchInput)"
                                 class="px-5 sm:px-7 py-4 ltr:ml-2 rtl:mr-2 text-sm font-normal text-white bg-[#F18522] rounded-md border-none hover:bg-[#f5841b] focus:ring-0 focus:outline-none">
                                 <span class="hidden xs:block">@lang('messages.t_search')</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" class="text-white block xs:hidden" viewBox="0 0 16 16">
@@ -76,15 +77,41 @@
                         </div>
 
                         {{-- search quick result --}}
-                        @if (count($gigs) || count($sellers) || count($tags) || $q)
-                            <div class="absolute top-16 w-full bg-white dark:bg-zinc-800 rounded-lg border border-gray-100 dark:border-zinc-800 shadow-md max-w-full z-[60]"
-                                @keydown.window.escape="opne = false" x-show="open" style="display: none" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
-                                x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                x-on:click.away="open = false">
-                                {{-- Results --}}
-                                @if (count($gigs) || count($sellers) || count($tags))
-                                    <ul class="p-4 pb-2 space-y-4 overflow-y-auto max-h-80 scroll-py-10 scroll-pb-2" id="options" role="listbox">
+                        <div class="absolute top-16 w-full bg-white dark:bg-zinc-800 rounded-lg border border-gray-100 dark:border-zinc-800 shadow-md max-w-full z-[60]"
+                            @keydown.window.escape="opne = false" x-show="open" style="display: none" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            x-on:click.away="open = false">
 
+                            {{-- Results --}}
+                                <ul class="p-4 pb-2 space-y-4 overflow-y-auto max-h-52 sm:max-h-80 scroll-py-10 scroll-pb-2" id="options" role="listbox">
+                                    @if (!$q)
+                                        <li>
+                                            <div class="flex items-center justify-between">
+                                                <h2 class="text-xs font-semibold text-gray-900 dark:text-white">
+                                                Recent Searches</h2>
+                                                <h2 @click="clearKeywords()" class="text-xs font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-gray-500 dark:hover:text-gray-400">
+                                                Clear</h2>
+                                            </div>
+
+                                            {{-- Recent Search --}}
+                                            <ul class="mt-2 -mx-4 text-sm text-gray-700 dark:text-gray-400">
+                                                <template x-for="keyword in searches">
+                                                    <li class="flex items-center px-4 py-2 cursor-default select-none group">
+                                                        <a :href="`/search?q=${keyword.keywords}`" class="flex items-center">
+                                                            <svg class="flex-none w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                                aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                                            </svg>
+                                                            <span class="flex-auto overflow-hidden ltr:ml-3 rtl:mr-3 ext-ellipsis" x-text="keyword.keywords"></span>
+                                                        </a>
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </li>
+                                    @endif
+
+                                    @if (count($gigs) || count($sellers) || count($tags))
                                         {{-- Gigs --}}
                                         @if ($gigs && count($gigs))
                                             <li>
@@ -95,7 +122,7 @@
                                                     {{-- List of gigs --}}
                                                     @foreach ($gigs as $gig)
                                                         <li class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                            <a href="{{ url('service', $gig->slug) }}" class="flex items-center">
+                                                            <a href="{{ url('service', $gig->slug) }}" class="flex items-center" @click="ItemClick(@js($gig->title))">
                                                                 <svg class="flex-none w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                                     aria-hidden="true">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,7 +147,7 @@
                                                 <ul class="mt-2 -mx-4 text-sm text-gray-700 dark:text-gray-400">
                                                     @foreach ($sellers as $seller)
                                                         <li class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                            <a href="{{ url('profile', $seller->username) }}" class="flex items-center">
+                                                            <a href="{{ url('profile', $seller->username) }}" class="flex items-center" @click="ItemClick(@js($seller->username))">
                                                                 <img src="{{ placeholder_img() }}" data-src="{{ src($seller->avatar_id) }}" alt="{{ $seller->username }}"
                                                                     class="flex-none object-cover w-6 h-6 rounded-full lazy">
                                                                 <span class="flex-auto truncate ltr:ml-3 rtl:mr-3">{{ $seller->username }}</span>
@@ -141,7 +168,7 @@
                                                     {{-- List of tags --}}
                                                     @foreach ($tags as $tag)
                                                         <li class="flex items-center px-4 py-2 cursor-default select-none group">
-                                                            <a href="{{ url('gigs', $tag->slug) }}" class="flex items-center">
+                                                            <a href="{{ url('gigs', $tag->slug) }}" class="flex items-center" @click="ItemClick(@js($tag->name))">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="flex-none w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24"
                                                                     stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
@@ -154,30 +181,30 @@
                                                 </ul>
                                             </li>
                                         @endif
+                                    @endif
+                            </ul>
+                            
 
-                                    </ul>
-                                @endif
-
-                                {{-- No results --}}
-                                @if (count($gigs) === 0 && count($sellers) === 0 && count($tags) === 0 && $q)
-                                    <div class="px-6 text-sm text-center py-14 sm:px-14">
-                                        <svg class="w-6 h-6 mx-auto text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <p class="mt-4 font-semibold text-gray-900 dark:text-white">
-                                            {{ __('messages.no_results_found') }}</p>
-                                        <p class="mt-2 text-gray-500">
-                                            {{ __('messages.t_we_couldnt_find_anthing_search_term') }}</p>
-                                    </div>
-                                @endif
-
-                                {{-- Footer --}}
-                                <div class="rounded-b-lg flex flex-wrap items-center bg-gray-50 dark:bg-zinc-700 py-2.5 px-4 text-xs text-gray-700 dark:text-gray-400">
-                                    {!! __('messages.t_press_enter_to_search_deeply') !!}
+                            {{-- No results --}}
+                            @if (count($gigs) === 0 && count($sellers) === 0 && count($tags) === 0 && $q)
+                                <div class="px-6 text-sm text-center py-14 sm:px-14">
+                                    <svg class="w-6 h-6 mx-auto text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <p class="mt-4 font-semibold text-gray-900 dark:text-white">
+                                        {{ __('messages.no_results_found') }}</p>
+                                    <p class="mt-2 text-gray-500">
+                                        {{ __('messages.t_we_couldnt_find_anthing_search_term') }}</p>
                                 </div>
+                            @endif
+
+                            {{-- Footer --}}
+                            <div class="rounded-b-lg flex flex-wrap items-center bg-gray-50 dark:bg-zinc-700 py-2.5 px-4 text-xs text-gray-700 dark:text-gray-400">
+                                {!! __('messages.t_press_enter_to_search_deeply') !!}
                             </div>
-                        @endif
+                        </div>
+                        
                     </form>
 
                     {{-- popular tags --}}
@@ -199,7 +226,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center pt-3 -mb-10">
+    <div class="flex justify-center pt-5 -mb-11">
         <div class="swiper-pagination !static [&>.swiper-pagination-bullet]:h-3 [&>.swiper-pagination-bullet]:w-3 p-0">
         </div>
     </div>
@@ -256,10 +283,53 @@
                 showStates: false,
                 open: false,
                 selectedState: "nigeria",
+                searchInput: '',
+                searches: [],
 
                 selectState(state) {
                     this.selectedState = state
                     this.showStates = false
+                },
+
+                setSearchHistory() {
+                    let recents = localStorage.getItem('recent_searches');
+
+                    if(recents) {
+                        this.searches = JSON.parse(recents) ?? []
+                    }
+
+                    window.axios.get("{{ route('userSearches') }}")
+                    .then(res => {
+                        this.searches = res.data
+                        localStorage.setItem('recent_searches', JSON.stringify(res.data));
+                    })
+                },
+
+                saveKeywords() {
+                    if(this.searchInput.length <= 0) {
+                        return;
+                    }
+
+                    window.axios.post("{{ route('userSaveKeywords') }}", {
+                        keywords: this.searchInput
+                    })
+                    .then(r => this.setSearchHistory())
+                },
+
+                clearKeywords() {
+                    localStorage.setItem('recent_searches', JSON.stringify([]));
+
+                    window.axios.post("{{ route('userDeleteKeywords') }}")
+                    .then(r => this.setSearchHistory())
+                },
+
+                ItemClick(keyword) {
+                    if(keyword.length <= 0) {
+                        return;
+                    }
+
+                    this.searchInput = keyword
+                    this.saveKeywords()
                 },
 
                 init() {
@@ -324,6 +394,8 @@
                             }
                         });
                     }
+
+                    this.setSearchHistory();
                 }
             }
         }

@@ -309,11 +309,6 @@
             new Swiper('.sellers-swiper', {
                 slidesPerView: "auto",
                 spaceBetween: "15",
-
-                navigation: {
-                    nextEl: '.for-you-next',
-                    prevEl: '.for-you-prev',
-                },
             });
         }
 
