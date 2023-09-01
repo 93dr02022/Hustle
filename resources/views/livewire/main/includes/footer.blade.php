@@ -10,7 +10,7 @@
 
                 <ul>
                     <li>
-                        <a href="" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
+                        <a href="{{ url('about') }}" target="_blank" class="block font-normal text-gray-400 hover:text-gray-600 hover:underline dark:text-gray-100 dark:hover:text-gray-50 text-sm mb-2">
                             About Us
                         </a>
                     </li>
