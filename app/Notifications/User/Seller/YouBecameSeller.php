@@ -48,7 +48,7 @@ class YouBecameSeller extends Notification implements ShouldQueue
             ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
             ->line(__('messages.t_notification_seller_line_1_u_became_seller'))
             ->line(__('You need to complete the seller verification process in other to start creating gigs.'))
-        ->action(__('Verification'), url('seller/verification'));
+        ->action(__('Verification'), url('/seller/verification'));
     }
 
     /**

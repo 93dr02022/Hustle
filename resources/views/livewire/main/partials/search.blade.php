@@ -35,9 +35,9 @@
                 </svg>
 
                 {{-- Search input --}}
-                <input wire:model.debounce.500ms="q" wire:keydown.enter="enter" x-ref="search" type="text"
+                <input wire:model.debounce.500ms="q" wire:keydown.enter="enter" x-ref="search" x-model="searchInput" type="text"
                     class="h-12 w-full border-0 bg-transparent ltr:pl-11 ltr:pr-3 rtl:pr-11 rtl:pl-3 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm pt-2.5"
-                    placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}">
+                    placeholder="{{ __('messages.t_what_service_are_u_looking_for_today') }}" @keyup.enter="ItemClick(searchInput)" maxlength="225">
 
                 {{-- Loading indicator --}}
                 <div role="status" class="absolute ltr:right-2 rtl:left-2 top-3" wire:loading wire:target="q">
@@ -55,85 +55,110 @@
             </div>
 
             {{-- Results --}}
-            @if (count($gigs) || count($sellers) || count($tags))
-                <ul class="max-h-80 scroll-py-10 scroll-pb-2 space-y-4 overflow-y-auto p-4 pb-2" id="options"
-                    role="listbox">
+            <ul class="max-h-80 scroll-py-10 scroll-pb-2 space-y-4 overflow-y-auto p-4 pb-2" id="options"
+                role="listbox">
 
-                    {{-- Gigs --}}
-                    @if ($gigs && count($gigs))
-                        <li>
-                            <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_gigs') }}</h2>
-                            <ul class="-mx-4 mt-2 text-sm text-gray-700">
+                @if (!$q)
+                    <li>
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xs font-semibold text-gray-900 dark:text-white">
+                            Recent Searches</h2>
+                            <h2 @click="clearKeywords()" class="text-xs font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-gray-500 dark:hover:text-gray-400">
+                            Clear</h2>
+                        </div>
 
-                                {{-- List of gigs --}}
-                                @foreach ($gigs as $gig)
-                                    <li class="group flex cursor-default select-none items-center px-4 py-2">
-                                        <a href="{{ url('service', $gig->slug) }}" class="flex items-center">
-                                            <svg class="h-6 w-6 flex-none text-gray-400"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                            </svg>
-                                            <span
-                                                class="ltr:ml-3 rtl:mr-3 flex-auto ext-ellipsis overflow-hidden">{{ $gig->title }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
+                        {{-- Recent Search --}}
+                        <ul class="mt-2 -mx-4 text-sm text-gray-700 dark:text-gray-400">
+                            <template x-for="keyword in searches">
+                                <li class="flex items-center px-4 py-2 cursor-default select-none group">
+                                    <a :href="`/search?q=${keyword.keywords}`" class="flex items-center">
+                                        <svg class="flex-none w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                        </svg>
+                                        <span class="flex-auto overflow-hidden ltr:ml-3 rtl:mr-3 ext-ellipsis" x-text="keyword.keywords"></span>
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                @endif
 
-                            </ul>
-                        </li>
-                    @endif
+                {{-- Gigs --}}
+                @if ($gigs && count($gigs))
+                    <li>
+                        <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_gigs') }}</h2>
+                        <ul class="-mx-4 mt-2 text-sm text-gray-700">
 
-                    {{-- Sellers --}}
-                    @if ($sellers && count($sellers))
-                        <li>
-                            <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_sellers') }}</h2>
+                            {{-- List of gigs --}}
+                            @foreach ($gigs as $gig)
+                                <li class="group flex cursor-default select-none items-center px-4 py-2">
+                                    <a href="{{ url('service', $gig->slug) }}" class="flex items-center" @click="ItemClick(@js($gig->title))">
+                                        <svg class="h-6 w-6 flex-none text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                        </svg>
+                                        <span
+                                            class="ltr:ml-3 rtl:mr-3 flex-auto ext-ellipsis overflow-hidden">{{ $gig->title }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
 
-                            {{-- List of sellers --}}
-                            <ul class="-mx-4 mt-2 text-sm text-gray-700">
-                                @foreach ($sellers as $seller)
-                                    <li class="group flex cursor-default select-none items-center px-4 py-2">
-                                        <a href="{{ url('profile', $seller->username) }}" class="flex items-center">
-                                            <img src="{{ placeholder_img() }}" data-src="{{ src($seller->avatar_id) }}"
-                                                alt="{{ $seller->username }}"
-                                                class="lazy h-6 w-6 flex-none rounded-full object-cover">
-                                            <span
-                                                class="ltr:ml-3 rtl:mr-3 flex-auto truncate">{{ $seller->username }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @endif
+                        </ul>
+                    </li>
+                @endif
 
-                    {{-- Tags --}}
-                    @if ($tags && count($tags))
-                        <li>
-                            <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_tags') }}</h2>
-                            <ul class="-mx-4 mt-2 text-sm text-gray-700">
+                {{-- Sellers --}}
+                @if ($sellers && count($sellers))
+                    <li>
+                        <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_sellers') }}</h2>
 
-                                {{-- List of tags --}}
-                                @foreach ($tags as $tag)
-                                    <li class="group flex cursor-default select-none items-center px-4 py-2">
-                                        <a href="{{ url('gigs', $tag->slug) }}" class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="h-6 w-6 flex-none text-gray-400" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                                            </svg>
-                                            <span class="ml-3 flex-auto truncate">{{ $tag->name }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
+                        {{-- List of sellers --}}
+                        <ul class="-mx-4 mt-2 text-sm text-gray-700">
+                            @foreach ($sellers as $seller)
+                                <li class="group flex cursor-default select-none items-center px-4 py-2">
+                                    <a href="{{ url('profile', $seller->username) }}" class="flex items-center" @click="ItemClick(@js($seller->username))">
+                                        <img src="{{ placeholder_img() }}" data-src="{{ src($seller->avatar_id) }}"
+                                            alt="{{ $seller->username }}"
+                                            class="lazy h-6 w-6 flex-none rounded-full object-cover">
+                                        <span
+                                            class="ltr:ml-3 rtl:mr-3 flex-auto truncate">{{ $seller->username }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endif
 
-                            </ul>
-                        </li>
-                    @endif
+                {{-- Tags --}}
+                @if ($tags && count($tags))
+                    <li>
+                        <h2 class="text-xs font-semibold text-gray-900">{{ __('messages.t_tags') }}</h2>
+                        <ul class="-mx-4 mt-2 text-sm text-gray-700">
 
-                </ul>
-            @endif
+                            {{-- List of tags --}}
+                            @foreach ($tags as $tag)
+                                <li class="group flex cursor-default select-none items-center px-4 py-2">
+                                    <a href="{{ url('gigs', $tag->slug) }}" class="flex items-center" @click="ItemClick(@js($tag->name))">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-6 w-6 flex-none text-gray-400" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                                        </svg>
+                                        <span class="ml-3 flex-auto truncate">{{ $tag->name }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+
+                        </ul>
+                    </li>
+                @endif
+
+            </ul>
 
             {{-- No results --}}
             @if (count($gigs) === 0 && count($sellers) === 0 && count($tags) === 0 && $q)
@@ -165,10 +190,57 @@
             return {
                 isOpen: !1,
                 restoreElement: void 0,
+                searchInput: '',
+                searches: [],
+
+                setSearchHistory() {
+                    let recents = localStorage.getItem('recent_searches');
+
+                    if(recents) {
+                        this.searches = JSON.parse(recents) ?? []
+                    }
+
+                    window.axios.get("{{ route('userSearches') }}")
+                    .then(res => {
+                        this.searches = res.data
+                        localStorage.setItem('recent_searches', JSON.stringify(res.data));
+                    })
+                },
+
+                saveKeywords() {
+                    if(this.searchInput.length <= 0) {
+                        return;
+                    }
+
+                    window.axios.post("{{ route('userSaveKeywords') }}", {
+                        keywords: this.searchInput
+                    })
+                    .then(r => this.setSearchHistory())
+                },
+
+                clearKeywords() {
+                    localStorage.setItem('recent_searches', JSON.stringify([]));
+
+                    window.axios.post("{{ route('userDeleteKeywords') }}")
+                    .then(r => this.setSearchHistory())
+                },
+
+                ItemClick(keyword) {
+                    if(keyword.length <= 0) {
+                        return;
+                    }
+
+                    this.searchInput = keyword
+                    this.saveKeywords()
+                },
+
                 init: function() {
+                    this.setSearchHistory()
+
                     var t = this;
                     (this.onFocus = this.onFocus.bind(this))
                 },
+
                 onFocus: function(e) {
                     this.isOpen && (this.$el.contains(e.target) || ((document.documentElement.scrollTop = this
                         .documentScrollTop), this.$refs.search.focus({
