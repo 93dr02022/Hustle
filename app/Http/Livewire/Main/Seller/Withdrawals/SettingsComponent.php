@@ -230,8 +230,14 @@ class SettingsComponent extends Component
             return false;
         }
 
+        // validate account number update happens only once in a month
+        if (now()->diffInDays($this->withdrawInfo->updated_at) < 30) {
+            $this->toastError('You can only update withdrawal information once a month.');
+            return false;
+        }
+
         // check nobody else has used this account before
-        $acctExists = UserWithdrawalSettings::where('personal_acct_number', $this->accountNumber)
+        $acctExists = UserWithdrawalSettings::where('personal_acct_number', $this->personalAccountNumber)
             ->where('user_id', '!=', auth()->id())
             ->exists();
 
@@ -270,6 +276,12 @@ class SettingsComponent extends Component
     {
         if ($this->verification->business_verify_status !== 'verified') {
             $this->toastError('you can only add business account when your business verified.');
+            return false;
+        }
+
+        // validate account number update happens only once in a month
+        if (now()->diffInDays($this->withdrawInfo->updated_at) < 30) {
+            $this->toastError('You can only update withdrawal information once a month.');
             return false;
         }
 
