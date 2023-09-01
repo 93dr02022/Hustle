@@ -433,7 +433,7 @@
         <div class="col-span-12 lg:col-span-8">
             @if (auth()->user()?->account_type == 'seller')
                 <div
-                    class="grid grid-cols-12 md:gap-x-6 gap-y-6 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-xl shadow-sm overflow-hidden mb-6">
+                    class="grid grid-cols-12 md:gap-x-6 gap-y-6 p-4 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-xl shadow-sm overflow-hidden mb-6">
                     {{-- List of gigs --}}
                     @forelse ($gigs as $gig)
                         {{-- Gig item --}}
