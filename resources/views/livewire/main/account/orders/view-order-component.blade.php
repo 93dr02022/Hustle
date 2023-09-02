@@ -765,8 +765,7 @@
                                                     <!-- Order timeline -->
                                                     <div class="w-full lg:w-auto">
                                                    
-                        @if ($order->orderTimelines()->count())
-                      
+                        @if (count($timelines) > 0)
                       
                             <div class="col-span-12 px-6 py-4 text-sm bg-white border border-gray-200 rounded-lg shadow-sm md:col-span-6 dark:border-zinc-700 dark:bg-zinc-800">
                                 <h1 class="font-bold text-">Order Timeline</h1>
