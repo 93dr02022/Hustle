@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\Main\Seller\Orders\Options;
 
 use App\Http\Validators\Main\Seller\Orders\DeliverValidator;
-use App\Http\Validators\Main\Seller\Orders\MessageValidator;
+// use App\Http\Validators\Main\Seller\Orders\MessageValidator;
 use App\Models\OrderItem;
 use App\Models\OrderItemWork;
-use App\Models\OrderItemWorkConversation;
+// use App\Models\OrderItemWorkConversation;
 use App\Notifications\User\Buyer\OrderDelivered;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Illuminate\Support\Facades\File;
@@ -262,59 +262,59 @@ class DeliverComponent extends Component
      *
      * @return mixed
      */
-    public function sendMessage()
-    {
-        try {
+    // public function sendMessage()
+    // {
+    //     try {
 
-            // Check if order not finished yet
-            if ($this->order->is_finished) {
-                return;
-            }
+    //         // Check if order not finished yet
+    //         if ($this->order->is_finished) {
+    //             return;
+    //         }
 
-            // Validate form
-            MessageValidator::validate($this);
+    //         // Validate form
+    //         MessageValidator::validate($this);
 
-            // Save message
-            $message = new OrderItemWorkConversation();
-            $message->item_id = $this->order->id;
-            $message->seller_id = $this->order->owner_id;
-            $message->buyer_id = $this->order->order->buyer_id;
-            $message->msg_from = auth()->id();
-            $message->msg_content = clean($this->message);
-            $message->save();
+    //         // Save message
+    //         $message = new OrderItemWorkConversation();
+    //         $message->item_id = $this->order->id;
+    //         $message->seller_id = $this->order->owner_id;
+    //         $message->buyer_id = $this->order->order->buyer_id;
+    //         $message->msg_from = auth()->id();
+    //         $message->msg_content = clean($this->message);
+    //         $message->save();
 
-            // Reset form
-            $this->reset('message');
+    //         // Reset form
+    //         $this->reset('message');
 
-            // Refresh order item
-            $this->order->refresh();
+    //         // Refresh order item
+    //         $this->order->refresh();
 
-            // Success
-            $this->notification([
-                'title' => __('messages.t_success'),
-                'description' => __('messages.t_toast_operation_success'),
-                'icon' => 'success',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Success
+    //         $this->notification([
+    //             'title' => __('messages.t_success'),
+    //             'description' => __('messages.t_toast_operation_success'),
+    //             'icon' => 'success',
+    //         ]);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
 
-            // Validation error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => __('messages.t_toast_form_validation_error'),
-                'icon' => 'error',
-            ]);
+    //         // Validation error
+    //         $this->notification([
+    //             'title' => __('messages.t_error'),
+    //             'description' => __('messages.t_toast_form_validation_error'),
+    //             'icon' => 'error',
+    //         ]);
 
-            throw $e;
-        } catch (\Throwable $th) {
+    //         throw $e;
+    //     } catch (\Throwable $th) {
 
-            // Error
-            $this->notification([
-                'title' => __('messages.t_error'),
-                'description' => __('messages.t_toast_something_went_wrong'),
-                'icon' => 'error',
-            ]);
+    //         // Error
+    //         $this->notification([
+    //             'title' => __('messages.t_error'),
+    //             'description' => __('messages.t_toast_something_went_wrong'),
+    //             'icon' => 'error',
+    //         ]);
 
-            throw $th;
-        }
-    }
+    //         throw $th;
+    //     }
+    // }
 }
