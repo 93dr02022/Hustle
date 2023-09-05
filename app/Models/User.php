@@ -101,6 +101,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
+/**
+     * Get user state
+     *
+     * @return object
+     */
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
 
     /**
      * Get user sales
@@ -184,7 +194,7 @@ class User extends Authenticatable
 
     /**
      * The user keyword searches
-     * 
+     *
      */
     public function searches()
     {

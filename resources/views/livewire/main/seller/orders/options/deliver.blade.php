@@ -654,7 +654,7 @@
                     </div>
 
                     {{-- Send message --}}
-                    @if (!$order->is_finished)
+                    <!-- @if (!$order->is_finished)
                         <div
                             class="mt-auto w-full px-4 py-10 border-t bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 rounded-b-lg">
                             <div class="flex items-start space-x-4 rtl:space-x-reverse">
@@ -691,7 +691,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endif -->
 
                 </div>
             </div>
