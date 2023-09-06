@@ -119,7 +119,7 @@
                     @if ($review)
                         <div class="flex items-center shadow-sm border  col-span-12 md:col-span-5">
 
-                            <div class="max-w-xs">
+                            <div class="w-full">
                                 <div class="bg-white  rounded-lg py-4">
                                     <div class="photo-wrapper p-2">
 
@@ -137,10 +137,17 @@
                                         <table class="text-xs my-3">
                                             <tbody>
                                                 <tr>
-                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Address</td>
-                                                    <td class="px-2 py-2">{{$review->user->country->name}} {{$review->user->state->name}}</td>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Country</td>
+                                                    <td class="px-2 py-2">{{$review->user->country->name != null ? $review->user->country->name : 'null' }}</td>
                                                 </tr>
-
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">State</td>
+                                                    <td class="px-2 py-2">{{$review->user->state->name != null ? $review->user->state->name: 'null' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Address</td>
+                                                    <td class="px-2 py-2">{{$review->user->address != null ? $review->user->address: 'null' }}</td>
+                                                </tr>
                                                 <tr>
                                                     <td class="px-2 py-2 text-gray-500 font-semibold">Email</td>
                                                     <td class="px-2 py-2">{{$review->user->email}}</td>
