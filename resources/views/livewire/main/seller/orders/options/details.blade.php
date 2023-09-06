@@ -506,19 +506,41 @@
 
                     <ol class="relative text-xs border-l border-gray-200 dark:border-gray-700">
                         @foreach ($timelines as $timeline)
-                            <li class="py-3 ml-4">
+                            <li class="py-2 ml-4">
                                 <div
-                                    class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700 {{$timeline->name == 'Order delivered' ? 'bg-green-400 ' : ($timeline->name == 'Order started'?'bg-primary-600':'bg-gray-600')}}">
+                                    @switch($timeline->name)
+                                        @case('Order delivered')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-orange-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+                                        @case('Order finished')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-green-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+                                        @case('Order started')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-yellow-400 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+                                        @case('Order Reviewed')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-blue-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+                                        @case('Order refunded')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-red-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+                                        @case('Order canceled')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-grey-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+
+                                    @default
+
+                                @endswitch>
                                 </div>
-                                <time class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
-                                    {{ format_date($timeline->created_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
-                                <h3 class="text-sm font-normal text-gray-900 dark:text-white">
-                                    ({{ $timeline->title }})</h3>
-                                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+
+                                <h3 class="font-semibold text-gray-900 dark:text-white">
                                     {{ $timeline->name }}</h3>
-                                <p class=" text-sm text-gray-500 dark:text-gray-400">
+                                <p class="text-gray-500 py-2 dark:text-gray-400">
                                     {{ $timeline->description }}
                                 </p>
+                                <time class="mb-1 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">
+                                    {{ format_date($timeline->created_at, config('carbon-formats.F_j,_Y_h_:_i_A')) }}</time>
+
                             </li>
                         @endforeach
 
@@ -527,45 +549,44 @@
                 </div>
             @endif
         </div>
-                {{-- Send message --}}
-                    @if (!$order->is_finished)
-                        <div
-                            class="mt-auto w-full px-4 py-10 border-t bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 rounded-b-lg">
-                            <div class="flex items-start space-x-4 rtl:space-x-reverse">
-                                <div class="flex-shrink-0">
-                                    <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
-                                        src="{{ placeholder_img() }}"
-                                        data-src="{{ src(auth()->user()->avatar_id) }}"
-                                        alt="{{ auth()->user()->username }}">
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="relative">
-                                        <div
-                                            class="border border-gray-300 dark:border-zinc-600 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                                            <textarea rows="3" maxlength="750" wire:model.defer="message"
-                                                class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200"
-                                                placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
-                                            <div class="py-2" aria-hidden="true">
-                                                <div class="py-px">
-                                                    <div class="h-9"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            class="absolute bottom-0 inset-x-0 ltr:pl-3 rtl:pr-3 ltr:pr-2 rtl:pl-2 py-2 flex justify-between">
-                                            <div></div>
-                                            <div class="flex-shrink-0">
-                                                <button wire:click="sendMessage" wire:loading.attr="disabled"
-                                                    wire:target="sendMessage" type="button"
-                                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">{{ __('messages.t_send') }}</button>
-                                            </div>
-                                        </div>
+        {{-- Send message --}}
+        @if (!$order->is_finished)
+            <div
+                class="mt-auto w-full px-4 py-10 border-t bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 rounded-b-lg">
+                <div class="flex items-start space-x-4 rtl:space-x-reverse">
+                    <div class="flex-shrink-0">
+                        <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
+                            src="{{ placeholder_img() }}" data-src="{{ src(auth()->user()->avatar_id) }}"
+                            alt="{{ auth()->user()->username }}">
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="relative">
+                            <div
+                                class="border border-gray-300 dark:border-zinc-600 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
+                                <textarea rows="3" maxlength="750" wire:model.defer="message"
+                                    class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200"
+                                    placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
+                                <div class="py-2" aria-hidden="true">
+                                    <div class="py-px">
+                                        <div class="h-9"></div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div
+                                class="absolute bottom-0 inset-x-0 ltr:pl-3 rtl:pr-3 ltr:pr-2 rtl:pl-2 py-2 flex justify-between">
+                                <div></div>
+                                <div class="flex-shrink-0">
+                                    <button wire:click="sendMessage" wire:loading.attr="disabled"
+                                        wire:target="sendMessage" type="button"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">{{ __('messages.t_send') }}</button>
+                                </div>
+                            </div>
                         </div>
-                    @endif
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
 </div>
