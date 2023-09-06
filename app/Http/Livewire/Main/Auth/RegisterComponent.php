@@ -146,6 +146,7 @@ class RegisterComponent extends Component
                 'username' => clean($this->username),
                 'password' => Hash::make($this->password),
                 'status' => $settings->verification_required ? 'pending' : 'active',
+                'referral_code' => bin2hex(random_bytes(6)),
                 'level_id' => 1,
             ]);
 
