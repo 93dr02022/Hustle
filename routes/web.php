@@ -52,14 +52,14 @@ Route::prefix('tasks')->group(function () {
 // Main (Livewire)
 Route::namespace('App\Http\Livewire\Main')->group(function () {
 
-         // About 
+         // About
      Route::namespace('About')->group(function () {
 
         // about page
         Route::get('/', AboutComponent::class);
-        
+
     });
-    
+
     // Home
     Route::namespace('Home')->group(function () {
 
