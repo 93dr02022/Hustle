@@ -1,19 +1,107 @@
-<main class="flex-grow font-montserrat">
+<main class="flex-grow font-montserrat" x-data="{mobile_menu: false}">
+    {{-- navigation bar --}}
+    <nav class="fixed h-[70px] top-0 w-full py-5 font-heebo topnav z-20">
+        <div class="flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <a href="/" class="w-[25%]">
+                <svg width="169" height="19" class="w-[100px] md:w-[169px] md:h-[19px]" viewBox="0 0 169 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9.032 18.74C7.752 18.74 6.56 18.532 5.456 18.116C4.368 17.684 3.416 17.084 2.6 16.316C1.8 15.532 1.176 14.612 0.728 13.556C0.28 12.5 0.0560001 11.348 0.0560001 10.1C0.0560001 8.852 0.28 7.7 0.728 6.644C1.176 5.588 1.808 4.676 2.624 3.908C3.44 3.124 4.392 2.524 5.48 2.108C6.568 1.676 7.76 1.46 9.056 1.46C10.432 1.46 11.688 1.7 12.824 2.18C13.96 2.644 14.92 3.34 15.704 4.268L13.688 6.164C13.08 5.508 12.4 5.02 11.648 4.7C10.896 4.364 10.08 4.196 9.2 4.196C8.32 4.196 7.512 4.34 6.776 4.628C6.056 4.916 5.424 5.324 4.88 5.852C4.352 6.38 3.936 7.004 3.632 7.724C3.344 8.444 3.2 9.236 3.2 10.1C3.2 10.964 3.344 11.756 3.632 12.476C3.936 13.196 4.352 13.82 4.88 14.348C5.424 14.876 6.056 15.284 6.776 15.572C7.512 15.86 8.32 16.004 9.2 16.004C10.08 16.004 10.896 15.844 11.648 15.524C12.4 15.188 13.08 14.684 13.688 14.012L15.704 15.932C14.92 16.844 13.96 17.54 12.824 18.02C11.688 18.5 10.424 18.74 9.032 18.74ZM23.8653 18.668C22.5533 18.668 21.3853 18.388 20.3613 17.828C19.3373 17.252 18.5293 16.468 17.9373 15.476C17.3453 14.484 17.0493 13.356 17.0493 12.092C17.0493 10.812 17.3453 9.684 17.9373 8.708C18.5293 7.716 19.3373 6.94 20.3613 6.38C21.3853 5.82 22.5533 5.54 23.8653 5.54C25.1933 5.54 26.3693 5.82 27.3933 6.38C28.4333 6.94 29.2413 7.708 29.8173 8.684C30.4093 9.66 30.7053 10.796 30.7053 12.092C30.7053 13.356 30.4093 14.484 29.8173 15.476C29.2413 16.468 28.4333 17.252 27.3933 17.828C26.3693 18.388 25.1933 18.668 23.8653 18.668ZM23.8653 16.1C24.6013 16.1 25.2573 15.94 25.8333 15.62C26.4093 15.3 26.8573 14.836 27.1773 14.228C27.5133 13.62 27.6813 12.908 27.6813 12.092C27.6813 11.26 27.5133 10.548 27.1773 9.956C26.8573 9.348 26.4093 8.884 25.8333 8.564C25.2573 8.244 24.6093 8.084 23.8893 8.084C23.1533 8.084 22.4973 8.244 21.9213 8.564C21.3613 8.884 20.9133 9.348 20.5773 9.956C20.2413 10.548 20.0733 11.26 20.0733 12.092C20.0733 12.908 20.2413 13.62 20.5773 14.228C20.9133 14.836 21.3613 15.3 21.9213 15.62C22.4973 15.94 23.1453 16.1 23.8653 16.1ZM33.7661 18.5V5.684H36.6221V9.212L36.2861 8.18C36.6701 7.316 37.2701 6.66 38.0861 6.212C38.9181 5.764 39.9501 5.54 41.1821 5.54V8.396C41.0541 8.364 40.9341 8.348 40.8221 8.348C40.7101 8.332 40.5981 8.324 40.4861 8.324C39.3501 8.324 38.4461 8.66 37.7741 9.332C37.1021 9.988 36.7661 10.972 36.7661 12.284V18.5H33.7661ZM43.919 18.5V5.684H46.775V9.212L46.439 8.18C46.823 7.316 47.423 6.66 48.239 6.212C49.071 5.764 50.103 5.54 51.335 5.54V8.396C51.207 8.364 51.087 8.348 50.975 8.348C50.863 8.332 50.751 8.324 50.639 8.324C49.503 8.324 48.599 8.66 47.927 9.332C47.255 9.988 46.919 10.972 46.919 12.284V18.5H43.919ZM59.9788 18.668C58.5548 18.668 57.3068 18.388 56.2348 17.828C55.1788 17.252 54.3548 16.468 53.7628 15.476C53.1868 14.484 52.8988 13.356 52.8988 12.092C52.8988 10.812 53.1788 9.684 53.7388 8.708C54.3148 7.716 55.0988 6.94 56.0908 6.38C57.0988 5.82 58.2428 5.54 59.5228 5.54C60.7708 5.54 61.8828 5.812 62.8588 6.356C63.8348 6.9 64.6028 7.668 65.1628 8.66C65.7228 9.652 66.0028 10.82 66.0028 12.164C66.0028 12.292 65.9948 12.436 65.9788 12.596C65.9788 12.756 65.9708 12.908 65.9548 13.052H55.2748V11.06H64.3708L63.1948 11.684C63.2108 10.948 63.0588 10.3 62.7388 9.74C62.4188 9.18 61.9788 8.74 61.4188 8.42C60.8748 8.1 60.2428 7.94 59.5228 7.94C58.7868 7.94 58.1388 8.1 57.5788 8.42C57.0348 8.74 56.6028 9.188 56.2828 9.764C55.9788 10.324 55.8268 10.988 55.8268 11.756V12.236C55.8268 13.004 56.0028 13.684 56.3548 14.276C56.7068 14.868 57.2028 15.324 57.8428 15.644C58.4828 15.964 59.2188 16.124 60.0508 16.124C60.7708 16.124 61.4188 16.012 61.9948 15.788C62.5708 15.564 63.0828 15.212 63.5308 14.732L65.1388 16.58C64.5628 17.252 63.8348 17.772 62.9548 18.14C62.0908 18.492 61.0988 18.668 59.9788 18.668ZM74.9564 18.668C73.6124 18.668 72.4124 18.388 71.3564 17.828C70.3164 17.252 69.5004 16.468 68.9084 15.476C68.3164 14.484 68.0204 13.356 68.0204 12.092C68.0204 10.812 68.3164 9.684 68.9084 8.708C69.5004 7.716 70.3164 6.94 71.3564 6.38C72.4124 5.82 73.6124 5.54 74.9564 5.54C76.2044 5.54 77.3004 5.796 78.2444 6.308C79.2044 6.804 79.9324 7.54 80.4284 8.516L78.1244 9.86C77.7404 9.252 77.2684 8.804 76.7084 8.516C76.1644 8.228 75.5724 8.084 74.9324 8.084C74.1964 8.084 73.5324 8.244 72.9404 8.564C72.3484 8.884 71.8844 9.348 71.5484 9.956C71.2124 10.548 71.0444 11.26 71.0444 12.092C71.0444 12.924 71.2124 13.644 71.5484 14.252C71.8844 14.844 72.3484 15.3 72.9404 15.62C73.5324 15.94 74.1964 16.1 74.9324 16.1C75.5724 16.1 76.1644 15.956 76.7084 15.668C77.2684 15.38 77.7404 14.932 78.1244 14.324L80.4284 15.668C79.9324 16.628 79.2044 17.372 78.2444 17.9C77.3004 18.412 76.2044 18.668 74.9564 18.668ZM88.2018 18.668C86.7938 18.668 85.7058 18.308 84.9378 17.588C84.1698 16.852 83.7858 15.772 83.7858 14.348V2.852H86.7858V14.276C86.7858 14.884 86.9378 15.356 87.2418 15.692C87.5618 16.028 88.0018 16.196 88.5618 16.196C89.2338 16.196 89.7938 16.02 90.2418 15.668L91.0818 17.804C90.7298 18.092 90.2978 18.308 89.7858 18.452C89.2738 18.596 88.7458 18.668 88.2018 18.668ZM81.6738 8.18V5.78H90.2178V8.18H81.6738Z"
+                        fill="#F18522" />
+                    <path
+                        d="M101.014 5.54C102.038 5.54 102.95 5.74 103.75 6.14C104.566 6.54 105.206 7.156 105.67 7.988C106.134 8.804 106.366 9.86 106.366 11.156V18.5H103.366V11.54C103.366 10.404 103.094 9.556 102.55 8.996C102.022 8.436 101.278 8.156 100.318 8.156C99.6137 8.156 98.9897 8.3 98.4457 8.588C97.9017 8.876 97.4777 9.308 97.1737 9.884C96.8857 10.444 96.7417 11.156 96.7417 12.02V18.5H93.7417V0.691999H96.7417V9.14L96.0937 8.084C96.5417 7.268 97.1897 6.644 98.0377 6.212C98.9017 5.764 99.8937 5.54 101.014 5.54ZM115.787 18.668C114.699 18.668 113.739 18.468 112.907 18.068C112.075 17.652 111.427 17.028 110.963 16.196C110.499 15.348 110.267 14.284 110.267 13.004V5.684H113.267V12.596C113.267 13.748 113.523 14.612 114.035 15.188C114.563 15.748 115.307 16.028 116.267 16.028C116.971 16.028 117.579 15.884 118.091 15.596C118.619 15.308 119.027 14.876 119.315 14.3C119.619 13.724 119.771 13.012 119.771 12.164V5.684H122.771V18.5H119.915V15.044L120.419 16.1C119.987 16.932 119.355 17.572 118.523 18.02C117.691 18.452 116.779 18.668 115.787 18.668ZM130.851 18.668C129.779 18.668 128.747 18.532 127.755 18.26C126.779 17.972 126.003 17.628 125.427 17.228L126.579 14.948C127.155 15.316 127.843 15.62 128.643 15.86C129.443 16.1 130.243 16.22 131.043 16.22C131.987 16.22 132.667 16.092 133.083 15.836C133.515 15.58 133.731 15.236 133.731 14.804C133.731 14.452 133.587 14.188 133.299 14.012C133.011 13.82 132.635 13.676 132.171 13.58C131.707 13.484 131.187 13.396 130.611 13.316C130.051 13.236 129.483 13.132 128.907 13.004C128.347 12.86 127.835 12.66 127.371 12.404C126.907 12.132 126.531 11.772 126.243 11.324C125.955 10.876 125.811 10.284 125.811 9.548C125.811 8.732 126.043 8.028 126.507 7.436C126.971 6.828 127.619 6.364 128.451 6.044C129.299 5.708 130.299 5.54 131.451 5.54C132.315 5.54 133.187 5.636 134.067 5.828C134.947 6.02 135.675 6.292 136.251 6.644L135.099 8.924C134.491 8.556 133.875 8.308 133.251 8.18C132.643 8.036 132.035 7.964 131.427 7.964C130.515 7.964 129.835 8.1 129.387 8.372C128.955 8.644 128.739 8.988 128.739 9.404C128.739 9.788 128.883 10.076 129.171 10.268C129.459 10.46 129.835 10.612 130.299 10.724C130.763 10.836 131.275 10.932 131.835 11.012C132.411 11.076 132.979 11.18 133.539 11.324C134.099 11.468 134.611 11.668 135.075 11.924C135.555 12.164 135.939 12.508 136.227 12.956C136.515 13.404 136.659 13.988 136.659 14.708C136.659 15.508 136.419 16.204 135.939 16.796C135.475 17.388 134.811 17.852 133.947 18.188C133.083 18.508 132.051 18.668 130.851 18.668ZM144.259 18.668C142.851 18.668 141.763 18.308 140.995 17.588C140.227 16.852 139.843 15.772 139.843 14.348V2.852H142.843V14.276C142.843 14.884 142.995 15.356 143.299 15.692C143.619 16.028 144.059 16.196 144.619 16.196C145.291 16.196 145.851 16.02 146.299 15.668L147.139 17.804C146.787 18.092 146.355 18.308 145.843 18.452C145.331 18.596 144.803 18.668 144.259 18.668ZM137.731 8.18V5.78H146.275V8.18H137.731ZM149.799 18.5V0.691999H152.799V18.5H149.799ZM162.952 18.668C161.528 18.668 160.28 18.388 159.208 17.828C158.152 17.252 157.328 16.468 156.736 15.476C156.16 14.484 155.872 13.356 155.872 12.092C155.872 10.812 156.152 9.684 156.712 8.708C157.288 7.716 158.072 6.94 159.064 6.38C160.072 5.82 161.216 5.54 162.496 5.54C163.744 5.54 164.856 5.812 165.832 6.356C166.808 6.9 167.576 7.668 168.136 8.66C168.696 9.652 168.976 10.82 168.976 12.164C168.976 12.292 168.968 12.436 168.952 12.596C168.952 12.756 168.944 12.908 168.928 13.052H158.248V11.06H167.344L166.168 11.684C166.184 10.948 166.032 10.3 165.712 9.74C165.392 9.18 164.952 8.74 164.392 8.42C163.848 8.1 163.216 7.94 162.496 7.94C161.76 7.94 161.112 8.1 160.552 8.42C160.008 8.74 159.576 9.188 159.256 9.764C158.952 10.324 158.8 10.988 158.8 11.756V12.236C158.8 13.004 158.976 13.684 159.328 14.276C159.68 14.868 160.176 15.324 160.816 15.644C161.456 15.964 162.192 16.124 163.024 16.124C163.744 16.124 164.392 16.012 164.968 15.788C165.544 15.564 166.056 15.212 166.504 14.732L168.112 16.58C167.536 17.252 166.808 17.772 165.928 18.14C165.064 18.492 164.072 18.668 162.952 18.668Z"
+                        fill="#1D46F5" />
+                </svg>
+            </a>
+
+            <div class="flex items-center gap-x-5">
+                <a href=""
+                    class="hidden px-4 py-2 text-gray-500 font-semibold transition-colors duration-300 hover:text-primary-600 md:block [&.active]:text-[#F18522] {{ request()->is('about') ? 'active' : '' }}">
+                    About us
+                </a>
+
+                {{-- Explore --}}
+                <div x-data="{ open: false }" class="relative inline-block">
+                    {{-- Dropdown button --}}
+                    <div aria-haspopup="true" x-bind:aria-expanded="open" x-on:click="open = true" aria-expanded="true"
+                        class="hidden px-4 py-2 space-x-2 text-gray-500 transition-colors font-semibold duration-300 cursor-pointer hover:text-primary-600 focus:outline-none md:flex rtl:space-x-reverse md:items-center">
+                        <span>@lang('messages.t_explore')</span>
+                        <svg class="w-4 h-4" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd">
+                            </path>
+                        </svg>
+                    </div>
+
+                    {{-- Dropdown menu --}}
+                    <div x-show="open" style="display: none" x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="transform opacity-0 scale-75"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="transform opacity-100 scale-100"
+                        x-transition:leave-end="transform opacity-0 scale-75" x-on:click.outside="open = false" role="menu"
+                        class="absolute z-40 w-48 mt-3 text-sm font-normal text-gray-900 bg-white rounded-lg shadow-md ltr:origin-top-right rtl:origin-top-left top-full ltr:right-0 rtl:left-0 ring-1 ring-gray-900 ring-opacity-5">
+                        <div class="bg-white divide-y divide-gray-100 rounded ring-1 ring-black ring-opacity-5">
+                            <div class="p-2 space-y-1">
+
+                                {{-- Explore gigs --}}
+                                <a href="{{ url('search') }}" role="menuitem"
+                                    class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:bg-gray-100 focus:text-gray-700">
+                                    <span>@lang('messages.t_explore_gigs')</span>
+                                </a>
+
+                                {{-- Explore projects --}}
+                                @if (settings('projects')->is_enabled)
+                                <a href="{{ url('explore/projects') }}" role="menuitem"
+                                    class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:bg-gray-100 focus:text-gray-700">
+                                    <span>@lang('messages.t_explore_projects')</span>
+                                </a>
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ url('start_selling') }}"
+                    class="hidden px-4 py-2 text-gray-500 font-semibold transition-colors duration-300 hover:text-primary-600 md:block">
+                    Become a seller
+                </a>
+            </div>
+
+            {{-- Mobile menu button --}}
+            <div class="flex items-center w-full justify-end md:hidden">
+                <button type="button" class="text-gray-500 bg-white rounded-md md:hidden"
+                x-on:click="mobile_menu = true">
+                    <span class="sr-only">Open menu</span>
+                    <svg class="w-8 h-8 text-[#1D46F5] hover:text-gray-700" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"></path>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
     {{-- Hero Section  --}}
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-11 mb-20 px-4 sm:px-6 md:px-8 md:min-h-full lg:min-h-[500px]">
-        <div class="md:col-span-7 pt-14">
+        <div class="md:col-span-7 pt-28 md:pt-28">
             <div class="flex flex-col justify-center items-center md:items-start h-full md:pr-5">
-                <h1 class="mb-5 sm:mb-6 text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.5] text-[#3F3F46] capitalize text-center md:text-left max-w-[485px] md:max-w-full">
+                <h1 data-aos="fade-up" class="mb-5 sm:mb-6 text-2xl md:text-3xl lg:text-4xl font-bold leading-[1.5] text-[#3F3F46] capitalize text-center md:text-left max-w-[485px] md:max-w-full">
                     <span class="text-[#F18522] leading-[1.5]"> Connecting </span> people with skilled professionals 
                     <span class="text-[#1D46F5] leading-[1.5]">worldwide</span>
                 </h1>
 
-                <h3 class="font-semibold text-[#6974A3] text-base sm:text-lg lg:text-2xl leading-snug capitalize mb-5 text-center md:text-left">
+                <h3 data-aos="fade-up" class="font-semibold text-[#6974A3] text-base sm:text-lg lg:text-2xl leading-snug capitalize mb-5 text-center md:text-left">
                     Reliable, secure, and efficient: find the perfect match <br> for your project with our
                     skilled professionals.
                 </h3>
 
-                <p class="text-[#3F3F46] text-sm leading-relaxed max-w-xl pr-7 mb-7 text-center md:text-left">
+                <p data-aos="fade-up" class="text-[#3F3F46] text-sm leading-relaxed max-w-xl md:pr-7 mb-7 text-center md:text-left">
                     With secure payments and a commitment to quality, you can trust our freelance website to get the job done right. Post your project today and find your perfect match!
                 </p>
 
@@ -29,6 +117,104 @@
                 <div class="flex flex-col justify-end items-start h-full">
                     <img src="img/about/aboutbanner.png" alt="banner" class="max-h-[80%] -ml-[10%]" />
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- mobile navigation flyout --}}
+    <div x-show="mobile_menu" style="display: none" class="fixed inset-0 z-40 flex lg:hidden" x-ref="mobile_menu">
+
+        {{-- Backdrop --}}
+        <div x-show="mobile_menu" style="display: none" x-transition:enter="ease-in-out duration-500"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+            @click="mobile_menu = false" aria-hidden="true">
+        </div>
+
+        {{-- Menu --}}
+        <div x-show="mobile_menu" style="display: none" x-transition:enter="transition ease-in-out duration-300 transform"
+            x-transition:enter-start="ltr:-translate-x-full rtl:translate-x-full"
+            x-transition:enter-end="ltr:translate-x-0 rtl:translate-x-0"
+            x-transition:leave="transition ease-in-out duration-300 transform"
+            x-transition:leave-start="ltr:translate-x-0 rtl:translate-x-0"
+            x-transition:leave-end="ltr:-translate-x-full rtl:translate-x-full"
+            class="relative max-w-[275px] w-full bg-white dark:bg-zinc-700 shadow-xl flex flex-col overflow-y-auto">
+
+            {{-- Join us --}}
+            @guest
+            <div class="w-full px-5 pt-5 mb-6">
+                <a href="{{ url('auth/register') }}"
+                    class="inline-flex items-center justify-center w-full px-3 py-2 text-xs font-semibold leading-6 tracking-widest text-white uppercase border rounded focus:outline-none border-primary-700 bg-primary-700 hover:text-white hover:bg-primary-800 hover:border-primary-800 focus:ring focus:ring-primary-500 focus:ring-opacity-50 active:bg-primary-700 active:border-primary-700">
+                    <span>@lang('messages.t_join')</span>
+                </a>
+            </div>
+            @endguest
+
+            {{-- Links --}}
+            <div @class(['w-full overflow-auto h-full', 'pt-5'=> auth()->check()])>
+                {{-- Sign in --}}
+                @guest
+                    <a href="{{ url('auth/login') }}"
+                        class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                        @lang('messages.t_sign_in')
+                    </a>
+                @endguest
+
+                {{-- Become seller --}}
+                <a href="{{ url('start_selling') }}"
+                    class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    @lang('messages.t_become_a_seller')
+                </a>
+
+                {{-- Explore gigs --}}
+                <a href="{{ url('search') }}"
+                    class="block px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    @lang('messages.t_explore_gigs')
+                </a>
+
+                {{-- Divider --}}
+                <div class="w-full h-px my-3 bg-gray-100 dark:bg-zinc-600"></div>
+
+                {{-- Home --}}
+                <a href="{{ url('/') }}"
+                    class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor"
+                        stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M5 22h14a2 2 0 0 0 2-2v-9a1 1 0 0 0-.29-.71l-8-8a1 1 0 0 0-1.41 0l-8 8A1 1 0 0 0 3 11v9a2 2 0 0 0 2 2zm5-2v-5h4v5zm-5-8.59 7-7 7 7V20h-3v-5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5H5z">
+                        </path>
+                    </svg>
+                    @lang('messages.t_home')
+                </a>
+
+                {{-- Home --}}
+                <a href="{{ url('/about') }}"
+                    class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5"
+                        fill="currentColor" class="bi bi-info-square" viewBox="0 0 16 16">
+                        <path
+                            d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                        <path
+                            d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>
+                    About us
+                </a>
+
+                {{-- Contact us --}}
+                <a href="{{ url('help/contact') }}"
+                    class="flex items-center px-5 py-2 text-sm font-semibold text-gray-500 dark:text-gray-200">
+                    <svg class="w-[18px] h-[18px] ltr:mr-2.5 rtl:ml-2.5" stroke="currentColor" fill="currentColor"
+                        stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 6a3.939 3.939 0 0 0-3.934 3.934h2C10.066 8.867 10.934 8 12 8s1.934.867 1.934 1.934c0 .598-.481 1.032-1.216 1.626a9.208 9.208 0 0 0-.691.599c-.998.997-1.027 2.056-1.027 2.174V15h2l-.001-.633c.001-.016.033-.386.441-.793.15-.15.339-.3.535-.458.779-.631 1.958-1.584 1.958-3.182A3.937 3.937 0 0 0 12 6zm-1 10h2v2h-2z">
+                        </path>
+                        <path
+                            d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z">
+                        </path>
+                    </svg>
+                    @lang('messages.t_contact_us')
+                </a>
             </div>
         </div>
     </div>
@@ -490,5 +676,20 @@
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
     AOS.init();
+
+    var navbar = document.querySelector(".topnav");
+    var isScrolled = false;
+
+    window.onscroll = function() {
+        if (window.pageYOffset >= 10 && !isScrolled) {
+            navbar.style.backgroundColor = 'white';
+            isScrolled = true;
+        } else if (window.pageYOffset < 10 && isScrolled) {
+            navbar.style.backgroundColor = 'transparent';
+            isScrolled = false;
+        }
+    };
+
+
   </script>
 @endpush
