@@ -106,7 +106,7 @@
                 </p>
 
                 <a class="max-w-max pt-30 px-16 sm:px-9 py-4 text-sm font-medium text-white bg-[#F18522] rounded-md border-none hover:bg-[#f5841b] focus:ring-0 focus:outline-none"
-                    href="/">Get Started</a>
+                    href="/auth/register">Get Started</a>
             </div>
         </div>
         <div class="md:col-span-4 hidden md:grid grid-cols-1">
