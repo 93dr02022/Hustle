@@ -939,9 +939,23 @@ class CheckoutComponent extends Component
                         // Get item total price
                         $item_total_price = $this->itemTotalPrice($item['id']);
                         $itemOffer = $this->itemOffer($item['id']);
+                        $referralBalance = $gig->owner->referral_balance;
 
                         // Calculate commission first
-                        $commisssion = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
+                        $commission = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
+                        $itemProfitValue = $item_total_price - $commission;
+                        $referralAmountUsed = 0;
+
+                        // calculate referral on commission
+                        if ($referralBalance > 0 && $referralBalance <= $commission) {
+                            $itemProfitValue += $referralBalance;
+                            $referralAmountUsed += $referralBalance;
+                            $referralBalance = 0;
+                        } elseif ($referralBalance > 0 && $referralBalance > $commission) {
+                            $itemProfitValue += $commission;
+                            $referralBalance -= $commission;
+                            $referralAmountUsed = $commission;
+                        }
 
                         // Save order item
                         $order_item = new OrderItem();
@@ -953,8 +967,9 @@ class CheckoutComponent extends Component
                         $order_item->quantity = (int) $item['quantity'];
                         $order_item->has_upgrades = is_array($item['upgrades']) && count($item['upgrades']) ? true : false;
                         $order_item->total_value = $item_total_price;
-                        $order_item->profit_value = $item_total_price - $commisssion;
-                        $order_item->commission_value = $commisssion;
+                        $order_item->profit_value = $itemProfitValue;
+                        $order_item->commission_value = $commission;
+                        $order_item->referral_amount_used = $referralAmountUsed;
                         $order_item->custom_offer_id = is_null($itemOffer) ? null : $itemOffer['id'];
                         $order_item->save();
                         //Creating the ordertimeline
@@ -1000,6 +1015,7 @@ class CheckoutComponent extends Component
                             // Update seller pending balance
                             $gig->owner()->update([
                                 'balance_pending' => $gig->owner->balance_pending + $order_item->profit_value,
+                                'referral_balance' => $referralBalance
                             ]);
 
                             // Increment orders in queue

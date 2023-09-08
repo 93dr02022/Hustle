@@ -51,6 +51,7 @@ class OrderItem extends Model
         'total_value',
         'profit_value',
         'commission_value',
+        'referral_amount_used',
         'status',
         'is_finished',
         'can_wallet',

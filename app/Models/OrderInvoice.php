@@ -26,6 +26,7 @@ class OrderInvoice extends Model
         'payment_method',
         'payment_id',
         'amount_paid',
+        'buyer_ref_amount',
         'firstname',
         'lastname',
         'email',

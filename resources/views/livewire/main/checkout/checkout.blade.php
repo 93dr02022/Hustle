@@ -569,7 +569,24 @@
                                         $gateway_currency = settings('paystack')->currency;
                                         $gateway_exchange_rate = (float) settings('paystack')->exchange_rate;
                                         $exchange_total_amount = $this->calculateExchangeAmount();
-                                        $paystackInlineAmount = $exchange_total_amount * 100;
+                                        // $paystackInlineAmount = $exchange_total_amount * 100;
+                                        $commission = $this->commission($this->total());
+                                        $referralBalance = intval(auth()->user()->referral_balance);
+                                        $referralAmount = 0;
+
+                                        // calculate referral on commission
+                                        if ($referralBalance > 0 && $referralBalance <= $commission) {
+                                            $paystackInlineAmount = ($exchange_total_amount - $referralBalance) * 100;
+                                            $total_amount -= $referralBalance;
+                                            $referralAmount = $referralBalance;
+                                        } elseif ($referralBalance > 0 && $referralBalance > $commission) {
+                                            $paystackInlineAmount = ($exchange_total_amount - $commission) * 100;
+                                            $total_amount -= $commission;
+                                        } else {
+                                            $paystackInlineAmount = $exchange_total_amount * 100;
+                                        }
+
+                                        $useReferralPaystack = $referralBalance > 0 ? true : false;
                                 
                                         break;
                                 
@@ -743,7 +760,7 @@
                                                     <dd class="font-medium text-gray-500 dark:text-gray-300">
                                                         @money($total_amount, settings('currency')->code, true)
                                                         <span class="text-lg mx-2">≈</span>
-                                                        @money($exchange_total_amount, $gateway_currency, true)
+                                                        @money($paystackInlineAmount / 100, $gateway_currency, true)
                                                         <span
                                                             class="text-[10px] tracking-widest">({{ $gateway_currency }})</span>
                                                     </dd>
@@ -969,6 +986,9 @@
                                                 amount: Number({{ $paystackInlineAmount }}),
                                                 currency: "{{ settings('paystack')->currency }}",
                                                 ref: '{{ uid(32) }}',
+                                                metadata: {
+                                                    useReferral: {{ $useReferralPaystack }},
+                                                },
                                                 onClose: function() {
 
                                                 },
