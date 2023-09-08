@@ -9,6 +9,8 @@ use App\Notifications\User\Buyer\OrderItemInProgress;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Livewire\Component;
 use WireUi\Traits\Actions;
+use App\Http\Validators\Main\Seller\Orders\MessageValidator;
+use App\Models\OrderItemWorkConversation;
 
 class DetailsComponent extends Component
 {
@@ -16,6 +18,7 @@ class DetailsComponent extends Component
 
     public $order;
     public $timelines = [];
+    public $message;
 
     /**
      * Init component
@@ -31,6 +34,10 @@ class DetailsComponent extends Component
         // Get order item
         $order = OrderItem::where('owner_id', $user_id)->where('uid', $id)->firstOrFail();
 
+         // // Order item must be in ['delivered', 'proceeded'] status and not finished yet
+         if (!in_array($order->status, ['proceeded', 'delivered'])) {
+            return redirect('seller/orders')->with('message', __('messages.t_u_cant_send_delivered_work_anymore_status_wrong'));
+        }
         // Set order
         $this->order = $order;
 
@@ -80,6 +87,66 @@ class DetailsComponent extends Component
         $this->seo()->jsonLd()->setType('WebSite');
 
         return view('livewire.main.seller.orders.options.details')->extends('livewire.main.seller.layout.app')->section('content');
+    }
+    /**
+     * Send message
+     *
+     * @return mixed
+     */
+    public function sendMessage()
+    {
+        try {
+
+            // Check if order not finished yet
+            if ($this->order->is_finished) {
+                return;
+            }
+
+            // Validate form
+            MessageValidator::validate($this);
+
+            // Save message
+            $message = new OrderItemWorkConversation();
+            $message->item_id = $this->order->id;
+            $message->seller_id = $this->order->owner_id;
+            $message->buyer_id = $this->order->order->buyer_id;
+            $message->msg_from = auth()->id();
+            $message->msg_content = clean($this->message);
+            $message->save();
+
+            // Reset form
+            $this->reset('message');
+
+            // Refresh order item
+            $this->order->refresh();
+
+            // Success
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => __('messages.t_toast_operation_success'),
+                'icon' => 'success',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            // Validation error
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => __('messages.t_toast_form_validation_error'),
+                'icon' => 'error',
+            ]);
+
+            throw $e;
+        } catch (\Throwable $th) {
+
+            // Error
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => __('messages.t_toast_something_went_wrong'),
+                'icon' => 'error',
+            ]);
+
+            throw $th;
+        }
     }
 
     /**

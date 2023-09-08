@@ -44,6 +44,7 @@ class RegisterRequest extends FormRequest
                 'uid' => uid(),
                 'level_id' => 1,
                 'status' => 'active',
+                'referral_code' => bin2hex(random_bytes(6)),
                 'password' => Hash::make($this->input('password')),
             ])
             ->toArray();

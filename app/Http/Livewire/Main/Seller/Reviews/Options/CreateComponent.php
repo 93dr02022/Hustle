@@ -31,7 +31,7 @@ class CreateComponent extends Component
     public function mount($reviewId)
     {
         // Get review
-        $review = Review::where('uid', $reviewId)->where('seen', false)->first();
+        $review = Review::where('uid', $reviewId)->where('seen', false)->with('user')->first();
 
         // Check if order item exists
         if (!$review) {

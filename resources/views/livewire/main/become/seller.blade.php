@@ -266,6 +266,53 @@
 
 	</div>
 
+	{{-- Get started today --}}
+	<div class="mb-24 container xl:max-w-7xl mx-auto px-4 lg:px-8">
+		
+		{{-- Section heading --}}
+		<div class="text-center mb-12">
+			<div class="relative inline-flex w-20 h-20 items-center justify-center text-emerald-500 mb-10 mx-auto">
+				<div class="absolute inset-0 bg-emerald-200 rounded-xl transform rotate-6 scale-105"></div>
+				<div class="absolute inset-0 bg-emerald-100 rounded-xl transform -rotate-6 scale-105"></div>
+				<div class="relative">
+					<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="hi-solid hi-fire inline-block w-10 h-10"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path></svg>
+				</div>
+			</div>
+			<h2 class="text-3xl md:text-4xl font-extrabold mb-4 dark:text-gray-200">
+				@lang('messages.t_signup_and_create_ur_first_gig') <span class="text-primary-600">@lang('messages.t_today')</span>!
+			</h2>
+			<h3 class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600 dark:text-gray-400 lg:w-2/3 mx-auto">
+				@lang('messages.t_become_a_seller_subtitle')
+			</h3>
+		</div>
+	
+		{{-- Check if user authenticated --}}
+		@auth
+			<div class="flex items-center justify-center">
+				<x-forms.button action="start" :text="__('messages.t_lets_get_started')" :block="false" />
+			</div>
+		@endauth
+
+		{{-- Join us --}}
+		@guest
+			<div class="text-center">
+				<a href="{{ url('auth/register') }}" class="inline-flex justify-center items-center space-x-2 rtl:space-x-reverse border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-primary-700 bg-primary-700 text-white hover:text-white hover:bg-primary-800 hover:border-primary-800 focus:ring focus:ring-primary-500 focus:ring-opacity-50 active:bg-primary-700 active:border-primary-700">
+
+					{{-- LTR --}}
+					<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-arrow-right hidden ltr:inline-block w-5 h-5"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+
+					{{-- RTL --}}
+					<svg xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-arrow-right hidden rtl:inline-block w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+					</svg>
+
+					<span>@lang('messages.t_lets_get_started')</span>
+				</a>
+			</div>
+		@endguest
+		
+	</div>
+
 	{{-- FAQ --}}
 	<div class="mb-24 container xl:max-w-7xl mx-auto px-4 lg:px-8">
 		<div class="bg-white dark:bg-zinc-700 px-12 py-16 rounded-2xl shadow">
@@ -344,52 +391,4 @@
 
 		</div>
 	</div>
-
-	{{-- Get started today --}}
-	<div class="mb-24 container xl:max-w-7xl mx-auto px-4 lg:px-8">
-		
-		{{-- Section heading --}}
-		<div class="text-center mb-12">
-			<div class="relative inline-flex w-20 h-20 items-center justify-center text-emerald-500 mb-10 mx-auto">
-				<div class="absolute inset-0 bg-emerald-200 rounded-xl transform rotate-6 scale-105"></div>
-				<div class="absolute inset-0 bg-emerald-100 rounded-xl transform -rotate-6 scale-105"></div>
-				<div class="relative">
-					<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="hi-solid hi-fire inline-block w-10 h-10"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path></svg>
-				</div>
-			</div>
-			<h2 class="text-3xl md:text-4xl font-extrabold mb-4 dark:text-gray-200">
-				@lang('messages.t_signup_and_create_ur_first_gig') <span class="text-primary-600">@lang('messages.t_today')</span>!
-			</h2>
-			<h3 class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600 dark:text-gray-400 lg:w-2/3 mx-auto">
-				@lang('messages.t_become_a_seller_subtitle')
-			</h3>
-		</div>
-	
-		{{-- Check if user authenticated --}}
-		@auth
-			<div class="flex items-center justify-center">
-				<x-forms.button action="start" :text="__('messages.t_lets_get_started')" :block="false" />
-			</div>
-		@endauth
-
-		{{-- Join us --}}
-		@guest
-			<div class="text-center">
-				<a href="{{ url('auth/register') }}" class="inline-flex justify-center items-center space-x-2 rtl:space-x-reverse border font-semibold focus:outline-none px-6 py-4 leading-6 rounded border-primary-700 bg-primary-700 text-white hover:text-white hover:bg-primary-800 hover:border-primary-800 focus:ring focus:ring-primary-500 focus:ring-opacity-50 active:bg-primary-700 active:border-primary-700">
-
-					{{-- LTR --}}
-					<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-arrow-right hidden ltr:inline-block w-5 h-5"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-
-					{{-- RTL --}}
-					<svg xmlns="http://www.w3.org/2000/svg" class="opacity-50 hi-solid hi-arrow-right hidden rtl:inline-block w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-						<path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-					</svg>
-
-					<span>@lang('messages.t_lets_get_started')</span>
-				</a>
-			</div>
-		@endguest
-		
-	</div>
-
 </div>

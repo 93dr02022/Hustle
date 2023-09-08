@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class User extends Authenticatable
 {
@@ -101,6 +103,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
+/**
+     * Get user state
+     *
+     * @return object
+     */
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
 
     /**
      * Get user sales
@@ -184,7 +196,7 @@ class User extends Authenticatable
 
     /**
      * The user keyword searches
-     * 
+     *
      */
     public function searches()
     {
@@ -254,4 +266,14 @@ class User extends Authenticatable
     {
         return $this->chat_contacts_to->merge($this->chat_contacts_from);
     }
+
+/**
+ * Get all of the Gigs for the User
+ *
+ * @return \Illuminate\Database\Eloquent\Relations\HasMany
+ */
+public function gigs(): HasMany
+{
+    return $this->hasMany(Gig::class, 'user_id');
+}
 }

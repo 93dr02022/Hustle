@@ -431,10 +431,15 @@
 
         {{-- reviews --}}
         <div class="col-span-12 lg:col-span-8">
-            @if (auth()->user()?->account_type == 'seller')
+            {{--  Gigs --}}
+
                 <div
-                    class="grid grid-cols-12 md:gap-x-6 gap-y-6 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-xl shadow-sm overflow-hidden mb-6">
-                    {{-- List of gigs --}}
+                    class="grid grid-cols-12 md:gap-x-6  gap-y-6 bg-white dark:bg-zinc-800 border p-4 border-gray-300 dark:border-zinc-700 rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="col-span-12">
+                    <h1 class="text-base ml-3 font-semibold text-black  mt-5 dark:text-gray-400">
+                        {{ __('messages.t_gigs') }}</h1>
+                    </div>
+             {{-- List of gigs --}}
                     @forelse ($gigs as $gig)
                         {{-- Gig item --}}
                         <div class="col-span-12 lg:col-span-6 xl:col-span-4 md:col-span-6 sm:col-span-6">
@@ -471,7 +476,6 @@
                     @endif
 
                 </div>
-            @endif
             <div
                 class="grid grid-cols-12 md:gap-x-6 gap-y-6 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 rounded-xl shadow-sm overflow-hidden mb-6  {{ auth()->user()?->account_type == 'seller' ? 'mt-5' : 'mt-0' }} ">
                 {{-- List of review --}}

@@ -111,11 +111,69 @@
                         {{ __('messages.t_give_ur_opinion_about_this_item') }}</p>
                 </div>
 
+
+
                 {{-- Section content --}}
                 <div class="grid grid-cols-12 md:gap-x-8 gap-y-8 mb-6">
+                    {{-- Buyers profile card --}}
+                    @if ($review)
+                        <div class="flex items-center shadow-sm border  col-span-12 md:col-span-5">
 
+                            <div class="w-full">
+                                <div class="bg-white  rounded-lg py-4">
+                                    <div class="photo-wrapper p-2">
+
+                                            <img class="w-32 h-32 rounded-full mx-auto"
+                                            src="{{asset('img/default/default-placeholder.jpg')}}"
+                                            alt="{{$review->user->username}}">
+
+
+                                    </div>
+                                    <div class="p-2">
+                                        <h3 class="text-center text-xl text-gray-900 font-medium leading-8">{{$review->user->first_name}} {{ $review->user->last_name}}</h3>
+                                        <div class="text-center text-gray-400 text-xs font-semibold">
+                                            <p>{{$review->user->account_type}}</p>
+                                        </div>
+                                        <table class="text-xs my-3">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Country</td>
+                                                    <td class="px-2 py-2">{{$review->user->country->name != null ? $review->user->country->name : 'null' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">State</td>
+                                                    <td class="px-2 py-2">{{$review->user->state->name != null ? $review->user->state->name: 'null' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Address</td>
+                                                    <td class="px-2 py-2">{{$review->user->address != null ? $review->user->address: 'null' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2 text-gray-500 font-semibold">Email</td>
+                                                    <td class="px-2 py-2">{{$review->user->email}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="text-center my-3">
+                                            <a class="text-xs text-indigo-500 italic hover:underline hover:text-indigo-600 font-medium"
+                                                href="{{url('profile/'.$review->user->username)}}">View Profile</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    @endif
+
+
+                    {{-- Gig preview --}}
+                    <div class="col-span-12 md:col-span-7">
+                        @livewire('main.cards.gig', ['gig' => $review->gig])
+                    </div>
                     {{-- Review form --}}
-                    <div class="col-span-12 md:col-span-6">
+                    <div class="col-span-12 md:col-span-12">
 
                         {{-- Rating --}}
                         <div class="mb-4 w-full">
@@ -156,12 +214,6 @@
                         </div>
 
                     </div>
-
-                    {{-- Gig preview --}}
-                    <div class="col-span-12 md:col-span-6">
-                        @livewire('main.cards.gig', ['gig' => $review->gig])
-                    </div>
-
                 </div>
 
             </div>
