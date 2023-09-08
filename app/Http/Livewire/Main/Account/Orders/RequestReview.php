@@ -8,15 +8,23 @@ use App\Models\Refund;
 use App\Notifications\User\Buyer\OrderItemReviewed;
 use App\Notifications\User\Seller\RefundRequest;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use DB;
 use Livewire\Component;
 use WireUi\Traits\Actions;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\File;
+
 
 class RequestReview extends Component
 {
-    use SEOToolsTrait, Actions;
+    use WithFileUploads, SEOToolsTrait, Actions;
 
     public $item;
     public $review_description;
+    public $review_attachment;
+
+
+
 
     /**
      * Init component
@@ -143,26 +151,74 @@ class RequestReview extends Component
     }
     function requestReview()
     {
-        $this->validate([
-            'review_description' => 'required|string'
-        ]);
-        $this->item->deliver_work_opened = true;
-        $this->item->is_review_sent = true;
-        $this->item->reviewed_at = now();
-        $this->item->save();
 
-        $this->item->deliveredWorks()->create([
-            'uid' => uid(),
-            'review_description' => $this->review_description
-        ]);
+        try {
+            DB::beginTransaction();
+            // Set max work size
+            $max_size = settings('media')->delivered_work_max_size * 1024;
 
-        $this->item->orderTimelines()->create([
-            'name' => 'Order Reviewed',
-            'description' => auth()->user()->username . ' request for review'
-        ]);
-        $this->item->order->buyer->notify((new OrderItemReviewed($this->item))->locale(config('app.locale')));
 
-        session()->flash('success', 'Request for review sent successfully. Only ' . ($this->item->total_reviews - $this->item->count_review) . ' review(s) remain.');
-        return redirect('account/orders/files?orderId=' . $this->item->order->uid . '&itemId=' . $this->item->uid);
+            $this->validate([
+                'review_description' => 'required|string',
+                'review_attachment' => 'nullable|file|mimes:zip|max:' . $max_size,
+
+
+            ]);
+            // Check if request has files
+            if ($this->review_attachment) {
+
+                // Generate a unique name for this file
+                $id = uid(45);
+
+                // Get file extension
+                $extension = $this->review_attachment->extension();
+
+                // Get file mime type
+                $mime = $this->review_attachment->getMimeType();
+
+                // Get file size
+                $size = $this->review_attachment->getSize();
+
+                // Move this file to local storage
+                $path = $this->review_attachment->storeAs('orders/review/delivered_work', "$id.$extension", 's3');
+
+                // Set file data
+                $file = [
+                    'id' => $id,
+                    'path' => $path,
+                    'extension' => $extension,
+                    'mime' => $mime,
+                    'size' => $size,
+                ];
+            } else {
+
+                // No files selected
+                $file = null;
+            }
+            $this->item->deliver_work_opened = true;
+            $this->item->is_review_sent = true;
+            $this->item->reviewed_at = now();
+            DB::commit();
+            $this->item->save();
+
+            $this->item->deliveredWorks()->create([
+                'uid' => uid(),
+                'review_description' => $this->review_description,
+                'review_attachment' => json_encode($file),
+
+            ]);
+
+            $this->item->orderTimelines()->create([
+                'name' => 'Order Reviewed',
+                'description' => auth()->user()->username . ' request for review'
+            ]);
+            $this->item->order->buyer->notify((new OrderItemReviewed($this->item))->locale(config('app.locale')));
+
+            session()->flash('success', 'Request for review sent successfully. Only ' . ($this->item->total_reviews - $this->item->count_review) . ' review(s) remain.');
+            return redirect('account/orders/files?orderId=' . $this->item->order->uid . '&itemId=' . $this->item->uid);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 }

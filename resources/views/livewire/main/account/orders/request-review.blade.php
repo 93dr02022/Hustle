@@ -10,7 +10,53 @@
 
                 {{-- Section content --}}
                 <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:col-span-9">
+                    {{-- Breadcrumbs --}}
+                    <div class="my-1 p-5 ml-2 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6 rtl:space-x-reverse">
+                        <ol class="inline-flex items-center mb-3 space-x-1 md:space-x-3 md:rtl:space-x-reverse sm:mb-0">
 
+                            {{-- Main home --}}
+                            <li>
+                                <div class="flex items-center">
+                                    <a href="{{ url('/') }}"
+                                        class="text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-zinc-300 dark:hover:text-white">
+                                        @lang('messages.t_home')
+                                    </a>
+                                </div>
+                            </li>
+
+                            {{-- orders --}}
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <a href="{{ url('/account/orders') }}"
+                                        class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ltr:ml-2 md:rtl:mr-2 dark:text-zinc-300 dark:hover:text-white">
+                                        @lang('messages.t_orders')
+                                    </a>
+                                </div>
+                            </li>
+
+                            {{-- orders --}}
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg aria-hidden="true" class="w-4 h-4 text-gray-400 rtl:rotate-180"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="mx-1 text-sm font-medium text-gray-400 md:mx-2 dark:text-zinc-400">
+                                        Review
+                                    </span>
+                                </div>
+                            </li>
+
+                        </ol>
+                    </div>
                     {{-- Form --}}
                     <div class="py-6 px-4 sm:p-6 lg:pb-8">
 
@@ -128,7 +174,24 @@
                                     </div>
                                 </div>
                             </div>
-                           
+                            {{-- Atachment --}}
+                            <div class="col-span-12" wire:ignore>
+
+                                {{-- Label --}}
+                                <span
+                                    class="mb-2 text-[0.8125rem] font-semibold tracking-wide flex items-center text-gray-700 dark:text-white">Upload Attachment</span>
+
+                                {{-- Uploader --}}
+                                <x-forms.uploader model="review_attachment" id="uploader_work" :extensions="['zip']"
+                                    accept="application/zip" size="{{ settings('media')->delivered_work_max_size }}"
+                                    max="1" />
+
+                                {{-- Hint --}}
+                                <span class="text-xs text-gray-400 font-normal">
+                                    {{ __('messages.t_only_zip_allowed_max_size', ['size' => settings('media')->delivered_work_max_size]) }}
+                                </span>
+
+                            </div>
                             {{-- Review description --}}
                             <div class="col-span-12">
                                 <x-forms.textarea label="{{ __('messages.t_description')  }}" placeholder="{{ __('messages.t_enter_refund_reason') }}" model="review_description" :rows="18" icon="card-text-outline" />
