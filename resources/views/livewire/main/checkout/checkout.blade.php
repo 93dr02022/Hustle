@@ -582,6 +582,7 @@
                                         } elseif ($referralBalance > 0 && $referralBalance > $commission) {
                                             $paystackInlineAmount = ($exchange_total_amount - $commission) * 100;
                                             $total_amount -= $commission;
+                                            $referralAmount = $commission;
                                         } else {
                                             $paystackInlineAmount = $exchange_total_amount * 100;
                                         }
