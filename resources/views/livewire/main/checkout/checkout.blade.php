@@ -588,7 +588,7 @@
                                             $paystackInlineAmount = $exchange_total_amount * 100;
                                         }
 
-                                        $useReferralPaystack = $referralBalance > 0 ? true : false;
+                                        $useReferralPaystack = $referralAmount > 0 ? true : false;
 
                                         $this->buyerReferralAmount = $referralAmount;
                                 
@@ -991,7 +991,7 @@
                                                 currency: "{{ settings('paystack')->currency }}",
                                                 ref: '{{ uid(32) }}',
                                                 metadata: {
-                                                    useReferral: {{ $useReferralPaystack }},
+                                                    useReferral: Boolean("{{ $useReferralPaystack }}"),
                                                 },
                                                 onClose: function() {
 
