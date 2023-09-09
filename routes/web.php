@@ -62,9 +62,14 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
     // Home
     Route::namespace('Home')->group(function () {
-
         // Home
         Route::get('/', HomeComponent::class);
+    });
+
+    // About
+    Route::namespace('About')->group(function () {
+        // about page
+        Route::get('/about', AboutComponent::class);
     });
 
     // Explore
@@ -270,11 +275,14 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
 
     // Account
     Route::namespace('Account')->prefix('account')->middleware('auth')->group(function () {
-        // Settings
+        // Notifications
         Route::namespace('Notifications')->group(function () {
-
-            // Index
             Route::get('notifications', NotificationsComponent::class);
+        });
+
+        // Referral Page
+        Route::namespace('Referral')->prefix('referral')->group(function () {
+            Route::get('/', ReferralComponent::class);
         });
 
         // Settings

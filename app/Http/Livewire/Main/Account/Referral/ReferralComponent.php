@@ -1,22 +1,49 @@
 <?php
 
+namespace App\Http\Livewire\Main\Account\Referral;
 
-namespace App\Http\Livewire\Main\About;
-
+use App\Http\Validators\Main\Account\Settings\EditValidator;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\User;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
-use Livewire\WithPagination;
 use WireUi\Traits\Actions;
 
-class AboutComponent extends Component
-{
-    use WithPagination, SEOToolsTrait, Actions;
 
+class ReferralComponent extends Component
+{
+    use SEOToolsTrait, Actions;
+
+    public $username;
+
+    /**
+     * Init component
+     *
+     * @return void
+     */
+    public function mount()
+    {
+        $user = auth()->user();
+
+        if (is_null($user->referral_code)) {
+            $user->referral_code = bin2hex(random_bytes(6));
+            $user->save();
+        }
+    }
+
+    /**
+     * Render component
+     *
+     * @return Illuminate\View\View
+     */
     public function render()
     {
         // SEO
         $separator = settings('general')->separator;
-        $title = __('About') . " $separator " . settings('general')->title;
+        $title = __('messages.t_account_settings') . " $separator " . settings('general')->title;
         $description = settings('seo')->description;
         $ogimage = src(settings('seo')->ogimage);
 
@@ -40,8 +67,18 @@ class AboutComponent extends Component
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
 
-        return view('livewire.main.about.about', [])
-            ->extends('livewire.main.layout.blank')
-            ->section('content');
+        return view('livewire.main.account.referral.referral', [])->extends('livewire.main.layout.app')->section('content');
+    }
+
+    /**
+     * Wire UI Error toast notification
+     */
+    public function toastError($message)
+    {
+        $this->notification([
+            'title' => __('messages.t_error'),
+            'description' => $message,
+            'icon' => 'error',
+        ]);
     }
 }
