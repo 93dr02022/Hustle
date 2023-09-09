@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('referral_code')->nullable()->unique()->after('account_type');
+        Schema::create('referrals', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->index();
+            $table->foreignId('referred_id')->unique();
+            $table->boolean('completed')->default(false)->index();
+            $table->string('referral_code')->index();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referral_code');
-        });
+        Schema::dropIfExists('referrals');
     }
 };

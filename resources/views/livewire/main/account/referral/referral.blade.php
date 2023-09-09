@@ -98,12 +98,40 @@
                             </div>
 
 
+                            {{-- user referral balance --}}
+                            <div
+                                class="flex flex-col justify-between p-3 max-w-[400px] mb-7 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                                <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                                    <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                                        @money(auth()->user()->referral_balance, settings('currency')->code, true)
+                                    </p>
+                                    <div
+                                        class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                        <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300"
+                                            stroke="currentColor" fill="currentColor" stroke-width="0"
+                                            viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                            <g>
+                                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                                <path
+                                                    d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">
+                                    Referral Balance
+                                </p>
+                            </div>
+
                             <div class="text-base font-medium mb-2">Copy Your Referral link</div>
-                            <div class="relative max-w-md">
+                            <div class="relative max-w-[500px]">
                                 <input class="form-ctr block pl-4 py-4 pr-[75px] read-only:bg-slate-100"
-                                    value="https://correcthustle.com/auth/register?refer={{ auth()->user()->referral_code }}" readonly />
+                                    value="{{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
+                                    readonly />
                                 <div class="flex absolute inset-y-0 right-0 items-center pl-4 pointer-events-auto">
-                                    <button @click="copy('')"
+                                    <button
+                                        @click="copy('{{ url('/auth/register?refer=' . auth()->user()->referral_code) }}')"
                                         class="bg-[#1D46F5] m-[5px] text-white text-sm rounded py-3 px-5">Copy</button>
                                 </div>
                             </div>
@@ -112,7 +140,7 @@
                             <div class="flex items-center flex-wrap gap-x-4 xs:gap-x-7 mt-5 mb-12">
                                 {{-- Facebook --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://www.facebook.com/share.php?u=https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment&t=Quotation`"
+                                    <a href="https://www.facebook.com/share.php?u={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#3b5998] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -129,7 +157,7 @@
 
                                 {{-- Twitter --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://twitter.com/intent/tweet?text=Quotation%20-%20https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment%20`"
+                                    <a href="https://twitter.com/intent/tweet?text={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#1da1f2] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -147,7 +175,7 @@
 
                                 {{-- Linkedin --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://www.linkedin.com/shareArticle?mini=true&url=https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment&title=Quotation&summary=Quotation`"
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#0a66c2] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -165,7 +193,7 @@
 
                                 {{-- Whatsapp --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://api.whatsapp.com/send?text=Quotation%20https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment`"
+                                    <a href="https://api.whatsapp.com/send?text=Quotation%20{{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#25d366] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -202,7 +230,7 @@
                         .then(() => {
                             this.toastMessage('Referral link copied', 'success')
                         })
-                }
+                },
 
                 toastMessage(message, type = "error") {
                     window.$wireui.notify({

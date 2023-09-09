@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Auth;
 
 use App\Http\Validators\Main\Auth\RegisterValidator;
+use App\Jobs\Main\General\Referred;
 use App\Models\Admin;
 use App\Models\EmailVerification;
 use App\Models\User;
@@ -33,6 +34,8 @@ class RegisterComponent extends Component
     public $recaptcha_token;
 
     public $social_grid;
+
+    public $referCode = null;
 
     /**
      * Initialize component
@@ -74,6 +77,10 @@ class RegisterComponent extends Component
 
         // Set grid
         $this->social_grid = $social_grid_counter;
+
+        if (request()->has('refer')) {
+            $this->referCode = request()->get('refer');
+        }
     }
 
     /**
@@ -152,6 +159,12 @@ class RegisterComponent extends Component
 
             // Check if user requires verification
             if ($settings->verification_required) {
+
+                // check if there is referral
+                if ($this->referCode) {
+                    Referred::dispatch($this->referCode, $user);
+                }
+
                 if ($settings->verification_type === 'email') {
                     // Generate verification token and save it
                     $token = uid(64);

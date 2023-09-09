@@ -300,6 +300,7 @@ class Sidebar extends Component
                     ['text' => __('messages.t_smtp_settings_sidebar'), 'href' => "$dashboard/settings/smtp"],
                     ['text' => __('messages.t_hero_section'), 'href' => "$dashboard/settings/hero"],
                     ['text' => __('messages.t_withdrawal_settings_sidebar'), 'href' => "$dashboard/settings/withdrawal"],
+                    ['text' => __('Referral'), 'href' => "$dashboard/settings/referral"],
                 ],
             ],
 

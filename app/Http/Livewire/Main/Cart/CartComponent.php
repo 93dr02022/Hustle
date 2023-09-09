@@ -176,6 +176,32 @@ class CartComponent extends Component
     }
 
     /**
+     * Calculate commission
+     *
+     * @param  string  $price
+     * @return int
+     */
+    public function commission($price)
+    {
+        // Get settings
+        $settings = settings('commission');
+
+        // Commission percentage
+        if ($settings->commission_type === 'percentage') {
+
+            // Calculate commission
+            $commission = $settings->commission_value * $price / 100;
+        } else {
+
+            // Fixed amount
+            $commission = $settings->commission_value;
+        }
+
+        // Return commission
+        return $commission;
+    }
+
+    /**
      * Calculate taxes
      *
      * @return int
