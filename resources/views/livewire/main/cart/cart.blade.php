@@ -152,7 +152,7 @@
                                     </svg>
                                     <span class="sr-only">Info</span>
                                     <div>
-                                        <span class="font-medium">Referral</span> Percentage of your purchase will be cushion by your referral balance <span class="text-lg font-bold">{{ auth()->user()->referral_balance }}</span>
+                                        Percentage of your purchase will be cushion by your referral balance <span class="text-lg font-bold">{{ auth()->user()->referral_balance }}</span>
                                     </div>
                                 </div>
                             @endif

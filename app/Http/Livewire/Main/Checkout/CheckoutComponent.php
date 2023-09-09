@@ -21,6 +21,7 @@ use DateTimeZone;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -929,6 +930,13 @@ class CheckoutComponent extends Component
                 $order->subtotal_value = $subtotal;
                 $order->taxes_value = $taxes;
                 $order->save();
+
+                // update the referral balance of user
+                if ($this->buyerReferralAmount > 0) {
+                    auth()->user()->update([
+                        'referral_balance' => DB::raw("referral_balance - {$this->buyerReferralAmount}")
+                    ]);
+                }
 
                 // Now let's loop through items in this cart and save them
                 foreach ($this->cart as $key => $item) {

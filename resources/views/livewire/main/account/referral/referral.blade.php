@@ -140,7 +140,7 @@
                             <div class="flex items-center flex-wrap gap-x-4 xs:gap-x-7 mt-5 mb-12">
                                 {{-- Facebook --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://www.facebook.com/share.php?u=https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment&t=Quotation`"
+                                    <a href="https://www.facebook.com/share.php?u={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#3b5998] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -157,7 +157,7 @@
 
                                 {{-- Twitter --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://twitter.com/intent/tweet?text=Quotation%20-%20https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment%20`"
+                                    <a href="https://twitter.com/intent/tweet?text={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#1da1f2] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -175,7 +175,7 @@
 
                                 {{-- Linkedin --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://www.linkedin.com/shareArticle?mini=true&url=https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment&title=Quotation&summary=Quotation`"
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#0a66c2] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
@@ -193,7 +193,7 @@
 
                                 {{-- Whatsapp --}}
                                 <div class="flex flex-col items-center justify-center">
-                                    <a href="`https://api.whatsapp.com/send?text=Quotation%20https://correcthustle.com/quotations/${selectedQuote.quote.reference}/payment`"
+                                    <a href="https://api.whatsapp.com/send?text=Quotation%20{{ url('/auth/register?refer=' . auth()->user()->referral_code) }}"
                                         target="_blank"
                                         class="flex justify-center items-center h-10 w-10 border border-transparent rounded-full bg-[#25d366] focus:outline-none focus:ring-0 mx-auto">
                                         <svg class="h-4 w-4 fill-white" version="1.1" viewBox="0 0 512 512"
