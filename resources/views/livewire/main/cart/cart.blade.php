@@ -25,7 +25,7 @@
                     </div>
             
                     {{-- Section content --}}
-                    <div class="px-8">
+                    <div class="px-3 xs:px-4 sm:px-8">
                         <div class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
 
                             {{-- Cart items --}}
@@ -143,17 +143,45 @@
                                     
                                 </ul>
                             </section>
+
+                            {{-- referral bonus alert --}}
+                            @if (auth()->user()->referral_balance)
+                                <div class="lg:col-span-12 flex items-center px-3 sm:px-4 py-5 text-sm text-green-600 rounded-lg bg-green-100 dark:bg-gray-800 dark:text-green-400" role="alert">
+                                    <svg class="flex-shrink-0 inline w-5 h-5 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Percentage of your purchase will be cushion by your referral balance <span class="text-lg font-bold">{{ auth()->user()->referral_balance }}</span>
+                                    </div>
+                                </div>
+                            @endif
                     
                             {{-- Cart summary --}}
-                            <section aria-labelledby="summary-heading" class="my-16 bg-gray-50 dark:bg-zinc-700 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-12">
+                            <section aria-labelledby="summary-heading" class="mb-16 mt-7 bg-gray-50 dark:bg-zinc-700 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-5 lg:col-span-12">
                             <h2 id="summary-heading" class="text-lg font-medium text-gray-900 dark:text-gray-200">{{ __('messages.t_cart_summary') }}</h2>
                     
                             <dl class="mt-6 space-y-4">
+                                @php
+                                    $subTotal = $this->subtotal();
+                                    $commission = $this->commission($subTotal);
+                                    $referralBalance = intval(auth()->user()->referral_balance);
+                                    $referralAmount = 0;
+
+                                    // calculate referral on commission
+                                    if ($referralBalance > 0 && $referralBalance <= $commission) {
+                                        $subTotal -= $referralBalance;
+                                        $referralAmount = $referralBalance;
+                                    } elseif ($referralBalance > 0 && $referralBalance > $commission) {
+                                        $subTotal -= $commission;
+                                        $referralAmount = $commission;
+                                    }
+                                @endphp
 
                                 {{-- Subtotal --}}
                                 <div class="flex items-center justify-between">
                                     <dt class="text-sm text-gray-600 dark:text-gray-300">{{ __('messages.t_subtotal') }}</dt>
-                                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-200">@money($this->subtotal(), settings('currency')->code, true)</dd>
+                                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-200">@money($subTotal, settings('currency')->code, true)</dd>
                                 </div>
 
                                 {{-- Taxes --}}
@@ -175,7 +203,10 @@
                                 {{-- Total --}}
                                 <div class="border-t border-gray-200 dark:border-zinc-600 pt-4 flex items-center justify-between">
                                     <dt class="text-base font-medium text-gray-900 dark:text-white">{{ __('messages.t_total') }}</dt>
-                                    <dd class="text-base font-medium text-gray-900 dark:text-white">@money($this->total() + $this->taxes(), settings('currency')->code, true)</dd>
+                                    <dd class="text-base font-medium text-gray-900 dark:text-white">
+                                        @money($subTotal + $this->taxes(), settings('currency')->code, true) 
+                                        <span class="text-gray-500 dark:text-gray-200">(@money($referralAmount, settings('currency')->code, true))</span>
+                                    </dd>
                                 </div>
 
                             </dl>

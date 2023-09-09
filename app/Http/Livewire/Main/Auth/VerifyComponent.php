@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Main\Auth;
 
 use App\Models\EmailVerification;
+use App\Models\Referral;
 use App\Models\User;
+use App\Notifications\User\Everyone\ReferralCompleted;
 use App\Notifications\User\Everyone\Welcome;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 use Carbon\Carbon;
@@ -39,9 +41,7 @@ class VerifyComponent extends Component
 
         // Check if verification expired
         if ($expiry_date->isPast()) {
-
             return redirect('auth/request')->with('error', __('messages.t_verification_email_link_expired'));
-
         }
 
         // Verification is correct, activate account
@@ -54,6 +54,14 @@ class VerifyComponent extends Component
 
         // Delete verification
         $verification->delete();
+
+        $referral = Referral::where('referred_id', $user->id)
+        ->where('completed', false)
+            ->first();
+
+        if ($referral) {
+            $referral->user->notify(new ReferralCompleted($referral));
+        }
 
         // Send welcome to user
         $user->notify((new Welcome)->locale(config('app.locale')));

@@ -70,7 +70,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorySeeder::class,
             StatesTableSeeder::class,
-            ProjectCategoryAndSkillSeeder::class
+            ProjectCategoryAndSkillSeeder::class,
+            ReferralSettingSeeder::class
         ]);
 
         // if (App::environment('local')) {

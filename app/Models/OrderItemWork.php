@@ -27,6 +27,7 @@ class OrderItemWork extends Model
         'attached_work',
         'quick_response',
         'review_description',
+        'review_attachment',
         'is_delivered',
         'resubmit'
     ];

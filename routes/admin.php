@@ -498,6 +498,9 @@ Route::middleware(['web', 'auth:admin'])->group(function () {
         // Withdrawal
         Route::get('withdrawal', WithdrawalComponent::class);
 
+        // Referral
+        Route::get('referral', ReferralComponent::class);
+
         // Appearance
         Route::get('appearance', AppearanceComponent::class);
 

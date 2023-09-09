@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('referral_code')->nullable()->unique()->after('account_type');
+        Schema::table('order_item_work', function (Blueprint $table) {
+            //
+            $table->text('review_attachment')->nullable();
         });
     }
 
@@ -25,8 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referral_code');
+        Schema::table('order_item_work', function (Blueprint $table) {
+            //
         });
     }
 };

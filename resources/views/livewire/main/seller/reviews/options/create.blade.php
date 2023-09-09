@@ -138,15 +138,32 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="px-2 py-2 text-gray-500 font-semibold">Country</td>
-                                                    <td class="px-2 py-2">{{$review->user->country->name != null ? $review->user->country->name : 'null' }}</td>
+                                                    <td class="px-2 py-2">
+                                                        @if($review->user->country->name)
+                                                        {{$review->user->country->name}}
+                                                        @else
+                                                        Not available
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="px-2 py-2 text-gray-500 font-semibold">State</td>
-                                                    <td class="px-2 py-2">{{$review->user->state->name != null ? $review->user->state->name: 'null' }}</td>
+                                                    <td class="px-2 py-2">@if($review->user->state->name)
+                                                         {{$review->user->state->name}}
+                                                         @else
+                                                        Not available
+                                                        @endif
+                                                        </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="px-2 py-2 text-gray-500 font-semibold">Address</td>
-                                                    <td class="px-2 py-2">{{$review->user->address != null ? $review->user->address: 'null' }}</td>
+                                                    <td class="px-2 py-2">
+                                                        @if ($review->user->address)
+                                                            {{$review->user->address}}
+                                                        @else
+                                                            Not available
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="px-2 py-2 text-gray-500 font-semibold">Email</td>
