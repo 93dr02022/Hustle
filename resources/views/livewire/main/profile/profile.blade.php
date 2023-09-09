@@ -90,12 +90,12 @@
                         <div class="px-14 mt-8">
 
                             {{-- Contact user --}}
-                            @auth
+
                                 @if (auth()->id() != $user->id)
                                     <a href="{{ url('messages/new', $user->username) }}"
                                         class="flex items-center justify-center h-12 bg-primary-600 w-full text-white text-sm font-medium rounded hover:shadow hover:bg-primary-700 {{ auth()->check() && auth()->id() !== $user->id ? 'mb-4' : '' }}">{{ __('messages.t_contact_me') }}</a>
                                 @endif
-                            @endauth
+
 
                             {{-- Report user --}}
                             @auth
