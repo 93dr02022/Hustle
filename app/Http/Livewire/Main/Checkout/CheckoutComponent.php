@@ -89,6 +89,9 @@ class CheckoutComponent extends Component
 
     protected $listeners = ['cart-updated' => 'cartUpdated'];
 
+    // referral amount used
+    public $buyerReferralAmount =  0;
+
     /**
      * Init component
      *
@@ -1047,6 +1050,7 @@ class CheckoutComponent extends Component
                 $invoice->company = $billing_info->company ? clean($billing_info->company) : null;
                 $invoice->address = clean($billing_info->address);
                 $invoice->status = $response['transaction']['payment_status'];
+                $invoice->buyer_ref_amount = $this->buyerReferralAmount;
                 $invoice->save();
 
                 // If invoice not paid yet
@@ -1427,7 +1431,7 @@ class CheckoutComponent extends Component
                 }
 
                 // This amount must equals amount in order
-                if ($amount != $total_amount) {
+                if ($amount != $total_amount && $amount + $this->buyerReferralAmount != $total_amount) {
 
                     // Error
                     $response = [

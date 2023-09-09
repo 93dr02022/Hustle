@@ -574,7 +574,8 @@
                                         $referralBalance = intval(auth()->user()->referral_balance);
                                         $referralAmount = 0;
 
-                                        // calculate referral on commission
+                                        // calculate referral on commission and we will put the referral
+                                        // amount we used on the server to use when the payment is done.
                                         if ($referralBalance > 0 && $referralBalance <= $commission) {
                                             $paystackInlineAmount = ($exchange_total_amount - $referralBalance) * 100;
                                             $total_amount -= $referralBalance;
@@ -588,6 +589,8 @@
                                         }
 
                                         $useReferralPaystack = $referralBalance > 0 ? true : false;
+
+                                        $this->buyerReferralAmount = $referralAmount;
                                 
                                         break;
                                 
