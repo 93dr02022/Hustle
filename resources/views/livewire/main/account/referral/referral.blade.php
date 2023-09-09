@@ -92,7 +92,7 @@
                                         </div>
                                     </div>
                                     <div class="col-span-5">
-                                        <img src="/img/general/referral.png" class="object-contain" alt="">
+                                        <img src="{{ src('general/referral.png') }}" class="object-contain" alt="">
                                     </div>
                                 </div>
                             </div>
