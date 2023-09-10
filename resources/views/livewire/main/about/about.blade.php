@@ -115,7 +115,7 @@
             </div>
             <div class="row-start-1 col-start-1">
                 <div class="flex flex-col justify-end items-start h-full">
-                    <img src="img/about/aboutbanner.png" alt="banner" class="max-h-[80%] -ml-[10%]" />
+                    <img src="{{ src('about/aboutbanner.png') }}" alt="banner" class="max-h-[80%] -ml-[10%]" />
                 </div>
             </div>
         </div>
@@ -353,7 +353,7 @@
                             <div class="bg-[#1D46F5] h-full w-2/3 rounded-l-[15%] rounded-br-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-end py-[5%] pr-[8%]">
-                            <img class="max-h-[90%]" data-aos="fade-up" src="img/about/Rectangle 18.png" alt="task" />
+                            <img class="max-h-[90%]" data-aos="fade-up" src="{{ src('about/Rectangle 18.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -370,7 +370,7 @@
                             <div class="bg-[#F18522] h-full w-2/3 rounded-r-[15%] rounded-bl-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-start p-[8%]">
-                            <img class="max-w-[100%]" data-aos="fade-up" src="img/about/Rectangle 18 -.png" alt="task" />
+                            <img class="max-w-[100%]" data-aos="fade-up" src="{{ src('about/Rectangle 18 -.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -406,7 +406,7 @@
                             <div class="bg-[#1D46F5] h-full w-2/3 rounded-l-[15%] rounded-br-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-end py-[5%] pr-[8%]">
-                            <img class="max-h-[90%]" data-aos="fade-up" src="img/about/Rectangle 18-1.png" alt="task" />
+                            <img class="max-h-[90%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-1.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -422,7 +422,7 @@
                             <div class="bg-[#F18522] h-full w-2/3 rounded-r-[15%] rounded-bl-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-start p-[8%]">
-                            <img class="max-w-[100%]" data-aos="fade-up" src="img/about/Rectangle 18-2.png" alt="task" />
+                            <img class="max-w-[100%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-2.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -457,7 +457,7 @@
                             <div class="bg-[#1D46F5] h-full w-2/3 rounded-l-[15%] rounded-br-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-end py-[5%] pr-[8%]">
-                            <img class="max-h-[90%]" data-aos="fade-up" src="img/about/Rectangle 18-3.png" alt="task" />
+                            <img class="max-h-[90%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-3.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -473,7 +473,7 @@
                             <div class="bg-[#F18522] h-full w-2/3 rounded-r-[15%] rounded-bl-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-start p-[8%]">
-                            <img class="max-w-[100%]" data-aos="fade-up" src="img/about/Rectangle 18-4.png" alt="task" />
+                            <img class="max-w-[100%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-4.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -508,7 +508,7 @@
                             <div class="bg-[#1D46F5] h-full w-2/3 rounded-l-[15%] rounded-br-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-end py-[5%] pr-[8%]">
-                            <img class="max-h-[90%]" data-aos="fade-up" src="img/about/Rectangle 18-5.png" alt="task" />
+                            <img class="max-h-[90%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-5.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -525,7 +525,7 @@
                             <div class="bg-[#F18522] h-full w-2/3 rounded-r-[15%] rounded-bl-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-start p-[8%]">
-                            <img class="max-w-[100%]" data-aos="fade-up" src="img/about/Rectangle 18-6.png" alt="task" />
+                            <img class="max-w-[100%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-6.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -561,7 +561,7 @@
                             <div class="bg-[#1D46F5] h-full w-2/3 rounded-l-[15%] rounded-br-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-end py-[5%] pr-[8%]">
-                            <img class="max-h-[90%]" data-aos="fade-up" src="img/about/Rectangle 18-7.png" alt="task" />
+                            <img class="max-h-[90%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-7.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -577,7 +577,7 @@
                             <div class="bg-[#F18522] h-full w-2/3 rounded-r-[15%] rounded-bl-[15%]"></div>
                         </div>
                         <div class="row-start-1 col-start-1 flex items-center justify-start p-[8%]">
-                            <img class="max-w-[100%]" data-aos="fade-up" src="img/about/Rectangle 18-8.png" alt="task" />
+                            <img class="max-w-[100%]" data-aos="fade-up" src="{{ src('about/Rectangle 18-8.png') }}" alt="task" />
                         </div>
                     </div>
                 </div>
@@ -604,7 +604,7 @@
                         <div class="bg-[#F18522] h-full w-[70%] rounded-r-[15%] rounded-bl-[15%]"></div>
                     </div>
                     <div class="row-start-1 col-start-1 flex items-center justify-end p-[8%]">
-                        <img class="max-h-[80%] object-cover" data-aos="fade-up" src="img/about/Rectangle 20.png" alt="task" />
+                        <img class="max-h-[80%] object-cover" data-aos="fade-up" src="{{ src('about/Rectangle 20.png') }}" alt="task" />
                     </div>
                 </div>
                 <div class="md:col-span-6">

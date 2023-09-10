@@ -152,24 +152,23 @@
                     uid="confirmPasswordForUpdate">
                     <x-slot:title>
                         <div>Enter Passsword to continue</div>
+                    </x-slot>
+
+                    <form @submit.prevent="sendForm">
+                        <x-slot:content>
+                            <div class="col-span-12 md:col-span-6">
+                                <x-forms.text-input label="{{ __('Password') }}"
+                                    placeholder="{{ __('Enter Password') }}" model="password" current-password
+                                    type="password" required icon="key" />
+                            </div>
                         </x-slot>
 
-                        <form @submit.prevent="sendForm">
-                            <x-slot:content>
-                                <div class="col-span-12 md:col-span-6">
-                                    <x-forms.text-input label="{{ __('Password') }}"
-                                        placeholder="{{ __('Enter Password') }}" model="password" current-password
-                                        type="password" required icon="key" />
-                                </div>
-                                </x-slot>
-
-                                <x-slot:footer>
-                                    <div>
-                                        <button class="btn-purple" @click="sendForm"
-                                            modal-close="myModal">Proceed</button>
-                                    </div>
-                                    </x-slot>
-                        </form>
+                        <x-slot:footer>
+                            <div>
+                                <button class="btn-purple" @click="sendForm" modal-close="myModal">Proceed</button>
+                            </div>
+                        </x-slot>
+                    </form>
                 </x-forms.modal>
             </div>
         </div>

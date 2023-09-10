@@ -110,7 +110,7 @@
 
                     {{-- Available payment methods --}}
                     @if (is_null($payment_method))
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
+                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:gap-x-4">
 
                             {{-- Stripe --}}
                             @if (settings('stripe')->is_enabled)
@@ -153,11 +153,10 @@
                             {{-- Wallet --}}
                             @if (auth()->user()->balance_available >= $this->total() + $this->taxes())
                                 <div wire:click="$set('payment_method', 'wallet')"
-                                    class="py-4 px-1 bg-white dark:bg-zinc-700 rounded-lg ring-2 cursor-pointer grid items-center justify-center text-center transition-all duration-200 {{ $payment_method === 'wallet' ? 'ring-primary-600 border border-primary-600' : 'ring-transparent hover:ring-primary-600 border border-gray-200 dark:border-zinc-600 shadow-sm' }}">
+                                    class="py-3 px-3 bg-white gap-x-4 dark:bg-zinc-700 rounded-lg ring-2 cursor-pointer flex items-center transition-all duration-200 {{ $payment_method === 'wallet' ? 'ring-primary-600 border border-primary-600' : 'ring-transparent hover:ring-primary-600 border border-gray-200 dark:border-zinc-600 shadow-sm' }}">
 
                                     {{-- Logo --}}
-                                    <div
-                                        class="flex items-center justify-center max-h-[35px] mb-2 mx-auto p-1 mt-2 dark:text-gray-300">
+                                    <div class="h-10 w-10 rounded-md border grid place-items-center">
                                         <svg class="w-5 h-5" stroke="currentColor" fill="currentColor" stroke-width="0"
                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M16 12h2v4h-2z"></path>
@@ -165,15 +164,17 @@
                                                 d="M20 7V5c0-1.103-.897-2-2-2H5C3.346 3 2 4.346 2 6v12c0 2.201 1.794 3 3 3h15c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zM5 5h13v2H5a1.001 1.001 0 0 1 0-2zm15 14H5.012C4.55 18.988 4 18.805 4 18V8.815c.314.113.647.185 1 .185h15v10z">
                                             </path>
                                         </svg>
-                                        <h1 class="text-sm font-semibold ltr:ml-1 rtl:mr-1">
-                                            {{ __('messages.t_wallet') }}</h1>
                                     </div>
-
+                                    
                                     {{-- Name --}}
-                                    <span class="text-[13px] text-gray-500 dark:text-gray-100 font-bold mb-2">
-                                        @money(auth()->user()->balance_available, settings('currency')->code, true)
-                                    </span>
-
+                                    <div class="flex flex-col">
+                                        <span
+                                        class="text-[13px] text-gray-500 dark:text-gray-100 font-bold">Pay with Wallet</span>
+                                        <span
+                                        class="text-[13px] text-gray-500 dark:text-gray-100 font-bold capitalize">
+                                            @money(auth()->user()->balance_available, settings('currency')->code, true)
+                                        </span>
+                                    </div>
                                 </div>
                             @endif
 
@@ -218,19 +219,60 @@
                             {{-- Paystack --}}
                             @if (settings('paystack')->is_enabled)
                                 <div wire:click="$set('payment_method', 'paystack')"
-                                    class="py-4 px-1 bg-white dark:bg-zinc-700 rounded-lg ring-2 cursor-pointer grid items-center justify-center text-center transition-all duration-200 {{ $payment_method === 'paystack' ? 'ring-primary-600 border border-primary-600' : 'ring-transparent hover:ring-primary-600 border border-gray-200 dark:border-zinc-600 shadow-sm' }}">
+                                    class="py-3 px-3 bg-white gap-x-4 dark:bg-zinc-700 rounded-lg ring-2 cursor-pointer flex items-center transition-all duration-200 {{ $payment_method === 'paystack' ? 'ring-primary-600 border border-primary-600' : 'ring-transparent hover:ring-primary-600 border border-gray-200 dark:border-zinc-600 shadow-sm' }}">
 
                                     {{-- Logo --}}
-                                    @if (settings('paystack')->logo_id)
-                                        <img src="{{ placeholder_img() }}"
-                                            data-src="{{ src(settings('paystack')->logo_id) }}"
-                                            class="lazy max-h-[35px] max-w-[75%] mb-2 mx-auto p-1 mt-2">
-                                    @endif
+                                    <img src="{{ placeholder_img() }}"
+                                            data-src="https://website-v3-assets.s3.amazonaws.com/assets/img/hero/Paystack-mark-white-twitter.png"
+                                            class="lazy h-10 w-10 rounded-md border">
 
                                     {{-- Name --}}
-                                    <span
-                                        class="text-[13px] text-gray-500 dark:text-gray-100 font-bold mb-2">{{ settings('paystack')->name }}</span>
+                                    <div class="flex flex-col">
+                                        <span
+                                        class="text-[13px] text-gray-500 dark:text-gray-100 font-bold mb-2">Pay with {{ settings('paystack')->name }}</span>
+                                    </div>
 
+                                </div>
+                            @endif
+
+                            {{-- Pay with existing card --}}
+                            @if ($userCard)
+                                <div wire:click="$set('payment_method', 'paycard')"
+                                class="py-3 px-3 bg-white gap-x-4 dark:bg-zinc-700 rounded-lg ring-2 cursor-pointer flex items-center transition-all duration-200 {{ $payment_method === 'paystack' ? 'ring-primary-600 border border-primary-600' : 'ring-transparent hover:ring-primary-600 border border-gray-200 dark:border-zinc-600 shadow-sm' }}">
+
+                                    {{-- Logo --}}
+                                    @switch($userCard->card_type)
+                                        @case('visa')
+                                            <img src="{{ placeholder_img() }}"
+                                            data-src="{{ src('cards/visa.jpg') }}"
+                                            class="lazy object-contain h-10 w-10 rounded-md border">
+                                            @break
+
+                                        @case('mastercard')
+                                            <img src="{{ placeholder_img() }}"
+                                            data-src="{{ src('cards/master.jpg') }}"
+                                            class="lazy object-contain h-10 w-10 rounded-md border">
+                                            @break
+
+                                        @case('verve')
+                                            <img src="{{ placeholder_img() }}"
+                                            data-src="{{ src('cards/verve.png') }}"
+                                            class="lazy object-contain h-10 w-10 rounded-md border">
+                                            @break
+                                    
+                                        @default
+                                            <img src="{{ placeholder_img() }}"
+                                            data-src="{{ placeholder_img() }}"
+                                            class="lazy object-contain h-10 w-10 rounded-md border">
+                                    @endswitch
+
+                                    {{-- Name --}}
+                                    <div class="flex flex-col">
+                                        <span
+                                        class="text-[13px] text-gray-500 dark:text-gray-100 font-bold">Pay with saved card</span>
+                                        <span
+                                        class="text-[13px] text-blue-700 dark:text-gray-100 font-bold capitalize">{{ $userCard->card_type }} ****{{ $userCard->last }}</span>
+                                    </div>
                                 </div>
                             @endif
 
@@ -494,6 +536,7 @@
                             'paymob',
                             'paypal',
                             'paystack',
+                            'paycard',
                             'paytabs',
                             'paytr',
                             'razorpay',
@@ -542,6 +585,26 @@
                                         $gateway_currency = settings('currency')->code;
                                         $gateway_exchange_rate = (float) settings('currency')->exchange_rate;
                                         $exchange_total_amount = $this->calculateExchangeAmount();
+
+                                        $commission = $this->commission($this->total());
+                                        $referralBalance = intval(auth()->user()->referral_balance);
+                                        $referralAmount = 0;
+
+                                        // calculate referral on commission and we will put the referral
+                                        // amount we used on the server to use when the payment is done.
+                                        if ($referralBalance > 0 && $referralBalance <= $commission) {
+                                            $this->walletPayAmount = $exchange_total_amount - $referralBalance;
+                                            $total_amount -= $referralBalance;
+                                            $referralAmount = $referralBalance;
+                                        } elseif ($referralBalance > 0 && $referralBalance > $commission) {
+                                            $this->walletPayAmount = $exchange_total_amount - $commission;
+                                            $total_amount -= $commission;
+                                            $referralAmount = $commission;
+                                        } else {
+                                            $this->walletPayAmount = $total_amount;
+                                        }
+
+                                        $this->buyerReferralAmount = $referralAmount;
                                 
                                         break;
                                 
@@ -565,11 +628,11 @@
                                 
                                     // Paystack
                                     case 'paystack':
+                                    case 'paycard':
                                         // Get payment gateway currency
                                         $gateway_currency = settings('paystack')->currency;
                                         $gateway_exchange_rate = (float) settings('paystack')->exchange_rate;
                                         $exchange_total_amount = $this->calculateExchangeAmount();
-                                        // $paystackInlineAmount = $exchange_total_amount * 100;
                                         $commission = $this->commission($this->total());
                                         $referralBalance = intval(auth()->user()->referral_balance);
                                         $referralAmount = 0;
@@ -588,9 +651,10 @@
                                             $paystackInlineAmount = $exchange_total_amount * 100;
                                         }
 
-                                        $useReferralPaystack = $referralBalance > 0 ? true : false;
+                                        $useReferralPaystack = $referralAmount > 0 ? true : false;
 
                                         $this->buyerReferralAmount = $referralAmount;
+                                        $this->paycardAmount = $paystackInlineAmount;
                                 
                                         break;
                                 
@@ -742,6 +806,11 @@
                                                             @endif
                                                             <span
                                                                 class="ltr:pl-3 rtl:pr-3 font-bold">{{ settings('offline_payment')->name }}</span>
+                                                        @elseif ($payment_method === 'paycard')
+                                                            <span
+                                                                class="ltr:pl-3 rtl:pr-3 font-bold text-blue-600">
+                                                                    {{ $userCard->card_type }} ****{{ $userCard->last }}
+                                                                </span>
                                                         @else
                                                             @if (settings($payment_method)->logo)
                                                                 <img src="{{ placeholder_img() }}"
@@ -991,7 +1060,13 @@
                                                 currency: "{{ settings('paystack')->currency }}",
                                                 ref: '{{ uid(32) }}',
                                                 metadata: {
-                                                    useReferral: {{ $useReferralPaystack }},
+                                                    useReferral: Boolean("{{ $useReferralPaystack }}"),
+                                                    userId: "{{ auth()->user()->id}}",
+                                                    custom_fields: [
+                                                        {
+                                                            username: "{{ auth()->user()->username }}",
+                                                        }
+                                                    ]
                                                 },
                                                 onClose: function() {
 
@@ -1013,6 +1088,18 @@
                                         </button>
                                     </div>
 
+                                </div>
+                            @endif
+
+                            {{-- paystack saved card --}}
+                            @if ($payment_method === 'paycard' && $userCard)
+                                <div class="w-full">
+                                    {{-- Pay --}}
+                                    <div class="mt-8">
+                                        <div class="mt-8">
+                                            <x-forms.button action="checkout" :text="__('messages.t_pay')" :block="true" />
+                                        </div>
+                                    </div>
                                 </div>
                             @endif
 
