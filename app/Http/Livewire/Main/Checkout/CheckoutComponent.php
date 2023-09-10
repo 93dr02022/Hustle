@@ -93,6 +93,15 @@ class CheckoutComponent extends Component
     // referral amount used
     public $buyerReferralAmount =  0;
 
+    // user saved card
+    public $userCard = null;
+
+    // paystack card amount to pay
+    public $paycardAmount = 0;
+
+    // wallet amount to deduct
+    public $walletPayAmount = 0;
+
     /**
      * Init component
      *
@@ -100,6 +109,8 @@ class CheckoutComponent extends Component
      */
     public function mount()
     {
+
+        $this->userCard = auth()->user()->card;
 
         // if request has offer then we will unset all previous
         // cart items then place offer gig in the cart
@@ -646,6 +657,7 @@ class CheckoutComponent extends Component
                 'offline' => settings('offline_payment')->is_enabled,
                 'flutterwave' => settings('flutterwave')->is_enabled,
                 'paystack' => settings('paystack')->is_enabled,
+                'paycard' => true, // paystack saved card
                 'cashfree' => settings('cashfree')->is_enabled,
                 'mollie' => settings('mollie')->is_enabled,
                 'mercadopago' => settings('mercadopago')->is_enabled,
@@ -712,11 +724,19 @@ class CheckoutComponent extends Component
 
                     break;
 
-                    // Paystack
+                // Paystack
                 case 'paystack':
 
                     // Get response
                     $response = $this->paystack($options);
+
+                    break;
+
+                    // paystack saved card payment
+                case 'paycard':
+
+                    // Get response
+                    $response = $this->paystackCard();
 
                     break;
 
@@ -1344,8 +1364,9 @@ class CheckoutComponent extends Component
             // Get total amount
             $total_amount = $this->calculateExchangeAmount();
 
-            // Check if user has enough money
-            if (auth()->user()->balance_available < $total_amount) {
+            // Check if user has enough money using the amount we set
+            // front end due to checking for referral cushion
+            if (auth()->user()->balance_available < $this->walletPayAmount) {
 
                 // You don't have enough money
                 $response = [
@@ -1357,9 +1378,8 @@ class CheckoutComponent extends Component
             } else {
 
                 // Let's take money from buyer's wallet
-                auth()->user()->update([
-                    'balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($total_amount),
-                    'balance_available' => auth()->user()->balance_available - $total_amount,
+                auth()->user()->update(['balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($this->walletPayAmount),
+                    'balance_available' => auth()->user()->balance_available - $this->walletPayAmount,
                 ]);
 
                 // Payment succeeded
@@ -1369,7 +1389,7 @@ class CheckoutComponent extends Component
                         'payment_id' => uid(),
                         'payment_method' => 'wallet',
                         'payment_status' => 'paid',
-                        'amount_paid' => $total_amount,
+                        'amount_paid' => $this->walletPayAmount  //$total_amount,
                     ],
                 ];
 
@@ -1389,6 +1409,110 @@ class CheckoutComponent extends Component
         }
     }
 
+    /**
+     * Handles paystack card dedudction payment
+     * 
+     * @return array
+     */
+    public function paystackCard()
+    {
+        try {
+            // Get total amount
+            $total_amount = $this->calculateExchangeAmount();
+
+            // Get paystack secret key
+            $paystack_secret_key = config('paystack.secretKey');
+
+            // Send request
+            $payment = Http::withToken(config('paystack.secretKey'))
+            ->post('https://api.paystack.co/transaction/charge_authorization', [
+                'authorization_code' => $this->userCard->authorization_code,
+                'email' => $this->userCard->email,
+                'amount' => $this->paycardAmount,
+                'reference' => uid(32),
+                'currency' => settings('paystack')->currency,
+                'metadata' => [
+                    'useReferral' => $this->buyerReferralAmount > 0 ? true : false,
+                    'userId' => auth()->user()->id,
+                    'custom_fields' => [
+                        [
+                            'username' => auth()->user()->username,
+                        ]
+                    ]
+                ],
+            ])
+                ->json();
+
+            // Let's see if payment suuceeded
+            if (is_array($payment) && isset($payment['status']) && $payment['status'] === true && isset($payment['data'])) {
+
+                // Get paid amount
+                $amount = $payment['data']['amount'] / 100;
+
+                // Get currency
+                $currency = $payment['data']['currency'];
+
+                // Check currency
+                if (strtolower($currency) != strtolower(settings('paystack')->currency)) {
+
+                    // Error
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_checkout_currency_invalid'),
+                    ];
+
+                    return $response;
+                }
+
+                // This amount must equals amount in order
+                if ($amount != $total_amount && $amount + $this->buyerReferralAmount != $total_amount) {
+
+                    // Error
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_amount_in_cart_not_equals_received'),
+                    ];
+
+                    return $response;
+                }
+
+                // Payment succeeded
+                $response = [
+                    'success' => true,
+                    'transaction' => [
+                        'payment_id' => $payment['data']['id'],
+                        'payment_method' => 'paystack',
+                        'payment_status' => 'paid',
+                        'amount_paid' => $amount,
+                    ],
+                ];
+
+                // Return response
+                return $response;
+            } else {
+
+                // We couldn't handle your payment
+                $response = [
+                    'success' => false,
+                    'message' => __('messages.t_we_could_not_handle_ur_payment'),
+                ];
+
+                // Return response
+                return $response;
+            }
+        } catch (\Throwable $th) {
+
+            // Something went wrong
+            $response = [
+                'success' => false,
+                'message' => $th->getMessage(),
+            ];
+
+            // Return response
+            return $response;
+        }
+    }
+ 
     /**
      * Handle paystack payment
      *

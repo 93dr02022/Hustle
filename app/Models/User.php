@@ -195,6 +195,15 @@ class User extends Authenticatable
     }
 
     /**
+     * User saved card information
+     * 
+     */
+    public function card()
+    {
+        return $this->hasOne(UserCard::class);
+    }
+
+    /**
      * The user keyword searches
      *
      */
