@@ -145,7 +145,7 @@
                             </section>
 
                             {{-- referral bonus alert --}}
-                            @if (auth()->user()->referral_balance)
+                            @if (auth()->user()->referral_balance > 0)
                                 <div class="lg:col-span-12 flex items-center px-3 sm:px-4 py-5 text-sm text-green-600 rounded-lg bg-green-100 dark:bg-gray-800 dark:text-green-400" role="alert">
                                     <svg class="flex-shrink-0 inline w-5 h-5 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
@@ -205,7 +205,11 @@
                                     <dt class="text-base font-medium text-gray-900 dark:text-white">{{ __('messages.t_total') }}</dt>
                                     <dd class="text-base font-medium text-gray-900 dark:text-white">
                                         @money($subTotal + $this->taxes(), settings('currency')->code, true) 
-                                        <span class="text-gray-500 dark:text-gray-200">(@money($referralAmount, settings('currency')->code, true))</span>
+                                        @if (auth()->user()->referral_balance > 0)
+                                            <span class="text-gray-500 dark:text-gray-200">
+                                                (@money($referralAmount, settings('currency')->code, true))
+                                            </span>
+                                        @endif
                                     </dd>
                                 </div>
 

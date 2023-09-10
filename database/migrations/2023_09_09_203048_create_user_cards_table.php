@@ -15,12 +15,16 @@ return new class extends Migration
     {
         Schema::create('user_cards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->string('authorization_code');
-            $table->string('email');
+            $table->foreignId('user_id')->unique();
+            $table->string('authorization_code')->index();
+            $table->string('email')->index();
+            $table->string('card_type');
+            $table->string('exp_month');
+            $table->string('exp_year');
+            $table->string('bin');
+            $table->string('last');
+            $table->string('bank');
             $table->timestamps();
-
-            $table->unique(['user_id', 'authorization_code', 'email']);
         });
     }
 

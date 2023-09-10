@@ -35,6 +35,8 @@ class BillingComponent extends Component
 
     protected $queryString = ['redirect'];
 
+    public $card = null;
+
     /**
      * Init component
      *
@@ -69,6 +71,8 @@ class BillingComponent extends Component
             'address' => $billing->address,
             'vat_number' => $billing->vat_number,
         ]);
+
+        $this->card = $user->card;
     }
 
     /**
@@ -195,6 +199,38 @@ class BillingComponent extends Component
             ]);
 
             throw $th;
+        }
+    }
+
+    /**
+     * Update user account billing
+     *
+     * @return void
+     */
+    public function deleteCard()
+    {
+        try {
+            $this->card->delete();
+
+            $this->notification([
+                'title' => __('messages.t_success'),
+                'description' => 'Saved card delete successfully',
+                'icon' => 'success',
+            ]);
+
+            // Reload select2
+            $this->dispatchBrowserEvent('pharaonic.select2.load', [
+                'target' => '.select2',
+                'component' => $this->id,
+            ]);
+
+            $this->dispatchBrowserEvent('refresh');
+        } catch (\Throwable $th) {
+            $this->notification([
+                'title' => __('messages.t_error'),
+                'description' => 'Error occurred while deleting card please try again',
+                'icon' => 'error',
+            ]);
         }
     }
 }
