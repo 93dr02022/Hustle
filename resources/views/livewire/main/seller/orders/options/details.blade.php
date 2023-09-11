@@ -525,15 +525,45 @@
                                         class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-red-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
                                         @break
                                         @case('Order canceled')
-                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-grey-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-red-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
                                         @break
+                                        @case('Order placed')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-black rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+
 
                                     @default
 
                                 @endswitch>
                                 </div>
 
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
+
+                                @switch($timeline->name)
+                                @case('Order delivered')
+                                <h3 class="font-semibold  text-orange-500 dark:text-white">
+                                @break
+                                @case('Order finished')
+                                <h3 class="font-semibold text-green-500 dark:text-white">
+                                @break
+                                @case('Order started')
+                                <h3 class="font-semibold text-yellow-300 dark:text-white">
+                                @break
+                                @case('Order Reviewed')
+                                <h3 class="font-semibold text-blue-500 dark:text-white">
+                                @break
+                                @case('Order refunded')
+                                <h3 class="font-semibold text-red-500 dark:text-white">
+                                @break
+                                @case('Order canceled')
+                                <h3 class="font-semibold text-red-500 dark:text-white">
+                                @break
+
+                                @case('Order placed')
+                                <h3 class="font-semibold text-black dark:text-white">
+                                @break
+                            @default
+
+                        @endswitch
                                     {{ $timeline->name }}</h3>
                                 <p class="text-gray-500 py-2 dark:text-gray-400">
                                     {{ $timeline->description }}
