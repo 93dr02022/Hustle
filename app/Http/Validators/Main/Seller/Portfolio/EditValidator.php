@@ -31,6 +31,7 @@ class EditValidator
                 'link'        => 'nullable|max:120|url',
                 'video'       => 'nullable|max:120|url',
                 'images'      => 'nullable|array|max:' . $max_images,
+                'videoFile' => ['nullable', 'mimes:mp4,mp3,webm'],
                 'images.*'    => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size
             ];
 
@@ -62,6 +63,7 @@ class EditValidator
                 'thumbnail'   => $request->thumbnail,
                 'link'        => $request->link,
                 'video'       => $request->video,
+                'videoFile' => $request->videoFile,
                 'images'      => $request->images
             ];
 

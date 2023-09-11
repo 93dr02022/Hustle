@@ -30,6 +30,7 @@ class CreateValidator
                 'thumbnail'   => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size,
                 'link'        => 'nullable|max:120|url',
                 'video'       => 'nullable|max:120|url',
+                'videoFile' => ['nullable', 'mimes:mp4,mp3,webm'],
                 'images'      => 'required|array|min:1|max:' . $max_images,
                 'images.*'    => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size
             ];
@@ -65,6 +66,7 @@ class CreateValidator
                 'thumbnail'   => $request->thumbnail,
                 'link'        => $request->link,
                 'video'       => $request->video,
+                'videoFile' => $request->videoFile,
                 'images'      => $request->images
             ];
 

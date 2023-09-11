@@ -30,6 +30,7 @@ class UserPortfolio extends Model
         'thumb_id',
         'project_link',
         'project_video',
+        'project_video_upload',
         'status'
     ];
 
