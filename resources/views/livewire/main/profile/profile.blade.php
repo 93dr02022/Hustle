@@ -90,11 +90,18 @@
                         <div class="px-14 mt-8">
 
                             {{-- Contact user --}}
-
+                                @auth
                                 @if (auth()->id() != $user->id)
                                     <a href="{{ url('messages/new', $user->username) }}"
                                         class="flex items-center justify-center h-12 bg-primary-600 w-full text-white text-sm font-medium rounded hover:shadow hover:bg-primary-700 {{ auth()->check() && auth()->id() !== $user->id ? 'mb-4' : '' }}">{{ __('messages.t_contact_me') }}</a>
                                 @endif
+                                @endauth
+                                @guest
+                                @if (auth()->id() != $user->id)
+                                <a x-on:click="loginToContact"
+                                    class="flex items-center justify-center h-12 bg-primary-600 w-full text-white text-sm font-medium rounded hover:shadow hover:bg-primary-700 {{ auth()->check() && auth()->id() !== $user->id ? 'mb-4' : '' }}">{{ __('messages.t_contact_me') }}</a>
+                                        @endif
+                                @endguest
 
 
                             {{-- Report user --}}
@@ -616,10 +623,28 @@
                 // Init component
                 initialize() {
 
-                }
+                },
+                authed: @js(auth()->check()),
+                loginToContact() {
+                    window.$wireui.notify({
+                        title: "{{ __('messages.t_info') }}",
+                        description: "Pls Login Or Register To Contact User",
+                        icon: 'info'
+                    });
 
+                    this.$dispatch('popLogin')
+                },
+
+                clickMiddleware(event) {
+                    if (!this.authed) {
+                        event.preventDefault();
+
+                        this.$dispatch('popLogin')
+                    }
+                }
             }
         }
         window.vjOXhkLsunWIxQy = vjOXhkLsunWIxQy();
+
     </script>
 @endpush
