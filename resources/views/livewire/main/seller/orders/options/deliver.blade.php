@@ -527,7 +527,7 @@
                     </div>
 
                     {{-- Conversation --}}
-                    <div class="w-full">
+                    {{-- <div class="w-full">
                         <ul role="list" class="px-4 pb-3 last:pb-0">
 
                             @foreach ($order->conversation as $message)
@@ -565,7 +565,7 @@
                             @endforeach
 
                         </ul>
-                    </div>
+                    </div> --}}
 
                     {{-- Send message --}}
                     <!-- @if (!$order->is_finished)

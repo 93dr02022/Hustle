@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\User\Seller;
+namespace App\Notifications\User\Buyer;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Kutia\Larafirebase\Facades\Larafirebase;
 use Kutia\Larafirebase\Messages\FirebaseMessage;
 
-class DeliveredWorkNewMessage extends Notification implements ShouldQueue
+class BuyerDeliveredWorkNewMessage extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -57,12 +57,12 @@ class DeliveredWorkNewMessage extends Notification implements ShouldQueue
             rescue(fn () => $this->toFirebase($notifiable));
         }
         // Set subject
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_delivered_work_new_msg');
+        $subject = "[" . config('app.name') . "] " . __('messages.t_buyer_sent_u_message_about_delivered_files');
 
         return (new MailMessage)
                     ->subject($subject)
                     ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
-                    ->line(__('messages.t_notification_seller_line_1_delivered_work_msg'))
+                    ->line(__('messages.t_buyer_sent_u_message_about_delivered_files'))
                     ->action(__('messages.t_delivered_work'), url('seller/orders/deliver', $this->item->uid));
     }
 
@@ -75,12 +75,12 @@ class DeliveredWorkNewMessage extends Notification implements ShouldQueue
     {
         if ($notifiable?->userNotificationSetting?->push_order_notifications) {
             // $subject = "[" . config('app.name') . "] " .'seller deliver order new message';
-        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_delivered_work_new_msg');
+            $subject = "[" . config('app.name') . "] " . __('messages.t_buyer_sent_u_message_about_delivered_files');
 
 
             Larafirebase::withTitle($subject)
                 ->withBody($this->message->msg_content)
-                ->withClickAction(url('seller/orders/deliver', $this->item->uid))
+                ->withClickAction(url('seller/orders/details', $this->item->uid))
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);

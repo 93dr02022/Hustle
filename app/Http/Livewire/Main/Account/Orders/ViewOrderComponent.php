@@ -6,13 +6,13 @@ use App\Http\Validators\Main\Account\Orders\SendMessageValidator;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemWorkConversation;
-use App\Notifications\User\Seller\DeliveredWorkNewMessage;
 use Artesaos\SEOTools\Traits\SEOTools;
 use Livewire\Component;
 use Livewire\WithPagination;
 use RalphJSmit\Livewire\Urls\Facades\Url;
 use WireUi\Traits\Actions;
 use App\Models\OrderTimeline;
+use App\Notifications\User\Buyer\BuyerDeliveredWorkNewMessage;
 
 class ViewOrderComponent extends Component
 {
@@ -31,7 +31,7 @@ class ViewOrderComponent extends Component
             $this->timelines = $timelines->toArray();
             }
     }
-    public function render() 
+    public function render()
     {
         // SEO
         $separator = settings('general')->separator;
@@ -58,7 +58,7 @@ class ViewOrderComponent extends Component
         $this->seo()->jsonLd()->setDescription($description);
         $this->seo()->jsonLd()->setUrl(url()->current());
         $this->seo()->jsonLd()->setType('WebSite');
-        
+
         return view('livewire.main.account.orders.view-order-component')->extends('livewire.main.layout.app')->section('content');
     }
 
@@ -97,15 +97,15 @@ class ViewOrderComponent extends Component
             $item->refresh();
 
             // Send notification to seller
-            $item->owner->notify((new DeliveredWorkNewMessage($item, $message))->locale(config('app.locale')));
+            $item->order->buyer->notify((new BuyerDeliveredWorkNewMessage($item, $message))->locale(config('app.locale')));
 
-            // Send notification
-            notification([
-                'text' => 't_buyer_sent_u_message_about_delivered_files',
-                'action' => url('seller/orders/deliver', $item->uid),
-                'user_id' => $item->owner_id,
-                'params' => ['buyer' => auth()->user()->username],
-            ]);
+            // // Send notification
+            // notification([
+            //     'text' => 't_buyer_sent_u_message_about_delivered_files',
+            //     'action' => url('seller/orders/details', $item->uid),
+            //     'user_id' => $item->owner_id,
+            //     'params' => ['buyer' => auth()->user()->username],
+            // ]);
 
             // Success
             $this->notification([
