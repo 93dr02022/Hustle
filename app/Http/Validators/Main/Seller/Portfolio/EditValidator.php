@@ -23,6 +23,8 @@ class EditValidator
             // Set maximum size per image
             $max_size   = settings('media')->portfolio_max_size * 1024;
 
+            $maxFileSize = 100 * 1024;
+
             // Set rules
             $rules    = [
                 'title'       => 'required|max:100',
@@ -31,6 +33,7 @@ class EditValidator
                 'link'        => 'nullable|max:120|url',
                 'video'       => 'nullable|max:120|url',
                 'images'      => 'nullable|array|max:' . $max_images,
+                'videoFile' => ['nullable', 'mimes:mp4,mp3,webm', 'file', "max:{$maxFileSize}"],
                 'images.*'    => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size
             ];
 
@@ -62,6 +65,7 @@ class EditValidator
                 'thumbnail'   => $request->thumbnail,
                 'link'        => $request->link,
                 'video'       => $request->video,
+                'videoFile' => $request->videoFile,
                 'images'      => $request->images
             ];
 

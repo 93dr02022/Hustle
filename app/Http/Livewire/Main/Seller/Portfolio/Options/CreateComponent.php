@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Main\Seller\Portfolio\Options;
 
 use App\Http\Validators\Main\Seller\Portfolio\CreateValidator;
+use App\Jobs\Main\Seller\WatermarkVideo;
 use App\Models\Admin;
 use App\Models\UserPortfolio;
 use App\Models\UserPortfolioGallery;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use WireUi\Traits\Actions;
+use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class CreateComponent extends Component
 {
@@ -29,6 +32,8 @@ class CreateComponent extends Component
     public $video;
 
     public $images = [];
+
+    public $videoFile = null;
 
     /**
      * Render component
@@ -72,7 +77,7 @@ class CreateComponent extends Component
      * @return mixed
      */
     public function create()
-    {
+    {        
         try {
             CreateValidator::validate($this);
 
@@ -87,6 +92,14 @@ class CreateComponent extends Component
             // Generate slug
             $slug = substr(Str::slug($this->title), 0, 138) . '-' . $project_id;
 
+            if ($this->videoFile) {
+                $filename = uid(32) . '.' . $this->videoFile->getClientOriginalExtension();
+                $videoPath = $this->videoFile->storeAs('seller/projects/gallery', $filename, 's3');
+            } else {
+                $videoPath = $this->videoFile;
+                $filename = null;
+            }
+            
             // Save project
             $project = new UserPortfolio();
             $project->uid = $project_id;
@@ -98,6 +111,7 @@ class CreateComponent extends Component
             $project->status = settings('publish')->auto_approve_portfolio ? 'active' : 'pending';
             $project->project_link = $this->link ? clean($this->link) : null;
             $project->project_video = $this->video ? clean($this->video) : null;
+            $project->project_video_upload = $videoPath;
             $project->save();
 
             // Upload gallery images
@@ -116,6 +130,11 @@ class CreateComponent extends Component
             // Send notification to admin if project status pending
             if (!settings('publish')->auto_approve_portfolio) {
                 Admin::first()->notify((new PendingPortfolio($project))->locale(config('app.locale')));
+            }
+
+            // check if there is a video in other to watermark
+            if ($this->videoFile) {
+                WatermarkVideo::dispatch($videoPath, $filename);
             }
 
             // Redirect to projects with success
