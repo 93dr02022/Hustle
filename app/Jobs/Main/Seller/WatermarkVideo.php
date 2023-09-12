@@ -6,10 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -18,7 +16,7 @@ class WatermarkVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 0;
+    public $timeout = 1800;
 
     /**
      * Create a new job instance.
@@ -45,8 +43,9 @@ class WatermarkVideo implements ShouldQueue
             ->addWatermark(function (WatermarkFactory $watermark) {
                 $watermark->fromDisk('s3')
                     ->open('general/hustle.png')
-                    ->right(100)
-                    ->bottom(150);
+            ->right(50)
+                ->height(50)
+                ->top(50);
             })
             ->resize(640, 400)
             ->export()

@@ -23,6 +23,8 @@ class CreateValidator
             // Set maximum size per image
             $max_size   = settings('media')->portfolio_max_size * 1024;
 
+            $maxFileSize = 100 * 1024;
+
             // Set rules
             $rules    = [
                 'title'       => 'required|max:100',
@@ -30,7 +32,7 @@ class CreateValidator
                 'thumbnail'   => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size,
                 'link'        => 'nullable|max:120|url',
                 'video'       => 'nullable|max:120|url',
-                'videoFile' => ['nullable', 'mimes:mp4,mp3,webm'],
+                'videoFile' => ['nullable', 'mimes:mp4,mp3,webm', 'file', "max:{$maxFileSize}"],
                 'images'      => 'required|array|min:1|max:' . $max_images,
                 'images.*'    => 'required|image|mimes:jpeg,jpg,png|max:' . $max_size
             ];

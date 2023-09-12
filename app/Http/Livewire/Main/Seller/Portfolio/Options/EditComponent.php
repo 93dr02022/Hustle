@@ -104,7 +104,6 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
             // Get project
             $project = UserPortfolio::where('id', $this->project->id)->where('user_id', auth()->id())->firstOrFail();
 
@@ -200,6 +199,20 @@ class EditComponent extends Component
             ]);
 
             throw $th;
+        }
+    }
+
+    /**
+     * Create video mime type
+     */
+    public function mime($filename)
+    {
+        $parts = explode(".", $filename);
+
+        if (count($parts) > 1) {
+            return strtolower("video/$parts[1]");
+        } else {
+            return "video/mp4";
         }
     }
 
