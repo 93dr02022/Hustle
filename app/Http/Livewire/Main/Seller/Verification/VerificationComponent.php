@@ -285,7 +285,7 @@ class VerificationComponent extends Component
     }
 
     /**
-     * Personal verification
+     * Photo verification with user verified badge
      */
     public function photoVerify($file)
     {
@@ -330,7 +330,7 @@ class VerificationComponent extends Component
     }
 
     /**
-     * Complete Verification forma and submits the form
+     * Complete Verification format and submits the form
      */
     public function businessVerify($payload)
     {
