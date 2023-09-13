@@ -11,6 +11,7 @@ use Livewire\Component;
 use WireUi\Traits\Actions;
 use App\Http\Validators\Main\Seller\Orders\MessageValidator;
 use App\Models\OrderItemWorkConversation;
+use App\Notifications\User\Seller\DeliveredWorkNewMessage;
 
 class DetailsComponent extends Component
 {
@@ -96,7 +97,7 @@ class DetailsComponent extends Component
     public function sendMessage()
     {
         try {
-
+            $item = $this->order->order->buyer;
             // Check if order not finished yet
             if ($this->order->is_finished) {
                 return;
@@ -119,6 +120,8 @@ class DetailsComponent extends Component
 
             // Refresh order item
             $this->order->refresh();
+            // Send notification to Buyer
+            $item->notify((new DeliveredWorkNewMessage($item, $message))->locale(config('app.locale')));
 
             // Success
             $this->notification([

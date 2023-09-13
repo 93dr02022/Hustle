@@ -6,6 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use Kutia\Larafirebase\Facades\Larafirebase;
+use Kutia\Larafirebase\Messages\FirebaseMessage;
 
 class DeliveredWorkNewMessage extends Notification implements ShouldQueue
 {
@@ -44,6 +47,15 @@ class DeliveredWorkNewMessage extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+         // if there is app token proceed
+         if ($notifiable?->userNotificationSetting?->app_token) {
+            rescue(fn () => $this->toMobile($notifiable));
+        }
+
+        // if there is web token proceed
+        if ($notifiable?->userNotificationSetting?->notification_token) {
+            rescue(fn () => $this->toFirebase($notifiable));
+        }
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_delivered_work_new_msg');
 
@@ -54,6 +66,44 @@ class DeliveredWorkNewMessage extends Notification implements ShouldQueue
                     ->action(__('messages.t_delivered_work'), url('seller/orders/deliver', $this->item->uid));
     }
 
+    /**
+     * Create the push notification.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toFirebase($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            // $subject = "[" . config('app.name') . "] " .'seller deliver order new message';
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_delivered_work_new_msg');
+
+
+            Larafirebase::withTitle($subject)
+                ->withBody($this->message->msg_content)
+                ->withClickAction(url('seller/orders/deliver', $this->item->uid))
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+        }
+    }
+
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toMobile($notifiable)
+    {
+        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_buyer_order_has_placed');
+
+            Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_buyer_order_placed'))
+                ->withIcon(asset('img/default/no-favicon.png'))
+                ->withPriority('high')
+                ->sendNotification([$notifiable->userNotificationSetting->app_token]);
+        }
+    }
     /**
      * Get the array representation of the notification.
      *

@@ -311,7 +311,7 @@
                                 @endif
                             </div>
                         @endif
-                        @if ($submited_work->review_attachment)
+                        @if ($submited_work->review_attachment != null)
                             <div class="py-4 flex items-center justify-between space-x-3 rtl:space-x-reverse mb-10">
                                 <div class="min-w-0 flex-1 flex items-center space-x-3 rtl:space-x-reverse">
                                     <div class="flex-shrink-0">
@@ -527,7 +527,7 @@
                     </div>
 
                     {{-- Conversation --}}
-                    <div class="w-full">
+                    {{-- <div class="w-full">
                         <ul role="list" class="px-4 pb-3 last:pb-0">
 
                             @foreach ($order->conversation as $message)
@@ -565,7 +565,7 @@
                             @endforeach
 
                         </ul>
-                    </div>
+                    </div> --}}
 
                     {{-- Send message --}}
                     <!-- @if (!$order->is_finished)

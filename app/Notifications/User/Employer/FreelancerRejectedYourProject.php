@@ -42,7 +42,7 @@ class FreelancerRejectedYourProject extends Notification implements ShouldQueue
     {
 
          // if there is app token proceed
-         if ($notifiable?->userNotificationSetting?->app_token) { 
+         if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -67,16 +67,16 @@ class FreelancerRejectedYourProject extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_rejected_ur_project');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_rejected_ur_project'))
-                ->withClickAction('account/project')
+                ->withBody($this->project->title)
+                ->withClickAction('project/' . $this->project->pid . '/' . $this->project->slug)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -85,16 +85,14 @@ class FreelancerRejectedYourProject extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      */
     public function toMobile($notifiable)
-    {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_rejected_ur_project');
+    {            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_rejected_ur_project');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_rejected_ur_project'))
+                ->withBody($this->project->title)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
 
     /**
