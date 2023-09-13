@@ -31,6 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'face_url' => 'https://2od64pvrz9.execute-api.us-east-1.amazonaws.com/dev/api/face-detect',
+
     'stripe' => [
         'secret' => '',
     ],
