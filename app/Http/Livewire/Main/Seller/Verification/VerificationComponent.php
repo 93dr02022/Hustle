@@ -276,9 +276,6 @@ class VerificationComponent extends Component
                 ]
             );
 
-            User::where('id', auth()->id())
-                ->update(['status' => 'verified']);
-
             $this->toastMessage('Your personal information has been verified successfully.', 'success');
 
             $this->dispatchBrowserEvent('refresh');
@@ -292,17 +289,39 @@ class VerificationComponent extends Component
      */
     public function photoVerify($file)
     {
+        if (!$this->verification->has_personal) {
+            $this->toastMessage('You need to verify your personal details above first before capturing.', 'error');
+            return;
+        }
+
+        $filepath = 'verifications/' . uid() . '.jpeg';
+        $image = Image::make($file);
+
+        Storage::disk('s3')->put($filepath, $image->encode());
+
+        $res = Http::withToken(env('FACE_KEY'), 'Token')->acceptJson()
+            ->attach(
+                'image',
+                file_get_contents(Storage::disk('s3')->url($filepath)),
+                'selfie.jpeg'
+            )
+            ->post(config('services.face_url'));
+
+        if ($res->status() >= 400) {
+            $this->toastMessage($res->json()['message'], 'error');
+            Storage::disk('s3')->delete($filepath);
+            return;
+        }
+
         try {
-            $filename = 'verifications/' . uid() . '.jpeg';
-            $image = Image::make($file);
-
-            Storage::disk('s3')->put($filename, $image->encode());
-
-            $this->verification->file_selfie = $filename;
-            $this->verification->photo_status = 'awaiting';
+            $this->verification->file_selfie = $filepath;
+            $this->verification->photo_status = 'verified';
             $this->verification->save();
 
-            $this->toastMessage('Your verification photo successfully uploaded.', 'success');
+            User::where('id', auth()->id())
+                ->update(['status' => 'verified']);
+
+            $this->toastMessage('Your verification photo has been successfully verified.', 'success');
 
             $this->dispatchBrowserEvent('refresh');
         } catch (\Throwable $th) {
