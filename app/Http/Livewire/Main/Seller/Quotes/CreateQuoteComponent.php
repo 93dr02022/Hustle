@@ -57,8 +57,8 @@ class CreateQuoteComponent extends Component
             $totalValue = $totals['total'] + $totals['total_tax'];
 
             $order = Order::create([
-                'uid' => uid(7),
                 'total_value' => $totalValue,
+                'uid' => uid(10),
                 'subtotal_value' => $totals['total'],
                 'taxes_value' => $totals['total_tax'],
                 'placed_at' => now(),
@@ -68,7 +68,7 @@ class CreateQuoteComponent extends Component
                 'user_id' => auth()->id(),
                 'order_id' => $order->id,
                 'quote_date' => now(),
-                'reference' => uid(7),
+                'reference' => uid(10),
                 'is_draft' => true,
                 'paid' => $paymentMethod === 'cash',
                 'profit_value' => $profitValue,
