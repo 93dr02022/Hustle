@@ -34,7 +34,7 @@ class CreateComponent extends Component
     public $images = [];
 
     public $videoFile = null;
-
+    
     /**
      * Render component
      *
