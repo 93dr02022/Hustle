@@ -39,9 +39,8 @@ class FreelancerAcceptedYourProject extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        
          // if there is app token proceed
-         if ($notifiable?->userNotificationSetting?->app_token) { 
+         if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -67,16 +66,16 @@ class FreelancerAcceptedYourProject extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_accepted_ur_project');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_accepted_ur_project'))
+                ->withBody($this->project->title)
                 ->withClickAction('account/project')
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -86,15 +85,15 @@ class FreelancerAcceptedYourProject extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_accepted_ur_project');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_accepted_ur_project'))
+                ->withBody($this->project->title)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
 
     /**

@@ -40,7 +40,7 @@ class YourBidApproved extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
          // if there is app token proceed
-         if ($notifiable?->userNotificationSetting?->app_token) { 
+         if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -64,16 +64,16 @@ class YourBidApproved extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_approved');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_ur_bid_approved'))
-                ->withClickAction('account/project')
+                ->withBody(__('messages.t_notification_ur_bid_has_been_approved'))
+                ->withClickAction('seller/projects/bids')
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -83,15 +83,13 @@ class YourBidApproved extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_approved');
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_approved');
 
-            Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_ur_bid_approved'))
+        Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_ur_bid_has_been_approved'))
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
     }
     /**
      * Get the array representation of the notification.

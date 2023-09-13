@@ -41,10 +41,10 @@ class YourProjectApproved extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
                   // if there is app token proceed
-                  if ($notifiable?->userNotificationSetting?->app_token) { 
+                  if ($notifiable?->userNotificationSetting?->app_token) {
                     rescue(fn () => $this->toMobile($notifiable));
                 }
-        
+
                 // if there is web token proceed
                 if ($notifiable?->userNotificationSetting?->notification_token) {
                     rescue(fn () => $this->toFirebase($notifiable));
@@ -67,16 +67,16 @@ class YourProjectApproved extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_approved');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_project_approved'))
-                ->withClickAction('account/project')
+                ->withBody(__('messages.t_notification_ur_project_has_been_approved'))
+                ->withClickAction('project/' . $this->project->pid . '/' . $this->project->slug)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -86,15 +86,15 @@ class YourProjectApproved extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_approved');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_requested_milestone'))
+                ->withBody(__('messages.t_notification_ur_project_has_been_approved'))
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
 
     /**
