@@ -99,13 +99,13 @@ class ViewOrderComponent extends Component
             // Send notification to seller
             $item->order->buyer->notify((new BuyerDeliveredWorkNewMessage($item, $message))->locale(config('app.locale')));
 
-            // // Send notification
-            // notification([
-            //     'text' => 't_buyer_sent_u_message_about_delivered_files',
-            //     'action' => url('seller/orders/details', $item->uid),
-            //     'user_id' => $item->owner_id,
-            //     'params' => ['buyer' => auth()->user()->username],
-            // ]);
+            // Send notification
+            notification([
+                'text' => 't_buyer_sent_u_message_about_delivered_files',
+                'action' => url('seller/orders/details', $item->uid),
+                'user_id' => $item->owner_id,
+                'params' => ['buyer' => auth()->user()->username],
+            ]);
 
             // Success
             $this->notification([

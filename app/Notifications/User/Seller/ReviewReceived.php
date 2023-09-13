@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-
+use Kutia\Larafirebase\Facades\Larafirebase;
 class ReviewReceived extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -53,7 +53,7 @@ class ReviewReceived extends Notification implements ShouldQueue
         if ($notifiable?->userNotificationSetting?->notification_token) {
             rescue(fn () => $this->toFirebase($notifiable));
         }
-        
+
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_new_review');
 
@@ -62,6 +62,40 @@ class ReviewReceived extends Notification implements ShouldQueue
                     ->greeting(__('messages.t_hello_username', ['username' => $notifiable->username]))
                     ->line(__('messages.t_notification_seller_line_1_review_received'))
                     ->action(__('messages.t_reviews'), url('seller/reviews/details', $this->review->uid));
+    }
+     /**
+     * Create the push notification.
+     * its a must for seller to be notified that he has Recieved a Review
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toFirebase($notifiable)
+    {
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_new_review');
+
+
+        Larafirebase::withTitle($subject)
+            ->withBody(__('You just received a new review, check your dashboard to see Review details'))
+            ->withClickAction('seller/reviews/details' . $this->review->uid)
+            ->withIcon(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
+    }
+
+    /**
+     * Create the push notification to mobile.
+     *
+     * @param  mixed  $notifiable
+     */
+    public function toMobile($notifiable)
+    {
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_new_review');
+
+        Larafirebase::withTitle($subject)
+            ->withBody(__('You just received a new review, check your dashboard to see Review details'))
+            ->withIcon(asset('img/default/no-favicon.png'))
+            ->withPriority('high')
+            ->sendNotification([$notifiable->userNotificationSetting->app_token]);
     }
 
     /**
