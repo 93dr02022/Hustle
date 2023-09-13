@@ -21,6 +21,7 @@ use DateTimeZone;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -89,6 +90,18 @@ class CheckoutComponent extends Component
 
     protected $listeners = ['cart-updated' => 'cartUpdated'];
 
+    // referral amount used
+    public $buyerReferralAmount =  0;
+
+    // user saved card
+    public $userCard = null;
+
+    // paystack card amount to pay
+    public $paycardAmount = 0;
+
+    // wallet amount to deduct
+    public $walletPayAmount = 0;
+
     /**
      * Init component
      *
@@ -96,6 +109,8 @@ class CheckoutComponent extends Component
      */
     public function mount()
     {
+
+        $this->userCard = auth()->user()->card;
 
         // if request has offer then we will unset all previous
         // cart items then place offer gig in the cart
@@ -642,6 +657,7 @@ class CheckoutComponent extends Component
                 'offline' => settings('offline_payment')->is_enabled,
                 'flutterwave' => settings('flutterwave')->is_enabled,
                 'paystack' => settings('paystack')->is_enabled,
+                'paycard' => true, // paystack saved card
                 'cashfree' => settings('cashfree')->is_enabled,
                 'mollie' => settings('mollie')->is_enabled,
                 'mercadopago' => settings('mercadopago')->is_enabled,
@@ -708,11 +724,19 @@ class CheckoutComponent extends Component
 
                     break;
 
-                    // Paystack
+                // Paystack
                 case 'paystack':
 
                     // Get response
                     $response = $this->paystack($options);
+
+                    break;
+
+                    // paystack saved card payment
+                case 'paycard':
+
+                    // Get response
+                    $response = $this->paystackCard();
 
                     break;
 
@@ -927,6 +951,13 @@ class CheckoutComponent extends Component
                 $order->taxes_value = $taxes;
                 $order->save();
 
+                // update the referral balance of user
+                if ($this->buyerReferralAmount > 0) {
+                    auth()->user()->update([
+                        'referral_balance' => DB::raw("referral_balance - {$this->buyerReferralAmount}")
+                    ]);
+                }
+
                 // Now let's loop through items in this cart and save them
                 foreach ($this->cart as $key => $item) {
 
@@ -939,9 +970,23 @@ class CheckoutComponent extends Component
                         // Get item total price
                         $item_total_price = $this->itemTotalPrice($item['id']);
                         $itemOffer = $this->itemOffer($item['id']);
+                        $referralBalance = $gig->owner->referral_balance;
 
                         // Calculate commission first
-                        $commisssion = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
+                        $commission = $commission_settings->commission_from === 'orders' ? $this->commission($item_total_price) : 0;
+                        $itemProfitValue = $item_total_price - $commission;
+                        $referralAmountUsed = 0;
+
+                        // calculate referral on commission
+                        if ($referralBalance > 0 && $referralBalance <= $commission) {
+                            $itemProfitValue += $referralBalance;
+                            $referralAmountUsed += $referralBalance;
+                            $referralBalance = 0;
+                        } elseif ($referralBalance > 0 && $referralBalance > $commission) {
+                            $itemProfitValue += $commission;
+                            $referralBalance -= $commission;
+                            $referralAmountUsed = $commission;
+                        }
 
                         // Save order item
                         $order_item = new OrderItem();
@@ -953,8 +998,9 @@ class CheckoutComponent extends Component
                         $order_item->quantity = (int) $item['quantity'];
                         $order_item->has_upgrades = is_array($item['upgrades']) && count($item['upgrades']) ? true : false;
                         $order_item->total_value = $item_total_price;
-                        $order_item->profit_value = $item_total_price - $commisssion;
-                        $order_item->commission_value = $commisssion;
+                        $order_item->profit_value = $itemProfitValue;
+                        $order_item->commission_value = $commission;
+                        $order_item->referral_amount_used = $referralAmountUsed;
                         $order_item->custom_offer_id = is_null($itemOffer) ? null : $itemOffer['id'];
                         $order_item->save();
                         //Creating the ordertimeline
@@ -1000,6 +1046,7 @@ class CheckoutComponent extends Component
                             // Update seller pending balance
                             $gig->owner()->update([
                                 'balance_pending' => $gig->owner->balance_pending + $order_item->profit_value,
+                                'referral_balance' => $referralBalance
                             ]);
 
                             // Increment orders in queue
@@ -1031,6 +1078,7 @@ class CheckoutComponent extends Component
                 $invoice->company = $billing_info->company ? clean($billing_info->company) : null;
                 $invoice->address = clean($billing_info->address);
                 $invoice->status = $response['transaction']['payment_status'];
+                $invoice->buyer_ref_amount = $this->buyerReferralAmount;
                 $invoice->save();
 
                 // If invoice not paid yet
@@ -1316,8 +1364,9 @@ class CheckoutComponent extends Component
             // Get total amount
             $total_amount = $this->calculateExchangeAmount();
 
-            // Check if user has enough money
-            if (auth()->user()->balance_available < $total_amount) {
+            // Check if user has enough money using the amount we set
+            // front end due to checking for referral cushion
+            if (auth()->user()->balance_available < $this->walletPayAmount) {
 
                 // You don't have enough money
                 $response = [
@@ -1329,9 +1378,8 @@ class CheckoutComponent extends Component
             } else {
 
                 // Let's take money from buyer's wallet
-                auth()->user()->update([
-                    'balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($total_amount),
-                    'balance_available' => auth()->user()->balance_available - $total_amount,
+                auth()->user()->update(['balance_purchases' => convertToNumber(auth()->user()->balance_purchases) + convertToNumber($this->walletPayAmount),
+                    'balance_available' => auth()->user()->balance_available - $this->walletPayAmount,
                 ]);
 
                 // Payment succeeded
@@ -1341,7 +1389,7 @@ class CheckoutComponent extends Component
                         'payment_id' => uid(),
                         'payment_method' => 'wallet',
                         'payment_status' => 'paid',
-                        'amount_paid' => $total_amount,
+                        'amount_paid' => $this->walletPayAmount  //$total_amount,
                     ],
                 ];
 
@@ -1361,6 +1409,110 @@ class CheckoutComponent extends Component
         }
     }
 
+    /**
+     * Handles paystack card dedudction payment
+     * 
+     * @return array
+     */
+    public function paystackCard()
+    {
+        try {
+            // Get total amount
+            $total_amount = $this->calculateExchangeAmount();
+
+            // Get paystack secret key
+            $paystack_secret_key = config('paystack.secretKey');
+
+            // Send request
+            $payment = Http::withToken(config('paystack.secretKey'))
+            ->post('https://api.paystack.co/transaction/charge_authorization', [
+                'authorization_code' => $this->userCard->authorization_code,
+                'email' => $this->userCard->email,
+                'amount' => $this->paycardAmount,
+                'reference' => uid(32),
+                'currency' => settings('paystack')->currency,
+                'metadata' => [
+                    'useReferral' => $this->buyerReferralAmount > 0 ? true : false,
+                    'userId' => auth()->user()->id,
+                    'custom_fields' => [
+                        [
+                            'username' => auth()->user()->username,
+                        ]
+                    ]
+                ],
+            ])
+                ->json();
+
+            // Let's see if payment suuceeded
+            if (is_array($payment) && isset($payment['status']) && $payment['status'] === true && isset($payment['data'])) {
+
+                // Get paid amount
+                $amount = $payment['data']['amount'] / 100;
+
+                // Get currency
+                $currency = $payment['data']['currency'];
+
+                // Check currency
+                if (strtolower($currency) != strtolower(settings('paystack')->currency)) {
+
+                    // Error
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_checkout_currency_invalid'),
+                    ];
+
+                    return $response;
+                }
+
+                // This amount must equals amount in order
+                if ($amount != $total_amount && $amount + $this->buyerReferralAmount != $total_amount) {
+
+                    // Error
+                    $response = [
+                        'success' => false,
+                        'message' => __('messages.t_amount_in_cart_not_equals_received'),
+                    ];
+
+                    return $response;
+                }
+
+                // Payment succeeded
+                $response = [
+                    'success' => true,
+                    'transaction' => [
+                        'payment_id' => $payment['data']['id'],
+                        'payment_method' => 'paystack',
+                        'payment_status' => 'paid',
+                        'amount_paid' => $amount,
+                    ],
+                ];
+
+                // Return response
+                return $response;
+            } else {
+
+                // We couldn't handle your payment
+                $response = [
+                    'success' => false,
+                    'message' => __('messages.t_we_could_not_handle_ur_payment'),
+                ];
+
+                // Return response
+                return $response;
+            }
+        } catch (\Throwable $th) {
+
+            // Something went wrong
+            $response = [
+                'success' => false,
+                'message' => $th->getMessage(),
+            ];
+
+            // Return response
+            return $response;
+        }
+    }
+ 
     /**
      * Handle paystack payment
      *
@@ -1411,7 +1563,7 @@ class CheckoutComponent extends Component
                 }
 
                 // This amount must equals amount in order
-                if ($amount != $total_amount) {
+                if ($amount != $total_amount && $amount + $this->buyerReferralAmount != $total_amount) {
 
                     // Error
                     $response = [

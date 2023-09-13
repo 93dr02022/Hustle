@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('referral_code')->nullable()->unique()->after('account_type');
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->decimal('referral_amount_used', 12)->default(0)->after('commission_value')->index();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referral_code');
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->dropColumn('referral_amount_used');
         });
     }
 };

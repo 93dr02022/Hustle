@@ -228,9 +228,21 @@
 
             {{-- text --}}
             <span class="truncate text-sm font-semibold"> {{ __('messages.t_notifications') }} </span>
-
         </a>
 
+        {{-- Referral --}}
+        <a href="{{ url('account/referral') }}"
+            class="{{ Request::is('account/referral') ? $link_active_class : $link_basic_class }} group flex items-center px-5 py-3 text-sm font-medium ltr:border-l-4 rtl:border-r-4">
+
+            {{-- icon --}}
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="{{ Request::is('account/referral') ? $icon_active_class : $icon_basic_class }} h-5 w-5 flex-shrink-0 ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3" viewBox="0 0 16 16">
+                <path d="M5.5 4.002h3.11c1.71 0 2.741.973 2.741 2.46 0 1.138-.667 1.94-1.495 2.24L11.5 12H9.98L8.52 8.924H6.836V12H5.5V4.002Zm1.335 1.09v2.777h1.549c.995 0 1.573-.463 1.573-1.36 0-.913-.596-1.417-1.537-1.417H6.835Z"></path>
+                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"></path>
+            </svg>
+
+            {{-- text --}}
+            <span class="truncate text-sm font-semibold"> {{ __('Referral') }} </span>
+        </a>
     </div>
 
     <div class="border-b border-gray-100 dark:border-zinc-600">
@@ -250,9 +262,6 @@
             <span class="truncate text-sm font-semibold"> {{ __('messages.t_billing_information') }} </span>
 
         </a>
-
-        {{-- Verification center --}}
-
     </div>
 
     {{-- Logout --}}

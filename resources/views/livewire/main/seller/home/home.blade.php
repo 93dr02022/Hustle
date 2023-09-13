@@ -106,11 +106,11 @@
         @endif
 
         {{-- Stats & Messages --}}
-        <div class="grid grid-cols-12 gap-4 mt-4 sm:mt-5 lg:mt-6 sm:gap-y-5 lg:gap-y-6 sm:gap-x-6 lg:gap-x-10">
+        <div class="grid grid-cols-12 gap-4 mt-4 sm:mt-5 lg:mt-6 sm:gap-y-5 lg:gap-y-6 sm:gap-x-6 lg:gap-x-7">
 
             {{-- Stats --}}
             <div class="col-span-12 xl:col-span-8">
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 sm:gap-3 lg:gap-4">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 sm:gap-3 lg:gap-4">
 
                     {{-- Earnings --}}
                     <div
@@ -300,6 +300,33 @@
                         </div>
                         <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">@lang('messages.t_canceled_orders')</p>
                     </div>
+
+                    {{-- user referral balance --}}
+                    <div
+                        class="flex flex-col justify-between p-3 bg-white border rounded-lg shadow-sm border-slate-200 dark:border-zinc-700 dark:bg-zinc-800">
+                        <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                            <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                                @money(auth()->user()->referral_balance, settings('currency')->code, true)
+                            </p>
+                            <div
+                                class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                                <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300"
+                                    stroke="currentColor" fill="currentColor" stroke-width="0"
+                                    viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                    <g>
+                                        <path fill="none" d="M0 0h24v24H0z"></path>
+                                        <path
+                                            d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">
+                            Referral Balance
+                        </p>
+                    </div>
+
 
                 </div>
             </div>

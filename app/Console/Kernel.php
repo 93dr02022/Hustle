@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('expired:bids')->daily();
         $schedule->command('expired:projects')->daily();
         $schedule->command('refresh:cache')->everyThirtyMinutes();
+        $schedule->command('tmp:clean')->everySixHours();
     }
 
     /**

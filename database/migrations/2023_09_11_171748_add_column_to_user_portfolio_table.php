@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('referral_code')->nullable()->unique()->after('account_type');
+        Schema::table('user_portfolio', function (Blueprint $table) {
+            $table->string('project_video_upload')->nullable()->after('project_video');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referral_code');
+        Schema::table('user_portfolio', function (Blueprint $table) {
+            //
         });
     }
 };

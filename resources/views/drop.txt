@@ -2,13 +2,10 @@
 api.ipify.org?format=json
 https://ipapi.co/${ip.value}/json
 
-$path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\barber.webp'), 'barber.webp');
-
-ini_set('max_execution_time', 3600);
-
-$path = Storage::disk('s3')->putFileAs('home', new File('C:\artisan\Hustle\storage\app\public\home\xampp-windows-x64-8.1.17-0-VS16-installer.exe'), 'xampp.exe');
+$path = Storage::disk('s3')->putFileAs('about', new File('/home/logic/artisan/Hustle/storage/app/public/about/Vector.png'), 'Vector.png');
 
 dd($path);
+ini_set('max_execution_time', 3600);
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
@@ -20,3 +17,45 @@ dd($path);
 //     appId: "1:296351545552:web:1a3b1abc7a400a108586d5",
 //     measurementId: "G-BVCSMWF93K"
 //   };
+
+upload(event) {
+   console.log(event.target.files[0])
+   let upload = event.target.files
+
+   this.toBase64(upload, (base64) => @this.set('videoFile', base64));
+},
+
+toBase64 (file, closure) {
+   const reader = new FileReader();
+   reader.readAsDataURL(file[0]);
+   reader.onload = () => {
+      closure(reader.result);
+   };
+},
+
+// $image = $file;
+        // preg_match("/data:image\/(.*?);/", $image, $image_extension);
+        // $image = preg_replace('/data:image\/(.*?);base64,/', '', $image);
+        // $image = str_replace(' ', '+', $image);
+        // $filename = uid() . ".{$image_extension[1]}";
+        // $path = 
+
+
+        $filename = 'verifications/' . uid() . '.jpeg';
+        $image = Image::make($file);
+
+        Storage::disk('local')->put($filename, $image->encode());
+
+        // dd(Storage::disk('local')->url("{$filename}"));
+
+
+        // Storage::disk('s3')->put("tmp/{$filename}", base64_decode($image));
+
+        $res = Http::withToken(env('FACE_KEY'), 'Token')->acceptJson()
+            ->attach(
+                'image',
+                file_get_contents(Storage::disk('local')->path("{$filename}")),
+            )
+            ->post(config('services.face_url'));
+
+        dd($res->json());
