@@ -44,6 +44,16 @@ class ReviewReceived extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+         // if there is app token proceed
+        if ($notifiable?->userNotificationSetting?->app_token) {
+            rescue(fn () => $this->toMobile($notifiable));
+        }
+
+        // if there is web token proceed
+        if ($notifiable?->userNotificationSetting?->notification_token) {
+            rescue(fn () => $this->toFirebase($notifiable));
+        }
+        
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_seller_new_review');
 
