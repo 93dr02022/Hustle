@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Main\Seller\Portfolio\Options;
 
 use App\Http\Validators\Main\Seller\Portfolio\EditValidator;
+use App\Jobs\Main\Seller\WatermarkVideo;
 use App\Models\Admin;
 use App\Models\UserPortfolio;
 use App\Models\UserPortfolioGallery;
 use App\Notifications\Admin\PendingPortfolio;
 use App\Utils\Uploader\ImageUploader;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -31,6 +33,8 @@ class EditComponent extends Component
     public $video;
 
     public $images = [];
+
+    public $videoFile = null;
 
     /**
      * Init component
@@ -78,6 +82,7 @@ class EditComponent extends Component
             'description' => $project->description,
             'link' => $project->project_link,
             'video' => $project->project_video,
+            'videoFile' => $project->project_video_upload
         ]);
     }
 
@@ -99,7 +104,6 @@ class EditComponent extends Component
     public function update()
     {
         try {
-
             // Get project
             $project = UserPortfolio::where('id', $this->project->id)->where('user_id', auth()->id())->firstOrFail();
 
@@ -119,6 +123,16 @@ class EditComponent extends Component
             // Generate slug
             $slug = substr(Str::slug($this->title), 0, 138) . '-' . $project->uid;
 
+            // lets check if user wants to update video
+            if ($this->videoFile) {
+                $filename = uid(32) . '.' . $this->videoFile->getClientOriginalExtension();
+                $videoPath = $this->videoFile->storeAs('seller/projects/gallery', $filename, 's3');
+                Storage::disk('s3')->delete($this->project->project_video_upload);
+            } else {
+                $videoPath = $this->videoFile;
+                $filename = null;
+            }
+
             // Update project
             $project->update([
                 'title' => clean($this->title),
@@ -128,6 +142,7 @@ class EditComponent extends Component
                 'status' => settings('publish')->auto_approve_portfolio ? 'active' : 'pending',
                 'project_link' => $this->link ? clean($this->link) : null,
                 'project_video' => $this->video ? clean($this->video) : null,
+                'project_video_upload' => $videoPath
             ]);
 
             // Update gallery images
@@ -157,6 +172,11 @@ class EditComponent extends Component
                 Admin::first()->notify((new PendingPortfolio($project))->locale(config('app.locale')));
             }
 
+            // check if there is a video in other to watermark
+            if ($this->videoFile) {
+                WatermarkVideo::dispatch($videoPath, $filename);
+            }
+
             // Redirect to projects with success
             return redirect('seller/portfolio')->with('success', __('messages.t_ur_project_updated_successfully'));
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -179,6 +199,20 @@ class EditComponent extends Component
             ]);
 
             throw $th;
+        }
+    }
+
+    /**
+     * Create video mime type
+     */
+    public function mime($filename)
+    {
+        $parts = explode(".", $filename);
+
+        if (count($parts) > 1) {
+            return strtolower("video/$parts[1]");
+        } else {
+            return "video/mp4";
         }
     }
 
