@@ -67,15 +67,22 @@
                 </div>
 
                 {{-- Actions --}}
-                <div class="mt-5 flex justify-between lg:mt-0 lg:ltr::ml-4 lg:rtl:mr-4">
+                <div class="mt-5 flex items-center gap-x-3 lg:mt-0">
                     {{-- Create Quotes --}}
                     <span class="sm:ltr:ml-3 sm:rtl:mr-3">
                         <a href="{{ url('seller/quotes/create') }}"
-                            class="inline-flex items-center rounded border border-transparent bg-primary-600 px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                            class="inline-flex items-center rounded border border-transparent bg-primary-600 px-3 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                             @lang('messages.t_create_quote')
                         </a>
                     </span>
 
+                    {{-- Quotation settings --}}
+                    <span class="block">
+                        <a href="{{ url('/seller/quotes/settings') }}"
+                            class="inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2.5 text-[13px] font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-900 dark:focus:ring-offset-zinc-900 dark:focus:ring-zinc-900 whitespace-nowrap">
+                            Settings
+                        </a>
+                    </span>
                 </div>
 
             </div>
@@ -83,89 +90,102 @@
     </div>
 
     {{-- quotes metrics summary --}}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-5 flex flex-row items-center gap-x-4">
-        <div
-            class="min-w-[220px] w-full stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
-            <div class="flex justify-between space-x-1 rtl:space-x-reverse">
-                <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                    @money(500, settings('currency')->code, true)
-                </p>
-                <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                    <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                        fill="currentColor" stroke-width="0" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path
-                                d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                            </path>
-                        </g>
-                    </svg>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-5">
+        <div class="swiper metric-swipe w-full">
+            <div class="swiper-wrapper flex flex-row items-center gap-x-4">
+                <div
+                    class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
+                    <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                        <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                            @money(500, settings('currency')->code, true)
+                        </p>
+                        <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                fill="currentColor" stroke-width="0"
+                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path
+                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
                 </div>
-            </div>
-            <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
-        </div>
 
-        <div
-            class="min-w-[220px] w-full stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
-            <div class="flex justify-between space-x-1 rtl:space-x-reverse">
-                <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                    @money(500, settings('currency')->code, true)
-                </p>
-                <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                    <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                        fill="currentColor" stroke-width="0" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path
-                                d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                            </path>
-                        </g>
-                    </svg>
+                <div
+                    class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
+                    <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                        <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                            @money(500, settings('currency')->code, true)
+                        </p>
+                        <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                fill="currentColor" stroke-width="0"
+                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path
+                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
                 </div>
-            </div>
-            <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
-        </div>
 
-        <div
-            class="min-w-[220px] w-full stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
-            <div class="flex justify-between space-x-1 rtl:space-x-reverse">
-                <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                    @money(500, settings('currency')->code, true)
-                </p>
-                <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                    <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                        fill="currentColor" stroke-width="0" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path
-                                d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                            </path>
-                        </g>
-                    </svg>
+                <div
+                    class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
+                    <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                        <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                            @money(500, settings('currency')->code, true)
+                        </p>
+                        <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                fill="currentColor" stroke-width="0"
+                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path
+                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
                 </div>
-            </div>
-            <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
-        </div>
 
-        <div
-            class="min-w-[220px] w-full stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
-            <div class="flex justify-between space-x-1 rtl:space-x-reverse">
-                <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                    @money(500, settings('currency')->code, true)
-                </p>
-                <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                    <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                        fill="currentColor" stroke-width="0" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path
-                                d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                            </path>
-                        </g>
-                    </svg>
+                <div
+                    class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
+                    <div class="flex justify-between space-x-1 rtl:space-x-reverse">
+                        <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
+                            @money(500, settings('currency')->code, true)
+                        </p>
+                        <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
+                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
+                                fill="currentColor" stroke-width="0"
+                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path
+                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
                 </div>
             </div>
-            <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
+        </div>
+        <div class="flex justify-center pt-1">
+            <div
+                class="swiper-pagination !static [&>.swiper-pagination-bullet]:!rounded-[2px] [&>.swiper-pagination-bullet]:h-1 [&>.swiper-pagination-bullet]:w-5 p-0">
+            </div>
         </div>
     </div>
 
@@ -202,7 +222,8 @@
                     class="z-10 hidden w-[250px] pb-4 bg-white border border-gray-100 rounded-md x-shadow dark:bg-zinc-800">
                     <div class="flex justify-between items-center border-b px-3 py-2">
                         <span class="text-gray-700 text-sm dark:text-gray-300 font-semibold">Filter Quotes</span>
-                        <button class="rounded grid place-items-center p-2 hover:bg-[#EBF2FF]" @click="document.body.click()">
+                        <button class="rounded grid place-items-center p-2 hover:bg-[#EBF2FF]"
+                            @click="document.body.click()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
                                 fill="currentColor"
                                 class="text-slate-400 hover:text-blue-400 dark:text-slate-200 dark:hover:text-white"
@@ -225,7 +246,8 @@
                                 <input type="date" id="endData" class="form-ctr">
                             </div>
                             <div class="">
-                                <label for="status" class="block text-slate-600 dark:text-zinc-400">Payment Status</label>
+                                <label for="status" class="block text-slate-600 dark:text-zinc-400">Payment
+                                    Status</label>
                                 <select id="status" class="form-ctr">
                                     <option value="paid">Paid</option>
                                     <option value="unpaid">Unpaid</option>
@@ -255,6 +277,7 @@
                             <th>Total</th>
                             <th>Expires At</th>
                             <th>Paid</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -292,6 +315,97 @@
                                         <span class="px-2.5 py-1 rounded bg-green-200 text-green-600">Paid</span>
                                     @endif
                                 </td>
+                                <td>
+                                    <div class="static text-center">
+                                        <button
+                                            class="px-3 py-3 bg-white dark:bg-gray-700 hover:shadow-sm rounded-md border border-gray-200 text-sm text-slate-500 hover:text-slate-600 dark:text-slate-200 dark:hover:text-white"
+                                            data-offset="10" data-lc-toggle="dropdown"
+                                            data-popper-placement="bottom-end">
+                                            Actions
+                                        </button>
+                                        <div
+                                            class="z-10
+                                                hidden w-48 py-4 px-3 bg-white border border-gray-100 rounded-md
+                                                x-shadow dark:bg-zinc-800">
+                                            <ul class="text-sm text-gray-700 dark:text-gray-200"
+                                                aria-labelledby="dropdownDefault">
+                                                {{-- Quote details Overview --}}
+                                                <li>
+                                                    <a href="/seller/quotes/{{ $quote->id }}/details"
+                                                        class="flex items-center gap-x-2 py-3 px-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor"
+                                                            class="text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zM11.5 4a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z" />
+                                                            <path
+                                                                d="M2.354.646a.5.5 0 0 0-.801.13l-.5 1A.5.5 0 0 0 1 2v13H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1H15V2a.5.5 0 0 0-.053-.224l-.5-1a.5.5 0 0 0-.8-.13L13 1.293l-.646-.647a.5.5 0 0 0-.708 0L11 1.293l-.646-.647a.5.5 0 0 0-.708 0L9 1.293 8.354.646a.5.5 0 0 0-.708 0L7 1.293 6.354.646a.5.5 0 0 0-.708 0L5 1.293 4.354.646a.5.5 0 0 0-.708 0L3 1.293 2.354.646zm-.217 1.198.51.51a.5.5 0 0 0 .707 0L4 1.707l.646.647a.5.5 0 0 0 .708 0L6 1.707l.646.647a.5.5 0 0 0 .708 0L8 1.707l.646.647a.5.5 0 0 0 .708 0L10 1.707l.646.647a.5.5 0 0 0 .708 0L12 1.707l.646.647a.5.5 0 0 0 .708 0l.509-.51.137.274V15H2V2.118l.137-.274z" />
+                                                        </svg>
+                                                        <span
+                                                            class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                            Quote view</span>
+                                                    </a>
+                                                </li>
+
+                                                {{-- Edit Quote item --}}
+                                                <li>
+                                                    <a href="/seller/quotes/{{ $quote->id }}/edit"
+                                                        class="flex items-center gap-x-2 py-3 px-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor"
+                                                            class="text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                            <path fill-rule="evenodd"
+                                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                                        </svg>
+                                                        <span
+                                                            class="text-xs font-medium text-gray-700 dark:text-gray-300">Edit
+                                                            Quote</span>
+                                                    </a>
+                                                </li>
+
+                                                {{-- Share Quote item --}}
+                                                <li>
+                                                    <div @click="selectedQuote.quote = @js($quote); $refs.share.click()"
+                                                        class="flex items-center gap-x-2 py-3 px-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor"
+                                                            class="text-slate-400 hover:!text-slate-600 dark:!text-slate-200 dark:hover:!text-white focus:outline-none"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
+                                                        </svg>
+                                                        <span
+                                                            class="text-xs font-medium text-gray-700 dark:text-gray-300">Share
+                                                            Quote</span>
+                                                    </div>
+                                                </li>
+
+                                                {{-- Delete Quote item --}}
+                                                <li>
+                                                    <div @click="selectedQuote.quote = @js($quote); $refs.deleteQuote.click()"
+                                                        class="flex items-center gap-x-2 py-3 px-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor"
+                                                            class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:!text-white focus:outline-none"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                            <path
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                                        </svg>
+                                                        <span
+                                                            class="text-xs font-medium text-gray-700 dark:text-gray-300">Delete
+                                                            Quote</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -326,7 +440,8 @@
             <div class="flex justify-between">
                 <h3 class="font-bold text-slate-800" x-text="selectedQuote.quote.reference"></h3>
                 <div class="flex items-center gap-x-2">
-                    <button id="modals-share-btn" class="btn-purple rounded px-3 py-2.5 text-xs">Share</button>
+                    <button id="modals-share-btn" class="btn-purple rounded px-3 py-2.5 text-xs"
+                        x-ref="share">Share</button>
                     <a :href="`/seller/quotes/${selectedQuote.quote.id}/edit`"
                         class="btn-purple rounded px-3 py-2.5 text-xs">Edit Quote</a>
                 </div>
@@ -481,7 +596,31 @@
 
             </div>
         </x-slot>
+    </x-forms.modal>
 
+    {{-- delete quote action --}}
+    <button class="hidden" id="deleteQuote" x-ref="deleteQuote"></button>
+    <x-forms.modal placement="top" size="max-w-md" id="deleteQuoteModal" target="deleteQuote"
+        uid="deleteQuoteModaluid">
+        <x-slot:title>
+            <div class="text-gray-800 dark:text-gray-300">Delete Quotation</div>
+        </x-slot>
+        <x-slot:content>
+            <div class="sm:flex sm:items-start">
+                <div class="text-center">
+                    <h3 class="text-base font-medium leading-6 text-gray-600 dark:text-white">
+                        Are you sure you want to delete this quotation, this action can't be reversed
+                    </h3>
+                </div>
+            </div>
+        </x-slot>
+        <x-slot:footer>
+            <div class="flex items-center gap-x-4">
+                <button class="btn-light px-5" @click="$dispatch('close-modal', 'deleteQuoteModal')">Cancel</button>
+                <button class="btn-purple bg-red-600 enabled:hover:bg-red-500" @click="deleteQuote"
+                    modal-close="myModal">Proceed</button>
+            </div>
+        </x-slot>
     </x-forms.modal>
 
 </div>
@@ -496,6 +635,9 @@
             box-shadow: 0 12px 40px 8px rgba(140, 152, 164, 0.19) !important;
         }
     </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 @endpush
 
 @push('scripts')
@@ -544,10 +686,24 @@
                     if (event.target.classList.contains('modal-backdrop')) {
                         this.hidden = false
                     }
+                },
+
+                async deleteQuote() {
+                    await @this.deleteQuotation(this.selectedQuote.quote.id)
+                    this.selectedQuote.quote = {}
                 }
             }
         }
         window.SellerDashboardQuotesPage = SellerDashboardQuotesPage()
+
+        new Swiper('.metric-swipe', {
+            slidesPerView: "auto",
+
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
     </script>
 
     <script src="{{ mix('js/dropdown.js') }}"></script>

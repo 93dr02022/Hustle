@@ -76,6 +76,14 @@ class Quotation extends Model
     }
 
     /**
+     * The quotation items for this quotation
+     */
+    public function invoices()
+    {
+        return $this->hasMany(OrderInvoice::class, 'order_id', 'order_id');
+    }
+
+    /**
      * Scope to include auth user quotations
      */
     public function scopeAuthUser(Builder $query): Builder
