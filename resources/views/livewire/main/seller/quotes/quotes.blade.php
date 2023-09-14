@@ -202,7 +202,7 @@
                     class="z-10 hidden w-[250px] pb-4 bg-white border border-gray-100 rounded-md x-shadow dark:bg-zinc-800">
                     <div class="flex justify-between items-center border-b px-3 py-2">
                         <span class="text-gray-700 text-sm dark:text-gray-300 font-semibold">Filter Quotes</span>
-                        <button class="rounded grid place-items-center p-2 hover:bg-[#EBF2FF]">
+                        <button class="rounded grid place-items-center p-2 hover:bg-[#EBF2FF]" @click="document.body.click()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
                                 fill="currentColor"
                                 class="text-slate-400 hover:text-blue-400 dark:text-slate-200 dark:hover:text-white"
