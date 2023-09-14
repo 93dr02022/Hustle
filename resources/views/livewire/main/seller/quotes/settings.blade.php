@@ -1,7 +1,7 @@
 <div class="w-full" x-data="window.SellerDashboardQuoteSettings">
 
     {{-- Loading --}}
-    {{-- <x-forms.loading /> --}}
+    <x-forms.loading />
 
     {{-- Heading --}}
     <div class="px-4 mx-auto mb-16 max-w-7xl sm:px-6 md:px-12">
@@ -56,7 +56,7 @@
                                             clip-rule="evenodd"></path>
                                     </svg>
                                     <span class="mx-1 text-sm font-medium text-gray-400 md:mx-2 dark:text-zinc-400">
-                                        {{ __('Quote view') }}
+                                        {{ __('Settings') }}
                                     </span>
                                 </div>
                             </li>
@@ -70,8 +70,59 @@
 
     {{-- Content --}}
     <div class="px-4 mx-auto space-y-2 max-w-7xl sm:px-6 md:px-12">
-        <div class="max-w-[800px] mx-auto">
-           
+        <div class="max-w-[800px] mx-auto bg-white border rounded-md">
+            <form wire:submit.prevent="update">
+                <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:col-span-9">
+                    <div class="pb-10 pt-7 px-12">
+
+                        {{-- Section header --}}
+                        <div class="mb-14">
+                            <h2 class="text-sm leading-6 font-bold text-gray-900">{{ __('Quotation settings') }}
+                            </h2>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('Change quotation settings') }}</p>
+                        </div>
+
+                        <div class="flex gap-x-4 text-sm mb-5">
+                            <div class="h-20 w-20 bg-slate-300 rounded-md overflow-hidden">
+                                <img :src="logoSrc" class="w-full h-full object-cover" alt="">
+                            </div>
+                            <div class="flex flex-col justify-center">
+                                <label for="logo" class="btn-light">
+                                    Select invoice logo
+                                    <input type="file" id="logo" class="hidden" @change="handleLogo($event)"
+                                        wire:model="logo">
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- Section content --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-8 gap-y-8 mb-6">
+                            <x-forms.text-input :label="__('Store name')" :placeholder="__('Enter store name')" model="business_name" required
+                                icon="cash-multiple" />
+
+                            <x-forms.text-input :label="__('Quote email')" :placeholder="__('Enter quote email')" type="email" model="email"
+                                icon="cash-multiple" required />
+
+                            <x-forms.text-input :label="__('Quote contact')" :placeholder="__('Enter quote contact')" type="tel" model="contact"
+                                icon="cash-multiple" required />
+
+                            <x-forms.text-input :label="__('Address')" :placeholder="__('Enter store address')" model="address"
+                                icon="cash-multiple" />
+                        </div>
+
+                    </div>
+
+                    {{-- Actions --}}
+                    <div class="py-4 px-4 flex justify-end sm:px-12 bg-gray-50 rounded-bl-lg rounded-br-lg">
+                        {{-- <x-forms.button action="update-mod" text="{{ __('messages.t_update') }}" :block="false" /> --}}
+                        <button wire:target="update" wire:loading.attr="disabled" class="btn-purple">
+                            Update
+                        </button>
+
+                    </div>
+
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -90,12 +141,16 @@
 
 @push('scripts')
     <script>
-        function SellerDashboardQuoteInfo() {
+        function SellerDashboardQuoteSettings() {
             return {
-                successful: false,
-                quote: {},
-                total: 0,
                 copying: false,
+                logoSrc: "{{ $settings->logo ? src($settings->logo) : placeholder_img() }}",
+
+                init() {
+                    if (/[\?&]rds=/.test(window.location.search)) {
+                        this.toastMessage('You need to complete your quote settings before you can create a quote.');
+                    }
+                },
 
                 toastMessage(message, type = "error") {
                     window.$wireui.notify({
@@ -103,6 +158,18 @@
                         description: message,
                         icon: type == 'success' ? 'success' : 'error'
                     });
+                },
+
+                toBase64(file, closure) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file[0]);
+                    reader.onload = () => {
+                        closure(reader.result);
+                    };
+                },
+
+                handleLogo(event) {
+                    this.toBase64(event.target.files, (file) => this.logoSrc = file);
                 },
 
                 copy(text) {

@@ -2,13 +2,7 @@
 
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
-use App\Http\Validators\Main\Seller\Quote\EditQuoteValidator;
-use App\Models\Order;
-use App\Models\OrderInvoice;
 use App\Models\Quotation;
-use App\Models\QuotationItem;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 

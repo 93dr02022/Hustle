@@ -84,6 +84,14 @@ class Quotation extends Model
     }
 
     /**
+     * Get quotation settings
+     */
+    public function settings()
+    {
+        return $this->hasOne(QuoteSetting::class, 'user_id', 'user_id');
+    }
+
+    /**
      * Scope to include auth user quotations
      */
     public function scopeAuthUser(Builder $query): Builder
