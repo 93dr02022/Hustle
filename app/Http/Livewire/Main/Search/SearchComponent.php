@@ -202,8 +202,9 @@ class SearchComponent extends Component
                 ->leftJoin('users', 'gigs.user_id', 'users.id')
                 ->leftJoin('states', 'states.id', 'users.state_id')
                 ->where(function ($builder) use ($keyword) {
-                    for ($i = 0; $i < mb_strlen($keyword); $i++) {
-                        $char = mb_substr($keyword, $i, 1);
+                    $reductKeyword = mb_substr($keyword,0,2);
+                    for ($i = 0; $i <= mb_strlen($reductKeyword); $i++) {
+                        $char = mb_substr($reductKeyword, $i, 1);
                         $builder->orWhere('gigs.title', 'LIKE', "%{$char}%")
                             ->orWhere('gigs.description', 'LIKE', "%{$char}%")
                             ->orWhereHas('tagged', function ($query) use ($char) {
