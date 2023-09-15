@@ -1,7 +1,8 @@
 <main class="w-full" x-data>
     <div class="sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-zinc-800 rounded-lg shadow overflow-hidden">
-            <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x rtl:divide-x-reverse">
+            <div
+                class="divide-y divide-gray-200 dark:divide-zinc-700 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x rtl:divide-x-reverse">
 
                 {{-- Sidebar --}}
                 <aside class="lg:col-span-3 py-6 hidden lg:block" wire:ignore>
@@ -25,7 +26,8 @@
                             <div class="bg-yellow-100 ltr:border-l-4 rtl:border-r-4 border-yellow-400 p-4 mb-6">
                                 <div class="flex">
                                     <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
                                                 clip-rule="evenodd" />
@@ -42,12 +44,14 @@
 
                         {{-- Section content --}}
                         <div class="w-full mb-6">
-                            <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border dark:border-zinc-700">
+                            <div
+                                class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border dark:border-zinc-700">
                                 {{-- Section title --}}
                                 <div class="bg-gray-50 dark:bg-zinc-700 px-7 py-4 rounded-t-md">
                                     <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
                                         <div class="ltr:ml-4 rtl:mr-4 mt-4">
-                                            <h3 class="text-sm leading-6 font-bold tracking-wide text-gray-800 dark:text-gray-100">
+                                            <h3
+                                                class="text-sm leading-6 font-bold tracking-wide text-gray-800 dark:text-gray-100">
                                                 {{ __('Quotation') }}</h3>
                                             <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
                                                 {{ __('Quotation information with order items') }}</p>
@@ -57,25 +61,32 @@
 
                                 {{-- invoice logo heading --}}
                                 <div class="flex justify-between flex-col sm:flex-row px-4 gap-y-5 sm:px-7 py-5">
-                                    <div class="flex gap-4 text-sm">
-                                        <div class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center">
-                                            <h1 class="text-white text-5xl">
-                                                {{ mb_substr($quotation->owner->first_name, 0, 1) }}
-                                            </h1>
+                                    <div class="flex items-center gap-4 text-sm">
+                                        <div
+                                            class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center overflow-hidden">
+                                            @if ($quotation->settings->logo)
+                                                <img src="{{ placeholder_img() }}"
+                                                    data-src="{{ src($quotation->settings->logo) }}"
+                                                    class="lazy w-ful h-full object-cover" alt="">
+                                            @else
+                                                <h1 class="text-white text-5xl">
+                                                    {{ mb_substr($quotation->owner->first_name, 0, 1) }}
+                                                </h1>
+                                            @endif
                                         </div>
                                         <div class="flex flex-col">
-                                            <h3 class="capitalize">
-                                                {{ $quotation->owner->first_name }} {{ $quotation->owner->last_name }}
+                                            <h3
+                                                class="capitalize text-base font-semibold text-gray-600 dark:text-gray-400">
+                                                {{ $quotation->settings->business_name }}
                                             </h3>
-                                            <h3 class="capitalize break-words">
-                                                {{ $quotation->owner->email }}
+                                            <h3 class="break-words">
+                                                {{ $quotation->settings->email }}
                                             </h3>
                                             <h3 class="capitalize">
-                                                {{ $quotation->owner->country_name }} {{ $quotation->owner->address }}
+                                                {{ $quotation->settings->contact }}
                                             </h3>
                                         </div>
                                     </div>
-
                                     <div class="flex flex-row sm:flex-col gap-x-3">
                                         <div class="flex flex-col">
                                             <span class="text-sm font-normal">Invoice NO:</span>
@@ -110,7 +121,8 @@
 
                                         <div class="sm:col-span-1">
                                             <dt class="text-sm font-medium text-gray-500">Phone</dt>
-                                            <dd class="mt-1 text-xs text-gray-500 capitalize">{{ $quotation->phone_number }}</dd>
+                                            <dd class="mt-1 text-xs text-gray-500 capitalize">
+                                                {{ $quotation->phone_number }}</dd>
                                         </div>
 
                                         <div class="sm:col-span-1">
@@ -126,7 +138,7 @@
                                 <div class="flex flex-col px-4 md:px-7">
                                     <dt class="text-sm font-medium text-gray-500">Details</dt>
                                     <dd class="mt-1 text-xs text-gray-500 capitalize">
-                                        {{ $quotation->notes ?? 'N/A' }}
+                                        {{ $quotation->note ?? 'N/A' }}
                                     </dd>
                                 </div>
 
@@ -135,8 +147,10 @@
                                     <div class="overflow-x-auto">
                                         <table class="w-full mt-4" width="100%">
                                             <thead>
-                                                <tr class="border-t border-b dark:border-gray-500 [&>th]:px-6 [&>th]:py-3 [&>th]:text-left">
-                                                    <th class="font-semibold text-sm dark:text-gray-300">Description</th>
+                                                <tr
+                                                    class="border-t border-b dark:border-gray-500 [&>th]:px-6 [&>th]:py-3 [&>th]:text-left">
+                                                    <th class="font-semibold text-sm dark:text-gray-300">Description
+                                                    </th>
                                                     <th class="font-semibold text-sm dark:text-gray-300">Quantity</th>
                                                     <th class="font-semibold text-sm dark:text-gray-300">Price</th>
                                                     <th class="font-semibold text-sm dark:text-gray-300">Discount</th>
@@ -146,9 +160,11 @@
                                             <tbody>
                                                 @foreach ($quotation->items as $item)
                                                     <tr class="[&>td]:px-6 [&>td]:py-3">
-                                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->description }}
+                                                        <td class="font-normal text-sm dark:text-gray-300">
+                                                            {{ $item->description }}
                                                         </td>
-                                                        <td class="font-normal text-sm dark:text-gray-300">{{ $item->quantity }}
+                                                        <td class="font-normal text-sm dark:text-gray-300">
+                                                            {{ $item->quantity }}
                                                         </td>
                                                         <td class="font-normal text-sm dark:text-gray-300">
                                                             @money($item->price, settings('currency')->code, true)
@@ -169,12 +185,14 @@
                                     <table width="100%">
                                         <tr class="border-t dark:border-gray-600">
                                             <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Total</th>
-                                            <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total, settings('currency')->code, true)</th>
+                                            <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total, settings('currency')->code, true)
+                                            </th>
                                         </tr>
 
                                         <tr class="border-t dark:border-gray-600">
                                             <th colspan="4" class="px-6 pt-4 pb-0.5 text-right">Tax</th>
-                                            <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total_tax, settings('currency')->code, true)</th>
+                                            <th class="px-6 pt-4 pb-0.5 w-32 font-medium text-right">@money($quotation->total_tax, settings('currency')->code, true)
+                                            </th>
                                         </tr>
 
                                         <tr class="text-lg">
@@ -187,14 +205,16 @@
                                 </div>
 
                                 {{-- Quotation payment --}}
-                                <div class="flex items-center px-4 py-3 bg-gray-50 dark:bg-black/50 sm:px-5 border-t border-t-gray-">
+                                <div
+                                    class="flex items-center px-4 py-3 bg-gray-50 dark:bg-black/50 sm:px-5 border-t border-t-gray-">
                                     Transaction
                                 </div>
 
                                 <div class="overflow-x-auto">
                                     <table class="w-full" width="100%">
                                         <thead>
-                                            <tr class="border-t border-b dark:border-gray-500 [&>th]:px-6 [&>th]:py-3 [&>th]:text-left">
+                                            <tr
+                                                class="border-t border-b dark:border-gray-500 [&>th]:px-6 [&>th]:py-3 [&>th]:text-left">
                                                 <th class="font-semibold text-sm dark:text-gray-300">Date</th>
                                                 <th class="font-semibold text-sm dark:text-gray-300">Gateway</th>
                                                 <th class="font-semibold text-sm dark:text-gray-300">TransactionID</th>
@@ -207,7 +227,8 @@
                                                 <td class="font-normal text-sm dark:text-gray-300">
                                                     {{ now()->parse($quotation->invoice->updated_at)->format('d/m/Y') }}
                                                 </td>
-                                                <td class="font-normal text-sm dark:text-gray-300">{{ $quotation->invoice->payment_method }}
+                                                <td class="font-normal text-sm dark:text-gray-300">
+                                                    {{ $quotation->invoice->payment_method }}
                                                 </td>
                                                 <td class="font-normal text-sm dark:text-gray-300">
                                                     {{ $quotation->invoice->payment_id }}

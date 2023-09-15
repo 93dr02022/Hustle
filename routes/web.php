@@ -496,6 +496,8 @@ Route::namespace('App\Http\Livewire\Main')->group(function () {
             Route::get('/', QuotesComponent::class);
             Route::get('create', CreateQuoteComponent::class);
             Route::get('/{quoteId}/edit', EditQuoteComponent::class);
+            Route::get('/{quoteId}/details', QuoteInfoComponent::class);
+            Route::get('/settings', SettingsComponent::class);
         });
 
         // Verification Center

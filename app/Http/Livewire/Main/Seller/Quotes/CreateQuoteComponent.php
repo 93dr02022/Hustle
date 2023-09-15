@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderInvoice;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
+use App\Models\QuoteSetting;
 use App\Models\User;
 use App\Notifications\User\Seller\QuotationCreated;
 use DB;
@@ -26,6 +27,18 @@ class CreateQuoteComponent extends Component
         $this->expiration = now()->addDays(7)->format('Y-m-d');
         if (request()->has('uid')) {
             $this->quotePerson = User::find(request()->uid);
+        }
+
+        $settings = QuoteSetting::where('user_id', auth()->id())->first();
+
+        if (!$settings) {
+            redirect('seller/quotes/settings?rds=true');
+            return;
+        }
+
+        if (is_null($settings->business_name) || is_null($settings->email) || is_null($settings->contact)) {
+            redirect('seller/quotes/settings?rds=true');
+            return;
         }
     }
 
@@ -57,8 +70,8 @@ class CreateQuoteComponent extends Component
             $totalValue = $totals['total'] + $totals['total_tax'];
 
             $order = Order::create([
-                'uid' => uid(7),
                 'total_value' => $totalValue,
+                'uid' => uid(10),
                 'subtotal_value' => $totals['total'],
                 'taxes_value' => $totals['total_tax'],
                 'placed_at' => now(),
@@ -68,7 +81,7 @@ class CreateQuoteComponent extends Component
                 'user_id' => auth()->id(),
                 'order_id' => $order->id,
                 'quote_date' => now(),
-                'reference' => uid(7),
+                'reference' => uid(10),
                 'is_draft' => true,
                 'paid' => $paymentMethod === 'cash',
                 'profit_value' => $profitValue,
