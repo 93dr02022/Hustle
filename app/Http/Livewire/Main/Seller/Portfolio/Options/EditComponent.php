@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Main\Seller\Portfolio\Options;
 
 use App\Http\Validators\Main\Seller\Portfolio\EditValidator;
-use App\Jobs\Main\Seller\WatermarkVideo;
 use App\Models\Admin;
 use App\Models\UserPortfolio;
 use App\Models\UserPortfolioGallery;
@@ -127,7 +126,7 @@ class EditComponent extends Component
             if ($this->videoFile) {
                 $filename = uid(32) . '.' . $this->videoFile->getClientOriginalExtension();
                 $videoPath = $this->videoFile->storeAs('seller/projects/gallery', $filename, 's3');
-                Storage::disk('s3')->delete($this->project->project_video_upload);
+                Storage::disk('s3')->delete("{$this->project->project_video_upload}");
             } else {
                 $videoPath = $this->videoFile;
                 $filename = null;
@@ -170,11 +169,6 @@ class EditComponent extends Component
             // Send notification to admin if project status pending
             if (!settings('publish')->auto_approve_portfolio) {
                 Admin::first()->notify((new PendingPortfolio($project))->locale(config('app.locale')));
-            }
-
-            // check if there is a video in other to watermark
-            if ($this->videoFile) {
-                WatermarkVideo::dispatch($videoPath, $filename);
             }
 
             // Redirect to projects with success
