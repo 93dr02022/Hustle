@@ -63,7 +63,7 @@
                                 <div class="flex justify-between flex-col sm:flex-row px-4 gap-y-5 sm:px-7 py-5">
                                     <div class="flex items-center gap-4 text-sm">
                                         <div
-                                            class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center overflow-hidden">
+                                            class="flex-shrink-0 h-20 w-20 bg-slate-700 rounded-md grid place-items-center overflow-hidden">
                                             @if ($quotation->settings->logo)
                                                 <img src="{{ placeholder_img() }}"
                                                     data-src="{{ src($quotation->settings->logo) }}"
@@ -79,7 +79,7 @@
                                                 class="capitalize text-base font-semibold text-gray-600 dark:text-gray-400">
                                                 {{ $quotation->settings->business_name }}
                                             </h3>
-                                            <h3 class="break-words">
+                                            <h3 class="break-all">
                                                 {{ $quotation->settings->email }}
                                             </h3>
                                             <h3 class="capitalize">
