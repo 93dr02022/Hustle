@@ -132,6 +132,7 @@
 
     {{-- Content --}}
     <div class="mx-auto max-w-7xl px-4 sm:px-6 md:px-12">
+
         <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2">
                 <dl
@@ -525,15 +526,45 @@
                                         class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-red-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
                                         @break
                                         @case('Order canceled')
-                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-grey-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-red-500 rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
                                         @break
+                                        @case('Order placed')
+                                        class="absolute -left-1.5 mt-1.5 h-3 w-3 bg-black rounded-full border border-white  dark:border-gray-900 dark:bg-gray-700"
+                                        @break
+
 
                                     @default
 
                                 @endswitch>
                                 </div>
 
-                                <h3 class="font-semibold text-gray-900 dark:text-white">
+
+                                @switch($timeline->name)
+                                @case('Order delivered')
+                                <h3 class="font-semibold  text-orange-500 dark:text-white">
+                                @break
+                                @case('Order finished')
+                                <h3 class="font-semibold text-green-500 dark:text-white">
+                                @break
+                                @case('Order started')
+                                <h3 class="font-semibold text-yellow-300 dark:text-white">
+                                @break
+                                @case('Order Reviewed')
+                                <h3 class="font-semibold text-blue-500 dark:text-white">
+                                @break
+                                @case('Order refunded')
+                                <h3 class="font-semibold text-red-500 dark:text-white">
+                                @break
+                                @case('Order canceled')
+                                <h3 class="font-semibold text-red-500 dark:text-white">
+                                @break
+
+                                @case('Order placed')
+                                <h3 class="font-semibold text-black dark:text-white">
+                                @break
+                            @default
+
+                        @endswitch
                                     {{ $timeline->name }}</h3>
                                 <p class="text-gray-500 py-2 dark:text-gray-400">
                                     {{ $timeline->description }}
@@ -549,45 +580,119 @@
                 </div>
             @endif
         </div>
-        {{-- Send message --}}
-        @if (!$order->is_finished)
-            <div
-                class="mt-auto w-full px-4 py-10 border-t bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 rounded-b-lg">
-                <div class="flex items-start space-x-4 rtl:space-x-reverse">
-                    <div class="flex-shrink-0">
-                        <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
-                            src="{{ placeholder_img() }}" data-src="{{ src(auth()->user()->avatar_id) }}"
-                            alt="{{ auth()->user()->username }}">
+        {{-- chat section --}}
+        <div class="rounded-lg bg-white dark:bg-zinc-700 overflow-hidden border border-gray-200 dark:border-zinc-600">
+
+            {{-- conversation Section title --}}
+            <div class="bg-gray-50 dark:bg-zinc-600 px-8 py-4 rounded-t-md">
+                <div
+                    class="ltr:-ml-4 rtl:-mr-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
+                    <div class="ltr:ml-4 rtl:mr-4 mt-4">
+                        <h3
+                            class="text-sm leading-6 font-semibold tracking-wide text-gray-600 dark:text-gray-100">
+                            {{ __('messages.t_conversation_with_seller') }}</h3>
+                        <p class="text-xs font-normal text-gray-400 dark:text-gray-300">
+                            {{ __('messages.t_communicate_with_seller_about_changes') }}
+                        </p>
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <div class="relative">
-                            <div
-                                class="border border-gray-300 dark:border-zinc-600 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                                <textarea rows="3" maxlength="750" wire:model.defer="message"
-                                    class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200"
-                                    placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
-                                <div class="py-2" aria-hidden="true">
-                                    <div class="py-px">
-                                        <div class="h-9"></div>
+                    <div class="ltr:ml-4 rtl:mr-4 mt-4 flex-shrink-0">
+                        <a href="{{ url('seller/orders') }}"
+                            class="inline-flex items-center py-2 px-3 border border-transparent rounded-full bg-transparent hover:bg-transparent focus:outline-none focus:ring-0">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 text-primary-600 hover:text-primary-600 ltr:mr-2 rtl:ml-2" " fill=" none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                            </svg>
+                            <span class="text-xs font-medium text-primary-600 hover:text-primary-600">
+                                {{ __('messages.t_back_to_orders') }}
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- Conversation --}}
+            <div class="w-full">
+                <ul role="list" class="px-4 pb-3 last:pb-0">
+
+                    @foreach ($order->conversation as $message)
+                        <li wire:key="seller-deliver-order-msg-id-{{ $message->id }}">
+                            <div class="relative pb-8">
+                                @if (!$loop->last)
+                                    <span
+                                        class="absolute top-5 ltr:left-5 rtl:right-5 ltr:-ml-px rtl:-mr-px h-full w-0.5 bg-gray-200 dark:bg-zinc-700"
+                                        aria-hidden="true"></span>
+                                @endif
+                                <div class="relative flex items-start space-x-3 rtl:space-x-reverse">
+                                    <div class="relative">
+                                        <img class="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white dark:ring-transparent object-cover lazy"
+                                            src="{{ placeholder_img() }}"
+                                            data-src="{{ src($message->from->avatar_id) }}"
+                                            alt="{{ $message->from->username }}">
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div>
+                                            <div class="text-sm">
+                                                <a href="{{ url('profile', $message->from->username) }}"
+                                                    target="_blank"
+                                                    class="font-bold tracking-wide text-gray-900 dark:text-gray-100">{{ $message->from->username }}</a>
+                                            </div>
+                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                {{ format_date($message->created_at, 'ago') }}</p>
+                                        </div>
+                                        <div class="mt-2 text-sm text-gray-700 dark:text-gray-200">
+                                            <p>{!! nl2br($message->msg_content) !!}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </li>
+                    @endforeach
 
-                            <div
-                                class="absolute bottom-0 inset-x-0 ltr:pl-3 rtl:pr-3 ltr:pr-2 rtl:pl-2 py-2 flex justify-between">
-                                <div></div>
-                                <div class="flex-shrink-0">
-                                    <button wire:click="sendMessage" wire:loading.attr="disabled"
-                                        wire:target="sendMessage" type="button"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">{{ __('messages.t_send') }}</button>
+                </ul>
+            </div>
+            {{-- Send message --}}
+            @if (!$order->is_finished)
+                <div
+                    class="mt-auto w-full px-4 py-10 border-t bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 rounded-b-lg">
+                    <div class="flex items-start space-x-4 rtl:space-x-reverse">
+                        <div class="flex-shrink-0">
+                            <img class="inline-block h-10 w-10 rounded-full object-cover lazy"
+                                src="{{ placeholder_img() }}" data-src="{{ src(auth()->user()->avatar_id) }}"
+                                alt="{{ auth()->user()->username }}">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="relative">
+                                <div
+                                    class="border border-gray-300 dark:border-zinc-600 rounded-lg shadow-sm overflow-hidden focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
+                                    <textarea rows="3" maxlength="750" wire:model.defer="message"
+                                        class="block w-full py-3 border-0 resize-none focus:ring-0 sm:text-sm dark:bg-transparent dark:text-gray-200"
+                                        placeholder="{{ __('messages.t_type_ur_message_here') }}"></textarea>
+                                    <div class="py-2" aria-hidden="true">
+                                        <div class="py-px">
+                                            <div class="h-9"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-0 inset-x-0 ltr:pl-3 rtl:pr-3 ltr:pr-2 rtl:pl-2 py-2 flex justify-between">
+                                    <div></div>
+                                    <div class="flex-shrink-0">
+                                        <button wire:click="sendMessage" wire:loading.attr="disabled"
+                                            wire:target="sendMessage" type="button"
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600">{{ __('messages.t_send') }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
+
     </div>
+
 
 </div>
 

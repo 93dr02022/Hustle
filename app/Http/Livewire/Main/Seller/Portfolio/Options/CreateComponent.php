@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Main\Seller\Portfolio\Options;
 
 use App\Http\Validators\Main\Seller\Portfolio\CreateValidator;
-use App\Jobs\Main\Seller\WatermarkVideo;
 use App\Models\Admin;
 use App\Models\UserPortfolio;
 use App\Models\UserPortfolioGallery;
@@ -14,8 +13,6 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use WireUi\Traits\Actions;
-use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class CreateComponent extends Component
 {
@@ -130,11 +127,6 @@ class CreateComponent extends Component
             // Send notification to admin if project status pending
             if (!settings('publish')->auto_approve_portfolio) {
                 Admin::first()->notify((new PendingPortfolio($project))->locale(config('app.locale')));
-            }
-
-            // check if there is a video in other to watermark
-            if ($this->videoFile) {
-                WatermarkVideo::dispatch($videoPath, $filename);
             }
 
             // Redirect to projects with success

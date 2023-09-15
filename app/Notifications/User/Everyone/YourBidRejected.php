@@ -41,7 +41,7 @@ class YourBidRejected extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // if there is app token proceed
-        if ($notifiable?->userNotificationSetting?->app_token) { 
+        if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -66,16 +66,16 @@ class YourBidRejected extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
+
             $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_rejected');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_ur_bid_rejected'))
-                ->withClickAction('account/project')
+                ->withBody(__('messages.t_notification_ur_bid_has_been_rejected'))
+                ->withClickAction('seller/projects/bids')
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -85,15 +85,14 @@ class YourBidRejected extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_rejected');
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_everyone_ur_bid_rejected');
 
-            Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_ur_bid_rejected'))
+        Larafirebase::withTitle($subject)
+                ->withBody(__('messages.t_notification_ur_bid_has_been_rejected'))
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
 
     /**

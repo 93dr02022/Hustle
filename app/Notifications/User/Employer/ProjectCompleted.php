@@ -40,7 +40,7 @@ class ProjectCompleted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
           // if there is app token proceed
-          if ($notifiable?->userNotificationSetting?->app_token) { 
+          if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -65,16 +65,16 @@ class ProjectCompleted extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_completed');
+                // Set subject
+                $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_completed');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_project_completed'))
-                ->withClickAction('account/project')
+                ->withBody($this->project->title)
+                ->withClickAction('project/' . $this->project->pid . '/' . $this->project->slug)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
+
     }
 
     /**
@@ -84,15 +84,15 @@ class ProjectCompleted extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_completed');
+         // Set subject
+         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_project_completed');
 
             Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_requested_milestone'))
+                ->withBody($this->project->title)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
     /**
      * Get the array representation of the notification.

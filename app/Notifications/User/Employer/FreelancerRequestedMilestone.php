@@ -38,9 +38,9 @@ class FreelancerRequestedMilestone extends Notification implements ShouldQueue
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    {  
+    {
         // if there is app token proceed
-           if ($notifiable?->userNotificationSetting?->app_token) { 
+           if ($notifiable?->userNotificationSetting?->app_token) {
             rescue(fn () => $this->toMobile($notifiable));
         }
 
@@ -50,8 +50,8 @@ class FreelancerRequestedMilestone extends Notification implements ShouldQueue
         }
         // Set subject
         $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_requested_a_milestone');
-       
-         
+
+
 
         return (new MailMessage)
                     ->subject($subject)
@@ -68,16 +68,14 @@ class FreelancerRequestedMilestone extends Notification implements ShouldQueue
      */
     public function toFirebase($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_requested_a_milestone');
-
-            Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_requested_a_milestone'))
-                ->withClickAction('account/project')
+        // Set subject
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_requested_a_milestone');
+                   Larafirebase::withTitle($subject)
+                ->withBody($this->milestone->project->title)
+                ->withClickAction('project/' . $this->milestone->project->pid . '/' . $this->milestone->project->slug)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendMessage([$notifiable->userNotificationSetting->notification_token]);
-        }
     }
 
     /**
@@ -87,15 +85,13 @@ class FreelancerRequestedMilestone extends Notification implements ShouldQueue
      */
     public function toMobile($notifiable)
     {
-        if ($notifiable?->userNotificationSetting?->push_order_notifications) {
-            $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_requested_a_milestone');
-
-            Larafirebase::withTitle($subject)
-                ->withBody(__('messages.t_notification_freelancer_requested_milestone'))
+        $subject = "[" . config('app.name') . "] " . __('messages.t_subject_employer_freelancer_requested_a_milestone');
+                Larafirebase::withTitle($subject)
+                ->withBody($this->milestone->project->title)
                 ->withIcon(asset('img/default/no-favicon.png'))
                 ->withPriority('high')
                 ->sendNotification([$notifiable->userNotificationSetting->app_token]);
-        }
+
     }
 
     /**
