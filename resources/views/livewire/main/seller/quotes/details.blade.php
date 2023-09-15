@@ -72,7 +72,8 @@
     <div class="px-4 mx-auto space-y-2 max-w-7xl sm:px-6 md:px-12">
         <div class="max-w-[800px] mx-auto">
             <div class="w-full mb-6">
-                <div class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-slate-200 dark:border-zinc-700">
+                <div
+                    class="mb-6 bg-white dark:bg-zinc-800 shadow-sm rounded-md border border-slate-200 dark:border-zinc-700">
                     {{-- Section title --}}
                     <div class="bg-gray-50 dark:bg-zinc-700 px-7 py-4 rounded-t-md">
                         <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
@@ -87,21 +88,25 @@
 
                     {{-- invoice logo heading --}}
                     <div class="flex justify-between flex-col sm:flex-row px-4 gap-y-5 sm:px-7 py-5">
-                        <div class="flex gap-4 text-sm">
-                            <div class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center">
-                                <h1 class="text-white text-5xl">
-                                    {{ mb_substr($quotation->owner->first_name, 0, 1) }}
-                                </h1>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="h-20 w-20 bg-slate-700 rounded-md grid place-items-center overflow-hidden">
+                                @if ($quotation->settings->logo)
+                                    <img src="{{ placeholder_img() }}" data-src="{{ src($quotation->settings->logo) }}" class="lazy w-ful h-full object-cover" alt="">
+                                @else
+                                    <h1 class="text-white text-5xl">
+                                        {{ mb_substr($quotation->owner->first_name, 0, 1) }}
+                                    </h1>
+                                @endif
                             </div>
                             <div class="flex flex-col">
-                                <h3 class="capitalize">
-                                    {{ $quotation->owner->first_name }} {{ $quotation->owner->last_name }}
+                                <h3 class="capitalize text-base font-semibold text-gray-600 dark:text-gray-400">
+                                    {{ $quotation->settings->business_name }}
                                 </h3>
-                                <h3 class="capitalize break-words">
-                                    {{ $quotation->owner->email }}
+                                <h3 class="break-words">
+                                    {{ $quotation->settings->email }}
                                 </h3>
                                 <h3 class="capitalize">
-                                    {{ $quotation->owner->country_name }} {{ $quotation->owner->address }}
+                                    {{ $quotation->settings->contact }}
                                 </h3>
                             </div>
                         </div>
@@ -155,8 +160,8 @@
                     {{-- quotation note details --}}
                     <div class="flex flex-col px-4 md:px-7">
                         <dt class="text-sm font-medium text-gray-500">Details</dt>
-                        <dd class="mt-1 text-xs text-gray-500 capitalize">
-                            {{ $quotation->notes ?? 'N/A' }}
+                        <dd class="mt-1 text-xs text-gray-500 capitalize line-clamp-2">
+                            {{ $quotation->note ?? 'N/A' }}
                         </dd>
                     </div>
 

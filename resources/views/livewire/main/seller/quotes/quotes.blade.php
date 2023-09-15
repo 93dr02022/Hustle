@@ -9,7 +9,6 @@
             <div class="lg:flex lg:items-center lg:justify-between">
 
                 <div class="min-w-0 flex-1">
-
                     {{-- Section heading --}}
                     <h2
                         class="text-lg font-bold leading-7 text-zinc-700 dark:text-gray-50 sm:truncate sm:text-xl sm:tracking-tight">
@@ -90,14 +89,14 @@
     </div>
 
     {{-- quotes metrics summary --}}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-5" wire:ignore>
         <div class="swiper metric-swipe w-full">
             <div class="swiper-wrapper flex flex-row items-center gap-x-4">
                 <div
                     class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
                     <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                         <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                            @money(500, settings('currency')->code, true)
+                            @money($metrics?->paid_invoices ?? 0, settings('currency')->code, true)
                         </p>
                         <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
                             <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
@@ -112,58 +111,52 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Paid Invoice</p>
                 </div>
 
                 <div
                     class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
                     <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                         <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                            @money(500, settings('currency')->code, true)
+                            @money($metrics?->unpaid_invoices ?? 0, settings('currency')->code, true)
                         </p>
                         <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                                fill="currentColor" stroke-width="0"
-                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                    <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path
-                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                                    </path>
-                                </g>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" viewBox="0 0 16 16">
+                                <path
+                                    d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zM11.5 4a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z" />
+                                <path
+                                    d="M2.354.646a.5.5 0 0 0-.801.13l-.5 1A.5.5 0 0 0 1 2v13H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1H15V2a.5.5 0 0 0-.053-.224l-.5-1a.5.5 0 0 0-.8-.13L13 1.293l-.646-.647a.5.5 0 0 0-.708 0L11 1.293l-.646-.647a.5.5 0 0 0-.708 0L9 1.293 8.354.646a.5.5 0 0 0-.708 0L7 1.293 6.354.646a.5.5 0 0 0-.708 0L5 1.293 4.354.646a.5.5 0 0 0-.708 0L3 1.293 2.354.646zm-.217 1.198.51.51a.5.5 0 0 0 .707 0L4 1.707l.646.647a.5.5 0 0 0 .708 0L6 1.707l.646.647a.5.5 0 0 0 .708 0L8 1.707l.646.647a.5.5 0 0 0 .708 0L10 1.707l.646.647a.5.5 0 0 0 .708 0L12 1.707l.646.647a.5.5 0 0 0 .708 0l.509-.51.137.274V15H2V2.118l.137-.274z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Unpaid Invoice</p>
                 </div>
 
                 <div
                     class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
                     <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                         <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                            @money(500, settings('currency')->code, true)
+                            {{ $metrics?->quotations ?? 0 }}
                         </p>
                         <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
-                            <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
-                                fill="currentColor" stroke-width="0"
-                                viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                    <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path
-                                        d="M10 20H6v2H4v-2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7V1.59a.5.5 0 0 1 .582-.493l10.582 1.764a1 1 0 0 1 .836.986V6h1v2h-1v7h1v2h-1v2.153a1 1 0 0 1-.836.986L20 20.333V22h-2v-1.333l-7.418 1.236A.5.5 0 0 1 10 21.41V20zm2-.36l8-1.334V4.694l-8-1.333v16.278zM16.5 14c-.828 0-1.5-1.12-1.5-2.5S15.672 9 16.5 9s1.5 1.12 1.5 2.5-.672 2.5-1.5 2.5z">
-                                    </path>
-                                </g>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" viewBox="0 0 16 16">
+                                <path
+                                    d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
+                                <path
+                                    d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Quotations</p>
                 </div>
 
                 <div
                     class="swiper-slide min-w-[220px] !flex-auto stat-shadow flex flex-col justify-between px-3 py-4 bg-white border rounded-lg shadow-sm border-[#E7EAF3B3] dark:border-zinc-700 dark:bg-zinc-800">
                     <div class="flex justify-between space-x-1 rtl:space-x-reverse">
                         <p class="text-lg font-bold text-zinc-700 dark:text-zinc-100">
-                            @money(500, settings('currency')->code, true)
+                            @money($metrics?->total_profit ?? 0, settings('currency')->code, true)
                         </p>
                         <div class="flex items-center justify-center rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-700">
                             <svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" stroke="currentColor"
@@ -178,7 +171,7 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Total Paid Invoice</p>
+                    <p class="mt-1 text-[13px] text-gray-500 dark:text-zinc-300 font-medium">Earnings</p>
                 </div>
             </div>
         </div>
@@ -201,7 +194,8 @@
                             d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                     </svg>
                 </span>
-                <input type="text" class="form-ctr focus:!border-gray-300 pl-10" placeholder="Search quotes">
+                <input type="text" class="form-ctr focus:!border-gray-300 pl-10"
+                    @keyup.enter="@this.set('search', $event.target.value)" placeholder="Search quotes">
             </div>
 
             {{-- filter dropdown --}}
@@ -239,21 +233,25 @@
                             <div class="">
                                 <label for="startData" class="block text-slate-600 dark:text-zinc-400">Start
                                     date</label>
-                                <input type="date" id="startData" class="form-ctr">
+                                <input type="date" id="startData" class="form-ctr" wire:model.defer="start_date">
                             </div>
                             <div class="">
                                 <label for="endData" class="block text-slate-600 dark:text-zinc-400">End date</label>
-                                <input type="date" id="endData" class="form-ctr">
+                                <input type="date" id="endData" class="form-ctr" wire:model.defer="end_date">
                             </div>
                             <div class="">
                                 <label for="status" class="block text-slate-600 dark:text-zinc-400">Payment
                                     Status</label>
-                                <select id="status" class="form-ctr">
-                                    <option value="paid">Paid</option>
-                                    <option value="unpaid">Unpaid</option>
+                                <select id="status" class="form-ctr" wire:model.defer="status">
+                                    <option value="">All status</option>
+                                    <option value="true">Paid</option>
+                                    <option value="false">Unpaid</option>
                                 </select>
                             </div>
-                            <button class="w-full btn-purple mt-4">Apply</button>
+                            <div class="flex items-center justify-end gap-x-3 mt-3">
+                                <button class="btn-light py-2.5 px-5" wire:click="resetFilter">Clear</button>
+                                <button class="btn-purple py-2.5 px-4" wire:click="filter">Apply</button>
+                            </div>
                         </div>
                     </div>
                 </div>

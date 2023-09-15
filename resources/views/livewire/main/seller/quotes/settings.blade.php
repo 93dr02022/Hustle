@@ -73,7 +73,7 @@
         <div class="max-w-[800px] mx-auto bg-white border rounded-md">
             <form wire:submit.prevent="update">
                 <div class="divide-y divide-gray-200 dark:divide-zinc-700 lg:col-span-9">
-                    <div class="pb-10 pt-7 px-12">
+                    <div class="pb-10 pt-7 px-3 xs:px-5 md:px-12">
 
                         {{-- Section header --}}
                         <div class="mb-14">
@@ -92,6 +92,9 @@
                                     <input type="file" id="logo" class="hidden" @change="handleLogo($event)"
                                         wire:model="logo">
                                 </label>
+                                @error('logo')
+                                    <p class="mt-1 text-xs text-red-600 dark:text-red-500">{{ $errors->first('logo') }}</p>
+                                @enderror
                             </div>
                         </div>
 

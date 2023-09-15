@@ -21,7 +21,7 @@ class QuoteComponent extends Component
      */
     public function mount($orderId)
     {
-        $quotation = Quotation::where('order_id', $orderId)->with(['items', 'invoice'])
+        $quotation = Quotation::where('order_id', $orderId)->with(['items', 'invoice', 'settings'])
             ->first();
 
         $this->quotation = $quotation;

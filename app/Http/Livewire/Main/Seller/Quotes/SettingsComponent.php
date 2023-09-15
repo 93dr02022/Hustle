@@ -8,6 +8,7 @@ use App\Utils\Uploader\ImageUploader;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use WireUi\Traits\Actions;
 
@@ -21,7 +22,7 @@ class SettingsComponent extends Component
 
     public $expiration;
 
-    public $logo;
+    public $logo = null;
 
     public $business_name;
 
@@ -68,12 +69,12 @@ class SettingsComponent extends Component
                     ->size(250)
                     ->toBucket('quotations');
 
-                Storage::disk('s3')->delete($this->settings->logo);
+                Storage::disk('s3')->delete("{$this->settings->logo}");
             }
 
             $this->settings->update([
                 ...$validator->safe()->except('logo'),
-                'logo' => $this->logo ? $path : null
+                'logo' => $this->logo ? $path : $this->settings->logo
             ]);
 
             $this->notification([
@@ -81,9 +82,9 @@ class SettingsComponent extends Component
                 'description' => __('Quotation settings update successfully.'),
                 'icon' => 'success',
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            dd($e);
 
+            redirect('seller/quotes/settings');
+        } catch (\Illuminate\Validation\ValidationException $e) {
             $this->notification([
                 'title' => __('messages.t_error'),
                 'description' => __('messages.t_toast_form_validation_error'),

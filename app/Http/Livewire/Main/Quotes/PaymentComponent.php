@@ -38,7 +38,7 @@ class PaymentComponent extends Component
             ->with(['owner' => function ($query) {
                 return $query->select('users.*', 'countries.name as country_name')
                     ->leftJoin('countries', 'users.country_id', 'countries.id');
-            }, 'items'])
+        }, 'items', 'settings'])
             ->first();
 
         if ($this->quotation?->expires_at?->isPast()) {

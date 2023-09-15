@@ -3,12 +3,13 @@
 namespace App\Http\Livewire\Main\Seller\Quotes;
 
 use App\Models\Quotation;
+use Artesaos\SEOTools\Traits\SEOTools;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
 class QuoteInfoComponent extends Component
 {
-    use Actions;
+    use Actions, SEOTools;
 
     public $quotation;
 
@@ -20,7 +21,7 @@ class QuoteInfoComponent extends Component
     {
         $quotation = Quotation::where('id', $quoteId)
             ->where('user_id', auth()->id())
-            ->with(['items', 'invoices'])
+            ->with(['items', 'invoices', 'settings'])
             ->firstOrFail();
 
         $this->quotation = $quotation;
@@ -28,6 +29,9 @@ class QuoteInfoComponent extends Component
 
     public function render()
     {
+        $this->seo()->setTitle(setSeoTitle(__('Quote details'), true));
+        $this->seo()->setDescription(settings('seo')->description);
+
         return view('livewire.main.seller.quotes.details', [
             'commission' => settings('commission'),
         ])
