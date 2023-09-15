@@ -169,9 +169,9 @@ class SearchComponent extends Component
                     break;
             }
         }
-
+        //
         // Set results
-        return $query->addSelect(
+        $result = $query->addSelect(
             'gigs.*',
             'users.username',
             'users.avatar_id',
@@ -188,6 +188,35 @@ class SearchComponent extends Component
                     });
             })
             ->paginate(42);
+        if (empty($result->data)) {
+            // Create a query to find matching gigs
+            $query = Gig::query()
+                ->whereIn('gigs.status', ['active', 'boosted', 'trending', 'featured'])
+                ->addSelect(
+                    'gigs.*',
+                    'users.username',
+                    'users.avatar_id',
+                    'users.status as user_status',
+                    'states.name as state_name'
+                )
+                ->leftJoin('users', 'gigs.user_id', 'users.id')
+                ->leftJoin('states', 'states.id', 'users.state_id')
+                ->where(function ($builder) use ($keyword) {
+                    for ($i = 0; $i < mb_strlen($keyword); $i++) {
+                        $char = mb_substr($keyword, $i, 1);
+                        $builder->orWhere('gigs.title', 'LIKE', "%{$char}%")
+                            ->orWhere('gigs.description', 'LIKE', "%{$char}%")
+                            ->orWhereHas('tagged', function ($query) use ($char) {
+                                $query->where('tag_name', 'LIKE', "%{$char}%");
+                            });
+                    }
+                })
+                ->paginate(42);
+
+            return $query;
+        } else {
+            return $result;
+        }
     }
 
     /**
