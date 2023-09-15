@@ -63,6 +63,7 @@ class ReviewReceived extends Notification implements ShouldQueue
                     ->line(__('messages.t_notification_seller_line_1_review_received'))
                     ->action(__('messages.t_reviews'), url('seller/reviews/details', $this->review->uid));
     }
+  
      /**
      * Create the push notification.
      * its a must for seller to be notified that he has Recieved a Review
